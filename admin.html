@@ -183,13 +183,21 @@ tr:nth-child(even){background:#f9f9f9}
       </div>
     </div>
 
-    <table>
-      <thead>
-        <tr><th>الاسم</th><th>البريد</th><th>عدد الفصول المسندة</th><th>إجراءات</th></tr>
-      </thead>
-      <tbody id="teachers_body"></tbody>
-    </table>
-  </div>
+<div style="max-height:450px; overflow-y:auto; border:1px solid #bbb; border-radius:10px; margin-top:15px;">
+  <table style="width:100%; border-collapse:collapse; font-size:13px;">
+    <thead style="position:sticky; top:0; background:#1976d2; color:#fff; z-index:10;">
+      <tr>
+        <th style="padding:6px;">الكود</th>
+        <th style="padding:6px;">الاسم</th>
+        <th style="padding:6px;">الصف</th>
+        <th style="padding:6px;">الشعبة</th>
+        <th style="padding:6px;">الإجراءات</th>
+      </tr>
+    </thead>
+
+    <tbody id="students_body"></tbody>
+  </table>
+</div>
 
   <!-- إدارة المشرفين -->
   <div class="box">
