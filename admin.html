@@ -308,34 +308,6 @@ var firebaseConfig = {
   appId: "1:241421115694:web:96f55fd9fd1d5b18b31abf"
 };
 firebase.initializeApp(firebaseConfig);
-  // Auto-add Manager account if missing
-async function ensureManagerExists(){
-  const email = "manager2026@gmail.com";
-
-  const userRef = db.collection("users").doc(email);
-  const supRef  = db.collection("supervisors").doc(email);
-
-  let userDoc = await userRef.get();
-  if(!userDoc.exists){
-    await userRef.set({
-      name: "مدير الإشراف",
-      role: "manager",
-      password: "010096"
-    });
-  }
-
-  let supDoc = await supRef.get();
-  if(!supDoc.exists){
-    await supRef.set({
-      name: "مدير الإشراف",
-      email: email,
-      teachers: []
-    });
-  }
-}
-
-// Run the function automatically
-ensureManagerExists();
 var db=firebase.firestore();
 
 var gradesList=[
@@ -826,17 +798,35 @@ async function deleteSupervisor(email){
 async function loadSupervisors(){
   let tbody=document.getElementById("supervisors_body");
   tbody.innerHTML="<tr><td colspan='4'>جاري التحميل...</td></tr>";
+
   let snap=await db.collection("supervisors").get();
   supervisorsCache=[];
+
   snap.forEach(doc=>supervisorsCache.push(doc.data()));
+
+  // ترتيب بالأسماء
   supervisorsCache.sort((a,b)=>(a.name||"").localeCompare(b.name||"","ar"));
 
   tbody.innerHTML="";
+
   if(!supervisorsCache.length){
     tbody.innerHTML="<tr><td colspan='4'>لا يوجد مشرفون</td></tr>";
-    renderSupervisorLinks();
     return;
   }
+
+  supervisorsCache.forEach(s=>{
+    let count=(s.teachers && s.teachers.length)? s.teachers.length:0;
+
+    let tr=document.createElement("tr");
+    tr.innerHTML=
+      "<td>"+s.name+"</td>"+
+      "<td>"+s.email+"</td>"+
+      "<td>"+count+"</td>"+
+      "<td><button class='btn-primary' onclick='viewSupervisor(\""+s.email+"\")'>عرض</button></td>";
+
+    tbody.appendChild(tr);
+  });
+}
 
   supervisorsCache.forEach(s=>{
     let count = (s.teachers && s.teachers.length) ? s.teachers.length : 0;
