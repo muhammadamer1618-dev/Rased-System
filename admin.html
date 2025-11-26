@@ -33,6 +33,196 @@ th,td{border:1px solid #ccc;text-align:center;padding:5px}
 th{background:#1976d2;color:#fff}
 tr:nth-child(even){background:#f9f9f9}
 .small-btn{padding:3px 6px;font-size:11px;border-radius:5px}
+.footer{text-align:center;font-size:12px;color:#555;margin-top:10px}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>مدارس الفلاح الأهلية</h1>
+  <h2 id="header_exam">لوحة المشرف العام - نظام رصد الدرجات</h2>
+</div>
+
+<div class="container">
+
+  <!-- إدارة الطلاب -->
+  <div class="box">
+    <h3>إدارة الطلاب</h3>
+
+    <div class="row">
+      <div class="col-3"><label>كود الطالب</label><input id="st_code"></div>
+      <div class="col-3"><label>اسم الطالب</label><input id="st_name"></div>
+      <div class="col-3"><label>الصف</label><select id="st_grade"></select></div>
+      <div class="col-3"><label>الشعبة</label><select id="st_section"></select></div>
+    </div>
+
+    <button class="btn-primary" style="margin-top:8px" onclick="addStudent()">إضافة / تعديل طالب</button>
+
+    <hr>
+
+    <!-- أزرار جديدة -->
+    <div class="row">
+      <div class="col-4">
+        <label>استيراد ملف Excel</label>
+        <input type="file" id="import_file">
+      </div>
+      <div class="col-4" style="display:flex;align-items:flex-end">
+        <button class="btn-secondary" onclick="importStudents()">استيراد الطلاب</button>
+      </div>
+      <div class="col-4" style="display:flex;align-items:flex-end">
+        <button class="btn-danger" onclick="deleteAllStudents()">حذف جميع الطلاب</button>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top:10px">
+      <div class="col-4" style="display:flex;align-items:flex-end">
+        <button class="btn-danger" onclick="clearAllStudentsSubjects()">تفريغ نتائج جميع الطلاب</button>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-3"><label>بحث بالكود</label><input id="filter_code"></div>
+      <div class="col-3"><label>بحث بالاسم</label><input id="filter_name"></div>
+      <div class="col-3" style="display:flex;align-items:flex-end"><button class="btn-secondary" onclick="loadStudents()">تحديث</button></div>
+      <div class="col-3" style="display:flex;align-items:flex-end"><button class="btn-secondary" onclick="window.print()">طباعة</button></div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>الكود</th><th>الاسم</th><th>الصف</th><th>الشعبة</th><th>إجراءات</th></tr>
+      </thead>
+      <tbody id="students_body"></tbody>
+    </table>
+  </div>
+<!-- بقية لوحة التحكم كما هي (إدارة المعلمين – إدارة المشرفين – إسناد الفصول...) -->
+
+  <!-- … نفس الكود السابق دون تعديل … -->
+
+</div>
+
+<script>
+var firebaseConfig={
+  apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+  authDomain:"results2026-7c0dd.firebaseapp.com",
+  projectId:"results2026-7c0dd",
+  storageBucket:"results2026-7c0dd.firebasestorage.app",
+  messagingSenderId:"241421115694",
+  appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
+};
+
+firebase.initializeApp(firebaseConfig);
+var db=firebase.firestore();
+
+var gradesList=[
+ "1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي",
+ "1 متوسط","2 متوسط","3 متوسط",
+ "1 ثانوي","2 ثانوي","3 ثانوي"
+];
+
+var sections=["أ","ب","ج","د"];
+
+/* ================================
+   استيراد الطلاب من Excel
+================================ */
+async function importStudents(){
+  let file=document.getElementById("import_file").files[0];
+  if(!file){alert("اختر ملف أولاً");return;}
+
+  let reader=new FileReader();
+  reader.onload=function(e){
+    let data=new Uint8Array(e.target.result);
+    let wb=XLSX.read(data,{type:"array"});
+    let ws=wb.Sheets[wb.SheetNames[0]];
+    let rows=XLSX.utils.sheet_to_json(ws,{header:1});
+
+    rows.forEach((r,i)=>{
+      if(i===0)return;
+      let code=(r[0]||"").toString().trim();
+      let name=(r[1]||"").toString().trim();
+      let grade=(r[2]||"").toString().trim();
+      let section=(r[3]||"").toString().trim();
+      if(!code||!name)return;
+
+      db.collection("students").doc(code).set({
+        code,name,grade,section,subjects:{}
+      },{merge:true});
+    });
+
+    alert("تم استيراد الطلاب");
+    loadStudents();
+  };
+
+  reader.readAsArrayBuffer(file);
+}
+
+/* ================================
+   حذف جميع الطلاب
+================================ */
+async function deleteAllStudents(){
+  if(!confirm("حذف جميع الطلاب نهائيًا؟"))return;
+  let snap=await db.collection("students").get();
+  let batch=db.batch();
+  snap.forEach(doc=>batch.delete(doc.ref));
+  await batch.commit();
+  alert("تم حذف الطلاب بالكامل");
+  loadStudents();
+}
+
+/* ================================
+   تفريغ كل الدرجات لكل الطلاب
+================================ */
+async function clearAllStudentsSubjects(){
+  if(!confirm("تفريغ جميع نتائج الطلاب؟"))return;
+  let snap=await db.collection("students").get();
+  let batch=db.batch();
+  snap.forEach(doc=>batch.set(doc.ref,{subjects:{}},{merge:true}));
+  await batch.commit();
+  alert("تم تفريغ كل نتائج الطلاب");
+  loadStudents();
+}
+
+/* باقي دوال النظام دون أي تعديل … */
+</script>
+
+</body>
+</html>
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>لوحة المشرف العام - مدارس الفلاح الأهلية</title>
+<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<style>
+body{font-family:Calibri;background:#f4f4f4;margin:0}
+.header{background:#1976d2;color:#fff;text-align:center;padding:15px}
+.header h1{margin:0;font-size:24px}
+.header h2{margin:5px 0 0;font-size:18px;color:#ffeb3b}
+.container{max-width:1200px;margin:20px auto;padding:10px}
+.box{background:#fff;border-radius:10px;padding:15px;margin-bottom:15px;box-shadow:0 0 8px rgba(0,0,0,0.1)}
+h3{margin-top:0;color:#1976d2}
+label{display:block;margin-top:5px}
+input,select,button{font-family:Calibri;font-size:14px;padding:6px;margin-top:4px;border-radius:6px;border:1px solid #999;box-sizing:border-box}
+input,select{width:100%}
+button{cursor:pointer;font-weight:bold;border:none}
+.btn-primary{background:#1976d2;color:#fff}
+.btn-secondary{background:#757575;color:#fff}
+.btn-danger{background:#d32f2f;color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.col-3{flex:1 1 23%}
+.col-4{flex:1 1 30%}
+.col-6{flex:1 1 48%}
+.col-12{flex:1 1 100%}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+th,td{border:1px solid #ccc;text-align:center;padding:5px}
+th{background:#1976d2;color:#fff}
+tr:nth-child(even){background:#f9f9f9}
+.small-btn{padding:3px 6px;font-size:11px;border-radius:5px}
 .badge{display:inline-block;padding:2px 6px;border-radius:10px;font-size:11px;background:#e3f2fd;color:#0d47a1}
 .footer{text-align:center;font-size:12px;color:#555;margin-top:10px}
 </style>
