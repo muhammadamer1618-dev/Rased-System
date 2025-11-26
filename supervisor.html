@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>لوحة المشرف - مدارس الفلاح الأهلية</title>
+<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<style>
+body{font-family:Calibri;background:#f4f4f4;margin:0}
+.header{background:#1976d2;color:#fff;text-align:center;padding:15px}
+.header h1{margin:0;font-size:24px}
+.header h2{margin:5px 0 0;font-size:18px;color:#ffeb3b}
+.container{max-width:1200px;margin:20px auto;padding:10px}
+.box{background:#fff;border-radius:10px;padding:15px;margin-bottom:15px;box-shadow:0 0 8px rgba(0,0,0,0.1)}
+h3{margin-top:0;color:#1976d2}
+label{display:block;margin-top:5px}
+select,button{
+  font-family:Calibri;font-size:15px;padding:7px;margin-top:5px;
+  border-radius:6px;border:1px solid #999;box-sizing:border-box
+}
+select{width:100%}
+button{cursor:pointer;font-weight:bold;border:none}
+.btn-primary{background:#1976d2;color:#fff}
+.btn-secondary{background:#757575;color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.col-3{flex:1 1 23%}
+.col-4{flex:1 1 30%}
+.col-6{flex:1 1 48%}
+.col-12{flex:1 1 100%}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+th,td{border:1px solid #ccc;text-align:center;padding:6px}
+th{background:#1976d2;color:#fff}
+tr:nth-child(even){background:#f9f9f9}
+.badge{display:inline-block;padding:2px 6px;border-radius:10px;font-size:11px;background:#e3f2fd;color:#0d47a1}
+.info{font-size:13px;color:#555;margin-top:5px}
+.report-header{margin-top:10px;font-size:14px}
+.report-header span{display:inline-block;margin-left:15px}
+@media print{
+  body{background:#fff;margin:0}
+  .no-print{display:none}
+  .container{max-width:100%;margin:0;padding:10px;box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>مدارس الفلاح الأهلية</h1>
+  <h2>لوحة المشرف - تقارير المعلمين</h2>
+</div>
+
+<div class="container">
+
+  <div class="box no-print">
+    <h3>بيانات المشرف</h3>
+    <div class="row">
+      <div class="col-4">
+        <label>اسم المشرف</label>
+        <div id="supervisor_name" class="badge">—</div>
+      </div>
+      <div class="col-4">
+        <label>البريد الإلكتروني</label>
+        <div id="supervisor_email" class="badge">—</div>
+      </div>
+      <div class="col-4">
+        <label>عدد المعلمين المسندين</label>
+        <div id="teachers_count" class="badge">0</div>
+      </div>
+    </div>
+    <div class="info">
+      يمكن للمشرف اختيار أحد المعلمين المسندين له ومشاهدة تقرير درجات طلابه فقط، بدون تعديل على الدرجات.
+    </div>
+  </div>
+
+  <div class="box no-print">
+    <h3>اختيار المعلم</h3>
+    <div class="row">
+      <div class="col-6">
+        <label>المعلم</label>
+        <select id="teacher_select"></select>
+      </div>
+      <div class="col-3" style="display:flex;align-items:flex-end">
+        <button class="btn-primary" style="width:100%" onclick="loadTeacherReport()">عرض تقرير المعلم</button>
+      </div>
+      <div class="col-3" style="display:flex;align-items:flex-end">
+        <button class="btn-secondary" style="width:100%" onclick="printReport()">تصدير كملف PDF</button>
+      </div>
+    </div>
+    <div class="info" id="teacher_info"></div>
+  </div>
+
+  <div class="box">
+    <h3>تقرير الدرجات للمعلم المختار</h3>
+
+    <div class="report-header">
+      <span>المشرف: <strong id="rep_supervisor_name">—</strong></span>
+      <span>المعلم: <strong id="rep_teacher_name">—</strong></span>
+      <span>البريد: <strong id="rep_teacher_email">—</strong></span>
+      <span>التاريخ: <strong id="rep_date">—</strong></span>
+    </div>
+
+    <table id="report_table" style="display:none;">
+      <thead>
+        <tr>
+          <th>الصف</th>
+          <th>الشعبة</th>
+          <th>المادة</th>
+          <th>كود الطالب</th>
+          <th>اسم الطالب</th>
+          <th>درجة الطالب</th>
+          <th>الدرجة النهائية</th>
+          <th>التقدير</th>
+        </tr>
+      </thead>
+      <tbody id="report_body"></tbody>
+    </table>
+  </div>
+
+  <div class="box no-print">
+    <button class="btn-secondary" onclick="location='index.html'">تسجيل خروج</button>
+  </div>
+
+</div>
+
+<script>
+var firebaseConfig={
+  apiKey:"AIzaSyC4-cGVb2pHwo6LYiD-UoWtmEEZKQxj4_M",
+  authDomain:"all-subjects-14322.firebaseapp.com",
+  projectId:"all-subjects-14322",
+  storageBucket:"all-subjects-14322.firebasestorage.app",
+  messagingSenderId:"813955287168",
+  appId:"1:813955287168:web:07efa7dde95b117b9bbe65"
+};
+firebase.initializeApp(firebaseConfig);
+var db=firebase.firestore();
+
+var supervisorEmail="";
+var supervisorName="";
+var supervisorTeachersEmails=[];
+var teachersMap={};
+
+function updateDate(){
+  var d=new Date();
+  var text=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  document.getElementById("rep_date").innerText=text;
+}
+
+async function initSupervisorPage(){
+  var role=localStorage.getItem("currentUserRole");
+  supervisorEmail=localStorage.getItem("currentUserEmail");
+  supervisorName=localStorage.getItem("currentUserName") || "";
+
+  if(!supervisorEmail || role!=="supervisor"){
+    location="index.html";
+    return;
+  }
+
+  document.getElementById("supervisor_email").innerText=supervisorEmail;
+  document.getElementById("supervisor_name").innerText=supervisorName || "—";
+  document.getElementById("rep_supervisor_name").innerText=supervisorName || supervisorEmail;
+  updateDate();
+
+  try{
+    var sDoc=await db.collection("users").doc(supervisorEmail).get();
+    if(sDoc.exists){
+      var d=sDoc.data() || {};
+      supervisorTeachersEmails=d.teachers || [];
+      if(!supervisorName && d.name){
+        supervisorName=d.name;
+        document.getElementById("supervisor_name").innerText=supervisorName;
+        document.getElementById("rep_supervisor_name").innerText=supervisorName;
+      }
+    }
+  }catch(e){
+    console.log(e);
+  }
+
+  if(!supervisorTeachersEmails || !supervisorTeachersEmails.length){
+    document.getElementById("teachers_count").innerText="0";
+    document.getElementById("teacher_info").innerText=
+      "لم يتم إسناد أي معلمين لهذا المشرف حتى الآن. يرجى الإسناد من لوحة المشرف العام.";
+    var sel=document.getElementById("teacher_select");
+    sel.innerHTML="<option value=''>لا يوجد معلمون مسندون</option>";
+    return;
+  }
+
+  document.getElementById("teachers_count").innerText=supervisorTeachersEmails.length.toString();
+
+  try{
+    var q=await db.collection("users").where("role","==","teacher").get();
+    teachersMap={};
+    q.forEach(function(doc){
+      var d=doc.data() || {};
+      var email=d.email || doc.id;
+      if(supervisorTeachersEmails.indexOf(email)!==-1){
+        teachersMap[email]=d;
+      }
+    });
+
+    var sel=document.getElementById("teacher_select");
+    sel.innerHTML="";
+    var count=0;
+    for(var email in teachersMap){
+      if(!teachersMap.hasOwnProperty(email)) continue;
+      count++;
+      var t=teachersMap[email];
+      var name=t.name || email;
+      var o=document.createElement("option");
+      o.value=email;
+      o.textContent=name+" - "+email;
+      sel.appendChild(o);
+    }
+
+    if(!count){
+      sel.innerHTML="<option value=''>لا يوجد معلمون مسندون</option>";
+      document.getElementById("teacher_info").innerText=
+        "لا يوجد معلمون مسجلون في النظام بنفس الإيميلات المسندة لهذا المشرف.";
+    }else{
+      document.getElementById("teacher_info").innerText=
+        "اختر معلماً من القائمة لعرض تقرير درجات فصوله ومواده.";
+    }
+  }catch(e2){
+    console.log(e2);
+    document.getElementById("teacher_info").innerText="حدث خطأ أثناء تحميل قائمة المعلمين.";
+  }
+}
+
+async function loadTeacherReport(){
+  var sel=document.getElementById("teacher_select");
+  var email=sel.value;
+  if(!email){
+    alert("اختر معلماً أولاً");
+    return;
+  }
+
+  var teacherData=teachersMap[email];
+  if(!teacherData){
+    alert("بيانات المعلم غير متوفرة، راجع المشرف العام");
+    return;
+  }
+
+  var name=teacherData.name || email;
+  document.getElementById("rep_teacher_name").innerText=name;
+  document.getElementById("rep_teacher_email").innerText=email;
+  updateDate();
+
+  var assignments=teacherData.assignments || [];
+  var tbody=document.getElementById("report_body");
+  var table=document.getElementById("report_table");
+  tbody.innerHTML="";
+  table.style.display="none";
+
+  if(!assignments.length){
+    tbody.innerHTML="<tr><td colspan='8'>لا توجد فصول أو مواد مسندة لهذا المعلم</td></tr>";
+    table.style.display="table";
+    return;
+  }
+
+  tbody.innerHTML="<tr><td colspan='8'>جاري تجميع التقرير...</td></tr>";
+
+  try{
+    var studentsByClass=[];
+    for(var i=0;i<assignments.length;i++){
+      (function(assign){
+        studentsByClass.push(
+          db.collection("students")
+            .where("grade","==",assign.grade)
+            .where("section","==",assign.section)
+            .get()
+            .then(function(qSnap){
+              var rows=[];
+              qSnap.forEach(function(doc){
+                var s=doc.data();
+                var subs=s.subjects || {};
+                var subj=subs[assign.subject];
+                if(subj){
+                  rows.push({
+                    grade:assign.grade,
+                    section:assign.section,
+                    subject:assign.subject,
+                    code:s.code || "",
+                    name:s.name || "",
+                    mark:subj.mark || 0,
+                    full:subj.fullMark || 0,
+                    rating:subj.rating || ""
+                  });
+                }
+              });
+              return rows;
+            })
+        );
+      })(assignments[i]);
+    }
+
+    var allRowsArrays=await Promise.all(studentsByClass);
+    var allRows=[];
+    allRowsArrays.forEach(function(arr){
+      allRows=allRows.concat(arr);
+    });
+
+    tbody.innerHTML="";
+    if(!allRows.length){
+      tbody.innerHTML="<tr><td colspan='8'>لا توجد درجات مسجلة لهذا المعلم في الفصول المسندة له</td></tr>";
+      table.style.display="table";
+      return;
+    }
+
+    allRows.sort(function(a,b){
+      var g1=(a.grade||"").localeCompare(b.grade||"","ar");
+      if(g1!==0) return g1;
+      var s1=(a.section||"").localeCompare(b.section||"","ar");
+      if(s1!==0) return s1;
+      var sub1=(a.subject||"").localeCompare(b.subject||"","ar");
+      if(sub1!==0) return sub1;
+      return (a.name||"").localeCompare(b.name||"","ar");
+    });
+
+    allRows.forEach(function(r){
+      var tr=document.createElement("tr");
+      tr.innerHTML=
+        "<td>"+r.grade+"</td>"+
+        "<td>"+r.section+"</td>"+
+        "<td>"+r.subject+"</td>"+
+        "<td>"+r.code+"</td>"+
+        "<td>"+r.name+"</td>"+
+        "<td>"+r.mark+"</td>"+
+        "<td>"+r.full+"</td>"+
+        "<td>"+(r.rating || "")+"</td>";
+      tbody.appendChild(tr);
+    });
+
+    table.style.display="table";
+
+  }catch(e){
+    console.log(e);
+    tbody.innerHTML="<tr><td colspan='8'>حدث خطأ أثناء تحميل التقرير</td></tr>";
+    table.style.display="table";
+  }
+}
+
+function printReport(){
+  window.print();
+}
+
+initSupervisorPage();
+</script>
+
+</body>
+</html>

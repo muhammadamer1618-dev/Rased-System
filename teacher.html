@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>لوحة المعلم - مدارس الفلاح الأهلية</title>
+<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<style>
+body{font-family:Calibri;background:#f4f4f4;margin:0}
+.header{background:#1976d2;color:#fff;text-align:center;padding:15px}
+.header h1{margin:0;font-size:24px}
+.header h2{margin:5px 0 0;font-size:18px;color:#ffeb3b}
+.container{max-width:1200px;margin:20px auto;padding:10px}
+.box{background:#fff;border-radius:10px;padding:15px;margin-bottom:15px;box-shadow:0 0 8px rgba(0,0,0,0.1)}
+h3{margin-top:0;color:#1976d2}
+label{display:block;margin-top:5px}
+input,select,button{
+  font-family:Calibri;font-size:15px;padding:7px;margin-top:5px;
+  border-radius:6px;border:1px solid #999;box-sizing:border-box
+}
+select,input{width:100%}
+button{cursor:pointer;font-weight:bold;border:none}
+.btn-primary{background:#1976d2;color:#fff}
+.btn-secondary{background:#757575;color:#fff}
+.btn-danger{background:#d32f2f;color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.col-3{flex:1 1 23%}
+.col-4{flex:1 1 30%}
+.col-6{flex:1 1 48%}
+.col-12{flex:1 1 100%}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:14px}
+th,td{border:1px solid #ccc;text-align:center;padding:6px}
+th{background:#1976d2;color:#fff}
+tr:nth-child(even){background:#f9f9f9}
+.badge{display:inline-block;padding:2px 6px;border-radius:10px;font-size:11px;background:#e3f2fd;color:#0d47a1}
+.info{font-size:13px;color:#555;margin-top:5px}
+.report-header{margin-top:10px;font-size:14px}
+.report-header span{display:inline-block;margin-left:15px}
+@media print{
+  body{background:#fff;margin:0}
+  .no-print{display:none}
+  .container{max-width:100%;margin:0;padding:10px;box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>مدارس الفلاح الأهلية</h1>
+  <h2 id="header_exam">لوحة المعلم - رصد الدرجات</h2>
+</div>
+
+<div class="container">
+
+  <div class="box no-print">
+    <h3>بيانات المعلم</h3>
+    <div class="row">
+      <div class="col-4">
+        <label>اسم المعلم</label>
+        <div id="teacher_name" class="badge">—</div>
+      </div>
+      <div class="col-4">
+        <label>البريد الإلكتروني</label>
+        <div id="teacher_email" class="badge">—</div>
+      </div>
+      <div class="col-4">
+        <label>نوع الاختبار</label>
+        <div id="exam_type_badge" class="badge">—</div>
+      </div>
+    </div>
+    <div class="info">
+      يقوم المعلم باختيار الصف والشعبة والمادة من القوائم التالية، ثم رصد درجات طلاب هذا الفصل فقط.
+    </div>
+  </div>
+
+  <div class="box no-print">
+    <h3>اختيار الصف والشعبة والمادة</h3>
+    <div class="row">
+      <div class="col-3">
+        <label>الصف</label>
+        <select id="grade_select"></select>
+      </div>
+      <div class="col-3">
+        <label>الشعبة</label>
+        <select id="section_select"></select>
+      </div>
+      <div class="col-3">
+        <label>المادة</label>
+        <select id="subject_select"></select>
+      </div>
+      <div class="col-3" style="display:flex;align-items:flex-end">
+        <button class="btn-primary" style="width:100%" onclick="loadClassStudents()">عرض طلاب الفصل</button>
+      </div>
+    </div>
+    <div class="info" id="permission_info"></div>
+  </div>
+
+  <div class="box">
+    <h3>رصد الدرجات</h3>
+
+    <div class="report-header">
+      <span>المعلم: <strong id="report_teacher_name">—</strong></span>
+      <span>الصف: <strong id="report_grade">—</strong></span>
+      <span>الشعبة: <strong id="report_section">—</strong></span>
+      <span>المادة: <strong id="report_subject">—</strong></span>
+      <span>التاريخ: <strong id="report_date">—</strong></span>
+    </div>
+
+    <table id="marks_table" style="display:none;">
+      <thead>
+        <tr>
+          <th>الكود</th>
+          <th>اسم الطالب</th>
+          <th>الدرجة النهائية</th>
+          <th>درجة الطالب</th>
+          <th>التقدير</th>
+        </tr>
+      </thead>
+      <tbody id="marks_body"></tbody>
+    </table>
+
+    <div class="no-print" style="margin-top:10px;display:none;" id="teacher_actions">
+      <button class="btn-primary" onclick="saveMarks()">حفظ الدرجات</button>
+      <button class="btn-secondary" onclick="printReport()">تصدير كملف PDF</button>
+    </div>
+  </div>
+
+  <div class="box no-print">
+    <button class="btn-secondary" onclick="location='index.html'">تسجيل خروج</button>
+  </div>
+
+</div>
+
+<script>
+var firebaseConfig={
+  apiKey:"AIzaSyC4-cGVb2pHwo6LYiD-UoWtmEEZKQxj4_M",
+  authDomain:"all-subjects-14322.firebaseapp.com",
+  projectId:"all-subjects-14322",
+  storageBucket:"all-subjects-14322.firebasestorage.app",
+  messagingSenderId:"813955287168",
+  appId:"1:813955287168:web:07efa7dde95b117b9bbe65"
+};
+firebase.initializeApp(firebaseConfig);
+var db=firebase.firestore();
+
+var gradesList=[
+  "1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي",
+  "1 متوسط","2 متوسط","3 متوسط",
+  "1 ثانوي","2 ثانوي","3 ثانوي"
+];
+
+var sectionsList=["أ","ب","ج","د"];
+
+var subjectsList=[
+  "اللغة العربية",
+  "اللغة الإنجليزية",
+  "الرياضيات",
+  "العلوم",
+  "الدراسات الإسلامية",
+  "الدراسات الاجتماعية",
+  "المهارات الرقمية",
+  "التقنية الرقمية",
+  "التفكير الناقد",
+  "المهارات الحياتية",
+  "الكيمياء",
+  "الفيزياء",
+  "الأحياء",
+  "علم الأرض والفضاء",
+  "التاريخ",
+  "التفسير",
+  "الفقه",
+  "التوحيد",
+  "كفايات لغوية"
+];
+
+var examType="";
+var teacherEmail="";
+var teacherName="";
+var teacherAssignments=[];
+var currentGrade="";
+var currentSection="";
+var currentSubject="";
+var currentStudents=[];
+
+function calcRating(mark, full){
+  mark=Number(mark); full=Number(full);
+  if(!full) return "";
+  var p=(mark/full)*100;
+  if(p>=90) return "ممتاز";
+  if(p>=80) return "جيد جدًا";
+  if(p>=70) return "جيد";
+  if(p>=60) return "مقبول";
+  return "ضعيف";
+}
+
+async function initTeacherPage(){
+  var role=localStorage.getItem("currentUserRole");
+  teacherEmail=localStorage.getItem("currentUserEmail");
+  teacherName=localStorage.getItem("currentUserName") || "";
+
+  if(!teacherEmail || role!=="teacher"){
+    location="index.html";
+    return;
+  }
+
+  document.getElementById("teacher_email").innerText=teacherEmail;
+  document.getElementById("teacher_name").innerText=teacherName || "—";
+  document.getElementById("report_teacher_name").innerText=teacherName || teacherEmail;
+
+  var gSel=document.getElementById("grade_select");
+  gradesList.forEach(function(g){
+    var o=document.createElement("option");
+    o.value=g; o.textContent=g;
+    gSel.appendChild(o);
+  });
+
+  var sSel=document.getElementById("section_select");
+  sectionsList.forEach(function(s){
+    var o=document.createElement("option");
+    o.value=s; o.textContent=s;
+    sSel.appendChild(o);
+  });
+
+  var subSel=document.getElementById("subject_select");
+  subjectsList.forEach(function(sub){
+    var o=document.createElement("option");
+    o.value=sub; o.textContent=sub;
+    subSel.appendChild(o);
+  });
+
+  try{
+    var setDoc=await db.collection("settings").doc("general").get();
+    if(setDoc.exists){
+      examType=setDoc.data().examType || "";
+      document.getElementById("exam_type_badge").innerText=examType || "—";
+      if(examType){
+        document.getElementById("header_exam").innerText="لوحة المعلم - "+examType;
+      }
+    }
+  }catch(e){
+    console.log(e);
+  }
+
+  try{
+    var tDoc=await db.collection("users").doc(teacherEmail).get();
+    if(tDoc.exists){
+      var d=tDoc.data() || {};
+      teacherAssignments=d.assignments || [];
+      if(!teacherName && d.name){
+        teacherName=d.name;
+        document.getElementById("teacher_name").innerText=teacherName;
+        document.getElementById("report_teacher_name").innerText=teacherName;
+      }
+      if(teacherAssignments.length){
+        document.getElementById("permission_info").innerText=
+          "المعلم مسند له "+teacherAssignments.length+" فصول/مواد. النظام سيتأكد من أن الفصل المختار من ضمن صلاحياته.";
+      }else{
+        document.getElementById("permission_info").innerText=
+          "لم يتم تسجيل فصول محددة لهذا المعلم، يمكنه رصد أي فصل (إلى أن يتم تقييد الصلاحيات من المشرف العام).";
+      }
+    }
+  }catch(e2){
+    console.log(e2);
+  }
+
+  updateReportDate();
+}
+
+function updateReportDate(){
+  var d=new Date();
+  var text=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  document.getElementById("report_date").innerText=text;
+}
+
+function isAllowedCombination(grade, section, subject){
+  if(!teacherAssignments || !teacherAssignments.length) return true;
+  for(var i=0;i<teacherAssignments.length;i++){
+    var a=teacherAssignments[i];
+    if(a.grade===grade && a.section===section && a.subject===subject) return true;
+  }
+  return false;
+}
+
+async function loadClassStudents(){
+  currentGrade=document.getElementById("grade_select").value;
+  currentSection=document.getElementById("section_select").value;
+  currentSubject=document.getElementById("subject_select").value;
+
+  if(!currentGrade || !currentSection || !currentSubject){
+    alert("اختر الصف والشعبة والمادة أولاً");
+    return;
+  }
+
+  if(!isAllowedCombination(currentGrade,currentSection,currentSubject)){
+    alert("ليست لديك صلاحية لرصد هذا الصف/الشعبة/المادة. راجع المشرف العام.");
+    return;
+  }
+
+  document.getElementById("report_grade").innerText=currentGrade;
+  document.getElementById("report_section").innerText=currentSection;
+  document.getElementById("report_subject").innerText=currentSubject;
+  updateReportDate();
+
+  var marksTable=document.getElementById("marks_table");
+  var tbody=document.getElementById("marks_body");
+  marksTable.style.display="none";
+  tbody.innerHTML="<tr><td colspan='5'>جاري تحميل الطلاب...</td></tr>";
+  document.getElementById("teacher_actions").style.display="none";
+
+  var fullMark=0;
+  try{
+    var tempDoc=await db.collection("settings").doc("subjects_"+currentGrade).get();
+    if(tempDoc.exists){
+      var subs=tempDoc.data().subjects || [];
+      for(var i=0;i<subs.length;i++){
+        if(subs[i].name===currentSubject){
+          fullMark=Number(subs[i].fullMark) || 0;
+          break;
+        }
+      }
+    }
+  }catch(e2){
+    console.log(e2);
+  }
+
+  try{
+    var q=await db.collection("students")
+      .where("grade","==",currentGrade)
+      .where("section","==",currentSection)
+      .get();
+
+    currentStudents=[];
+    tbody.innerHTML="";
+
+    q.forEach(function(doc){
+      var s=doc.data();
+      currentStudents.push(s);
+    });
+
+    if(!currentStudents.length){
+      tbody.innerHTML="<tr><td colspan='5'>لا يوجد طلاب لهذا الصف/الشعبة</td></tr>";
+      return;
+    }
+
+    currentStudents.sort(function(a,b){
+      return (a.name||"").localeCompare(b.name||"","ar");
+    });
+
+    currentStudents.forEach(function(st){
+      var subjects=st.subjects || {};
+      var existing=subjects[currentSubject];
+      var markVal=existing ? (existing.mark || 0) : 0;
+      var fullVal=existing ? (existing.fullMark || fullMark) : fullMark;
+      var rating=calcRating(markVal,fullVal);
+
+      var tr=document.createElement("tr");
+      tr.innerHTML=
+        "<td>"+(st.code || "")+"</td>"+
+        "<td>"+(st.name || "")+"</td>"+
+        "<td>"+fullVal+"</td>"+
+        "<td><input type='number' class='mark-input' data-code='"+(st.code || "")+"' value='"+markVal+"' style='width:80px'></td>"+
+        "<td class='rating-cell'>"+rating+"</td>";
+      tbody.appendChild(tr);
+    });
+
+    marksTable.style.display="table";
+    document.getElementById("teacher_actions").style.display="block";
+  }catch(e){
+    console.log(e);
+    tbody.innerHTML="<tr><td colspan='5'>حدث خطأ أثناء تحميل الطلاب</td></tr>";
+  }
+}
+
+async function saveMarks(){
+  if(!currentGrade || !currentSection || !currentSubject){
+    alert("اختر الصف والشعبة والمادة ثم اعرض الطلاب أولاً");
+    return;
+  }
+
+  var inputs=document.querySelectorAll(".mark-input");
+  if(!inputs.length){
+    alert("لا توجد درجات لإدخالها");
+    return;
+  }
+
+  var fullMark=0;
+  try{
+    var tempDoc=await db.collection("settings").doc("subjects_"+currentGrade).get();
+    if(tempDoc.exists){
+      var subs=tempDoc.data().subjects || [];
+      for(var i=0;i<subs.length;i++){
+        if(subs[i].name===currentSubject){
+          fullMark=Number(subs[i].fullMark) || 0;
+          break;
+        }
+      }
+    }
+  }catch(e2){
+    console.log(e2);
+  }
+
+  var studentsMap={};
+  currentStudents.forEach(function(s){
+    if(s.code) studentsMap[s.code]=s;
+  });
+
+  var batch=db.batch();
+
+  inputs.forEach(function(inp){
+    var code=inp.getAttribute("data-code");
+    if(!code) return;
+    var markVal=inp.value.trim();
+    var mark=markVal==="" ? 0 : Number(markVal);
+    if(isNaN(mark)) mark=0;
+
+    var st=studentsMap[code];
+    if(!st) return;
+
+    var subjectsObj=st.subjects || {};
+    var thisFull=fullMark || (subjectsObj[currentSubject] ? (subjectsObj[currentSubject].fullMark || 0) : 0);
+    var rating=calcRating(mark,thisFull);
+
+    subjectsObj[currentSubject]={
+      fullMark:thisFull,
+      mark:mark,
+      rating:rating
+    };
+
+    var ref=db.collection("students").doc(code);
+    batch.set(ref,{
+      subjects:subjectsObj,
+      examType:examType || ""
+    },{merge:true});
+  });
+
+  try{
+    await batch.commit();
+    alert("تم حفظ الدرجات بنجاح");
+
+    var inputsAfter=document.querySelectorAll(".mark-input");
+    inputsAfter.forEach(function(inp){
+      var code=inp.getAttribute("data-code");
+      var st=studentsMap[code];
+      if(!st) return;
+      var subjectsObj=st.subjects || {};
+      var subj=subjectsObj[currentSubject];
+      if(subj){
+        subj.mark=Number(inp.value.trim() || "0");
+      }
+    });
+
+    var rows=document.querySelectorAll("#marks_body tr");
+    rows.forEach(function(tr){
+      var inp=tr.querySelector(".mark-input");
+      var ratingCell=tr.querySelector(".rating-cell");
+      if(inp && ratingCell){
+        var code=inp.getAttribute("data-code");
+        var st=studentsMap[code];
+        var subjectsObj=st ? (st.subjects || {}) : {};
+        var subj=subjectsObj[currentSubject];
+        if(subj){
+          ratingCell.textContent=subj.rating || "";
+        }
+      }
+    });
+
+  }catch(e){
+    console.log(e);
+    alert("حدث خطأ أثناء الحفظ");
+  }
+}
+
+function printReport(){
+  window.print();
+}
+
+initTeacherPage();
+</script>
+
+</body>
+</html>

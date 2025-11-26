@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>نتيجة الطالب - مدارس الفلاح الأهلية</title>
+<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<style>
+body{font-family:Calibri;background:#f4f4f4;margin:0;padding:20px}
+.container{max-width:900px;margin:auto;background:white;padding:20px;border-radius:12px;box-shadow:0 0 10px rgba(0,0,0,0.2)}
+h1{text-align:center;color:#1976d2;margin-bottom:5px}
+h2{text-align:center;color:#d32f2f;margin-top:0}
+label{font-weight:bold}
+input{padding:10px;font-size:18px;width:200px;border-radius:8px;border:1px solid #999;margin-bottom:10px}
+button{padding:10px 20px;border:none;border-radius:8px;background:#1976d2;color:white;font-size:18px;font-weight:bold;cursor:pointer}
+button:hover{opacity:0.9}
+
+table{width:100%;border-collapse:collapse;margin-top:15px;font-size:16px}
+th,td{border:1px solid #888;padding:8px;text-align:center}
+th{background:#1976d2;color:white;font-size:17px}
+
+.blue{color:#0d47a1;font-weight:bold}
+.red{color:#d32f2f;font-weight:bold}
+
+.footer-sign{margin-top:20px}
+.designer{text-align:center;margin-top:25px;font-size:15px;color:#555}
+
+@media print{
+  body{background:white}
+  .no-print{display:none}
+  .container{box-shadow:none;border:1px solid #000}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="no-print" style="text-align:center">
+    <label>أدخل كود الطالب</label><br>
+    <input id="code_input" placeholder="مثال: 1001">
+    <button onclick="loadStudent()">عرض النتيجة</button>
+  </div>
+
+  <h1>مدارس الفلاح الأهلية</h1>
+  <h2 id="exam_type">—</h2>
+
+  <!-- Student info -->
+  <table id="student_info" style="display:none;">
+    <tr><th>البيان</th><th>القيمة</th></tr>
+    <tr><td class="red">اسم الطالب</td><td id="st_name" class="blue"></td></tr>
+    <tr><td class="red">الكود</td><td id="st_code" class="blue"></td></tr>
+    <tr><td class="red">الصف</td><td id="st_grade" class="blue"></td></tr>
+    <tr><td class="red">الشعبة</td><td id="st_section" class="blue"></td></tr>
+  </table>
+
+  <!-- Subjects table -->
+  <table id="subjects_table" style="display:none;">
+    <thead>
+      <tr>
+        <th>المادة</th>
+        <th>درجة الطالب</th>
+        <th>الدرجة النهائية</th>
+        <th>النسبة</th>
+        <th>التقدير</th>
+        <th>الملاحظة</th>
+      </tr>
+    </thead>
+    <tbody id="subjects_body"></tbody>
+  </table>
+
+  <!-- Summary table -->
+  <table id="summary_table" style="display:none;">
+    <tr><th>المجموع الكلي</th><th>التقدير العام</th></tr>
+    <tr>
+      <td id="total_mark" class="blue"></td>
+      <td id="final_rating" class="red"></td>
+    </tr>
+  </table>
+
+  <!-- Supervisor sign -->
+  <table id="supervisor_table" style="display:none;margin-top:20px;">
+    <tr><th>رئيس الإشراف التربوي</th></tr>
+    <tr><td class="blue">أحمد سمير عباس</td></tr>
+  </table>
+
+  <!-- Manager sign -->
+  <table id="manager_table" style="display:none;margin-top:20px;">
+    <tr><th>مدير المدرسة</th></tr>
+    <tr><td class="blue">سعيد بن علي الجمعان</td></tr>
+  </table>
+
+  <div class="designer">تصميم محمد عامر أحمد</div>
+
+  <div class="no-print" style="text-align:center;margin-top:15px;">
+    <button onclick="window.print()">طباعة الشهادة</button>
+  </div>
+
+</div>
+
+<script>
+var firebaseConfig={
+  apiKey:"AIzaSyC4-cGVb2pHwo6LYiD-UoWtmEEZKQxj4_M",
+  authDomain:"all-subjects-14322.firebaseapp.com",
+  projectId:"all-subjects-14322",
+  storageBucket:"all-subjects-14322.firebasestorage.app",
+  messagingSenderId:"813955287168",
+  appId:"1:813955287168:web:07efa7dde95b117b9bbe65"
+};
+firebase.initializeApp(firebaseConfig);
+var db=firebase.firestore();
+
+function getRate(p){
+  if(p>=90)return"ممتاز";
+  if(p>=80)return"جيد جدًا";
+  if(p>=70)return"جيد";
+  if(p>=60)return"مقبول";
+  return"ضعيف";
+}
+
+async function loadStudent(){
+  let code=document.getElementById("code_input").value.trim();
+  if(!code){alert("أدخل الكود");return;}
+
+  let doc=await db.collection("students").doc(code).get();
+  if(!doc.exists){alert("الطالب غير موجود");return;}
+
+  let d=doc.data();
+
+  document.getElementById("exam_type").innerText=d.examType||"—";
+
+  document.getElementById("st_name").innerText=d.name||"";
+  document.getElementById("st_code").innerText=d.code||"";
+  document.getElementById("st_grade").innerText=d.grade||"";
+  document.getElementById("st_section").innerText=d.section||"";
+  document.getElementById("student_info").style.display="table";
+
+  // get subjects template for this grade
+  let grade=d.grade||"";
+  let templateDoc=await db.collection("settings").doc("subjects_"+grade).get();
+  let allowedSubjects=[];
+  if(templateDoc.exists){
+    let subsTemplate=templateDoc.data().subjects||[];
+    allowedSubjects=subsTemplate.map(s=>s.name);
+  }
+
+  let body=document.getElementById("subjects_body");
+  body.innerHTML="";
+  let subs=d.subjects||{};
+  let total=0,totalFull=0;
+  let hasRows=false;
+
+  Object.keys(subs).forEach(subName=>{
+    if(allowedSubjects.length && !allowedSubjects.includes(subName)) return;
+
+    let m=subs[subName].mark||0;
+    let f=subs[subName].fullMark||0;
+    let p=f?((m/f)*100).toFixed(0):0;
+    let r=getRate(p);
+    let note=subs[subName].note||"";
+
+    total+=Number(m);
+    totalFull+=Number(f);
+    hasRows=true;
+
+    let tr=document.createElement("tr");
+    tr.innerHTML=
+      "<td>"+subName+"</td>"+
+      "<td>"+m+"</td>"+
+      "<td>"+f+"</td>"+
+      "<td>"+p+"%</td>"+
+      "<td>"+r+"</td>"+
+      "<td>"+note+"</td>";
+    body.appendChild(tr);
+  });
+
+  document.getElementById("subjects_table").style.display=hasRows?"table":"none";
+
+  let finalRate = totalFull ? getRate((total/totalFull)*100) : "—";
+  let totalText = totalFull ? (total+" / "+totalFull) : "0 / 0";
+
+  document.getElementById("total_mark").innerText = totalText;
+  document.getElementById("final_rating").innerText = finalRate;
+  document.getElementById("summary_table").style.display="table";
+
+  document.getElementById("supervisor_table").style.display="table";
+  document.getElementById("manager_table").style.display="table";
+}
+</script>
+
+</body>
+</html>

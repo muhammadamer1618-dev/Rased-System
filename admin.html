@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>لوحة المشرف العام - مدارس الفلاح الأهلية</title>
+<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+
+<style>
+body{font-family:Calibri;background:#f4f4f4;margin:0}
+.header{background:#0d47a1;color:#fff;text-align:center;padding:15px}
+.header h1{margin:0;font-size:24px}
+.header h2{margin:5px 0 0;font-size:18px;color:#ffeb3b}
+.container{max-width:1300px;margin:20px auto;padding:10px}
+.box{background:#fff;border-radius:10px;padding:15px;margin-bottom:15px;box-shadow:0 0 8px rgba(0,0,0,0.15)}
+h3{margin-top:0;color:#1976d2}
+label{display:block;margin-top:5px}
+input,select,button{font-family:Calibri;font-size:14px;padding:6px;margin-top:5px;border-radius:6px;border:1px solid #999;box-sizing:border-box}
+input,select{width:100%}
+button{cursor:pointer;font-weight:bold;border:none}
+.btn-primary{background:#1976d2;color:#fff}
+.btn-secondary{background:#757575;color:#fff}
+.btn-danger{background:#d32f2f;color:#fff}
+.row{display:flex;flex-wrap:wrap;gap:10px}
+.col-3{flex:1 1 23%}
+.col-4{flex:1 1 30%}
+.col-6{flex:1 1 48%}
+.col-12{flex:1 1 100%}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+th,td{border:1px solid #ccc;text-align:center;padding:5px}
+th{background:#1976d2;color:#fff}
+tr:nth-child(even){background:#f9f9f9}
+.small-btn{padding:3px 7px;font-size:11px;border-radius:5px}
+.badge{display:inline-block;padding:2px 6px;border-radius:10px;font-size:11px;background:#e3f2fd;color:#0d47a1}
+.info{font-size:12px;color:#555;margin-top:5px}
+.section-title{background:#eeeeee;padding:6px 10px;margin:-10px -10px 10px -10px;border-radius:8px 8px 0 0;border-bottom:1px solid #ccc}
+.section-title span{color:#1976d2;font-weight:bold}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>مدارس الفلاح الأهلية</h1>
+  <h2 id="header_exam">لوحة المشرف العام - نظام رصد الدرجات</h2>
+</div>
+
+<div class="container">
+
+  <!-- إدارة الطلاب -->
+  <div class="box">
+    <div class="section-title"><span>إدارة الطلاب</span></div>
+
+    <div class="row">
+      <div class="col-3"><label>بحث بالاسم</label><input id="filter_name" placeholder="جزء من الاسم"></div>
+      <div class="col-3"><label>بحث بالكود</label><input id="filter_code" placeholder="كود الطالب"></div>
+      <div class="col-3" style="display:flex;align-items:flex-end">
+        <button class="btn-primary" style="width:100%" onclick="loadStudents()">بحث</button>
+      </div>
+    </div>
+
+    <hr>
+
+    <div class="row">
+      <div class="col-3"><label>كود الطالب</label><input id="new_code"></div>
+      <div class="col-3"><label>اسم الطالب</label><input id="new_name"></div>
+      <div class="col-3"><label>الصف</label><select id="new_grade"></select></div>
+      <div class="col-3"><label>الشعبة</label>
+        <select id="new_section">
+          <option>أ</option><option>ب</option><option>ج</option><option>د</option><option>هـ</option>
+        </select>
+      </div>
+    </div>
+
+    <button class="btn-primary" onclick="addNewStudent()">إضافة طالب</button>
+
+    <button class="btn-danger" onclick="deleteAllStudents()" style="margin-top:10px;width:100%">
+      حذف جميع الطلاب
+    </button>
+
+    <hr>
+
+    <label>استيراد الطلاب من ملف Excel (الترتيب: code - name - grade - section)</label>
+    <input type="file" id="students_file" accept=".xlsx,.xls">
+    <button class="btn-secondary" style="margin-top:5px" onclick="importStudentsFromExcel()">استيراد الطلاب</button>
+
+    <div class="info">
+      المواد يتم إعدادها من صفحة الإعدادات لكل صف مرة واحدة فقط، ويتم هنا رصد درجات الطلاب فقط.
+    </div>
+  </div>
+
+  <!-- رصد مجمع لصف كامل -->
+  <div class="box">
+    <div class="section-title"><span>رصد درجات صف كامل (جدول أفقي مثل نور)</span></div>
+
+    <div class="row">
+      <div class="col-3">
+        <label>الصف</label>
+        <select id="marks_grade"></select>
+      </div>
+      <div class="col-3">
+        <label>الشعبة</label>
+        <select id="marks_section">
+          <option value="">كل الشعب</option>
+          <option>أ</option><option>ب</option><option>ج</option><option>د</option><option>هـ</option>
+        </select>
+      </div>
+      <div class="col-3" style="display:flex;align-items:flex-end">
+        <button class="btn-primary" style="width:100%" onclick="loadGradeMarks()">عرض طلاب الصف للرصد</button>
+      </div>
+    </div>
+
+    <div id="grade_marks_container" style="margin-top:15px;overflow-x:auto;">
+      <table id="grade_marks_table" style="min-width:600px;display:none;">
+        <thead id="grade_marks_head"></thead>
+        <tbody id="grade_marks_body"></tbody>
+      </table>
+    </div>
+
+    <button id="save_grade_marks_btn" class="btn-primary" style="margin-top:10px;display:none;" onclick="saveGradeMarks()">
+      حفظ درجات الصف بالكامل
+    </button>
+  </div>
+
+  <!-- إدارة المعلمين -->
+  <div class="box">
+    <div class="section-title"><span>إدارة المعلمين</span></div>
+
+    <div class="row">
+      <div class="col-3"><label>معرف المعلم (رقم)</label><input id="t_id"></div>
+      <div class="col-3"><label>اسم المعلم</label><input id="t_name"></div>
+      <div class="col-3"><label>اسم المستخدم للدخول</label><input id="t_username" placeholder="مثال: 010096"></div>
+      <div class="col-3"><label>كلمة المرور</label><input id="t_password" placeholder="يمكن مساواتها برقم المستخدم"></div>
+    </div>
+
+    <div style="margin-top:10px;font-weight:bold;color:#1976d2">تكليفات المعلم (صف - شعبة - مادة)</div>
+    <div class="row">
+      <div class="col-3">
+        <label>الصف</label>
+        <select id="t_assign_grade"></select>
+      </div>
+      <div class="col-3">
+        <label>الشعبة</label>
+        <select id="t_assign_section">
+          <option>أ</option><option>ب</option><option>ج</option><option>د</option><option>هـ</option>
+        </select>
+      </div>
+      <div class="col-3">
+        <label>المادة</label>
+        <select id="t_assign_subject"></select>
+      </div>
+      <div class="col-3" style="display:flex;align-items:flex-end">
+        <button class="btn-secondary" style="width:100%" onclick="addTeacherAssignment()">إضافة تكليف</button>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>الصف</th><th>الشعبة</th><th>المادة</th><th>حذف</th></tr>
+      </thead>
+      <tbody id="t_assign_body"></tbody>
+    </table>
+
+    <div style="margin-top:10px">
+      <button class="btn-primary" onclick="saveTeacher()">حفظ / تعديل المعلم</button>
+      <button class="btn-danger" onclick="clearTeacherForm()">تفريغ النموذج</button>
+    </div>
+
+    <hr>
+
+    <button class="btn-secondary" onclick="loadTeachers()" style="margin-bottom:5px">تحميل قائمة المعلمين</button>
+    <table>
+      <thead>
+        <tr>
+          <th>المعرف</th><th>الاسم</th><th>اسم المستخدم</th><th>التكليفات</th><th>إجراءات</th>
+        </tr>
+      </thead>
+      <tbody id="teachers_list_body"></tbody>
+    </table>
+
+    <div class="info">حذف المعلم من هنا لا يحذف درجاته السابقة من الطلاب.</div>
+  </div>
+
+  <!-- إدارة المشرفين -->
+  <div class="box">
+    <div class="section-title"><span>إدارة المشرفين</span></div>
+
+    <div class="row">
+      <div class="col-3"><label>معرف المشرف (Document ID)</label><input id="s_id"></div>
+      <div class="col-3"><label>اسم المشرف</label><input id="s_name"></div>
+      <div class="col-3"><label>اسم المستخدم للدخول</label><input id="s_username"></div>
+      <div class="col-3"><label>كلمة المرور</label><input id="s_password"></div>
+    </div>
+
+    <div style="margin-top:10px;font-weight:bold;color:#1976d2">المعلمون التابعون للمشرف</div>
+
+    <div class="row">
+      <div class="col-6">
+        <label>اختيار معلم لإضافته للمشرف</label>
+        <select id="s_teacher_select"></select>
+      </div>
+      <div class="col-3" style="display:flex;align-items:flex-end">
+        <button class="btn-secondary" style="width:100%" onclick="addSupervisorTeacher()">إضافة معلم</button>
+      </div>
+    </div>
+
+    <table>
+      <thead>
+        <tr><th>رقم المعلم</th><th>اسم المعلم</th><th>حذف</th></tr>
+      </thead>
+      <tbody id="s_teachers_body"></tbody>
+    </table>
+
+    <div style="margin-top:10px">
+      <button class="btn-primary" onclick="saveSupervisor()">حفظ / تعديل المشرف</button>
+      <button class="btn-danger" onclick="clearSupervisorForm()">تفريغ النموذج</button>
+    </div>
+
+    <hr>
+
+    <button class="btn-secondary" onclick="loadSupervisors()" style="margin-bottom:5px">تحميل قائمة المشرفين</button>
+    <table>
+      <thead>
+        <tr><th>المعرف</th><th>الاسم</th><th>اسم المستخدم</th><th>عدد المعلمين</th><th>إجراءات</th></tr>
+      </thead>
+      <tbody id="supervisors_list_body"></tbody>
+    </table>
+  </div>
+
+  <div class="box">
+    <button class="btn-secondary" onclick="exportToExcel()">تصدير الطلاب إلى Excel</button>
+    <button class="btn-secondary" onclick="location='index.html'">الصفحة الرئيسية</button>
+    <button class="btn-secondary" onclick="location='student.html'">صفحة الطالب</button>
+  </div>
+
+</div>
+
+<script>
+var firebaseConfig={
+  apiKey:"AIzaSyC4-cGVb2pHwo6LYiD-UoWtmEEZKQxj4_M",
+  authDomain:"all-subjects-14322.firebaseapp.com",
+  projectId:"all-subjects-14322",
+  storageBucket:"all-subjects-14322.firebasestorage.app",
+  messagingSenderId:"813955287168",
+  appId:"1:813955287168:web:07efa7dde95b117b9bbe65"
+};
+firebase.initializeApp(firebaseConfig);
+var db=firebase.firestore();
+
+var gradesList=[
+  "1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي",
+  "1 متوسط","2 متوسط","3 متوسط",
+  "1 ثانوي","2 ثانوي","3 ثانوي"
+];
+
+var subjectsList=[
+  "اللغة العربية",
+  "اللغة الإنجليزية",
+  "الرياضيات",
+  "العلوم",
+  "الدراسات الإسلامية",
+  "الدراسات الاجتماعية",
+  "المهارات الرقمية",
+  "التقنية الرقمية",
+  "التفكير الناقد",
+  "المهارات الحياتية",
+  "الكيمياء",
+  "الفيزياء",
+  "الأحياء",
+  "علم الأرض والفضاء",
+  "التاريخ",
+  "التفسير",
+  "الفقه",
+  "التوحيد",
+  "كفايات لغوية"
+];
+
+var examType="";
+var studentsCache=[];
+var subjectsCacheByGrade={};
+
+function calcRating(m,f){
+  m=Number(m);f=Number(f);
+  if(!m||!f)return"";
+  var p=(m/f)*100;
+  if(p>=90)return"ممتاز";
+  if(p>=80)return"جيد جدًا";
+  if(p>=70)return"جيد";
+  if(p>=60)return"مقبول";
+  return"ضعيف";
+}
+
+async function loadSettings(){
+  try{
+    let set=await db.collection("settings").doc("general").get();
+    if(set.exists){
+      examType=set.data().examType||"";
+      if(examType){
+        document.getElementById("header_exam").innerText="لوحة المشرف العام - "+examType;
+      }
+    }
+  }catch(e){console.log(e);}
+}
+
+function initGrades(){
+  var g1=document.getElementById("new_grade");
+  var g2=document.getElementById("marks_grade");
+  gradesList.forEach(x=>{
+    [g1,g2].forEach(sel=>{
+      let o=document.createElement("option");o.value=x;o.textContent=x;
+      sel.appendChild(o);
+    });
+  });
+
+  var tg=document.getElementById("t_assign_grade");
+  gradesList.forEach(x=>{
+    let o=document.createElement("option");o.value=x;o.textContent=x;
+    tg.appendChild(o);
+  });
+
+  var ts=document.getElementById("t_assign_subject");
+  subjectsList.forEach(s=>{
+    let o=document.createElement("option");o.value=s;o.textContent=s;
+    ts.appendChild(o);
+  });
+}
+
+// إدارة الطلاب (كما هو تقريبًا)
+async function addNewStudent(){
+  let code=document.getElementById("new_code").value.trim();
+  let name=document.getElementById("new_name").value.trim();
+  let grade=document.getElementById("new_grade").value;
+  let section=document.getElementById("new_section").value;
+
+  if(!code||!name){alert("أدخل كود واسم الطالب");return;}
+
+  await db.collection("students").doc(code).set({
+    code,name,grade,section,
+    examType,
+    subjects:{}
+  },{merge:true});
+
+  alert("تم إضافة الطالب");
+  document.getElementById("new_code").value="";
+  document.getElementById("new_name").value="";
+  loadStudents();
+}
+
+async function deleteAllStudents(){
+  if(!confirm("هل تريد حذف جميع الطلاب؟"))return;
+  let snap=await db.collection("students").get();
+  let batch=db.batch();
+  snap.forEach(doc=>batch.delete(doc.ref));
+  await batch.commit();
+  alert("تم حذف جميع الطلاب");
+  loadStudents();
+}
+
+async function deleteStudent(code){
+  if(!code)return;
+  if(!confirm("هل تريد حذف هذا الطالب؟"))return;
+  await db.collection("students").doc(code).delete();
+  alert("تم حذف الطالب");
+  loadStudents();
+}
+
+async function loadStudents(){
+  let fname=document.getElementById("filter_name").value.trim();
+  let fcode=document.getElementById("filter_code").value.trim();
+  let tbody=document.getElementById("students_body");
+  if(!tbody)return; // في هذه النسخة قد لا يوجد كشف ملخص
+}
+
+async function getSubjectsTemplateForGrade(grade){
+  if(subjectsCacheByGrade[grade])return subjectsCacheByGrade[grade];
+  let doc=await db.collection("settings").doc("subjects_"+grade).get();
+  if(doc.exists){
+    subjectsCacheByGrade[grade]=doc.data().subjects||[];
+    return subjectsCacheByGrade[grade];
+  }
+  return [];
+}
+
+async function loadGradeMarks(){
+  let grade=document.getElementById("marks_grade").value;
+  let section=document.getElementById("marks_section").value;
+
+  let table=document.getElementById("grade_marks_table");
+  let head=document.getElementById("grade_marks_head");
+  let body=document.getElementById("grade_marks_body");
+  let btn=document.getElementById("save_grade_marks_btn");
+
+  head.innerHTML="";
+  body.innerHTML="";
+  table.style.display="none";
+  btn.style.display="none";
+
+  if(!grade){alert("اختر الصف أولاً");return;}
+
+  let subjects=await getSubjectsTemplateForGrade(grade);
+  if(!subjects.length){alert("لا توجد مواد محفوظة لهذا الصف في صفحة الإعدادات");return;}
+
+  let snap=await db.collection("students").where("grade","==",grade).get();
+  let students=[];
+  snap.forEach(doc=>{
+    let s=doc.data();
+    if(section && s.section!==section)return;
+    students.push(s);
+  });
+
+  if(!students.length){alert("لا يوجد طلاب لهذا الصف/الشعبة");return;}
+
+  students.sort((a,b)=>(a.name||"").localeCompare(b.name||"","ar"));
+
+  let trHead=document.createElement("tr");
+  trHead.innerHTML="<th>الكود</th><th>اسم الطالب</th>";
+  subjects.forEach(sub=>{trHead.innerHTML+="<th>"+sub.name+" (درجة)</th>";});
+  head.appendChild(trHead);
+
+  students.forEach(st=>{
+    let tr=document.createElement("tr");
+    let rowHtml="<td>"+(st.code||"")+"</td><td>"+(st.name||"")+"</td>";
+    subjects.forEach(sub=>{
+      let full=sub.fullMark||0;
+      let existing=st.subjects && st.subjects[sub.name];
+      let mark=existing ? (existing.mark||"") : "";
+      rowHtml+="<td><input type='number' class='gm-mark' data-code='"+(st.code||"")+"' data-subject='"+sub.name+"' data-full='"+full+"' style='width:70px' value='"+mark+"'></td>";
+    });
+    tr.innerHTML=rowHtml;
+    body.appendChild(tr);
+  });
+
+  table.style.display="table";
+  btn.style.display="inline-block";
+}
+
+async function saveGradeMarks(){
+  let inputs=document.querySelectorAll(".gm-mark");
+  if(!inputs.length){alert("لا توجد درجات لإدخالها");return;}
+
+  let byCode={};
+  inputs.forEach(inp=>{
+    let code=inp.getAttribute("data-code");
+    let subject=inp.getAttribute("data-subject");
+    let full=Number(inp.getAttribute("data-full"))||0;
+    let markVal=inp.value.trim();
+    let mark=markVal===""?0:Number(markVal);
+    if(!code||!subject)return;
+    if(!byCode[code])byCode[code]={};
+    byCode[code][subject]={fullMark:full,mark:mark,rating:calcRating(mark,full)};
+  });
+
+  let batch=db.batch();
+  Object.keys(byCode).forEach(code=>{
+    let ref=db.collection("students").doc(code);
+    batch.set(ref,{subjects:byCode[code],examType:examType||""},{merge:true});
+  });
+
+  await batch.commit();
+  alert("تم حفظ درجات الصف بنجاح");
+}
+
+// تصدير الطلاب إلى Excel (من students collection مباشرة)
+async function exportToExcel(){
+  let snap=await db.collection("students").get();
+  let rows=[["الكود","الاسم","الصف","الشعبة"]];
+  snap.forEach(doc=>{
+    let s=doc.data();
+    rows.push([s.code||"",s.name||"",s.grade||"",s.section||""]);
+  });
+  let ws=XLSX.utils.aoa_to_sheet(rows);
+  let wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb,ws,"students");
+  XLSX.writeFile(wb,"students.xlsx");
+}
+
+// ================= إدارة المعلمين ===================
+var currentTeacherAssignments=[];
+var teachersCache=[];
+
+function addTeacherAssignment(){
+  let grade=document.getElementById("t_assign_grade").value;
+  let section=document.getElementById("t_assign_section").value;
+  let subject=document.getElementById("t_assign_subject").value;
+  if(!grade||!section||!subject){alert("اختر الصف والشعبة والمادة");return;}
+  currentTeacherAssignments.push({grade,section,subject});
+  renderTeacherAssignments();
+}
+
+function renderTeacherAssignments(){
+  let body=document.getElementById("t_assign_body");
+  body.innerHTML="";
+  currentTeacherAssignments.forEach((a,idx)=>{
+    let tr=document.createElement("tr");
+    tr.innerHTML="<td>"+a.grade+"</td><td>"+a.section+"</td><td>"+a.subject+
+      "</td><td><button class='small-btn btn-danger' onclick='removeTeacherAssignment("+idx+")'>حذف</button></td>";
+    body.appendChild(tr);
+  });
+}
+
+function removeTeacherAssignment(i){
+  currentTeacherAssignments.splice(i,1);
+  renderTeacherAssignments();
+}
+
+function clearTeacherForm(){
+  document.getElementById("t_id").value="";
+  document.getElementById("t_name").value="";
+  document.getElementById("t_username").value="";
+  document.getElementById("t_password").value="";
+  currentTeacherAssignments=[];
+  renderTeacherAssignments();
+}
+
+async function saveTeacher(){
+  let id=document.getElementById("t_id").value.trim();
+  let name=document.getElementById("t_name").value.trim();
+  let username=document.getElementById("t_username").value.trim();
+  let password=document.getElementById("t_password").value.trim();
+
+  if(!id||!name||!username||!password){
+    alert("أكمل بيانات المعلم الأساسية");return;
+  }
+
+  await db.collection("teachers").doc(id).set({
+    name,username,assignments:currentTeacherAssignments
+  },{merge:true});
+
+  await db.collection("users").doc(username).set({
+    username,password,role:"teacher",refId:id,name
+  },{merge:true});
+
+  alert("تم حفظ بيانات المعلم");
+  loadTeachers();
+}
+
+async function loadTeachers(){
+  let body=document.getElementById("teachers_list_body");
+  body.innerHTML="<tr><td colspan='5'>جاري التحميل...</td></tr>";
+
+  let snap=await db.collection("teachers").get();
+  teachersCache=[];
+  body.innerHTML="";
+
+  snap.forEach(doc=>{
+    let t=doc.data();t.id=doc.id;
+    teachersCache.push(t);
+  });
+
+  if(!teachersCache.length){
+    body.innerHTML="<tr><td colspan='5'>لا يوجد معلمون</td></tr>";
+  }
+
+  teachersCache.forEach(t=>{
+    let txtAssignments="";
+    if(t.assignments && t.assignments.length){
+      txtAssignments=t.assignments.map(a=>a.grade+"-"+a.section+"-"+a.subject).join(" | ");
+    }else txtAssignments="لا توجد تكليفات";
+
+    let tr=document.createElement("tr");
+    tr.innerHTML=
+      "<td>"+t.id+"</td>"+
+      "<td>"+(t.name||"")+"</td>"+
+      "<td>"+(t.username||"")+"</td>"+
+      "<td>"+txtAssignments+"</td>"+
+      "<td>"+
+        "<button class='small-btn btn-primary' onclick='editTeacher(\""+t.id+"\")'>تعديل</button> "+
+        "<button class='small-btn btn-danger' onclick='deleteTeacher(\""+t.id+"\")'>حذف</button>"+
+      "</td>";
+    body.appendChild(tr);
+  });
+
+  // تعبئة قائمة المعلمين لاستخدامها في المشرفين
+  let sel=document.getElementById("s_teacher_select");
+  sel.innerHTML="";
+  teachersCache.forEach(t=>{
+    let o=document.createElement("option");
+    o.value=t.id;o.textContent=t.id+" - "+(t.name||"");
+    sel.appendChild(o);
+  });
+}
+
+function editTeacher(id){
+  let t=teachersCache.find(x=>x.id===id);
+  if(!t)return;
+  document.getElementById("t_id").value=t.id;
+  document.getElementById("t_name").value=t.name||"";
+  document.getElementById("t_username").value=t.username||"";
+  document.getElementById("t_password").value="";
+  currentTeacherAssignments=(t.assignments||[]).slice();
+  renderTeacherAssignments();
+}
+
+async function deleteTeacher(id){
+  if(!confirm("حذف هذا المعلم؟"))return;
+  let t=teachersCache.find(x=>x.id===id);
+  if(t && t.username){
+    await db.collection("users").doc(t.username).delete().catch(()=>{});
+  }
+  await db.collection("teachers").doc(id).delete();
+  alert("تم حذف المعلم");
+  loadTeachers();
+}
+
+// ============== إدارة المشرفين ===============
+var currentSupervisorTeachers=[];
+var supervisorsCache=[];
+var teacherNameById={};
+
+function clearSupervisorForm(){
+  document.getElementById("s_id").value="";
+  document.getElementById("s_name").value="";
+  document.getElementById("s_username").value="";
+  document.getElementById("s_password").value="";
+  currentSupervisorTeachers=[];
+  renderSupervisorTeachers();
+}
+
+function addSupervisorTeacher(){
+  let sel=document.getElementById("s_teacher_select");
+  let id=sel.value;
+  if(!id)return;
+  if(currentSupervisorTeachers.includes(id))return;
+  currentSupervisorTeachers.push(id);
+  renderSupervisorTeachers();
+}
+
+function renderSupervisorTeachers(){
+  let body=document.getElementById("s_teachers_body");
+  body.innerHTML="";
+  currentSupervisorTeachers.forEach((id,idx)=>{
+    let name=teacherNameById[id]||"";
+    let tr=document.createElement("tr");
+    tr.innerHTML="<td>"+id+"</td><td>"+name+"</td>"+
+      "<td><button class='small-btn btn-danger' onclick='removeSupervisorTeacher("+idx+")'>حذف</button></td>";
+    body.appendChild(tr);
+  });
+}
+
+function removeSupervisorTeacher(i){
+  currentSupervisorTeachers.splice(i,1);
+  renderSupervisorTeachers();
+}
+
+async function saveSupervisor(){
+  let id=document.getElementById("s_id").value.trim();
+  let name=document.getElementById("s_name").value.trim();
+  let username=document.getElementById("s_username").value.trim();
+  let password=document.getElementById("s_password").value.trim();
+  if(!id||!name||!username||!password){
+    alert("أكمل بيانات المشرف");return;
+  }
+
+  await db.collection("supervisors").doc(id).set({
+    name,username,teacherIds:currentSupervisorTeachers
+  },{merge:true});
+
+  await db.collection("users").doc(username).set({
+    username,password,role:"supervisor",refId:id,name
+  },{merge:true});
+
+  alert("تم حفظ المشرف");
+  loadSupervisors();
+}
+
+async function loadSupervisors(){
+  let body=document.getElementById("supervisors_list_body");
+  body.innerHTML="<tr><td colspan='5'>جاري التحميل...</td></tr>";
+
+  let snap=await db.collection("supervisors").get();
+  supervisorsCache=[];
+  body.innerHTML="";
+
+  snap.forEach(doc=>{
+    let s=doc.data();s.id=doc.id;
+    supervisorsCache.push(s);
+  });
+
+  if(!supervisorsCache.length){
+    body.innerHTML="<tr><td colspan='5'>لا يوجد مشرفون</td></tr>";
+  }
+
+  supervisorsCache.forEach(s=>{
+    let tr=document.createElement("tr");
+    tr.innerHTML=
+      "<td>"+s.id+"</td>"+
+      "<td>"+(s.name||"")+"</td>"+
+      "<td>"+(s.username||"")+"</td>"+
+      "<td>"+((s.teacherIds&&s.teacherIds.length)||0)+"</td>"+
+      "<td>"+
+        "<button class='small-btn btn-primary' onclick='editSupervisor(\""+s.id+"\")'>تعديل</button> "+
+        "<button class='small-btn btn-danger' onclick='deleteSupervisor(\""+s.id+"\")'>حذف</button>"+
+      "</td>";
+    body.appendChild(tr);
+  });
+}
+
+function editSupervisor(id){
+  let s=supervisorsCache.find(x=>x.id===id);
+  if(!s)return;
+  document.getElementById("s_id").value=s.id;
+  document.getElementById("s_name").value=s.name||"";
+  document.getElementById("s_username").value=s.username||"";
+  document.getElementById("s_password").value="";
+  currentSupervisorTeachers=(s.teacherIds||[]).slice();
+  renderSupervisorTeachers();
+}
+
+async function deleteSupervisor(id){
+  if(!confirm("حذف هذا المشرف؟"))return;
+  let s=supervisorsCache.find(x=>x.id===id);
+  if(s && s.username){
+    await db.collection("users").doc(s.username).delete().catch(()=>{});
+  }
+  await db.collection("supervisors").doc(id).delete();
+  alert("تم حذف المشرف");
+  loadSupervisors();
+}
+
+// تشغيل مبدئي
+initGrades();
+loadSettings();
+loadTeachers().then(()=>{
+  teachersCache.forEach(t=>{teacherNameById[t.id]=t.name||"";});
+});
+loadSupervisors();
+</script>
+
+</body>
+</html>
