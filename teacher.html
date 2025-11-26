@@ -4,94 +4,144 @@
 <meta charset="UTF-8">
 <title>لوحة المعلم - مدارس الفلاح الأهلية</title>
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
-<button class="btn-secondary" onclick="location='change_password.html'">
-  تغيير كلمة المرور
-</button>
+
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
-body{font-family:Calibri;background:#f4f4f4;margin:0}
-.header{background:#1976d2;color:#fff;text-align:center;padding:15px}
-.header h1{margin:0;font-size:24px}
+body{font-family:Calibri;background:#eef2f7;margin:0}
+.header{
+  background:#1976d2;color:#fff;text-align:center;padding:15px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.2)
+}
+.header h1{margin:0;font-size:26px;font-weight:bold}
 .header h2{margin:5px 0 0;font-size:18px;color:#ffeb3b}
-.container{max-width:1000px;margin:20px auto;padding:10px}
-.box{background:#fff;border-radius:10px;padding:15px;margin-bottom:15px;box-shadow:0 0 8px rgba(0,0,0,0.1)}
-h3{margin-top:0;color:#1976d2}
-label{display:block;margin-top:5px}
-input,select,button{font-family:Calibri;font-size:14px;padding:6px;margin-top:4px;border-radius:6px;border:1px solid #999;box-sizing:border-box}
-input,select{width:100%}
-button{cursor:pointer;font-weight:bold;border:none}
+
+.container{max-width:1050px;margin:25px auto;padding:10px}
+
+.box{
+  background:#fff;border-radius:14px;padding:20px;margin-bottom:18px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.12)
+}
+
+h3{
+  margin-top:0;color:#1976d2;font-size:20px;font-weight:bold;
+  border-right:4px solid #1976d2;padding-right:8px
+}
+
+.label-title{
+  font-weight:bold;font-size:15px;margin-bottom:4px;color:#444
+}
+
+.info-row{display:flex;gap:15px;flex-wrap:wrap}
+.info-item{
+  flex:1;
+  background:#fff;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #c7d6f5;
+  box-shadow:0 1px 4px rgba(0,0,0,0.08);
+}
+.info-item span{font-weight:bold;color:#1976d2}
+
+select,input{
+  width:100%;
+  padding:9px;
+  border-radius:7px;
+  border:1px solid #999;
+  font-size:15px;
+  margin-top:6px
+}
+
+button{
+  padding:10px 15px;border:none;border-radius:8px;font-size:15px;
+  cursor:pointer;font-weight:bold
+}
 .btn-primary{background:#1976d2;color:#fff}
 .btn-secondary{background:#757575;color:#fff}
-.row{display:flex;flex-wrap:wrap;gap:10px}
-.col-3{flex:1 1 23%}
-.col-4{flex:1 1 30%}
-table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
-th,td{border:1px solid #ccc;text-align:center;padding:5px}
-th{background:#1976d2;color:#fff}
+
+table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+th,td{border:1px solid #ccc;text-align:center;padding:6px}
+th{background:#1976d2;color:#fff;font-size:15px}
 tr:nth-child(even){background:#f9f9f9}
-.badge{display:inline-block;padding:2px 6px;border-radius:10px;font-size:11px;background:#e3f2fd;color:#0d47a1}
 </style>
 </head>
+
 <body>
 
 <div class="header">
   <h1>مدارس الفلاح الأهلية</h1>
-  <h2 id="teacher_title">لوحة المعلم</h2>
+  <h2>لوحة المعلم</h2>
 </div>
 
 <div class="container">
 
+  <!-- بيانات المعلم -->
   <div class="box">
     <h3>بيانات المعلم والإسناد</h3>
-    <div class="row">
-      <div class="col-4">
-        <label>اسم المعلم</label>
-        <div id="t_name" class="badge">—</div>
+
+    <div class="info-row">
+      <div class="info-item">
+        <div class="label-title">اسم المعلم</div>
+        <span id="t_name">—</span>
       </div>
-      <div class="col-4">
-        <label>البريد</label>
-        <div id="t_email" class="badge">—</div>
+
+      <div class="info-item">
+        <div class="label-title">اسم المستخدم</div>
+        <span id="t_email">—</span>
       </div>
-      <div class="col-4">
-        <label>عدد الفصول المسندة</label>
-        <div id="t_assign_count" class="badge">—</div>
+
+      <div class="info-item">
+        <div class="label-title">عدد الفصول المسندة</div>
+        <span id="t_assign_count">—</span>
       </div>
     </div>
   </div>
 
+  <!-- اختيار الصف والشعبة والمادة -->
   <div class="box">
     <h3>اختيار الصف والشعبة والمادة</h3>
-    <div class="row">
-      <div class="col-3">
-        <label>الصف</label>
+
+    <div class="info-row">
+      <div class="info-item">
+        <div class="label-title">الصف</div>
         <select id="sel_grade"></select>
       </div>
-      <div class="col-3">
-        <label>الشعبة</label>
+
+      <div class="info-item">
+        <div class="label-title">الشعبة</div>
         <select id="sel_section"></select>
       </div>
-      <div class="col-3">
-        <label>المادة</label>
+
+      <div class="info-item">
+        <div class="label-title">المادة</div>
         <select id="sel_subject"></select>
       </div>
-      <div class="col-3" style="display:flex;align-items:flex-end">
+
+      <div class="info-item" style="display:flex;align-items:flex-end">
         <button class="btn-primary" style="width:100%" onclick="loadStudentsForTeacher()">تحميل الطلاب</button>
       </div>
     </div>
   </div>
 
+  <!-- رصد الدرجات -->
   <div class="box">
     <h3>رصد درجات المادة المختارة</h3>
+
     <button class="btn-secondary" onclick="window.print()">طباعة / PDF</button>
+
     <table id="marks_table" style="display:none">
       <thead>
-        <tr><th>الكود</th><th>اسم الطالب</th><th>الدرجة</th></tr>
+        <tr>
+          <th>الكود</th>
+          <th>اسم الطالب</th>
+          <th>الدرجة</th>
+        </tr>
       </thead>
       <tbody id="marks_body"></tbody>
     </table>
-    <button id="save_btn" class="btn-primary" style="margin-top:10px;display:none" onclick="saveTeacherMarks()">حفظ الدرجات</button>
+
+    <button id="save_btn" class="btn-primary" style="margin-top:12px;display:none" onclick="saveTeacherMarks()">حفظ الدرجات</button>
   </div>
 
   <div class="box">
@@ -100,21 +150,22 @@ tr:nth-child(even){background:#f9f9f9}
 
 </div>
 
+
+
 <script>
-var firebaseConfig = {
-  apiKey: "AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
-  authDomain: "results2026-7c0dd.firebaseapp.com",
-  projectId: "results2026-7c0dd",
-  storageBucket: "results2026-7c0dd.firebasestorage.app",
-  messagingSenderId: "241421115694",
-  appId: "1:241421115694:web:96f55fd9fd1d5b18b31abf"
+var firebaseConfig={
+  apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+  authDomain:"results2026-7c0dd.firebaseapp.com",
+  projectId:"results2026-7c0dd",
+  storageBucket:"results2026-7c0dd.firebasestorage.app",
+  messagingSenderId:"241421115694",
+  appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
 };
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
-var currentEmail="";
-var assignments=[];
-var examType="";
+let currentEmail="";
+let assignments=[];
 
 function ensureTeacherGuard(){
   let r=localStorage.getItem("currentUserRole")||"";
@@ -126,18 +177,14 @@ function ensureTeacherGuard(){
 }
 
 async function loadTeacherData(){
-  if(!currentEmail)return;
   let doc=await db.collection("teachers").doc(currentEmail).get();
-  if(!doc.exists){
-    alert("بيانات المعلم غير موجودة في النظام");
-    return;
-  }
-  let t=doc.data()||{};
+  let t=doc.data()||{assignments:[]};
+
   assignments=t.assignments||[];
 
   document.getElementById("t_name").innerText=t.name||"—";
   document.getElementById("t_email").innerText=t.email||"—";
-  document.getElementById("t_assign_count").innerText=assignments.length.toString();
+  document.getElementById("t_assign_count").innerText=assignments.length;
 
   fillAssignmentSelectors();
 }
@@ -146,23 +193,24 @@ function fillAssignmentSelectors(){
   let gSel=document.getElementById("sel_grade");
   let sSel=document.getElementById("sel_section");
   let subSel=document.getElementById("sel_subject");
-  gSel.innerHTML="";sSel.innerHTML="";subSel.innerHTML="";
 
-  let grades=[...new Set(assignments.map(a=>a.grade))];
-  let sections=[...new Set(assignments.map(a=>a.section))];
-  let subjects=[...new Set(assignments.map(a=>a.subject))];
+  gSel.innerHTML="";
+  sSel.innerHTML="";
+  subSel.innerHTML="";
 
-  grades.forEach(g=>{
+  [...new Set(assignments.map(a=>a.grade))].forEach(g=>{
     let o=document.createElement("option");
     o.value=g;o.textContent=g;
     gSel.appendChild(o);
   });
-  sections.forEach(s=>{
+
+  [...new Set(assignments.map(a=>a.section))].forEach(s=>{
     let o=document.createElement("option");
     o.value=s;o.textContent=s;
     sSel.appendChild(o);
   });
-  subjects.forEach(sub=>{
+
+  [...new Set(assignments.map(a=>a.subject))].forEach(sub=>{
     let o=document.createElement("option");
     o.value=sub;o.textContent=sub;
     subSel.appendChild(o);
@@ -170,9 +218,7 @@ function fillAssignmentSelectors(){
 }
 
 function calcRating(m,f){
-  m=Number(m);f=Number(f);
-  if(!m||!f)return"";
-  var p=(m/f)*100;
+  let p=(m/f)*100;
   if(p>=90)return"ممتاز";
   if(p>=80)return"جيد جدًا";
   if(p>=70)return"جيد";
@@ -181,86 +227,80 @@ function calcRating(m,f){
 }
 
 async function loadStudentsForTeacher(){
-  let grade=document.getElementById("sel_grade").value;
-  let section=document.getElementById("sel_section").value;
-  let subject=document.getElementById("sel_subject").value;
-  if(!grade || !section || !subject){
-    alert("اختر صف وشعبة ومادة");
-    return;
-  }
+  let grade=sel_grade.value;
+  let section=sel_section.value;
+  let subject=sel_subject.value;
 
-  let allowed = assignments.find(a=>a.grade===grade && a.section===section && a.subject===subject);
-  if(!allowed){
-    alert("هذه المادة/الصف غير مسندة لك");
-    return;
-  }
+  let ok=assignments.find(a=>a.grade===grade && a.section===section && a.subject===subject);
+  if(!ok){ alert("هذه المادة غير مسندة لك"); return; }
 
-  let marksTable=document.getElementById("marks_table");
+  let table=document.getElementById("marks_table");
   let body=document.getElementById("marks_body");
-  let saveBtn=document.getElementById("save_btn");
+  let save=document.getElementById("save_btn");
+
   body.innerHTML="";
-  marksTable.style.display="none";
-  saveBtn.style.display="none";
+  table.style.display="none";
+  save.style.display="none";
 
-  let q=db.collection("students").where("grade","==",grade).where("section","==",section);
-  let snap=await q.get();
+  let snap=await db.collection("students")
+    .where("grade","==",grade)
+    .where("section","==",section).get();
+
   let students=[];
-  snap.forEach(doc=>students.push(doc.data()));
-  students.sort((a,b)=>(a.name||"").localeCompare(b.name||"","ar"));
+  snap.forEach(d=>students.push(d.data()));
+  students.sort((a,b)=>a.name.localeCompare(b.name,"ar"));
 
-  if(!students.length){
-    alert("لا يوجد طلاب لهذا الصف/الشعبة");
-    return;
-  }
-
-  // جلب الدرجة النهائية من الإعدادات
   let tmp=await db.collection("settings").doc("subjects_"+grade).get();
   let fullMark=100;
   if(tmp.exists){
     let arr=tmp.data().subjects||[];
-    let obj=arr.find(s=>s.name===subject);
-    if(obj)fullMark=obj.fullMark||100;
+    let x=arr.find(s=>s.name===subject);
+    if(x)fullMark=x.fullMark||100;
   }
 
   students.forEach(st=>{
     let ex=st.subjects && st.subjects[subject];
-    let mark=ex? (ex.mark||"") : "";
+    let val=ex?ex.mark:"";
+
     let tr=document.createElement("tr");
-    tr.innerHTML=
-      "<td>"+(st.code||"")+"</td>"+
-      "<td>"+(st.name||"")+"</td>"+
-      "<td><input type='number' class='t-mark' data-code='"+(st.code||"")+
-      "' data-subject='"+subject+"' data-full='"+fullMark+"' style='width:70px' value='"+mark+"'></td>";
+    tr.innerHTML=`
+      <td>${st.code}</td>
+      <td>${st.name}</td>
+      <td>
+        <input type="number" class="t-mark"
+          data-code="${st.code}"
+          data-subject="${subject}"
+          data-full="${fullMark}"
+          style="width:80px" value="${val}">
+      </td>
+    `;
     body.appendChild(tr);
   });
 
-  marksTable.style.display="table";
-  saveBtn.style.display="inline-block";
+  table.style.display="table";
+  save.style.display="inline-block";
 }
 
 async function saveTeacherMarks(){
   let inputs=document.querySelectorAll(".t-mark");
-  if(!inputs.length){
-    alert("لا توجد درجات");
-    return;
-  }
+  if(!inputs.length){ alert("لا توجد درجات"); return; }
 
-  let byCode={};
+  let pack={};
+
   inputs.forEach(inp=>{
-    let code=inp.getAttribute("data-code");
-    let subject=inp.getAttribute("data-subject");
-    let full=Number(inp.getAttribute("data-full"))||0;
-    let val=inp.value.trim();
-    let mark=val===""?0:Number(val);
-    if(!code||!subject)return;
-    if(!byCode[code])byCode[code]={};
-    byCode[code][subject]={fullMark:full,mark:mark,rating:calcRating(mark,full)};
+    let code=inp.dataset.code;
+    let subject=inp.dataset.subject;
+    let full=+inp.dataset.full;
+    let mark=inp.value===""?0:+inp.value;
+
+    if(!pack[code])pack[code]={};
+    pack[code][subject]={fullMark:full,mark:mark,rating:calcRating(mark,full)};
   });
 
   let batch=db.batch();
-  Object.keys(byCode).forEach(code=>{
+  Object.keys(pack).forEach(code=>{
     let ref=db.collection("students").doc(code);
-    batch.set(ref,{subjects:byCode[code]},{merge:true});
+    batch.set(ref,{subjects:pack[code]},{merge:true});
   });
 
   await batch.commit();
