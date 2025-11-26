@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>مدير الإشراف - نظام راصد</title>
+<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<style>
+body{font-family:Calibri;background:#f4f4f4;margin:0}
+.header{background:#1976d2;color:#fff;text-align:center;padding:15px}
+.header h1{margin:0;font-size:24px}
+.header h2{margin:5px 0 0;font-size:18px;color:#ffeb3b}
+
+.container{max-width:1100px;margin:20px auto;padding:10px}
+.box{background:#fff;border-radius:10px;padding:15px;
+     margin-bottom:15px;box-shadow:0 0 8px rgba(0,0,0,0.1)}
+h3{margin-top:0;color:#1976d2}
+table{width:100%;border-collapse:collapse;margin-top:10px;font-size:13px}
+th,td{border:1px solid #ccc;text-align:center;padding:5px}
+th{background:#1976d2;color:#fff}
+tr:nth-child(even){background:#f9f9f9}
+
+.badge{display:inline-block;padding:4px 7px;border-radius:10px;background:#e3f2fd;color:#0d47a1}
+.btn-secondary{background:#757575;color:#fff;padding:7px 15px;border:none;border-radius:6px;cursor:pointer;font-weight:bold}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>نظام راصد</h1>
+  <h2>مدير الإشراف</h2>
+</div>
+
+<div class="container">
+
+  <div class="box">
+    <h3>بيانات المستخدم</h3>
+    <div>الاسم: <span id="m_name" class="badge">—</span></div>
+    <div>البريد: <span id="m_email" class="badge">—</span></div>
+  </div>
+
+  <div class="box">
+    <h3>المشرفون في النظام</h3>
+    <table>
+      <thead>
+        <tr><th>الاسم</th><th>البريد</th><th>عدد المعلمين</th><th>عرض</th></tr>
+      </thead>
+      <tbody id="supervisors_body"></tbody>
+    </table>
+  </div>
+
+  <div class="box">
+    <h3>تفاصيل المشرف المختار</h3>
+    <div id="sup_info" class="badge">—</div>
+    <table id="teachers_table" style="display:none">
+      <thead>
+        <tr><th>المعلم</th><th>البريد</th><th>الفصول</th><th>عرض الفصول</th></tr>
+      </thead>
+      <tbody id="teachers_body"></tbody>
+    </table>
+  </div>
+
+  <div class="box">
+    <h3>طلاب الفصل</h3>
+    <div id="class_info" class="badge">—</div>
+    <table id="students_table" style="display:none">
+      <thead>
+        <tr><th>الكود</th><th>الاسم</th><th>الصف</th><th>الشعبة</th><th>الدرجات</th></tr>
+      </thead>
+      <tbody id="students_body"></tbody>
+    </table>
+  </div>
+
+  <div class="box">
+    <button class="btn-secondary" onclick="location='index.html'">تسجيل الخروج</button>
+  </div>
+
+</div>
+
+
+<script>
+var firebaseConfig={
+  apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+  authDomain:"results2026-7c0dd.firebaseapp.com",
+  projectId:"results2026-7c0dd",
+  storageBucket:"results2026-7c0dd.firebasestorage.app",
+  messagingSenderId:"241421115694",
+  appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
+};
+firebase.initializeApp(firebaseConfig);
+var db=firebase.firestore();
+
+
+function guard(){
+  let r=localStorage.getItem("currentUserRole");
+  if(r!=="manager"){
+    alert("هذه الصفحة لمدير الإشراف فقط");
+    location="index.html";
+  }
+}
+guard();
+
+document.getElementById("m_email").innerText=
+  localStorage.getItem("currentUserEmail")||"—";
+document.getElementById("m_name").innerText=
+  localStorage.getItem("currentUserName")||"—";
+
+
+/* جلب المشرفين */
+async function loadSupervisors(){
+  let snap=await db.collection("supervisors").get();
+  let tbody=document.getElementById("supervisors_body");
+  tbody.innerHTML="";
+
+  if(snap.empty){
+    tbody.innerHTML="<tr><td colspan='4'>لا يوجد مشرفون</td></tr>";
+    return;
+  }
+
+  snap.forEach(doc=>{
+    let s=doc.data();
+    let count=(s.teachers && s.teachers.length)? s.teachers.length:0;
+
+    let tr=document.createElement("tr");
+    tr.innerHTML=
+      "<td>"+s.name+"</td>"+
+      "<td>"+s.email+"</td>"+
+      "<td>"+count+"</td>"+
+      "<td><button onclick='viewSupervisor(\""+s.email+"\")'>عرض</button></td>";
+    tbody.appendChild(tr);
+  });
+}
+loadSupervisors();
+
+
+/* عرض المعلمين */
+async function viewSupervisor(email){
+  let d=await db.collection("supervisors").doc(email).get();
+  if(!d.exists)return;
+
+  let s=d.data();
+  document.getElementById("sup_info").innerText=
+    "المشرف: "+s.name+" ("+s.email+")";
+
+  let tbody=document.getElementById("teachers_body");
+  tbody.innerHTML="";
+  document.getElementById("teachers_table").style.display="table";
+
+  if(!s.teachers || !s.teachers.length){
+    tbody.innerHTML="<tr><td colspan='4'>لا يوجد معلمين</td></tr>";
+    return;
+  }
+
+  for(let tEmail of s.teachers){
+    let tDoc=await db.collection("teachers").doc(tEmail).get();
+    if(tDoc.exists){
+      let t=tDoc.data();
+      let ass=(t.assignments||[])
+        .map(a=>a.grade+"-"+a.section+"-"+a.subject).join(" | ");
+
+      let tr=document.createElement("tr");
+      tr.innerHTML=
+        "<td>"+t.name+"</td>"+
+        "<td>"+t.email+"</td>"+
+        "<td>"+(ass||"—")+"</td>"+
+        "<td><button onclick='viewTeacher(\""+t.email+"\")'>عرض الفصول</button></td>";
+      tbody.appendChild(tr);
+    }
+  }
+}
+
+
+/* عرض الطلاب */
+async function viewTeacher(email){
+  let tDoc=await db.collection("teachers").doc(email).get();
+  if(!tDoc.exists)return;
+
+  let t=tDoc.data();
+  if(!t.assignments || !t.assignments.length){
+    alert("لا يوجد فصول لهذا المعلم");
+    return;
+  }
+
+  let txt="اختر فصل:\n";
+  t.assignments.forEach((a,i)=>{
+    txt+=(i+1)+") "+a.grade+"-"+a.section+"-"+a.subject+"\n";
+  });
+
+  let n=prompt(txt);
+  if(!n)return;
+
+  let idx=parseInt(n)-1;
+  if(idx<0 || idx>=t.assignments.length){
+    alert("خيار غير صحيح");
+    return;
+  }
+
+  let a=t.assignments[idx];
+  loadStudents(a, t);
+}
+
+async function loadStudents(assign, teacher){
+  document.getElementById("class_info").innerText =
+    "المعلم: "+teacher.name+" | "+assign.grade+"-"+assign.section+"-"+assign.subject;
+
+  let tbody=document.getElementById("students_body");
+  tbody.innerHTML="";
+  document.getElementById("students_table").style.display="table";
+
+  let q=db.collection("students")
+    .where("grade","==",assign.grade)
+    .where("section","==",assign.section);
+
+  let snap=await q.get();
+  let students=[];
+  snap.forEach(doc=>students.push(doc.data()));
+  students.sort((a,b)=>(a.name||"").localeCompare(b.name||"","ar"));
+
+  if(!students.length){
+    tbody.innerHTML="<tr><td colspan='5'>لا يوجد طلاب</td></tr>";
+    return;
+  }
+
+  students.forEach(st=>{
+    let subs=st.subjects||{};
+    let txt="";
+    Object.keys(subs).forEach(x=>{
+      txt+=x+": "+subs[x].mark+"/"+subs[x].fullMark+" | ";
+    });
+    if(!txt)txt="—";
+
+    let tr=document.createElement("tr");
+    tr.innerHTML=
+      "<td>"+st.code+"</td>"+
+      "<td>"+st.name+"</td>"+
+      "<td>"+st.grade+"</td>"+
+      "<td>"+st.section+"</td>"+
+      "<td>"+txt+"</td>";
+    tbody.appendChild(tr);
+  });
+}
+</script>
+
+</body>
+</html>
