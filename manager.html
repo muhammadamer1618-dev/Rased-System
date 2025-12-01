@@ -9,45 +9,36 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
-
 body{
   font-family:Calibri;
-  background:#f4f4f4;
+  background:#eef2f7;
   margin:0;
 }
 
+/* ===== HEADER ===== */
 .header{
   background:#1976d2;
   color:#fff;
   text-align:center;
   padding:15px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.2);
 }
+.header h1{ margin:0; font-size:26px; font-weight:bold }
+.header h2{ margin:5px 0 0; font-size:18px; color:#ffeb3b }
 
-.header h1{
-  margin:0;
-  font-size:26px;
-  letter-spacing:1px;
-}
-
-.header h2{
-  margin:5px 0 0;
-  font-size:20px;
-  font-weight:bold;
-  color:#ffeb3b;
-}
-
+/* ===== CONTAINER ===== */
 .container{
-  max-width:1100px;
-  margin:20px auto;
+  max-width:1200px;
+  margin:25px auto;
   padding:10px;
 }
 
 .box{
   background:#fff;
-  border-radius:12px;
-  padding:18px;
+  border-radius:14px;
+  padding:20px;
   margin-bottom:18px;
-  box-shadow:0 0 12px rgba(0,0,0,0.12);
+  box-shadow:0 3px 10px rgba(0,0,0,0.12);
 }
 
 h3{
@@ -55,73 +46,72 @@ h3{
   color:#1976d2;
   font-size:20px;
   font-weight:bold;
+  border-right:4px solid #1976d2;
+  padding-right:8px;
 }
 
+.label-title{
+  font-weight:bold;
+  font-size:15px;
+  margin-bottom:4px;
+  color:#444;
+}
+
+.info-row{ display:flex; gap:15px; flex-wrap:wrap }
+.info-item{
+  flex:1;
+  background:#fff;
+  padding:12px;
+  border-radius:10px;
+  border:1px solid #c7d6f5;
+  box-shadow:0 1px 4px rgba(0,0,0,0.08);
+}
+.info-item span{ font-weight:bold; color:#1976d2 }
+
+/* BUTTONS */
+button{
+  padding:8px 15px;
+  border:none;
+  border-radius:8px;
+  font-size:14px;
+  cursor:pointer;
+  font-weight:bold;
+}
+.btn-primary{ background:#1976d2; color:#fff }
+.btn-secondary{ background:#757575; color:#fff }
+.btn-small{ padding:5px 10px; font-size:13px }
+
+/* TABLES */
 table{
   width:100%;
   border-collapse:collapse;
-  margin-top:10px;
-  font-size:15px;
+  margin-top:12px;
+  font-size:14px;
 }
-
 th,td{
   border:1px solid #ccc;
   text-align:center;
-  padding:7px;
+  padding:6px;
 }
-
 th{
   background:#1976d2;
   color:#fff;
   font-size:15px;
 }
+tr:nth-child(even){ background:#f9f9f9 }
 
-tr:nth-child(even){
-  background:#f9f9f9;
-}
-
-.badge{
-  display:inline-block;
-  padding:6px 10px;
-  border-radius:10px;
-  background:#e3f2fd;
-  color:#0d47a1;
-  font-size:15px;
-  margin-right:6px;
-}
-
-.btn-secondary{
-  background:#757575;
-  color:#fff;
-  padding:8px 17px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:15px;
-  font-weight:bold;
-}
-
+/* SELECT */
 select{
-  padding:8px;
+  padding:7px;
+  border-radius:6px;
+  border:1px solid #999;
+  font-size:15px;
   width:100%;
-  border-radius:6px;
-  border:1px solid #888;
-  margin-top:5px;
+  margin-top:6px;
 }
-
-.option-btn{
-  background:#1976d2;
-  color:#fff;
-  padding:6px 12px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  font-size:14px;
-  font-weight:bold;
-}
-
 </style>
 </head>
+
 <body>
 
 <div class="header">
@@ -131,40 +121,48 @@ select{
 
 <div class="container">
 
-  <!-- بيانات المستخدم -->
-<div class="box" style="padding:20px">
-
-  <h3 style="font-size:22px;color:#0d47a1;margin-bottom:15px;text-align:center;">
-    بيانات مدير الإشراف
-  </h3>
-
-  <table style="width:100%;border-collapse:collapse;font-size:17px">
-    <tr>
-      <th style="background:#1976d2;color:white;padding:12px;font-size:18px;">الاسم</th>
-      <th style="background:#1976d2;color:white;padding:12px;font-size:18px;">اسم المستخدم</th>
-    </tr>
-
-    <tr>
-      <td style="padding:15px;font-weight:bold;font-size:20px;">
-        <span id="m_name" style="display:none"></span>
-
-        <!-- الاسم الحقيقي الثابت -->
-        <div style="font-size:22px;color:#0d47a1;font-weight:bold;">
-          أحمد سمير عباس
-        </div>
-      </td>
-
-      <td style="padding:15px;font-weight:bold;font-size:19px;color:#333;">
-        <span id="m_email">—</span>
-      </td>
-    </tr>
-  </table>
-
-</div>
-
-  <!-- جميع المشرفين -->
+  <!-- ==== DASHBOARD ==== -->
   <div class="box">
-    <h3>المشرفون في النظام</h3>
+    <h3>لوحة التحكم</h3>
+
+    <div class="info-row">
+      <div class="info-item">
+        <div class="label-title">إجمالي المشرفين</div>
+        <span id="count_supervisors">—</span>
+      </div>
+
+      <div class="info-item">
+        <div class="label-title">إجمالي المعلمين</div>
+        <span id="count_teachers">—</span>
+      </div>
+
+      <div class="info-item">
+        <div class="label-title">إجمالي الطلاب</div>
+        <span id="count_students">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==== مدير الإشراف ==== -->
+  <div class="box">
+    <h3>بيانات مدير الإشراف</h3>
+
+    <div class="info-row">
+      <div class="info-item">
+        <div class="label-title">الاسم</div>
+        <span id="m_name">—</span>
+      </div>
+
+      <div class="info-item">
+        <div class="label-title">اسم المستخدم</div>
+        <span id="m_email">—</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==== SUPERVISORS ==== -->
+  <div class="box">
+    <h3>المشرفون</h3>
 
     <table>
       <thead>
@@ -172,46 +170,52 @@ select{
           <th>الاسم</th>
           <th>اسم المستخدم</th>
           <th>عدد المعلمين</th>
-          <th>عرض</th>
+          <th>عرض المعلمين</th>
         </tr>
       </thead>
       <tbody id="supervisors_body"></tbody>
     </table>
   </div>
 
-  <!-- تفاصيل المشرف -->
+  <!-- ==== TEACHERS ==== -->
   <div class="box">
-    <h3>تفاصيل المشرف</h3>
+    <h3>المعلمون التابعون للمشرف المختار</h3>
 
-    <div id="sup_info" class="badge">—</div>
+    <div class="info-item" style="max-width:350px">
+      <div class="label-title">المشرف المحدد</div>
+      <span id="sel_supervisor">—</span>
+    </div>
 
     <table id="teachers_table" style="display:none">
       <thead>
         <tr>
-          <th>المعلم</th>
+          <th>اسم المعلم</th>
           <th>اسم المستخدم</th>
-          <th>الفصول</th>
-          <th>عرض الفصول</th>
+          <th>عدد الفصول</th>
+          <th>اختيار المادة</th>
         </tr>
       </thead>
       <tbody id="teachers_body"></tbody>
     </table>
   </div>
 
-  <!-- طلاب الفصل -->
+  <!-- ==== STUDENTS ==== -->
   <div class="box">
-    <h3>طلاب الفصل</h3>
+    <h3>طلاب الفصل والمادة</h3>
 
-    <div id="class_info" class="badge">—</div>
+    <div class="info-item" style="max-width:350px">
+      <div class="label-title">الفصل والمادة</div>
+      <span id="class_info">—</span>
+    </div>
 
     <table id="students_table" style="display:none">
       <thead>
         <tr>
           <th>الكود</th>
-          <th>الاسم</th>
-          <th>الصف</th>
-          <th>الشعبة</th>
-          <th>الدرجات</th>
+          <th>اسم الطالب</th>
+          <th>الدرجة</th>
+          <th>الدرجة النهائية</th>
+          <th>التقدير</th>
         </tr>
       </thead>
       <tbody id="students_body"></tbody>
@@ -223,7 +227,6 @@ select{
   </div>
 
 </div>
-
 
 <script>
 var firebaseConfig={
@@ -237,8 +240,7 @@ var firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
-
-/* حماية الصفحة */
+/* ===== GUARD ===== */
 function guard(){
   let r=localStorage.getItem("currentUserRole");
   if(r!=="manager"){
@@ -248,15 +250,26 @@ function guard(){
 }
 guard();
 
-/* تحميل بيانات المدير */
-document.getElementById("m_email").innerText =
+/* ===== LOAD MANAGER ===== */
+document.getElementById("m_email").innerText=
   localStorage.getItem("currentUserEmail")||"—";
-
-document.getElementById("m_name").innerText =
+document.getElementById("m_name").innerText=
   localStorage.getItem("currentUserName")||"—";
 
+/* ===== DASHBOARD ===== */
+async function loadDashboard(){
+  let s=await db.collection("supervisors").get();
+  document.getElementById("count_supervisors").innerText=s.size;
 
-/* تحميل المشرفين */
+  let t=await db.collection("teachers").get();
+  document.getElementById("count_teachers").innerText=t.size;
+
+  let st=await db.collection("students").get();
+  document.getElementById("count_students").innerText=st.size;
+}
+loadDashboard();
+
+/* ===== LOAD SUPERVISORS ===== */
 async function loadSupervisors(){
   let snap=await db.collection("supervisors").get();
   let tbody=document.getElementById("supervisors_body");
@@ -264,125 +277,111 @@ async function loadSupervisors(){
 
   snap.forEach(doc=>{
     let s=doc.data();
-    let count=(s.teachers && s.teachers.length)? s.teachers.length:0;
+    let count=(s.teachers||[]).length;
 
     let tr=document.createElement("tr");
-    tr.innerHTML=
-      "<td>"+s.name+"</td>"+
-      "<td>"+s.email+"</td>"+
-      "<td>"+count+"</td>"+
-      "<td><button class='option-btn' onclick='viewSupervisor(\""+s.email+"\")'>عرض</button></td>";
+    tr.innerHTML=`
+      <td>${s.name}</td>
+      <td>${s.email}</td>
+      <td>${count}</td>
+      <td>
+        <button class="btn-primary btn-small"
+          onclick="viewSupervisor('${s.email}','${s.name}')">عرض</button>
+      </td>
+    `;
     tbody.appendChild(tr);
   });
 }
 loadSupervisors();
 
+/* ===== SHOW TEACHERS ===== */
+async function viewSupervisor(email,name){
+  document.getElementById("sel_supervisor").innerText=
+    name+" ("+email+")";
 
-/* عرض المعلمين */
-async function viewSupervisor(email){
   let d=await db.collection("supervisors").doc(email).get();
-  if(!d.exists)return;
-
   let s=d.data();
-
-  document.getElementById("sup_info").innerText =
-    "المشرف: "+s.name+" ("+s.email+")";
 
   let tbody=document.getElementById("teachers_body");
   tbody.innerHTML="";
   document.getElementById("teachers_table").style.display="table";
 
-  if(!s.teachers || !s.teachers.length){
-    tbody.innerHTML="<tr><td colspan='4'>لا يوجد معلمين</td></tr>";
-    return;
-  }
-
   for(let tEmail of s.teachers){
     let tDoc=await db.collection("teachers").doc(tEmail).get();
-    if(tDoc.exists){
-      let t=tDoc.data();
-      let ass=(t.assignments||[])
-        .map(a=>a.grade+"-"+a.section+"-"+a.subject).join(" | ");
+    if(!tDoc.exists)continue;
 
-      let tr=document.createElement("tr");
-      tr.innerHTML=
-        "<td>"+t.name+"</td>"+
-        "<td>"+t.email+"</td>"+
-        "<td>"+(ass||"—")+"</td>"+
-        "<td><button class='option-btn' onclick='viewTeacher(\""+t.email+"\")'>عرض</button></td>";
-      tbody.appendChild(tr);
-    }
+    let t=tDoc.data();
+    let assigns=t.assignments||[];
+    let opts="";
+
+    assigns.forEach((a,i)=>{
+      opts+=`<option value="${t.email}|${i}">
+        ${a.grade} - ${a.section} - ${a.subject}
+      </option>`;
+    });
+
+    let tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${t.name}</td>
+      <td>${t.email}</td>
+      <td>${assigns.length}</td>
+      <td>
+        <select onchange="selectClass(this.value)">
+          <option value="">اختر مادة</option>
+          ${opts}
+        </select>
+      </td>
+    `;
+    tbody.appendChild(tr);
   }
 }
 
+/* ===== SHOW STUDENTS ===== */
+function selectClass(value){
+  if(!value)return;
 
-/* عرض الطلاب */
-async function viewTeacher(email){
-  let tDoc=await db.collection("teachers").doc(email).get();
-  if(!tDoc.exists)return;
+  let [email,idx]=value.split("|");
+  idx=parseInt(idx);
 
-  let t=tDoc.data();
-  if(!t.assignments || !t.assignments.length){
-    alert("لا يوجد فصول لهذا المعلم");
-    return;
-  }
-
-  /* قائمة منسدلة بدل prompt */
-  let selector=document.createElement("div");
-  selector.innerHTML = `<select id='classSelect' style='padding:8px;font-size:15px;width:250px;margin:10px 0'>
-    ${t.assignments.map((a,i)=>`<option value='${i}'>${a.grade} - ${a.section} - ${a.subject}</option>`).join("")}
-  </select>
-  <button class='option-btn' onclick='chooseClass(${JSON.stringify(email)})'>اختيار</button>`;
-
-  document.getElementById("sup_info").appendChild(selector);
+  loadClassData(email,idx);
 }
 
-/* استكمال اختيار الفصل */
-async function chooseClass(email){
+async function loadClassData(email,idx){
   let tDoc=await db.collection("teachers").doc(email).get();
   let t=tDoc.data();
-  let idx=document.getElementById("classSelect").value;
-  loadStudents(t.assignments[idx], t);
-}
 
-
-async function loadStudents(assign, teacher){
-  document.getElementById("class_info").innerText =
-    "المعلم: "+teacher.name+" | "+assign.grade+"-"+assign.section+"-"+assign.subject;
+  let a=t.assignments[idx];
+  document.getElementById("class_info").innerText=
+    `${a.grade} - ${a.section} - ${a.subject}`;
 
   let tbody=document.getElementById("students_body");
   tbody.innerHTML="";
   document.getElementById("students_table").style.display="table";
 
   let q=db.collection("students")
-    .where("grade","==",assign.grade)
-    .where("section","==",assign.section);
-
+    .where("grade","==",a.grade)
+    .where("section","==",a.section);
   let snap=await q.get();
-  let students=[];
-  snap.forEach(doc=>students.push(doc.data()));
-  students.sort((a,b)=>(a.name||"").localeCompare(b.name||"","ar"));
 
-  if(!students.length){
-    tbody.innerHTML="<tr><td colspan='5'>لا يوجد طلاب</td></tr>";
-    return;
-  }
+  let list=[];
+  snap.forEach(d=>list.push(d.data()));
 
-  students.forEach(st=>{
-    let subs=st.subjects||{};
-    let txt="";
-    Object.keys(subs).forEach(x=>{
-      txt+=x+": "+subs[x].mark+"/"+subs[x].fullMark+" | ";
-    });
-    if(!txt)txt="—";
+  list.sort((x,y)=>x.name.localeCompare(y.name,"ar"));
+
+  list.forEach(st=>{
+    let sub=st.subjects && st.subjects[a.subject];
+    let m=sub?sub.mark:0;
+    let f=sub?sub.fullMark:0;
+    let r=sub?sub.rating:"—";
 
     let tr=document.createElement("tr");
-    tr.innerHTML=
-      "<td>"+st.code+"</td>"+
-      "<td>"+st.name+"</td>"+
-      "<td>"+st.grade+"</td>"+
-      "<td>"+st.section+"</td>"+
-      "<td>"+txt+"</td>";
+    tr.innerHTML=`
+      <td>${st.code}</td>
+      <td>${st.name}</td>
+      <td>${m}</td>
+      <td>${f}</td>
+      <td>${r}</td>
+    `;
     tbody.appendChild(tr);
   });
 }
