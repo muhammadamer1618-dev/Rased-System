@@ -15,6 +15,7 @@ body{
   background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 40%, #c9e7ff 100%);
   background-attachment: fixed;
 }
+
 .container{
   max-width:520px;
   margin:60px auto;
@@ -24,6 +25,7 @@ body{
   box-shadow:0 0 18px rgba(0,0,0,0.15);
   backdrop-filter: blur(4px);
 }
+
 h1{
   text-align:center;
   color:#0056b3;
@@ -32,6 +34,7 @@ h1{
   font-size:34px;
   letter-spacing:1px;
 }
+
 h2{
   text-align:center;
   color:#d32f2f;
@@ -39,13 +42,16 @@ h2{
   font-size:32px;
   font-weight:bold;
   font-family: "Brush Script MT", cursive;
-  letter-spacing:4px;
+  letter-spacing:2px;
 }
+
 label{
   display:block;
   margin-top:10px;
   font-weight:bold;
+  font-size:15px;
 }
+
 input,select{
   width:100%;
   padding:9px;
@@ -55,6 +61,7 @@ input,select{
   box-sizing:border-box;
   font-size:16px;
 }
+
 button{
   width:100%;
   margin-top:18px;
@@ -68,22 +75,29 @@ button{
   cursor:pointer;
   transition:0.2s;
 }
+
 button:hover{
   opacity:0.85;
   transform:scale(1.02);
 }
+
 .role-box{
   display:flex;
   justify-content:space-between;
-  margin-top:10px;
+  margin-top:10px
 }
-.role-box label{font-weight:normal}
+.role-box label{
+  font-weight:normal;
+  font-size:14px;
+}
+
 .footer{
   text-align:center;
   margin-top:20px;
   font-size:13px;
-  color:#444;
+  color:#444
 }
+
 .badge{
   display:inline-block;
   padding:3px 8px;
@@ -91,8 +105,9 @@ button:hover{
   background:#e3f2fd;
   color:#0d47a1;
   font-size:12px;
-  margin-top:8px;
+  margin-top:8px
 }
+
 .hidden{display:none}
 </style>
 </head>
@@ -102,30 +117,30 @@ button:hover{
 <div class="container">
 
   <h1>نظام راصد</h1>
-  <h2>M.A.R.S</h2>
+  <h2>M . A . R . S</h2>
 
   <label>اختر نوع المستخدم</label>
   <div class="role-box">
     <label><input type="radio" name="role" value="superadmin" checked> مشرف عام</label>
-    <label><input type="radio" name="role" value="manager"> مدير الإشراف</label>
     <label><input type="radio" name="role" value="supervisor"> مشرف</label>
     <label><input type="radio" name="role" value="teacher"> معلم</label>
+    <label><input type="radio" name="role" value="agent"> وكيل مدرسة</label>
     <label><input type="radio" name="role" value="student"> طالب</label>
   </div>
 
-  <!-- حقل اسم المستخدم (إيميل أو رقم جوال) -->
+  <!-- صندوق اسم المستخدم -->
   <div id="email_box">
     <label>اسم المستخدم</label>
-    <input id="email_input" placeholder="example@school.com أو رقم الجوال">
+    <input id="email_input" placeholder="username">
   </div>
 
-  <!-- كلمة المرور -->
+  <!-- صندوق كلمة المرور -->
   <div id="password_box">
     <label>كلمة المرور</label>
     <input id="password_input" type="password" placeholder="••••••••">
   </div>
 
-  <!-- كود الطالب عند اختيار طالب -->
+  <!-- صندوق كود الطالب -->
   <div id="student_code_box" class="hidden">
     <label>كود الطالب</label>
     <input id="student_code_input" placeholder="أدخل كود الطالب">
@@ -151,15 +166,16 @@ var firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
-/* تغيير الحقول حسب نوع المستخدم */
+/* عرض/إخفاء الحقول بناء على نوع المستخدم */
 document.querySelectorAll('input[name="role"]').forEach(r=>{
   r.addEventListener("change",()=>{
-    var role=document.querySelector('input[name="role"]:checked').value;
+    let role=document.querySelector('input[name="role"]:checked').value;
+
     if(role==="student"){
       document.getElementById("email_box").classList.add("hidden");
       document.getElementById("password_box").classList.add("hidden");
       document.getElementById("student_code_box").classList.remove("hidden");
-    }else{
+    } else {
       document.getElementById("email_box").classList.remove("hidden");
       document.getElementById("password_box").classList.remove("hidden");
       document.getElementById("student_code_box").classList.add("hidden");
@@ -167,22 +183,21 @@ document.querySelectorAll('input[name="role"]').forEach(r=>{
   });
 });
 
-/* تسجيل الدخول */
+/* عملية تسجيل الدخول */
 async function login(){
   var role=document.querySelector('input[name="role"]:checked').value;
 
+  // دخول الطالب
   if(role==="student"){
-    var code=document.getElementById("student_code_input").value.trim();
-    if(!code){
-      alert("أدخل كود الطالب");
-      return;
-    }
+    let code=document.getElementById("student_code_input").value.trim();
+    if(!code){ alert("أدخل كود الطالب"); return; }
     localStorage.setItem("studentCode",code);
     location="student.html";
     return;
   }
 
-  var email=document.getElementById("email_input").value.trim();
+  // دخول مستخدم (مشرف عام - مشرف - معلم - وكيل)
+  var email=document.getElementById("email_input").value.trim().toLowerCase();
   var password=document.getElementById("password_input").value.trim();
 
   if(!email || !password){
@@ -191,36 +206,26 @@ async function login(){
   }
 
   try{
-    var doc=await db.collection("users").doc(email.toLowerCase()).get();
-    if(!doc.exists){
-      doc=await db.collection("users").doc(email).get();
-    }
-    if(!doc.exists){
-      alert("المستخدم غير موجود");
-      return;
-    }
+    var doc=await db.collection("users").doc(email).get();
+    if(!doc.exists){ alert("المستخدم غير موجود"); return; }
 
-    var data=doc.data() || {};
-    if(data.password !== password){
-      alert("كلمة المرور غير صحيحة");
-      return;
-    }
+    var data=doc.data()||{};
+    if(data.password!==password){ alert("كلمة المرور غير صحيحة"); return; }
 
-    var realRole=data.role || "";
-    if(realRole !== role){
-      alert("نوع المستخدم المختار لا يطابق الصلاحيات المسجلة لهذا الحساب");
+    if(data.role!==role){
+      alert("نوع المستخدم المختار لا يطابق صلاحيات الحساب");
       return;
     }
 
     localStorage.setItem("currentUserEmail", email);
-    localStorage.setItem("currentUserRole", realRole);
-    localStorage.setItem("currentUserName", data.name || "");
+    localStorage.setItem("currentUserRole", data.role);
+    localStorage.setItem("currentUserName", data.name||"");
 
-    if(realRole === "superadmin") location="admin.html";
-    else if(realRole === "manager") location="manager.html";
-    else if(realRole === "supervisor") location="supervisor.html";
-    else if(realRole === "teacher") location="teacher.html";
-    else alert("صلاحية غير معروفة في بيانات المستخدم");
+    if(role==="superadmin") location="admin.html";
+    if(role==="supervisor") location="supervisor.html";
+    if(role==="teacher") location="teacher.html";
+    if(role==="agent") location="agent.html";
+
   }catch(e){
     alert("خطأ أثناء تسجيل الدخول");
   }
