@@ -248,7 +248,7 @@ async function loadManager(){
   let email=localStorage.getItem("currentUserEmail");
   document.getElementById("m_email").innerText=email;
 
-  let doc=await db.collection("managers").doc(email).get();
+  let doc=await db.collection("users").doc(email).get();
   if(doc.exists){
     document.getElementById("m_name").innerText = doc.data().name;
   } else {
