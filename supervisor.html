@@ -2,9 +2,11 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>لوحة المشرف - مدارس الفلاح الأهلية</title>
+<title>لوحة المشرف - نظام راصد</title>
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
-
+<button class="btn-secondary" onclick="location='change_password.html'">
+  تغيير كلمة المرور
+</button>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
@@ -48,6 +50,7 @@ button{
   padding:8px 15px;border:none;border-radius:8px;font-size:14px;
   cursor:pointer;font-weight:bold
 }
+.btn-primary{background:#1976d2;color:#fff}
 .btn-secondary{background:#757575;color:#fff}
 
 table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
@@ -56,10 +59,12 @@ th{
   background:#1976d2;color:#fff;font-size:15px
 }
 tr:nth-child(even){background:#f9f9f9}
+
 select{
   padding:7px;border-radius:6px;border:1px solid #999;font-size:15px;
   width:100%;margin-top:6px
 }
+
 </style>
 </head>
 <body>
@@ -95,6 +100,7 @@ select{
     <button class="btn-secondary" onclick="window.print()">طباعة / PDF</button>
   </div>
 
+
   <!-- جدول المعلمين -->
   <div class="box">
     <h3>المعلمون التابعون للمشرف</h3>
@@ -103,28 +109,29 @@ select{
         <tr>
           <th>المعلم</th>
           <th>اسم المستخدم</th>
-          <th>الفصول المسندة (لمادتك فقط)</th>
-          <th>اختيار الفصل</th>
+          <th>عدد الفصول</th>
+          <th>اختيار فصل ومادة</th>
         </tr>
       </thead>
       <tbody id="sup_teachers_body"></tbody>
     </table>
   </div>
 
-  <!-- طلاب الفصل -->
-  <div class="box">
-    <h3>طلاب الفصل المختار</h3>
 
-    <div class="info-item" style="max-width:300px">
-      <div class="label-title">الفصل المحدد</div>
+  <!-- عرض الطلاب -->
+  <div class="box">
+    <h3>طلاب الفصل المحدد</h3>
+
+    <div class="info-item" style="max-width:350px">
+      <div class="label-title">الفصل والمادة</div>
       <span id="currentClassInfo">—</span>
     </div>
 
     <table id="sup_students_table" style="display:none">
       <thead>
         <tr>
-          <th>الكود</th>
-          <th>الاسم</th>
+          <th>كود</th>
+          <th>اسم الطالب</th>
           <th>الصف</th>
           <th>الشعبة</th>
           <th>الدرجة</th>
@@ -140,8 +147,8 @@ select{
 
 </div>
 
+
 <script>
-// Firebase config
 var firebaseConfig={
   apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
   authDomain:"results2026-7c0dd.firebaseapp.com",
@@ -153,28 +160,24 @@ var firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
-// GLOBALS
 let currentEmail="";
-let supervisorSubject=""; // المادة الخاصة بالمشرف
 let teachersMap={};
 
 function ensureSupervisorGuard(){
-  let r=localStorage.getItem("currentUserRole")||"";
+  let r=localStorage.getItem("currentUserRole");
   if(r!=="supervisor"){
     alert("هذه الصفحة للمشرفين فقط");
     location="index.html";
   }
-  currentEmail=localStorage.getItem("currentUserEmail")||"";
+  currentEmail=localStorage.getItem("currentUserEmail");
 }
 
 async function loadSupervisor(){
   let doc=await db.collection("supervisors").doc(currentEmail).get();
   let data=doc.data()||{teachers:[]};
 
-  supervisorSubject = data.subject || "";  // ← المادة الخاصة بالمشرف
-
-  document.getElementById("sup_name").innerText=data.name||"—";
-  document.getElementById("sup_email").innerText=data.email||"—";
+  document.getElementById("sup_name").innerText=data.name;
+  document.getElementById("sup_email").innerText=data.email;
   document.getElementById("sup_t_count").innerText=data.teachers.length;
 
   loadSupervisorTeachers(data.teachers);
@@ -184,57 +187,49 @@ async function loadSupervisorTeachers(list){
   let body=document.getElementById("sup_teachers_body");
   body.innerHTML="";
 
-  if(!list.length){
-    body.innerHTML="<tr><td colspan='4'>لا يوجد معلمون</td></tr>";
-    return;
-  }
-
   for(let email of list){
-    let doc=await db.collection("teachers").doc(email).get();
-    if(!doc.exists)continue;
+    let tDoc=await db.collection("teachers").doc(email).get();
+    if(!tDoc.exists) continue;
 
-    let t=doc.data();
+    let t=tDoc.data();
     teachersMap[email]=t;
 
-    // فلترة الفصول لهذا المشرف فقط
-    let assigned = (t.assignments||[]).filter(a=>a.subject===supervisorSubject);
-
     let options="";
-    assigned.forEach((a,i)=>{
-      options+=`<option value="${email}|${i}">
-        ${a.grade} - ${a.section} - ${a.subject}
-      </option>`;
+    (t.assignments||[]).forEach((a,i)=>{
+      options+=`
+        <option value="${email}|${i}">
+          ${a.grade} - ${a.section} - ${a.subject}
+        </option>`;
     });
 
     let tr=document.createElement("tr");
     tr.innerHTML=`
       <td>${t.name}</td>
       <td>${t.email}</td>
-      <td>${assigned.length}</td>
+      <td>${(t.assignments||[]).length}</td>
       <td>
         <select onchange="selectClass(this.value)">
-          <option value="">اختر فصلًا</option>
+          <option value="">اختر فصلًا ومادة</option>
           ${options}
         </select>
-      </td>
-    `;
+      </td>`;
     body.appendChild(tr);
   }
 }
 
-function selectClass(value){
-  if(!value)return;
-  let [email, idx] = value.split("|");
-  idx = parseInt(idx);
+function selectClass(val){
+  if(!val) return;
 
-  let t = teachersMap[email];
-  let filtered = t.assignments.filter(a=>a.subject===supervisorSubject);
-  let assign = filtered[idx];
+  let [email, idx]=val.split("|");
+  idx=parseInt(idx);
 
-  loadClassStudents(assign);
+  let t=teachersMap[email];
+  let assign=t.assignments[idx];
+
+  loadStudents(assign);
 }
 
-async function loadClassStudents(assign){
+async function loadStudents(assign){
   document.getElementById("currentClassInfo").innerText=
     `${assign.grade} - ${assign.section} - ${assign.subject}`;
 
@@ -248,21 +243,23 @@ async function loadClassStudents(assign){
     .where("section","==",assign.section);
 
   let snap=await q.get();
-  let students=[];
-  snap.forEach(doc=>students.push(doc.data()));
+  let stds=[];
+  snap.forEach(doc=>stds.push(doc.data()));
 
-  students.forEach(st=>{
-    let s = st.subjects?.[supervisorSubject] || {};
-    let mark = `${s.mark || 0} / ${s.fullMark || 0}`;
+  stds.sort((a,b)=>a.name.localeCompare(b.name,"ar"));
+
+  stds.forEach(s=>{
+    let mark=s.subjects && s.subjects[assign.subject]
+      ? s.subjects[assign.subject].mark || 0
+      : 0;
 
     let tr=document.createElement("tr");
     tr.innerHTML=`
-      <td>${st.code}</td>
-      <td>${st.name}</td>
-      <td>${st.grade}</td>
-      <td>${st.section}</td>
-      <td>${mark}</td>
-    `;
+      <td>${s.code}</td>
+      <td>${s.name}</td>
+      <td>${s.grade}</td>
+      <td>${s.section}</td>
+      <td>${mark}</td>`;
     body.appendChild(tr);
   });
 
