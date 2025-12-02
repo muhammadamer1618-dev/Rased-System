@@ -2,34 +2,60 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>تحليل النتائج</title>
+<title>تحليل النتائج - نظام راصد</title>
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
-body{font-family:Calibri;background:#f4f4f4;margin:0}
-.header{background:#1976d2;color:#fff;text-align:center;padding:15px}
-.header h1{margin:0;font-size:26px}
+body{
+  font-family:Calibri;
+  background:#eef2f7;
+  margin:0;
+}
+
+.header{
+  background:#1976d2;color:#fff;text-align:center;padding:15px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.2)
+}
+.header h1{margin:0;font-size:26px;font-weight:bold}
+
+.container{max-width:1200px;margin:25px auto;padding:10px}
+
 .box{
-  background:#fff;border-radius:10px;padding:15px;margin:20px auto;
-  max-width:1100px;box-shadow:0 0 7px rgba(0,0,0,0.1)
+  background:#fff;padding:18px;border-radius:12px;
+  box-shadow:0 2px 6px rgba(0,0,0,0.15);margin-bottom:18px
 }
-table{width:100%;border-collapse:collapse;font-size:15px;margin-top:10px}
-th,td{border:1px solid #ccc;padding:6px;text-align:center}
+
+h3{
+  margin-top:0;color:#1976d2;font-size:20px;font-weight:bold;
+  border-right:4px solid #1976d2;padding-right:8px
+}
+
+select,button{
+  padding:8px;border-radius:7px;border:1px solid #888;font-size:15px;
+  font-family:Calibri;cursor:pointer
+}
+button{font-weight:bold;background:#1976d2;color:#fff;border:none}
+
+.table-box{overflow-x:auto;margin-top:15px}
+
+table{
+  width:100%;border-collapse:collapse;margin-top:10px;font-size:15px
+}
+th,td{
+  border:1px solid #ccc;padding:7px;text-align:center
+}
 th{background:#1976d2;color:#fff}
-.btn{padding:7px 14px;border:none;border-radius:6px;font-weight:bold;cursor:pointer}
-.btn-primary{background:#1976d2;color:#fff}
-.row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px}
-.col-3{flex:1 1 23%}
-select,input{width:100%;padding:6px;font-size:15px;border:1px solid #999;border-radius:6px}
-.section-title{
-  font-size:20px;color:#1976d2;font-weight:bold;margin-top:0;
-  border-right:5px solid #1976d2;padding-right:8px
+
+.category-title{
+  background:#1976d2;color:#fff;padding:6px;border-radius:6px;
+  font-weight:bold;margin-top:10px;margin-bottom:6px;text-align:center
 }
-.category-table th{background:#e3f2fd;color:#000}
-.category-title{background:#ffe082;font-weight:bold}
+.count-label{
+  color:#1976d2;font-weight:bold;font-size:16px;margin-top:6px;text-align:center
+}
 </style>
 </head>
 
@@ -39,98 +65,93 @@ select,input{width:100%;padding:6px;font-size:15px;border:1px solid #999;border-
   <h1>تحليل النتائج</h1>
 </div>
 
-<!-- ====================== تحليل فصل واحد =========================== -->
-<div class="box">
-  <h2 class="section-title">أولاً تحليل نتائج فصل</h2>
+<div class="container">
 
-  <div class="row">
-    <div class="col-3">
-      <label>الصف</label>
-      <select id="g1"></select>
+  <!-- تحليل فصل واحد -->
+  <div class="box">
+    <h3>تحليل فصل واحد</h3>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <div>
+        <label>الصف</label>
+        <select id="g1"></select>
+      </div>
+
+      <div>
+        <label>الشعبة</label>
+        <select id="sec1">
+          <option value="أ">أ</option>
+          <option value="ب">ب</option>
+          <option value="ج">ج</option>
+        </select>
+      </div>
+
+      <div>
+        <label>المادة</label>
+        <select id="sub1"></select>
+      </div>
+
+      <div style="display:flex;align-items:flex-end">
+        <button onclick="analyzeSingleClass()">عرض التحليل</button>
+      </div>
     </div>
 
-    <div class="col-3">
-      <label>الشعبة</label>
-      <select id="s1">
-        <option>أ</option>
-        <option>ب</option>
-        <option>ج</option>
-      </select>
-    </div>
-
-    <div class="col-3">
-      <label>المادة</label>
-      <select id="sub1"></select>
-    </div>
-
-    <div class="col-3" style="display:flex;align-items:flex-end">
-      <button class="btn-primary btn" onclick="analyzeClass()">عرض التحليل</button>
-    </div>
+    <div id="single_result"></div>
   </div>
 
-  <table id="cat_table" style="display:none" class="category-table">
-    <thead>
-      <tr>
-        <th>دراسة حالة</th>
-        <th>أولى بالرعاية</th>
-        <th>جيد</th>
-        <th>جيد جداً</th>
-        <th>ممتاز</th>
-        <th>الدرجة النهائية</th>
-      </tr>
-    </thead>
-    <tbody id="cat_body"></tbody>
-  </table>
+  <!-- مقارنة بين فصول -->
+  <div class="box">
+    <h3>مقارنة بين 3 فصول لنفس المادة</h3>
 
-  <table id="percent_table" style="display:none;margin-top:10px">
-    <tr>
-      <th>النسبة المئوية لدرجات الفصل</th>
-      <td id="class_percent"></td>
-    </tr>
-  </table>
-</div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      <div>
+        <label>الصف</label>
+        <select id="cg1"></select>
+      </div>
 
-<!-- ====================== المقارنة =========================== -->
-<div class="box">
-  <h2 class="section-title">ثانياً المقارنة بين الفصول</h2>
+      <div>
+        <label>الشعبة 1</label>
+        <select id="csec1">
+          <option value="أ">أ</option>
+          <option value="ب">ب</option>
+          <option value="ج">ج</option>
+        </select>
+      </div>
 
-  <div class="row">
-    <div class="col-3"><label>الصف</label><select id="cg1"></select></div>
-    <div class="col-3"><label>الشعبة</label><select id="cs1"><option>أ</option><option>ب</option><option>ج</option></select></div>
+      <div>
+        <label>الشعبة 2</label>
+        <select id="csec2">
+          <option value="أ">أ</option>
+          <option value="ب">ب</option>
+          <option value="ج">ج</option>
+        </select>
+      </div>
 
-    <div class="col-3"><label>الصف</label><select id="cg2"></select></div>
-    <div class="col-3"><label>الشعبة</label><select id="cs2"><option>أ</option><option>ب</option><option>ج</option></select></div>
+      <div>
+        <label>الشعبة 3</label>
+        <select id="csec3">
+          <option value="أ">أ</option>
+          <option value="ب">ب</option>
+          <option value="ج">ج</option>
+        </select>
+      </div>
 
-    <div class="col-3"><label>الصف</label><select id="cg3"></select></div>
-    <div class="col-3"><label>الشعبة</label><select id="cs3"><option>أ</option><option>ب</option><option>ج</option></select></div>
+      <div>
+        <label>المادة</label>
+        <select id="csub"></select>
+      </div>
 
-    <div class="col-3"><label>المادة</label><select id="csub"></select></div>
-
-    <div class="col-3" style="display:flex;align-items:flex-end">
-      <button class="btn-primary btn" onclick="compareClasses()">عرض المقارنة</button>
+      <div style="display:flex;align-items:flex-end">
+        <button onclick="compareClasses()">عرض المقارنة</button>
+      </div>
     </div>
+
+    <div id="compare_result"></div>
   </div>
 
-  <table id="compare_table" style="display:none">
-    <thead>
-      <tr>
-        <th>النسبة المئوية لدرجات الفصل أ</th>
-        <th>النسبة المئوية لدرجات الفصل ب</th>
-        <th>النسبة المئوية لدرجات الفصل ج</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td id="cp1"></td>
-        <td id="cp2"></td>
-        <td id="cp3"></td>
-      </tr>
-    </tbody>
-  </table>
 </div>
 
 <script>
-// Firebase
 var firebaseConfig={
   apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
   authDomain:"results2026-7c0dd.firebaseapp.com",
@@ -142,143 +163,160 @@ var firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
-let grades=["1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي",
-"1 متوسط","2 متوسط","3 متوسط","1 ثانوي","2 ثانوي","3 ثانوي"];
+var grades=[
+ "1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي",
+ "1 متوسط","2 متوسط","3 متوسط",
+ "1 ثانوي","2 ثانوي","3 ثانوي"
+];
 
-function loadDropdowns(){
-  let g1=document.getElementById("g1");
-  let cg1=document.getElementById("cg1");
-  let cg2=document.getElementById("cg2");
-  let cg3=document.getElementById("cg3");
-
+function init(){
   grades.forEach(g=>{
-    [g1,cg1,cg2,cg3].forEach(sel=>{
-      let o=document.createElement("option");
-      o.textContent=g;o.value=g;
-      sel.appendChild(o);
-    });
+    let o1=document.createElement("option");
+    o1.value=g;o1.textContent=g;
+    g1.appendChild(o1);
+
+    let o2=document.createElement("option");
+    o2.value=g;o2.textContent=g;
+    cg1.appendChild(o2);
   });
 }
-loadDropdowns();
+init();
 
-// Load subjects dynamically FROM STUDENTS
+/* جلب المواد من صفحة الإعدادات */
 async function loadSubjectsForGrade(grade,selectId){
-  let subSet=new Set();
-  let snap=await db.collection("students").where("grade","==",grade).get();
-  snap.forEach(doc=>{
-    let s=doc.data().subjects||{};
-    Object.keys(s).forEach(k=>subSet.add(k));
-  });
-
   let sel=document.getElementById(selectId);
   sel.innerHTML="";
-  subSet.forEach(x=>{
+
+  let d=await db.collection("settings").doc("subjects_"+grade).get();
+  if(!d.exists){
+    sel.innerHTML="<option value=''>لا توجد مواد</option>";
+    return;
+  }
+
+  let list=d.data().subjects || [];
+  list.forEach(s=>{
     let o=document.createElement("option");
-    o.textContent=x;o.value=x;
+    o.textContent=s.name;
+    o.value=s.name;
     sel.appendChild(o);
   });
 }
 
-document.getElementById("g1").addEventListener("change",()=>loadSubjectsForGrade(g1.value,"sub1"));
-document.getElementById("cg1").addEventListener("change",()=>loadSubjectsForGrade(cg1.value,"csub"));
+g1.addEventListener("change",()=>loadSubjectsForGrade(g1.value,"sub1"));
+cg1.addEventListener("change",()=>loadSubjectsForGrade(cg1.value,"csub"));
 
-// ========================= تحليل فصل واحد ============================
-async function analyzeClass(){
-  let grade=g1.value;
-  let section=s1.value;
-  let subject=sub1.value;
+/* تقسيم الطلاب حسب الفئات */
+function categorize(list,full){
+  return {
+    case: list.filter(x=>x.percent<=50),
+    need: list.filter(x=>x.percent>50 && x.percent<=65),
+    good: list.filter(x=>x.percent>65 && x.percent<=75),
+    very: list.filter(x=>x.percent>75 && x.percent<=85),
+    exc: list.filter(x=>x.percent>85 && x.percent<100),
+    full: list.filter(x=>x.percent>=100)
+  };
+}
 
-  let snap=await db.collection("students")
-    .where("grade","==",grade)
-    .where("section","==",section)
+/* تحليل فصل واحد */
+async function analyzeSingleClass(){
+  let g=g1.value;
+  let sec=sec1.value;
+  let sub=sub1.value;
+
+  let q=await db.collection("students")
+    .where("grade","==",g)
+    .where("section","==",sec)
     .get();
 
-  let cats={case:[], care:[], good:[], vgood:[], excellent:[], full:[]};
-  let total=0, sum=0, fullMark=0;
-
-  snap.forEach(doc=>{
-    let st=doc.data();
-    let sb=st.subjects?.[subject];
-    if(!sb)return;
-    total++;
-
-    let m=sb.mark||0;
-    let f=sb.fullMark||0;
-    fullMark=f;
-    sum+=m;
-
-    let p=(m/f)*100;
-
-    if(p < 50) cats.case.push(st.name);
-    else if(p < 65) cats.care.push(st.name);
-    else if(p < 75) cats.good.push(st.name);
-    else if(p < 85) cats.vgood.push(st.name);
-    else if(p < 100) cats.excellent.push(st.name);
-    else cats.full.push(st.name);
+  let list=[];
+  q.forEach(d=>{
+    let s=d.data();
+    let obj=s.subjects[sub];
+    if(!obj)return;
+    let p=(obj.mark/obj.fullMark)*100;
+    list.push({name:s.name,percent:p});
   });
 
-  let body=document.getElementById("cat_body");
-  body.innerHTML="";
+  let fullMark=list[0]?.fullMark||100;
 
-  let maxLen=Math.max(
-    cats.case.length,cats.care.length,cats.good.length,
-    cats.vgood.length,cats.excellent.length,cats.full.length
-  );
+  let cat=categorize(list,fullMark);
 
-  for(let i=0;i<maxLen;i++){
-    let tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>${cats.case[i]||""}</td>
-      <td>${cats.care[i]||""}</td>
-      <td>${cats.good[i]||""}</td>
-      <td>${cats.vgood[i]||""}</td>
-      <td>${cats.excellent[i]||""}</td>
-      <td>${cats.full[i]||""}</td>
-    `;
-    body.appendChild(tr);
+  single_result.innerHTML=createSingleTable(cat);
+}
+
+function createSingleTable(cat){
+  return `
+  <div class="table-box">
+    <table>
+      <tr>
+        <th>دراسة حالة<br>${cat.case.length}</th>
+        <th>أولى بالرعاية<br>${cat.need.length}</th>
+        <th>جيد<br>${cat.good.length}</th>
+        <th>جيد جدًا<br>${cat.very.length}</th>
+        <th>ممتاز<br>${cat.exc.length}</th>
+        <th>الدرجة النهائية<br>${cat.full.length}</th>
+      </tr>
+      <tr>
+        <td>${cat.case.map(x=>x.name).join("<br>")}</td>
+        <td>${cat.need.map(x=>x.name).join("<br>")}</td>
+        <td>${cat.good.map(x=>x.name).join("<br>")}</td>
+        <td>${cat.very.map(x=>x.name).join("<br>")}</td>
+        <td>${cat.exc.map(x=>x.name).join("<br>")}</td>
+        <td>${cat.full.map(x=>x.name).join("<br>")}</td>
+      </tr>
+    </table>
+  </div>`;
+}
+
+/* مقارنة الفصول */
+async function compareClasses(){
+  let g=cg1.value;
+  let subs=[csec1.value,csec2.value,csec3.value];
+  let sub=csub.value;
+
+  let outputs=[];
+
+  for(let sec of subs){
+    let q=await db.collection("students")
+      .where("grade","==",g)
+      .where("section","==",sec)
+      .get();
+
+    let list=[];
+    q.forEach(d=>{
+      let s=d.data();
+      let obj=s.subjects[sub];
+      if(!obj)return;
+      let p=(obj.mark/obj.fullMark)*100;
+      list.push({name:s.name,percent:p});
+    });
+
+    outputs.push({sec,list});
   }
 
-  document.getElementById("cat_table").style.display="table";
-  document.getElementById("percent_table").style.display="table";
-
-  let percent = total>0 ? ((sum/(total*fullMark))*100).toFixed(1)+"%" : "0%";
-  document.getElementById("class_percent").innerText=percent;
+  compare_result.innerHTML=createCompareTable(outputs);
 }
 
-// ========================= المقارنة ============================
-async function compareSingle(g,s,subject){
-  let snap=await db.collection("students")
-    .where("grade","==",g)
-    .where("section","==",s)
-    .get();
+function createCompareTable(arr){
+  let html=`
+  <div class="table-box">
+  <table>
+    <tr>
+      ${arr.map(a=>`<th>${a.sec}</th>`).join("")}
+    </tr>
 
-  let total=0,sum=0,f=0;
-  snap.forEach(doc=>{
-    let st=doc.data();
-    let sb=st.subjects?.[subject];
-    if(!sb)return;
-    total++;
-    sum+=sb.mark;
-    f=sb.fullMark;
-  });
+    <tr>
+      ${arr.map(a=>`<td>${a.list.map(x=>x.name+" ("+x.percent.toFixed(0)+"%)").join("<br>")}</td>`).join("")}
+    </tr>
 
-  return total>0 ? ((sum/(total*f))*100).toFixed(1)+"%" : "0%";
+    <tr>
+      ${arr.map(a=>`<td class="count-label">المجموع: ${a.list.length}</td>`).join("")}
+    </tr>
+  </table>
+  </div>`;
+
+  return html;
 }
-
-async function compareClasses(){
-  let subject=csub.value;
-
-  let p1=await compareSingle(cg1.value,cs1.value,subject);
-  let p2=await compareSingle(cg2.value,cs2.value,subject);
-  let p3=await compareSingle(cg3.value,cs3.value,subject);
-
-  document.getElementById("cp1").innerText=p1;
-  document.getElementById("cp2").innerText=p2;
-  document.getElementById("cp3").innerText=p3;
-
-  document.getElementById("compare_table").style.display="table";
-}
-
 </script>
 
 </body>
