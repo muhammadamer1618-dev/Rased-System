@@ -1,9 +1,8 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
 <meta charset="UTF-8">
-<title>تحليل النتائج - نظام راصد</title>
+<title>مقارنة الفصول - نظام راصد</title>
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -11,371 +10,297 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-body {
-  font-family: Calibri;
-  background: #eef2f7;
-  margin: 0;
+body{
+  font-family:Calibri;
+  margin:0;
+  background:#eef2f7;
 }
 
-.header {
-  background: #1976d2;
-  color: #fff;
-  text-align: center;
-  padding: 15px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.25);
+.header{
+  background:#1976d2;
+  color:#fff;
+  text-align:center;
+  padding:15px;
+  font-size:22px;
+  font-weight:bold;
 }
 
-.header h1 {
-  margin: 0;
-  font-size: 26px;
-  font-weight: bold
+.container{
+  max-width:1100px;
+  margin:25px auto;
+  background:#fff;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 3px 10px rgba(0,0,0,0.12);
 }
 
-.container {
-  max-width: 1300px;
-  margin: 25px auto;
-  padding: 10px;
+h2{
+  color:#1976d2;
+  border-right:5px solid #1976d2;
+  padding-right:8px;
+  font-size:20px;
 }
 
-.box {
-  background: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  margin-bottom: 20px;
-  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+.row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:15px;
+  margin-bottom:15px;
 }
 
-h3 {
-  margin-top: 0;
-  color: #1976d2;
-  border-right: 4px solid #1976d2;
-  padding-right: 8px;
-  font-size: 20px;
+.sel-box{
+  flex:1;
+  min-width:200px;
 }
 
-select, button {
-  padding: 8px;
-  border-radius: 6px;
-  margin-top: 7px;
-  border: 1px solid #888;
-  font-size: 15px;
-  width: 100%;
+label{
+  font-weight:bold;
+  font-size:15px;
 }
 
-.btn-primary {
-  background: #1976d2;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
+select,button{
+  width:100%;
+  padding:8px;
+  border-radius:6px;
+  border:1px solid #999;
+  font-size:15px;
+  margin-top:5px;
 }
 
-.btn-secondary {
-  background: #555;
-  color: #fff;
-  font-weight: bold;
-  cursor: pointer;
+button{
+  background:#1976d2;
+  color:#fff;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 12px;
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:15px;
+  font-size:14px;
 }
 
-th, td {
-  border: 1px solid #ccc;
-  padding: 6px;
-  text-align: center;
+th,td{
+  border:1px solid #ccc;
+  padding:6px;
+  text-align:center;
 }
 
-th {
-  background: #1976d2;
-  color: #fff;
-}
-
-.category-box {
-  padding: 12px;
-  background: #f7f9ff;
-  border: 1px solid #d0d9ff;
-  border-radius: 8px;
-  margin-bottom: 12px;
-}
-
-.category-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #1976d2;
-  margin-bottom: 8px;
+th{
+  background:#1976d2;
+  color:#fff;
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <h1>تحليل النتائج - نظام راصد</h1>
-</div>
+<div class="header">مقارنة الفصول حسب المادة</div>
 
 <div class="container">
 
-  <!-- اختيارات التحليل -->
-  <div class="box">
-    <h3>تحليل فصل واحد</h3>
+  <h2>اختيارات المقارنة</h2>
 
-    <div class="row" style="display:flex;gap:10px;flex-wrap:wrap">
-      <div style="flex:1">
-        <label>اختر الصف</label>
-        <select id="grade_select"></select>
-      </div>
+  <div class="row">
 
-      <div style="flex:1">
-        <label>اختر الشعبة</label>
-        <select id="section_select"></select>
-      </div>
-
-      <div style="flex:1">
-        <label>اختر المادة</label>
-        <select id="subject_select"></select>
-      </div>
-
-      <div style="flex:1;display:flex;align-items:flex-end">
-        <button class="btn-primary" onclick="loadAnalysis()">عرض التحليل</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- النتيجة -->
-  <div class="box">
-    <h3>نتيجة التحليل</h3>
-
-    <div id="analysis_area"></div>
-
-    <canvas id="chart1" style="margin-top:25px"></canvas>
-
-    <div style="margin-top:20px;display:flex;gap:10px">
-      <button class="btn-secondary" onclick="window.print()">طباعة</button>
-      <button class="btn-primary" onclick="exportCSV()">تصدير CSV</button>
-    </div>
-  </div>
-
-  <!-- المقارنة -->
-  <div class="box">
-    <h3>المقارنة بين الفصول</h3>
-
-    <div class="row" style="display:flex;gap:10px;flex-wrap:wrap">
-      <div style="flex:1">
-        <label>الفصل الأول</label>
-        <select id="cmp1"></select>
-      </div>
-
-      <div style="flex:1">
-        <label>الفصل الثاني</label>
-        <select id="cmp2"></select>
-      </div>
-
-      <div style="flex:1">
-        <label>المادة</label>
-        <select id="cmp_subject"></select>
-      </div>
-
-      <div style="flex:1;display:flex;align-items:flex-end">
-        <button class="btn-primary" onclick="compare()">عرض المقارنة</button>
-      </div>
+    <div class="sel-box">
+      <label>الصف</label>
+      <select id="cmp_grade"></select>
     </div>
 
-    <canvas id="chart2" style="margin-top:25px"></canvas>
+    <div class="sel-box">
+      <label>الشعبة أ</label>
+      <select id="cmp_sectionA">
+        <option>أ</option>
+      </select>
+    </div>
+
+    <div class="sel-box">
+      <label>الشعبة ب</label>
+      <select id="cmp_sectionB">
+        <option>ب</option>
+      </select>
+    </div>
+
+    <div class="sel-box">
+      <label>الشعبة ج</label>
+      <select id="cmp_sectionC">
+        <option>ج</option>
+      </select>
+    </div>
+
+    <div class="sel-box">
+      <label>المادة</label>
+      <select id="cmp_subject"></select>
+    </div>
+
+    <div class="sel-box" style="display:flex;align-items:flex-end">
+      <button onclick="compareClasses()">عرض المقارنة</button>
+    </div>
+
   </div>
+
+  <h2>الرسم البياني</h2>
+  <canvas id="chart3" height="200"></canvas>
+
+  <h2>تفاصيل كل فصل</h2>
+
+  <table id="table_details" style="display:none">
+    <thead>
+      <tr>
+        <th>الفصل</th>
+        <th>الطالب</th>
+        <th>الدرجة</th>
+        <th>النهائي</th>
+        <th>النسبة %</th>
+        <th>التقدير</th>
+      </tr>
+    </thead>
+    <tbody id="details_body"></tbody>
+  </table>
 
 </div>
 
 <script>
-var firebaseConfig = {
-  apiKey: "AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
-  authDomain: "results2026-7c0dd.firebaseapp.com",
-  projectId: "results2026-7c0dd",
-  storageBucket: "results2026-7c0dd.firebasestorage.app",
-  messagingSenderId: "241421115694",
-  appId: "1:241421115694:web:96f55fd9fd1d5b18b31abf"
+/* FIREBASE */
+var firebaseConfig={
+  apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+  authDomain:"results2026-7c0dd.firebaseapp.com",
+  projectId:"results2026-7c0dd",
+  storageBucket:"results2026-7c0dd.firebasestorage.app",
+  messagingSenderId:"241421115694",
+  appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
 };
 firebase.initializeApp(firebaseConfig);
-var db = firebase.firestore();
+var db=firebase.firestore();
 
-// تحميل المواد والشعب
-async function init() {
-  let grades = [
-    "1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي",
-    "1 متوسط","2 متوسط","3 متوسط",
-    "1 ثانوي","2 ثانوي","3 ثانوي"
-  ];
+/* تحميل الصفوف */
+let grades=[
+ "1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي",
+ "1 متوسط","2 متوسط","3 متوسط",
+ "1 ثانوي","2 ثانوي","3 ثانوي"
+];
 
-  grades.forEach(g => {
-    document.getElementById("grade_select").innerHTML += `<option>${g}</option>`;
-    document.getElementById("cmp1").innerHTML += `<option>${g}</option>`;
-    document.getElementById("cmp2").innerHTML += `<option>${g}</option>`;
-  });
+grades.forEach(g=>{
+  document.getElementById("cmp_grade").innerHTML+=`<option>${g}</option>`;
+});
 
-  ["A","B","C","أ","ب","ج"].forEach(s=>{
-    document.getElementById("section_select").innerHTML+=`<option>${s}</option>`;
-  });
+/* تحميل المواد */
+async function loadSubjects(){
+  let g=document.getElementById("cmp_grade").value;
+  let d=await db.collection("settings").doc("subjects_"+g).get();
 
-  loadSubjectsList();
-}
-init();
+  let sel=document.getElementById("cmp_subject");
+  sel.innerHTML="";
 
-async function loadSubjectsList(){
-  let snap = await db.collection("settings").get();
-  let subsSet = new Set();
+  if(!d.exists)return;
 
-  snap.forEach(d=>{
-    let data = d.data();
-    if(data.subjects){
-      data.subjects.forEach(s=>subsSet.add(s.name));
-    }
-  });
-
-  subsSet.forEach(s=>{
-    document.getElementById("subject_select").innerHTML+=`<option>${s}</option>`;
-    document.getElementById("cmp_subject").innerHTML+=`<option>${s}</option>`;
+  let list=d.data().subjects||[];
+  list.forEach(s=>{
+    sel.innerHTML+=`<option>${s.name}</option>`;
   });
 }
+document.getElementById("cmp_grade").onchange=loadSubjects;
+loadSubjects();
 
-// حساب الفئة
-function getCategory(p){
-  if(p < 50) return "دراسة حالة";
-  if(p < 65) return "أولى بالرعاية";
-  if(p < 75) return "جيد";
-  if(p < 85) return "جيد جدًا";
-  if(p < 99) return "ممتاز";
-  return "الدرجة النهائية";
+function calcRating(p){
+  if(p>=90)return"ممتاز";
+  if(p>=80)return"جيد جدًا";
+  if(p>=70)return"جيد";
+  if(p>=60)return"مقبول";
+  return"ضعيف";
 }
 
-// تحليل فصل واحد
-async function loadAnalysis(){
-  let grade = grade_select.value;
-  let section = section_select.value;
-  let subject = subject_select.value;
-
-  let q = await db.collection("students")
+async function getData(grade,section,subject){
+  let snap=await db.collection("students")
     .where("grade","==",grade)
     .where("section","==",section)
     .get();
 
-  let students=[];
-  q.forEach(d=>students.push(d.data()));
+  let list=[];
+  let total=0;
+  let full=0;
 
-  let cats={
-    "دراسة حالة":[],
-    "أولى بالرعاية":[],
-    "جيد":[],
-    "جيد جدًا":[],
-    "ممتاز":[],
-    "الدرجة النهائية":[]
-  };
+  snap.forEach(doc=>{
+    let st=doc.data();
+    let s=st.subjects && st.subjects[subject];
+    if(!s)return;
 
-  let total = 0;
-  let full = 0;
+    let p=(s.fullMark>0)? (s.mark/s.fullMark*100):0;
 
-  students.forEach(st=>{
-    let sb = st.subjects && st.subjects[subject];
-    if(!sb) return;
+    list.push({
+      code:st.code,
+      name:st.name,
+      mark:s.mark,
+      full:s.fullMark,
+      percent:p,
+      rating:calcRating(p),
+      section:section
+    });
 
-    let mark = sb.mark || 0;
-    let f = sb.fullMark || 100;
-    let p = (mark / f) * 100;
-
-    total += mark;
-    full += f;
-
-    cats[getCategory(p)].push(st.name);
+    total+=s.mark;
+    full+=s.fullMark;
   });
 
-  let area = document.getElementById("analysis_area");
-  area.innerHTML = "";
+  let classPercent = full>0 ? (total/full*100).toFixed(1):0;
 
-  Object.keys(cats).forEach(k=>{
-    let div = `
-      <div class="category-box">
-        <div class="category-title">${k}</div>
-        <div>${cats[k].length ? cats[k].join(" - ") : "—"}</div>
-      </div>
-    `;
-    area.innerHTML += div;
-  });
-
-  let percent = full ? ((total/full)*100).toFixed(1) : 0;
-
-  area.innerHTML += `
-    <h3>نسبة نجاح الفصل: ${percent}%</h3>
-  `;
-
-  drawChart1(cats);
+  return {list,classPercent};
 }
 
-// رسم بياني للفصل
-function drawChart1(cats){
-  let ctx = document.getElementById("chart1").getContext("2d");
+async function compareClasses(){
+
+  let g=document.getElementById("cmp_grade").value;
+  let sub=document.getElementById("cmp_subject").value;
+
+  let A=await getData(g,"أ",sub);
+  let B=await getData(g,"ب",sub);
+  let C=await getData(g,"ج",sub);
+
+  drawChart([A.classPercent,B.classPercent,C.classPercent],sub);
+
+  showTable(A.list,"أ");
+  showTable(B.list,"ب");
+  showTable(C.list,"ج");
+
+}
+
+function drawChart(values,sub){
+  let ctx=document.getElementById("chart3").getContext("2d");
 
   new Chart(ctx,{
     type:"bar",
     data:{
-      labels:Object.keys(cats),
+      labels:["أ","ب","ج"],
       datasets:[{
-        label:"عدد الطلاب",
-        data:Object.values(cats).map(a=>a.length),
-        backgroundColor:"#1976d2"
-      }]
-    }
-  });
-}
-
-// المقارنة
-async function compare(){
-  let g1 = cmp1.value;
-  let g2 = cmp2.value;
-  let sub = cmp_subject.value;
-
-  let c1 = await getClassAvg(g1,sub);
-  let c2 = await getClassAvg(g2,sub);
-
-  drawChart2([g1,g2],[c1,c2]);
-}
-
-async function getClassAvg(grade,sub){
-  let q = await db.collection("students").where("grade","==",grade).get();
-  let total=0, full=0;
-
-  q.forEach(d=>{
-    let st=d.data();
-    let sb=st.subjects && st.subjects[sub];
-    if(sb){
-      total+=sb.mark||0;
-      full+=sb.fullMark||0;
-    }
-  });
-
-  return full?((total/full)*100).toFixed(1):0;
-}
-
-// رسم مقارنة
-function drawChart2(labels,values){
-  let ctx=document.getElementById("chart2").getContext("2d");
-
-  new Chart(ctx,{
-    type:"bar",
-    data:{
-      labels:labels,
-      datasets:[{
-        label:"نسبة الفصل %",
+        label:"نسبة الفصل في مادة "+sub+" %",
         data:values,
-        backgroundColor:"#d32f2f"
+        backgroundColor:["#1976d2","#d32f2f","#388e3c"]
       }]
+    },
+    options:{
+      indexAxis:"y",
+      scales:{x:{min:0,max:100}}
     }
   });
 }
 
-// تصدير CSV
-function exportCSV(){
-  alert("سيتم إضافة التصدير لاحقًا.");
+function showTable(list,section){
+  let body=document.getElementById("details_body");
+  document.getElementById("table_details").style.display="table";
+
+  list.forEach(s=>{
+    body.innerHTML+=`
+      <tr>
+        <td>${section}</td>
+        <td>${s.name}</td>
+        <td>${s.mark}</td>
+        <td>${s.full}</td>
+        <td>${s.percent.toFixed(1)}</td>
+        <td>${s.rating}</td>
+      </tr>
+    `;
+  });
 }
 
 </script>
