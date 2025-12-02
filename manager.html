@@ -14,6 +14,8 @@ body{
   background:#eef2f7;
   margin:0;
 }
+
+/* HEADER */
 .header{
   background:#1976d2;
   color:#fff;
@@ -24,11 +26,13 @@ body{
 .header h1{ margin:0; font-size:26px; font-weight:bold }
 .header h2{ margin:5px 0 0; font-size:18px; color:#ffeb3b }
 
+/* MAIN */
 .container{
   max-width:1200px;
   margin:25px auto;
   padding:10px;
 }
+
 .box{
   background:#fff;
   border-radius:14px;
@@ -53,7 +57,12 @@ h3{
   color:#444;
 }
 
-.info-row{ display:flex; gap:15px; flex-wrap:wrap }
+.info-row{
+  display:flex;
+  gap:15px;
+  flex-wrap:wrap;
+}
+
 .info-item{
   flex:1;
   background:#fff;
@@ -62,8 +71,12 @@ h3{
   border:1px solid #c7d6f5;
   box-shadow:0 1px 4px rgba(0,0,0,0.08);
 }
-.info-item span{ font-weight:bold; color:#1976d2 }
+.info-item span{
+  font-weight:bold;
+  color:#1976d2;
+}
 
+/* BUTTONS */
 button{
   padding:8px 15px;
   border:none;
@@ -72,10 +85,11 @@ button{
   cursor:pointer;
   font-weight:bold;
 }
-.btn-primary{ background:#1976d2; color:#fff }
-.btn-secondary{ background:#757575; color:#fff }
-.btn-small{ padding:5px 10px; font-size:13px }
+.btn-primary{background:#1976d2;color:#fff}
+.btn-secondary{background:#757575;color:#fff}
+.btn-small{padding:5px 10px;font-size:13px}
 
+/* TABLES */
 table{
   width:100%;
   border-collapse:collapse;
@@ -92,8 +106,9 @@ th{
   color:#fff;
   font-size:15px;
 }
-tr:nth-child(even){ background:#f9f9f9 }
+tr:nth-child(even){background:#f9f9f9}
 
+/* SELECT */
 select{
   padding:7px;
   border-radius:6px;
@@ -134,13 +149,18 @@ select{
         <span id="count_students">—</span>
       </div>
     </div>
+
+    <button class="btn-primary" style="margin-top:15px" onclick="location='analysis.html'">
+      🔍 تحليل النتائج
+    </button>
   </div>
 
-  <!-- MANAGER INFO -->
+  <!-- MANAGER DATA -->
   <div class="box">
     <h3>بيانات مدير الإشراف</h3>
 
     <div class="info-row">
+
       <div class="info-item">
         <div class="label-title">الاسم</div>
         <span id="m_name">—</span>
@@ -150,6 +170,7 @@ select{
         <div class="label-title">اسم المستخدم</div>
         <span id="m_email">—</span>
       </div>
+
     </div>
   </div>
 
@@ -170,7 +191,7 @@ select{
     </table>
   </div>
 
-  <!-- TEACHERS -->
+  <!-- TEACHERS UNDER SUPERVISOR -->
   <div class="box">
     <h3>المعلمون التابعون للمشرف المختار</h3>
 
@@ -222,6 +243,7 @@ select{
 </div>
 
 <script>
+/* Firebase */
 var firebaseConfig={
   apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
   authDomain:"results2026-7c0dd.firebaseapp.com",
@@ -233,31 +255,22 @@ var firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
-/* ===== GUARD ===== */
+/* GUARD */
 function guard(){
-  let r=localStorage.getItem("currentUserRole");
-  if(r!=="manager"){
-    alert("هذه الصفحة لمدير الإشراف فقط");
+  if(localStorage.getItem("currentUserRole")!=="manager"){
+    alert("هذه الصفحة خاصة بمدير الإشراف فقط");
     location="index.html";
   }
 }
 guard();
 
-/* ===== LOAD MANAGER FROM FIRESTORE ===== */
-async function loadManager(){
-  let email=localStorage.getItem("currentUserEmail");
-  document.getElementById("m_email").innerText=email;
+/* LOAD MANAGER DATA */
+document.getElementById("m_email").innerText=
+  localStorage.getItem("currentUserEmail")||"—";
+document.getElementById("m_name").innerText=
+  localStorage.getItem("currentUserName")||"—";
 
-  let doc=await db.collection("users").doc(email).get();
-  if(doc.exists){
-    document.getElementById("m_name").innerText = doc.data().name;
-  } else {
-    document.getElementById("m_name").innerText = "—";
-  }
-}
-loadManager();
-
-/* ===== DASHBOARD ===== */
+/* DASHBOARD */
 async function loadDashboard(){
   let s=await db.collection("supervisors").get();
   document.getElementById("count_supervisors").innerText=s.size;
@@ -270,53 +283,54 @@ async function loadDashboard(){
 }
 loadDashboard();
 
-/* ===== LOAD SUPERVISORS ===== */
+/* LOAD SUPERVISORS */
 async function loadSupervisors(){
   let snap=await db.collection("supervisors").get();
-  let tbody=document.getElementById("supervisors_body");
-  tbody.innerHTML="";
+  let body=document.getElementById("supervisors_body");
+  body.innerHTML="";
 
   snap.forEach(doc=>{
     let s=doc.data();
-    let count=(s.teachers||[]).length;
-
     let tr=document.createElement("tr");
+
     tr.innerHTML=`
       <td>${s.name}</td>
       <td>${s.email}</td>
-      <td>${count}</td>
+      <td>${(s.teachers||[]).length}</td>
       <td>
         <button class="btn-primary btn-small"
-          onclick="viewSupervisor('${s.email}','${s.name}')">عرض</button>
+         onclick="viewSupervisor('${s.email}','${s.name}')">
+         عرض
+        </button>
       </td>
     `;
-    tbody.appendChild(tr);
+
+    body.appendChild(tr);
   });
 }
 loadSupervisors();
 
-/* ===== SHOW TEACHERS ===== */
+/* SHOW TEACHERS OF SUPERVISOR */
 async function viewSupervisor(email,name){
-  document.getElementById("sel_supervisor").innerText=
-    name+" ("+email+")";
+  document.getElementById("sel_supervisor").innerText=name+" ("+email+")";
 
-  let d=await db.collection("supervisors").doc(email).get();
-  let s=d.data();
+  let doc=await db.collection("supervisors").doc(email).get();
+  let data=doc.data();
 
-  let tbody=document.getElementById("teachers_body");
-  tbody.innerHTML="";
+  let body=document.getElementById("teachers_body");
+  body.innerHTML="";
   document.getElementById("teachers_table").style.display="table";
 
-  for(let tEmail of s.teachers){
+  for(let tEmail of data.teachers){
     let tDoc=await db.collection("teachers").doc(tEmail).get();
     if(!tDoc.exists)continue;
 
     let t=tDoc.data();
-    let assigns=t.assignments||[];
     let opts="";
 
-    assigns.forEach((a,i)=>{
-      opts+=`<option value="${t.email}|${i}">
+    (t.assignments||[]).forEach((a,i)=>{
+      opts+=`
+      <option value="${t.email}|${i}">
         ${a.grade} - ${a.section} - ${a.subject}
       </option>`;
     });
@@ -325,7 +339,7 @@ async function viewSupervisor(email,name){
     tr.innerHTML=`
       <td>${t.name}</td>
       <td>${t.email}</td>
-      <td>${assigns.length}</td>
+      <td>${(t.assignments||[]).length}</td>
       <td>
         <select onchange="selectClass(this.value)">
           <option value="">اختر مادة</option>
@@ -333,41 +347,39 @@ async function viewSupervisor(email,name){
         </select>
       </td>
     `;
-    tbody.appendChild(tr);
+    body.appendChild(tr);
   }
 }
 
-/* ===== SHOW STUDENTS ===== */
-function selectClass(value){
-  if(!value)return;
-
-  let [email,idx]=value.split("|");
-  idx=parseInt(idx);
-
-  loadClassData(email,idx);
+/* SELECT CLASS */
+function selectClass(v){
+  if(!v)return;
+  let [email,i]=v.split("|");
+  loadClass(email,parseInt(i));
 }
 
-async function loadClassData(email,idx){
+/* LOAD STUDENTS */
+async function loadClass(email,i){
   let tDoc=await db.collection("teachers").doc(email).get();
   let t=tDoc.data();
+  let a=t.assignments[i];
 
-  let a=t.assignments[idx];
   document.getElementById("class_info").innerText=
     `${a.grade} - ${a.section} - ${a.subject}`;
-
-  let tbody=document.getElementById("students_body");
-  tbody.innerHTML="";
-  document.getElementById("students_table").style.display="table";
 
   let q=db.collection("students")
     .where("grade","==",a.grade)
     .where("section","==",a.section);
-  let snap=await q.get();
 
+  let snap=await q.get();
   let list=[];
   snap.forEach(d=>list.push(d.data()));
 
   list.sort((x,y)=>x.name.localeCompare(y.name,"ar"));
+
+  let body=document.getElementById("students_body");
+  body.innerHTML="";
+  document.getElementById("students_table").style.display="table";
 
   list.forEach(st=>{
     let sub=st.subjects && st.subjects[a.subject];
@@ -383,10 +395,9 @@ async function loadClassData(email,idx){
       <td>${f}</td>
       <td>${r}</td>
     `;
-    tbody.appendChild(tr);
+    body.appendChild(tr);
   });
 }
-
 </script>
 
 </body>
