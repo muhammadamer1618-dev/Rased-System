@@ -8,105 +8,138 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
 <style>
 body{
   font-family:Calibri;
-  margin:0;
   background:#eef2f7;
+  margin:0;
 }
+
 .header{
   background:#1976d2;
   color:#fff;
-  padding:15px;
   text-align:center;
-  font-size:24px;
-  font-weight:bold;
+  padding:15px;
+  box-shadow:0 2px 5px rgba(0,0,0,0.2);
 }
+.header h1{ margin:0; font-size:26px; font-weight:bold }
+
 .container{
   max-width:1200px;
   margin:25px auto;
-  padding:15px;
+  padding:5px 15px;
 }
+
 .box{
   background:#fff;
   border-radius:14px;
   padding:20px;
-  margin-bottom:20px;
+  margin-bottom:18px;
   box-shadow:0 3px 10px rgba(0,0,0,0.12);
 }
+
 h3{
   margin-top:0;
   color:#1976d2;
+  font-size:20px;
+  font-weight:bold;
   border-right:4px solid #1976d2;
   padding-right:8px;
 }
-label{font-weight:bold; margin-top:10px; display:block}
-select{
-  width:100%; padding:8px; border-radius:6px;
-  border:1px solid #999; margin-top:5px; font-size:15px;
+
+/* أزرار */
+.btn{
+  padding:8px 14px;
+  font-size:14px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  font-weight:bold;
 }
-button{
-  padding:8px 15px; border:none; border-radius:8px;
-  font-size:14px; cursor:pointer; font-weight:bold;
+.btn-primary{ background:#1976d2; color:#fff }
+.btn-secondary{ background:#757575; color:#fff }
+
+/* جدول */
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:12px;
+  font-size:14px;
 }
-.btn-primary{background:#1976d2;color:#fff}
-.btn-secondary{background:#757575;color:#fff}
+th,td{
+  border:1px solid #ccc;
+  text-align:center;
+  padding:6px;
+}
+th{
+  background:#1976d2;
+  color:#fff;
+  font-size:15px;
+}
+.category-box{
+  background:#f7faff;
+  border:1px solid #c9d7f8;
+  padding:10px;
+  border-radius:10px;
+  margin:6px 0;
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">تحليل النتائج</div>
+<div class="header">
+  <h1>تحليل النتائج - نظام راصد</h1>
+</div>
 
 <div class="container">
 
+  <!-- قسم اختيار الفصل الواحد -->
   <div class="box">
-    <h3>تحديد الفصول والمادة</h3>
+    <h3>تحليل فصل واحد</h3>
 
-    <div style="display:flex; gap:15px; flex-wrap:wrap">
+    <label>الصف</label>
+    <select id="grade_single"></select>
 
-      <div style="flex:1">
-        <label>الصف 1</label>
-        <select id="g1"></select>
-        <label>الشعبة</label>
-        <select id="s1"></select>
-      </div>
+    <label>الشعبة</label>
+    <select id="section_single"></select>
 
-      <div style="flex:1">
-        <label>الصف 2</label>
-        <select id="g2"></select>
-        <label>الشعبة</label>
-        <select id="s2"></select>
-      </div>
+    <label>المادة</label>
+    <select id="subject_single"></select>
 
-      <div style="flex:1">
-        <label>الصف 3 (اختياري)</label>
-        <select id="g3"></select>
-        <label>الشعبة</label>
-        <select id="s3"></select>
-      </div>
+    <button class="btn btn-primary" onclick="analyzeSingle()">عرض التحليل</button>
 
-      <div style="flex:1">
-        <label>المادة</label>
-        <select id="sub"></select>
-      </div>
+    <canvas id="chart_single" style="margin-top:20px;display:none"></canvas>
 
-    </div>
+    <div id="single_categories"></div>
 
-    <button class="btn-primary" style="margin-top:15px" onclick="compare()">عرض النتائج</button>
-    <button class="btn-secondary" style="margin-top:15px" onclick="window.print()">طباعة</button>
+    <button id="print_single" class="btn btn-secondary" style="margin-top:15px;display:none" onclick="window.print()">طباعة</button>
+    <button id="excel_single" class="btn btn-primary" style="margin-top:15px;display:none" onclick="exportSingleExcel()">تصدير Excel</button>
   </div>
 
+  <!-- قسم مقارنة أكثر من فصل -->
   <div class="box">
-    <h3>الرسم البياني</h3>
-    <canvas id="chart" height="140"></canvas>
+    <h3>مقارنة بين الفصول</h3>
+
+    <label>اختر الصفوف والمجموعات (حتى 3)</label>
+    <div id="compare_area"></div>
+
+    <label>المادة</label>
+    <select id="subject_compare"></select>
+
+    <button class="btn btn-primary" onclick="analyzeCompare()">عرض المقارنة</button>
+
+    <canvas id="chart_compare" style="margin-top:20px;display:none"></canvas>
+
+    <button id="print_compare" class="btn btn-secondary" style="margin-top:15px;display:none" onclick="window.print()">طباعة</button>
   </div>
 
 </div>
 
 <script>
-/* Firebase */
+/* firebase */
 var firebaseConfig={
   apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
   authDomain:"results2026-7c0dd.firebaseapp.com",
@@ -118,134 +151,167 @@ var firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
-/* القوائم */
-const grades=[
-"1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي",
-"1 متوسط","2 متوسط","3 متوسط",
-"1 ثانوي","2 ثانوي","3 ثانوي"
-];
-const sections=["أ","ب","ج","د"];
+/* تحميل الصفوف والشعب */
+async function loadSelectors(){
+  let snap=await db.collection("students").get();
+  let grades=[...new Set(snap.docs.map(d=>d.data().grade))];
+  document.getElementById("grade_single").innerHTML =
+    grades.map(g=>`<option>${g}</option>`).join("");
 
-function fillSelectors(){
-  ["g1","g2","g3"].forEach(id=>{
-    let g=document.getElementById(id);
-    grades.forEach(x=>{
-      let o=document.createElement("option");
-      o.value=x; o.textContent=x; g.appendChild(o);
-    });
-  });
+  loadSections();
+}
+loadSelectors();
 
-  ["s1","s2","s3"].forEach(id=>{
-    let s=document.getElementById(id);
-    sections.forEach(x=>{
-      let o=document.createElement("option");
-      o.value=x; o.textContent=x; s.appendChild(o);
-    });
-  });
+async function loadSections(){
+  let g=document.getElementById("grade_single").value;
+  let snap=await db.collection("students").where("grade","==",g).get();
+  let sections=[...new Set(snap.docs.map(d=>d.data().section))];
+  document.getElementById("section_single").innerHTML =
+    sections.map(s=>`<option>${s}</option>`).join("");
 
   loadSubjects();
 }
 
 async function loadSubjects(){
-  let sub=document.getElementById("sub");
-  let docs=await db.collection("settings").get();
-  let set=new Set();
-
-  docs.forEach(d=>{
-    (d.data().subjects||[]).forEach(s=>set.add(s.name));
-  });
-
-  set.forEach(x=>{
-    let o=document.createElement("option");
-    o.value=x; o.textContent=x;
-    sub.appendChild(o);
-  });
+  let g=document.getElementById("grade_single").value;
+  let set=await db.collection("settings").doc("subjects_"+g).get();
+  let subs=set.exists? set.data().subjects.map(s=>s.name) : [];
+  document.getElementById("subject_single").innerHTML =
+    subs.map(s=>`<option>${s}</option>`).join("");
 }
 
-function category(m,f){
-  if(!f) return "—";
-  let p=(m/f)*100;
-  if(p<50)return"دراسة حالة";
-  if(p<65)return"أولى بالرعاية";
-  if(p<75)return"جيد";
-  if(p<85)return"جيد جدًا";
-  if(p<100)return"ممتاز";
-  return"الدرجة النهائية";
-}
+/* قسم تحليل فصل واحد */
+async function analyzeSingle(){
+  let g=document.getElementById("grade_single").value;
+  let s=document.getElementById("section_single").value;
+  let sub=document.getElementById("subject_single").value;
 
-async function loadClass(g,s,sub){
-  let q=db.collection("students").where("grade","==",g).where("section","==",s);
-  let snap=await q.get();
+  let q=await db.collection("students")
+    .where("grade","==",g)
+    .where("section","==",s).get();
 
-  let stats={
-    "دراسة حالة":0,
-    "أولى بالرعاية":0,
-    "جيد":0,
-    "جيد جدًا":0,
-    "ممتاز":0,
-    "الدرجة النهائية":0
+  let list=q.docs.map(d=>d.data());
+
+  let cats={
+    case:[],
+    care:[],
+    good:[],
+    verygood:[],
+    excellent:[],
+    perfect:[]
   };
 
-  snap.forEach(d=>{
-    let st=d.data();
-    let sb=st.subjects && st.subjects[sub];
-    if(!sb)return;
-    let c=category(sb.mark,sb.fullMark);
-    stats[c]++;
+  list.forEach(st=>{
+    let o=st.subjects && st.subjects[sub];
+    if(!o)return;
+
+    let p=(o.mark/o.fullMark)*100;
+
+    if(p<50) cats.case.push(st.name);
+    else if(p<65) cats.care.push(st.name);
+    else if(p<75) cats.good.push(st.name);
+    else if(p<85) cats.verygood.push(st.name);
+    else if(p<100) cats.excellent.push(st.name);
+    else cats.perfect.push(st.name);
   });
 
-  return stats;
-}
+  let data=[
+    cats.case.length,
+    cats.care.length,
+    cats.good.length,
+    cats.verygood.length,
+    cats.excellent.length,
+    cats.perfect.length
+  ];
 
-let chart=null;
-
-async function compare(){
-  let g1=document.getElementById("g1").value;
-  let s1=document.getElementById("s1").value;
-
-  let g2=document.getElementById("g2").value;
-  let s2=document.getElementById("s2").value;
-
-  let g3=document.getElementById("g3").value;
-  let s3=document.getElementById("s3").value;
-
-  let sub=document.getElementById("sub").value;
-
-  let d1=await loadClass(g1,s1,sub);
-  let d2=await loadClass(g2,s2,sub);
-  let d3=null;
-
-  if(g3 && s3){
-    d3=await loadClass(g3,s3,sub);
-  }
-
-  draw(d1,d2,d3,`${g1}-${s1}`,`${g2}-${s2}`,g3?`${g3}-${s3}`:null);
-}
-
-function draw(d1,d2,d3,l1,l2,l3){
-  if(chart) chart.destroy();
-
-  let ctx=document.getElementById("chart").getContext("2d");
-
-  chart=new Chart(ctx,{
+  document.getElementById("chart_single").style.display="block";
+  new Chart(document.getElementById("chart_single"),{
     type:"bar",
     data:{
-      labels:["دراسة حالة","أولى بالرعاية","جيد","جيد جدًا","ممتاز","الدرجة النهائية"],
-      datasets:[
-        { label:l1, data:Object.values(d1), backgroundColor:"rgba(54,162,235,0.75)" },
-        { label:l2, data:Object.values(d2), backgroundColor:"rgba(255,99,132,0.75)" }
-      ].concat(
-        d3?[{ label:l3, data:Object.values(d3), backgroundColor:"rgba(255,159,64,0.75)" }]:[]
-      )
-    },
-    options:{
-      responsive:true,
-      scales:{ y:{ beginAtZero:true } }
+      labels:["دراسة حالة","أولى بالرعاية","جيد","جيد جدًا","ممتاز","متفوق"],
+      datasets:[{
+        label:"عدد الطلاب",
+        data:data,
+        backgroundColor:["#ef5350","#ff7043","#ffee58","#64b5f6","#4db6ac","#9575cd"]
+      }]
     }
   });
+
+  let html="";
+  html+=box("دراسة حالة",cats.case);
+  html+=box("أولى بالرعاية",cats.care);
+  html+=box("جيد",cats.good);
+  html+=box("جيد جدًا",cats.verygood);
+  html+=box("ممتاز",cats.excellent);
+  html+=box("متفوق",cats.perfect);
+
+  document.getElementById("single_categories").innerHTML=html;
+  document.getElementById("excel_single").style.display="inline-block";
+  document.getElementById("print_single").style.display="inline-block";
 }
 
-fillSelectors();
+function box(title,arr){
+  return `
+    <div class="category-box">
+      <strong>${title} (${arr.length})</strong><br>
+      ${arr.join(" ، ")}
+    </div>
+  `;
+}
+
+/* Excel */
+function exportSingleExcel(){
+  let table=document.getElementById("single_categories").innerText;
+  let wb=XLSX.utils.book_new();
+  let ws=XLSX.utils.aoa_to_sheet([["التقرير"],[table]]);
+  XLSX.utils.book_append_sheet(wb,ws,"Report");
+  XLSX.writeFile(wb,"analysis.xlsx");
+}
+
+/* المقارنة بين الفصول */
+async function analyzeCompare(){
+  let g=document.getElementById("grade_single").value;
+  let sub=document.getElementById("subject_compare").value;
+
+  let snap=await db.collection("students").where("grade","==",g).get();
+  let sections=[...new Set(snap.docs.map(d=>d.data().section))];
+
+  let results=[];
+
+  for(let sec of sections){
+    let q=await db.collection("students")
+      .where("grade","==",g)
+      .where("section","==",sec).get();
+
+    let list=q.docs.map(d=>d.data());
+
+    let total=0,count=0;
+    list.forEach(st=>{
+      let o=st.subjects && st.subjects[sub];
+      if(o){ total+=o.mark; count++; }
+    });
+
+    let avg=count? (total/count).toFixed(1) : 0;
+
+    results.push({section:sec,avg:Number(avg)});
+  }
+
+  document.getElementById("chart_compare").style.display="block";
+
+  new Chart(document.getElementById("chart_compare"),{
+    type:"bar",
+    data:{
+      labels:results.map(r=>r.section),
+      datasets:[{
+        label:"المعدل العام",
+        data:results.map(r=>r.avg),
+        backgroundColor:"#1976d2"
+      }]
+    }
+  });
+
+  document.getElementById("print_compare").style.display="inline-block";
+}
 </script>
 
 </body>
