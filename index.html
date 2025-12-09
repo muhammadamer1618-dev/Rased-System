@@ -2,9 +2,9 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>نظام راصد - MARS</title>
+<title>MARS Login</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&family=Cairo:wght@700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -16,7 +16,6 @@ body{
   background:#f0f4ff;
 }
 
-/* ===== Container ===== */
 .container{
   max-width:900px;
   margin:40px auto;
@@ -26,26 +25,14 @@ body{
   box-shadow:0 0 25px rgba(0,0,0,0.15);
 }
 
-/* ===== Title ===== */
 h1{
   text-align:center;
   color:#0056b3;
   margin-bottom:0;
-  font-family:Cairo;
   font-size:40px;
   font-weight:bold;
 }
 
-h2{
-  text-align:center;
-  color:#d32f2f;
-  margin-top:5px;
-  font-size:32px;
-  font-family:"Brush Script MT", cursive;
-  letter-spacing:3px;
-}
-
-/* ===== Roles Grid ===== */
 .roles{
   display:grid;
   grid-template-columns:repeat(3,1fr);
@@ -58,9 +45,9 @@ h2{
   padding:15px;
   border-radius:15px;
   text-align:center;
+  font-weight:bold;
   box-shadow:0 3px 8px rgba(0,0,0,0.1);
   cursor:pointer;
-  font-weight:bold;
   transition:0.2s;
 }
 .role:hover{
@@ -72,7 +59,6 @@ h2{
   margin-top:10px;
 }
 
-/* ===== Inputs ===== */
 label{
   display:block;
   margin-top:15px;
@@ -89,7 +75,6 @@ input{
   font-size:16px;
 }
 
-/* ===== Button ===== */
 button{
   width:100%;
   margin-top:20px;
@@ -106,32 +91,20 @@ button:hover{
   opacity:0.9;
 }
 
-/* footer */
 .footer{
   text-align:center;
   margin-top:20px;
   font-size:14px;
   color:#444;
 }
-.footer span{
-  background:#e3f2fd;
-  padding:3px 10px;
-  border-radius:10px;
-  color:#0d47a1;
-}
-.hidden{display:none}
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
-
   <h1>نظام راصد</h1>
-  <h2>M . A . R . S</h2>
 
-  <!-- Roles -->
   <div class="roles">
 
     <div class="role">
@@ -146,7 +119,7 @@ button:hover{
 
     <div class="role">
       وكيل المدرسة<br>
-      <input type="radio" name="role" value="principal">
+      <input type="radio" name="role" value="agent">
     </div>
 
     <div class="role">
@@ -166,23 +139,21 @@ button:hover{
 
   </div>
 
-  <!-- Username -->
   <label>اسم المستخدم</label>
-  <input id="email_input" placeholder="User ID">
+  <input id="email_input">
 
-  <!-- Password -->
   <label>كلمة المرور</label>
-  <input id="password_input" type="password" placeholder="••••••••">
+  <input id="password_input" type="password">
 
   <button onclick="login()">دخول</button>
 
   <div class="footer">
-    <span>تصميم محمد عامر أحمد</span> — الإصدار 2026
+    تصميم محمد عامر — الإصدار 2026
   </div>
-
 </div>
 
 <script>
+// Firebase
 var firebaseConfig={
   apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
   authDomain:"results2026-7c0dd.firebaseapp.com",
@@ -196,11 +167,7 @@ var db=firebase.firestore();
 
 async function login(){
   let role=document.querySelector('input[name="role"]:checked');
-  if(!role){
-    alert("اختر نوع المستخدم");
-    return;
-  }
-
+  if(!role){ alert("اختر نوع المستخدم"); return; }
   role=role.value;
 
   let email=document.getElementById("email_input").value.trim().toLowerCase();
@@ -212,16 +179,10 @@ async function login(){
   }
 
   let doc=await db.collection("users").doc(email).get();
-  if(!doc.exists){
-    alert("المستخدم غير موجود");
-    return;
-  }
+  if(!doc.exists){ alert("المستخدم غير موجود"); return; }
 
   let d=doc.data();
-  if(d.password!==pass){
-    alert("كلمة المرور غير صحيحة");
-    return;
-  }
+  if(d.password!==pass){ alert("كلمة المرور غير صحيحة"); return; }
 
   if(d.role!==role){
     alert("هذا المستخدم ليس لديه صلاحية الدخول كـ "+role);
@@ -229,12 +190,11 @@ async function login(){
   }
 
   localStorage.setItem("currentUserEmail",email);
-  localStorage.setItem("currentUserName",d.name||"—");
   localStorage.setItem("currentUserRole",d.role);
 
   if(role==="superadmin") location="admin.html";
   if(role==="manager") location="manager.html";
-  if(role==="principal") location="agent.html";
+  if(role==="agent") location="agent.html";
   if(role==="supervisor") location="supervisor.html";
   if(role==="counselor") location="counselor.html";
   if(role==="teacher") location="teacher.html";
