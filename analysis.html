@@ -72,9 +72,7 @@ tr:nth-child(even){background:#f9f9f9}
     <button class="btn-primary" onclick="showAnalysis()">عرض التحليل</button>
   </div>
 
-  <!-- مكان عرض جداول التحليل -->
   <div id="analysis_area"></div>
-
 </div>
 
 <!-- ========================== المقارنة بين الفصول ========================== -->
@@ -105,7 +103,6 @@ tr:nth-child(even){background:#f9f9f9}
   </div>
 
   <div id="compare_area"></div>
-
 </div>
 
 </div>
@@ -142,7 +139,7 @@ function fillGrades(){
 }
 fillGrades();
 
-/* ========== تحميل المواد من صفحة الإعدادات ========== */
+/* ========== تحميل المواد من الإعدادات ========== */
 async function loadSubjects(grade, target){
   let s=await db.collection("settings").doc("subjects_"+grade).get();
   let sel=document.getElementById(target);
@@ -165,7 +162,7 @@ document.getElementById("cmp_grade").onchange=()=>loadSubjects(
   document.getElementById("cmp_grade").value,"cmp_subject"
 );
 
-/* =============== تحليل فصل واحد =============== */
+/* ===================== تحليل فصل واحد ===================== */
 async function showAnalysis(){
   let grade=document.getElementById("grade").value;
   let section=document.getElementById("section").value;
@@ -199,6 +196,9 @@ async function showAnalysis(){
     let s=st.subjects && st.subjects[subject];
     if(!s)return;
 
+    // *** تعديل مهم: تجاهل الطالب الذي درجته صفر أو غير مرصودة ***
+    if (!s.mark || s.mark <= 0) return;
+
     total+=s.mark;
     full+=s.fullMark;
 
@@ -212,9 +212,9 @@ async function showAnalysis(){
     else cats["ممتاز"].push(st.name);
   });
 
-  let overall = full? ((total/full)*100).toFixed(1):0;
+  let overall = full? ((total/full)*100).toFixed(1):"—";
 
-  // بناء الجداول أفقياً
+  // بناء الجداول
   let html=`<div class="sub-title">الصف: ${grade} — الشعبة: ${section} — المادة: ${subject}</div>`;
   html+=`<div class="col-table-container">`;
 
@@ -239,7 +239,7 @@ async function showAnalysis(){
   area.innerHTML=html;
 }
 
-/* =============== المقارنة بين الفصول =============== */
+/* ===================== المقارنة بين الفصول ===================== */
 async function showCompare(){
   let grade=document.getElementById("cmp_grade").value;
   let subject=document.getElementById("cmp_subject").value;
@@ -265,13 +265,15 @@ async function showCompare(){
     q.forEach(d=>{
       let st=d.data();
       let sub=st.subjects && st.subjects[subject];
-      if(sub){
+
+      // *** تجاهل الصفر ***
+      if(sub && sub.mark > 0){
         total+=sub.mark;
         full+=sub.fullMark;
       }
     });
 
-    let pct=full? ((total/full)*100).toFixed(1) : 0;
+    let pct=full? ((total/full)*100).toFixed(1) : "—";
 
     rows+=`
       <tr>
