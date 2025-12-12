@@ -23,27 +23,23 @@ body{
   border-radius:14px;
   box-shadow:0 0 12px rgba(0,0,0,0.15);
 }
-
 h1{
   text-align:center;
   color:#d4a017;
   font-size:32px;
   font-weight:bold;
 }
-
 .logo{
   width:70px;
   display:block;
   margin:auto;
 }
-
 .select-row{
   display:flex;
   gap:10px;
   flex-wrap:wrap;
   margin-top:15px;
 }
-
 select,button{
   font-family:Calibri;
   font-size:16px;
@@ -51,7 +47,6 @@ select,button{
   border-radius:7px;
   border:1px solid #777;
 }
-
 button{
   background:#d4a017;
   color:white;
@@ -60,7 +55,6 @@ button{
   border:none;
 }
 button:hover{opacity:0.92}
-
 table{
   width:100%;
   border-collapse:collapse;
@@ -76,7 +70,6 @@ th{
   background:#d4a017;
   color:white;
 }
-
 .rank{
   font-weight:bold;
   color:#d4a017;
@@ -161,7 +154,7 @@ async function loadTop(){
   let subs=setDoc.data().subjects||[];
   let officialSubs={};
   subs.forEach(s=>{
-    officialSubs[s.name]=s.fullMark;
+    officialSubs[s.name]=Math.round(s.fullMark); // ⭐ تقريب fullMark
   });
 
   /* --- load students --- */
@@ -177,10 +170,10 @@ async function loadTop(){
     let totalFull=0;
 
     Object.keys(officialSubs).forEach(sub=>{
-      let f=officialSubs[sub];
-      let m=st.subjects && st.subjects[sub] ? (st.subjects[sub].mark||0) : 0;
-      total+=m;
-      totalFull+=f;
+      let f = officialSubs[sub];
+      let m = st.subjects && st.subjects[sub] ? (st.subjects[sub].mark || 0) : 0;
+      total += m;
+      totalFull += f;
     });
 
     list.push({
