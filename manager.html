@@ -15,6 +15,7 @@ body{
   margin:0;
 }
 
+/* HEADER */
 .header{
   background:#1976d2;
   color:#fff;
@@ -25,6 +26,7 @@ body{
 .header h1{ margin:0; font-size:26px; font-weight:bold }
 .header h2{ margin:5px 0 0; font-size:18px; color:#ffeb3b }
 
+/* MAIN */
 .container{
   max-width:1200px;
   margin:25px auto;
@@ -74,6 +76,7 @@ h3{
   color:#1976d2;
 }
 
+/* BUTTONS */
 button{
   padding:8px 15px;
   border:none;
@@ -86,6 +89,7 @@ button{
 .btn-secondary{background:#757575;color:#fff}
 .btn-small{padding:5px 10px;font-size:13px}
 
+/* TABLES */
 table{
   width:100%;
   border-collapse:collapse;
@@ -104,6 +108,7 @@ th{
 }
 tr:nth-child(even){background:#f9f9f9}
 
+/* SELECT */
 select{
   padding:7px;
   border-radius:6px;
@@ -124,7 +129,7 @@ select{
 
 <div class="container">
 
-  <!-- Dashboard -->
+  <!-- DASHBOARD -->
   <div class="box">
     <h3>لوحة التحكم</h3>
 
@@ -145,16 +150,17 @@ select{
       </div>
     </div>
 
-    <button class="btn-primary" style="margin-top:15px">
+    <button class="btn-primary" style="margin-top:15px" onclick="location='analysis.html'">
       🔍 تحليل النتائج
     </button>
   </div>
 
-  <!-- Manager Info -->
+  <!-- MANAGER DATA -->
   <div class="box">
     <h3>بيانات مدير الإشراف</h3>
 
     <div class="info-row">
+
       <div class="info-item">
         <div class="label-title">الاسم</div>
         <span id="m_name">—</span>
@@ -164,10 +170,11 @@ select{
         <div class="label-title">اسم المستخدم</div>
         <span id="m_email">—</span>
       </div>
+
     </div>
   </div>
 
-  <!-- Supervisors -->
+  <!-- SUPERVISORS -->
   <div class="box">
     <h3>المشرفون</h3>
 
@@ -184,7 +191,7 @@ select{
     </table>
   </div>
 
-  <!-- Teachers -->
+  <!-- TEACHERS UNDER SUPERVISOR -->
   <div class="box">
     <h3>المعلمون التابعون للمشرف المختار</h3>
 
@@ -206,7 +213,7 @@ select{
     </table>
   </div>
 
-  <!-- Students -->
+  <!-- STUDENTS -->
   <div class="box">
     <h3>طلاب الفصل والمادة</h3>
 
@@ -229,28 +236,6 @@ select{
     </table>
   </div>
 
-  <!-- Statistics -->
-  <div class="box" id="stats_box" style="display:none">
-    <h3>إحصائيات المادة</h3>
-
-    <div class="info-row">
-      <div class="info-item">
-        <div class="label-title">متوسط الدرجات</div>
-        <span id="avg_grade">—</span>
-      </div>
-
-      <div class="info-item">
-        <div class="label-title">عدد الطلاب المحتسبين</div>
-        <span id="count_valid">—</span>
-      </div>
-
-      <div class="info-item">
-        <div class="label-title">عدد الطلاب المستبعدين</div>
-        <span id="count_excluded">—</span>
-      </div>
-    </div>
-  </div>
-
   <div class="box">
     <button class="btn-secondary" onclick="location='index.html'">تسجيل الخروج</button>
   </div>
@@ -258,6 +243,7 @@ select{
 </div>
 
 <script>
+/* Firebase */
 var firebaseConfig={
   apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
   authDomain:"results2026-7c0dd.firebaseapp.com",
@@ -269,16 +255,22 @@ var firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
-if(localStorage.getItem("currentUserRole")!=="manager"){
-  alert("هذه الصفحة خاصة بمدير الإشراف فقط");
-  location="index.html";
+/* GUARD */
+function guard(){
+  if(localStorage.getItem("currentUserRole")!=="manager"){
+    alert("هذه الصفحة خاصة بمدير الإشراف فقط");
+    location="index.html";
+  }
 }
+guard();
 
+/* LOAD MANAGER DATA */
 document.getElementById("m_email").innerText=
   localStorage.getItem("currentUserEmail")||"—";
 document.getElementById("m_name").innerText=
   localStorage.getItem("currentUserName")||"—";
 
+/* DASHBOARD */
 async function loadDashboard(){
   let s=await db.collection("supervisors").get();
   document.getElementById("count_supervisors").innerText=s.size;
@@ -291,6 +283,7 @@ async function loadDashboard(){
 }
 loadDashboard();
 
+/* LOAD SUPERVISORS */
 async function loadSupervisors(){
   let snap=await db.collection("supervisors").get();
   let body=document.getElementById("supervisors_body");
@@ -317,6 +310,7 @@ async function loadSupervisors(){
 }
 loadSupervisors();
 
+/* SHOW TEACHERS OF SUPERVISOR */
 async function viewSupervisor(email,name){
   document.getElementById("sel_supervisor").innerText=name+" ("+email+")";
 
@@ -357,12 +351,14 @@ async function viewSupervisor(email,name){
   }
 }
 
+/* SELECT CLASS */
 function selectClass(v){
   if(!v)return;
   let [email,i]=v.split("|");
   loadClass(email,parseInt(i));
 }
 
+/* LOAD STUDENTS */
 async function loadClass(email,i){
   let tDoc=await db.collection("teachers").doc(email).get();
   let t=tDoc.data();
@@ -385,45 +381,22 @@ async function loadClass(email,i){
   body.innerHTML="";
   document.getElementById("students_table").style.display="table";
 
-  let total=0;
-  let countValid=0;
-  let countExcluded=0;
-
   list.forEach(st=>{
     let sub=st.subjects && st.subjects[a.subject];
-    let mark=sub ? Number(sub.mark) : null;
-
-    let finalMark=sub ? sub.fullMark : "—";
-    let rating=sub ? sub.rating : "—";
-
-    let displayMark = mark !== null ? mark : "—";
-
-    if (mark === 0 || mark === null || isNaN(mark)) {
-      displayMark = "—";
-      countExcluded++;
-    } else {
-      total += mark;
-      countValid++;
-    }
+    let m=sub?sub.mark:0;
+    let f=sub?sub.fullMark:0;
+    let r=sub?sub.rating:"—";
 
     let tr=document.createElement("tr");
     tr.innerHTML=`
       <td>${st.code}</td>
       <td>${st.name}</td>
-      <td>${displayMark}</td>
-      <td>${finalMark}</td>
-      <td>${rating}</td>
+      <td>${m}</td>
+      <td>${f}</td>
+      <td>${r}</td>
     `;
     body.appendChild(tr);
   });
-
-  let avg = countValid > 0 ? (total / countValid).toFixed(2) : "—";
-
-  document.getElementById("avg_grade").innerText=avg;
-  document.getElementById("count_valid").innerText=countValid;
-  document.getElementById("count_excluded").innerText=countExcluded;
-
-  document.getElementById("stats_box").style.display="block";
 }
 </script>
 
