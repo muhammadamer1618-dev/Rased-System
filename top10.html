@@ -2,8 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>ترتيب أوائل الطلاب - نظام راصد</title>
-
+<title>ترتيب أوائل الطلاب</title>
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
@@ -12,55 +11,55 @@
 <style>
 body{
   font-family:Calibri;
-  background:#f4f4f4;
+  background:#f2f4f8;
   margin:0;
   padding:20px;
 }
-
 .container{
-  max-width:950px;
+  max-width:900px;
   margin:auto;
   background:white;
-  padding:25px;
-  border-radius:12px;
-  box-shadow:0 0 10px rgba(0,0,0,0.15);
-  text-align:center;
+  padding:20px;
+  border-radius:14px;
+  box-shadow:0 0 12px rgba(0,0,0,0.15);
 }
 
 h1{
-  color:#d4af37;
+  text-align:center;
+  color:#d4a017;
   font-size:32px;
-  margin-bottom:5px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:10px;
+  font-weight:bold;
 }
 
-label{
-  font-weight:bold;
-  margin-left:10px;
+.logo{
+  width:70px;
+  display:block;
+  margin:auto;
+}
+
+.select-row{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin-top:15px;
 }
 
 select,button{
+  font-family:Calibri;
+  font-size:16px;
   padding:10px;
-  font-size:17px;
-  border-radius:8px;
-  border:1px solid #999;
-  margin:5px;
+  border-radius:7px;
+  border:1px solid #777;
 }
 
 button{
-  cursor:pointer;
-  background:#d4af37;
+  background:#d4a017;
   color:white;
-  border:none;
   font-weight:bold;
+  cursor:pointer;
+  border:none;
 }
-
-button:hover{
-  opacity:0.9;
-}
+button:hover{opacity:0.92}
 
 table{
   width:100%;
@@ -68,83 +67,60 @@ table{
   margin-top:20px;
   font-size:16px;
 }
-
 th,td{
   border:1px solid #aaa;
   padding:8px;
   text-align:center;
 }
-
 th{
-  background:#d4af37;
+  background:#d4a017;
   color:white;
 }
 
 .rank{
   font-weight:bold;
-  color:#c08922;
-  font-size:18px;
+  color:#d4a017;
 }
 </style>
 </head>
-<body>
 
+<body>
 <div class="container">
 
-  <h1>
-    <!-- GOLD ICON -->
-    <svg width="45" height="45" viewBox="0 0 24 24" fill="#d4af37">
-      <path d="M17 3H7V5H3V6C3 8.97 5.16 11.43 8 11.91V19H6V21H18V19H16V11.91C18.84 11.43 21 8.97 21 6V5H17V3ZM5.17 7C5.06 6.69 5 6.35 5 6H7V7.93C6.28 7.74 5.64 7.42 5.17 7ZM19 6C19 6.35 18.94 6.69 18.83 7C18.36 7.42 17.72 7.74 17 7.93V6H19Z"/>
-    </svg>
+  <img class="logo" src="https://cdn-icons-png.flaticon.com/512/2583/2583343.png">
 
-    ترتيب أوائل الطلاب
-  </h1>
+  <h1>ترتيب أوائل الطلاب</h1>
 
-  <label>اختر الصف:</label>
-  <select id="grade"></select>
+  <div class="select-row">
+    <select id="grade"></select>
 
-  <label>الشعبة:</label>
-  <select id="section">
-    <option>أ</option>
-    <option>ب</option>
-    <option>ج</option>
-  </select>
+    <select id="section">
+      <option>أ</option>
+      <option>ب</option>
+      <option>ج</option>
+    </select>
 
-  <label>عدد الطلاب:</label>
-  <select id="limit">
-    <option value="3">أفضل 3</option>
-    <option value="5">أفضل 5</option>
-    <option value="10" selected>أفضل 10</option>
-  </select>
+    <select id="limit">
+      <option value="3">أفضل 3</option>
+      <option value="5">أفضل 5</option>
+      <option value="10" selected>أفضل 10</option>
+    </select>
 
-  <button onclick="loadTop()">عرض الترتيب</button>
+    <button onclick="loadTop()">عرض الترتيب</button>
+  </div>
 
-  <table id="top_table" style="display:none;">
-    <thead>
-      <tr>
-        <th>الترتيب</th>
-        <th>الاسم</th>
-        <th>الصف</th>
-        <th>الشعبة</th>
-        <th>المجموع</th>
-        <th>إجمالي الدرجات</th>
-        <th>النسبة</th>
-        <th>التقدير</th>
-      </tr>
-    </thead>
-    <tbody id="top_body"></tbody>
-  </table>
+  <div id="result"></div>
 
 </div>
 
 <script>
 var firebaseConfig = {
-  apiKey: "AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
-  authDomain: "results2026-7c0dd.firebaseapp.com",
-  projectId: "results2026-7c0dd",
-  storageBucket: "results2026-7c0dd.firebasestorage.app",
-  messagingSenderId: "241421115694",
-  appId: "1:241421115694:web:96f55fd9fd1d5b18b31abf"
+  apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+  authDomain:"results2026-7c0dd.firebaseapp.com",
+  projectId:"results2026-7c0dd",
+  storageBucket:"results2026-7c0dd.firebasestorage.app",
+  messagingSenderId:"241421115694",
+  appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -156,86 +132,96 @@ var gradesList=[
  "1 ثانوي","2 ثانوي","3 ثانوي"
 ];
 
-(function fillGrades(){
+function fillGrades(){
   let g=document.getElementById("grade");
   gradesList.forEach(x=>{
     let o=document.createElement("option");
     o.textContent=x;
     g.appendChild(o);
   });
-})();
-
-function getRate(p){
-  if(p>=90)return"ممتاز";
-  if(p>=80)return"جيد جدًا";
-  if(p>=70)return"جيد";
-  if(p>=60)return"مقبول";
-  return"ضعيف";
 }
+fillGrades();
 
+/* ===================== LOAD TOP STUDENTS ====================== */
 async function loadTop(){
   let grade=document.getElementById("grade").value;
   let section=document.getElementById("section").value;
-  let limit=Number(document.getElementById("limit").value);
+  let limit=parseInt(document.getElementById("limit").value);
 
-  let snap=await db.collection("students")
+  let res=document.getElementById("result");
+  res.innerHTML="جار التحميل...";
+
+  /* --- load official subjects from settings --- */
+  let setDoc=await db.collection("settings").doc("subjects_"+grade).get();
+  if(!setDoc.exists){
+    res.innerHTML="لا توجد مواد لهذا الصف في الإعدادات";
+    return;
+  }
+
+  let subs=setDoc.data().subjects||[];
+  let officialSubs={};
+  subs.forEach(s=>{
+    officialSubs[s.name]=s.fullMark;
+  });
+
+  /* --- load students --- */
+  let q=await db.collection("students")
     .where("grade","==",grade)
     .where("section","==",section)
     .get();
 
   let list=[];
+  q.forEach(d=>{
+    let st=d.data();
+    let total=0;
+    let totalFull=0;
 
-  snap.forEach(doc=>{
-    let st=doc.data();
-    let subs=st.subjects||{};
-    let total=0, full=0;
-
-    Object.keys(subs).forEach(sub=>{
-      let m=subs[sub].mark||0;
-      let f=subs[sub].fullMark||0;
-
-      if(f>0){
-        total+=Number(m);
-        full+=Number(f);
-      }
+    Object.keys(officialSubs).forEach(sub=>{
+      let f=officialSubs[sub];
+      let m=st.subjects && st.subjects[sub] ? (st.subjects[sub].mark||0) : 0;
+      total+=m;
+      totalFull+=f;
     });
 
-    if(full>0){
-      let pct=(total/full)*100;
-      list.push({
-        name:st.name,
-        grade:st.grade,
-        section:st.section,
-        total:total,
-        full:full,
-        pct:pct.toFixed(1),
-        rating:getRate(pct)
-      });
-    }
+    list.push({
+      name:st.name,
+      code:st.code,
+      total:total,
+      full:totalFull
+    });
   });
 
-  list.sort((a,b)=>b.total-a.total);
-  let top=list.slice(0, limit);
+  /* --- sorting --- */
+  list.sort((a,b)=>b.total - a.total);
 
-  let body=document.getElementById("top_body");
-  body.innerHTML="";
+  let top=list.slice(0,limit);
 
-  top.forEach((s,i)=>{
-    let tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td class="rank">${i+1}</td>
-      <td>${s.name}</td>
-      <td>${s.grade}</td>
-      <td>${s.section}</td>
-      <td>${s.total}</td>
-      <td>${s.full}</td>
-      <td>${s.pct}%</td>
-      <td>${s.rating}</td>
+  /* --- build table --- */
+  let html=`<table>
+    <tr>
+      <th>الترتيب</th>
+      <th>الاسم</th>
+      <th>الكود</th>
+      <th>المجموع</th>
+      <th>النسبة</th>
+    </tr>
+  `;
+
+  top.forEach((st,i)=>{
+    let pct = st.full ? ((st.total/st.full)*100).toFixed(1) : "0";
+    html+=`
+      <tr>
+        <td class="rank">${i+1}</td>
+        <td>${st.name}</td>
+        <td>${st.code}</td>
+        <td>${st.total} / ${st.full}</td>
+        <td>${pct}%</td>
+      </tr>
     `;
-    body.appendChild(tr);
   });
 
-  document.getElementById("top_table").style.display="table";
+  html+=`</table>`;
+  res.innerHTML=html;
 }
 </script>
 
