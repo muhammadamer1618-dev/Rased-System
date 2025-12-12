@@ -135,7 +135,6 @@ function fillGrades(){
 }
 fillGrades();
 
-/* ===================== LOAD TOP STUDENTS (REAL SUBJECTS ONLY) ====================== */
 async function loadTop(){
   let grade=document.getElementById("grade").value;
   let section=document.getElementById("section").value;
@@ -161,8 +160,10 @@ async function loadTop(){
       let m = subs[sub].mark || 0;
       let f = subs[sub].fullMark || 0;
 
-      // منع أي خطأ: لو الدرجة أكبر من النهاية
+      if(f > 100) f = 100;
       if(m > f) m = f;
+      if(f <= 0) return;
+      if(m < 0) m = 0;
 
       total += m;
       totalFull += f;
