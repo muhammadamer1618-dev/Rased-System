@@ -2,53 +2,124 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>أفضل 10 طلاب - نظام راصد</title>
+<title>ترتيب أوائل الطلاب - نظام راصد</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
-body{font-family:Calibri;background:#f4f4f4;margin:0;padding:20px}
-.container{max-width:900px;margin:auto;background:white;padding:20px;border-radius:12px;box-shadow:0 0 10px rgba(0,0,0,0.2)}
+body{
+  font-family:Calibri;
+  background:#f4f4f4;
+  margin:0;
+  padding:20px;
+}
 
-h1{text-align:center;color:#1976d2;margin-bottom:15px}
-label{font-weight:bold}
+.container{
+  max-width:950px;
+  margin:auto;
+  background:white;
+  padding:25px;
+  border-radius:12px;
+  box-shadow:0 0 10px rgba(0,0,0,0.15);
+  text-align:center;
+}
+
+h1{
+  color:#d4af37;
+  font-size:32px;
+  margin-bottom:5px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:10px;
+}
+
+label{
+  font-weight:bold;
+  margin-left:10px;
+}
+
 select,button{
   padding:10px;
-  font-size:16px;
+  font-size:17px;
   border-radius:8px;
   border:1px solid #999;
+  margin:5px;
 }
-button{cursor:pointer;background:#1976d2;color:white;font-weight:bold}
-button:hover{opacity:0.9}
 
-table{width:100%;border-collapse:collapse;margin-top:20px;font-size:16px}
-th,td{border:1px solid #888;padding:8px;text-align:center}
-th{background:#1976d2;color:white}
+button{
+  cursor:pointer;
+  background:#d4af37;
+  color:white;
+  border:none;
+  font-weight:bold;
+}
 
-.rank{font-weight:bold;color:#d32f2f}
+button:hover{
+  opacity:0.9;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:20px;
+  font-size:16px;
+}
+
+th,td{
+  border:1px solid #aaa;
+  padding:8px;
+  text-align:center;
+}
+
+th{
+  background:#d4af37;
+  color:white;
+}
+
+.rank{
+  font-weight:bold;
+  color:#c08922;
+  font-size:18px;
+}
 </style>
 </head>
 <body>
 
 <div class="container">
 
-  <h1>أفضل 10 طلاب في الفصل</h1>
+  <h1>
+    <!-- GOLD ICON -->
+    <svg width="45" height="45" viewBox="0 0 24 24" fill="#d4af37">
+      <path d="M17 3H7V5H3V6C3 8.97 5.16 11.43 8 11.91V19H6V21H18V19H16V11.91C18.84 11.43 21 8.97 21 6V5H17V3ZM5.17 7C5.06 6.69 5 6.35 5 6H7V7.93C6.28 7.74 5.64 7.42 5.17 7ZM19 6C19 6.35 18.94 6.69 18.83 7C18.36 7.42 17.72 7.74 17 7.93V6H19Z"/>
+    </svg>
 
-  <label>اختر الصف</label>
+    ترتيب أوائل الطلاب
+  </h1>
+
+  <label>اختر الصف:</label>
   <select id="grade"></select>
 
-  <label style="margin-left:15px">اختر الشعبة</label>
+  <label>الشعبة:</label>
   <select id="section">
     <option>أ</option>
     <option>ب</option>
     <option>ج</option>
   </select>
 
-  <button onclick="loadTop10()" style="margin-left:15px;">عرض</button>
+  <label>عدد الطلاب:</label>
+  <select id="limit">
+    <option value="3">أفضل 3</option>
+    <option value="5">أفضل 5</option>
+    <option value="10" selected>أفضل 10</option>
+  </select>
 
-  <table id="top10_table" style="display:none;">
+  <button onclick="loadTop()">عرض الترتيب</button>
+
+  <table id="top_table" style="display:none;">
     <thead>
       <tr>
         <th>الترتيب</th>
@@ -61,7 +132,7 @@ th{background:#1976d2;color:white}
         <th>التقدير</th>
       </tr>
     </thead>
-    <tbody id="top10_body"></tbody>
+    <tbody id="top_body"></tbody>
   </table>
 
 </div>
@@ -75,6 +146,7 @@ var firebaseConfig = {
   messagingSenderId: "241421115694",
   appId: "1:241421115694:web:96f55fd9fd1d5b18b31abf"
 };
+
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
@@ -101,9 +173,10 @@ function getRate(p){
   return"ضعيف";
 }
 
-async function loadTop10(){
+async function loadTop(){
   let grade=document.getElementById("grade").value;
   let section=document.getElementById("section").value;
+  let limit=Number(document.getElementById("limit").value);
 
   let snap=await db.collection("students")
     .where("grade","==",grade)
@@ -142,11 +215,12 @@ async function loadTop10(){
   });
 
   list.sort((a,b)=>b.total-a.total);
-  let top10=list.slice(0,10);
+  let top=list.slice(0, limit);
 
-  let body=document.getElementById("top10_body");
+  let body=document.getElementById("top_body");
   body.innerHTML="";
-  top10.forEach((s,i)=>{
+
+  top.forEach((s,i)=>{
     let tr=document.createElement("tr");
     tr.innerHTML=`
       <td class="rank">${i+1}</td>
@@ -161,7 +235,7 @@ async function loadTop10(){
     body.appendChild(tr);
   });
 
-  document.getElementById("top10_table").style.display="table";
+  document.getElementById("top_table").style.display="table";
 }
 </script>
 
