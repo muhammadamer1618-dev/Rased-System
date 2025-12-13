@@ -11,8 +11,8 @@
 <style>
 body{
   font-family:Calibri;
-  margin:0;
   background:#eef2f7;
+  margin:0;
 }
 
 .header{
@@ -20,13 +20,13 @@ body{
   color:white;
   text-align:center;
   padding:18px;
-  font-size:22px;
+  font-size:24px;
   font-weight:bold;
   box-shadow:0 2px 8px rgba(0,0,0,0.25);
 }
 
 .container{
-  max-width:1200px;
+  max-width:1300px;
   margin:25px auto;
   padding:10px;
 }
@@ -47,29 +47,26 @@ h3{
   padding-right:8px;
 }
 
-.info-row{
+/* Filters */
+.filter-row{
   display:flex;
-  gap:15px;
+  gap:10px;
   flex-wrap:wrap;
+  margin-bottom:15px;
 }
-
-.info-item{
-  flex:1;
-  background:#fff;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #d3dcf8;
-  text-align:center;
-  font-size:16px;
-  font-weight:bold;
-  color:#1976d2;
+select{
+  padding:8px;
+  font-size:15px;
+  border-radius:6px;
+  border:1px solid #888;
+  min-width:150px;
 }
 
 table{
   width:100%;
   border-collapse:collapse;
   margin-top:10px;
-  font-size:14px;
+  font-size:15px;
 }
 th,td{
   border:1px solid #ccc;
@@ -79,44 +76,59 @@ th,td{
 th{
   background:#1976d2;
   color:white;
-  font-size:15px;
 }
 tr:nth-child(even){
   background:#f9f9f9;
 }
 
-.btn-secondary{
-  padding:10px 15px;
-  background:#757575;
+.low{background:#ffebee;}
+.missing{background:#fff3cd;}
+
+.btn{
+  background:#1976d2;
   color:white;
+  padding:10px 20px;
   border:none;
   border-radius:8px;
   cursor:pointer;
   font-weight:bold;
   margin-top:10px;
 }
+
 </style>
 </head>
-
 <body>
 
 <div class="header">الموجّه الطلابي - نظام راصد</div>
 
 <div class="container">
 
-  <!-- Dashboard -->
+  <!-- Filters -->
   <div class="box">
-    <h3>الملخص العام</h3>
-    <div class="info-row">
-      <div class="info-item">الطلاب المتعثرين: <span id="count_low">—</span></div>
-      <div class="info-item">طلاب درجات ناقصة: <span id="count_missing">—</span></div>
-      <div class="info-item">إجمالي الطلاب: <span id="count_students">—</span></div>
+    <h3>فلترة البيانات</h3>
+    <div class="filter-row">
+      <select id="filter_grade"></select>
+      <select id="filter_section">
+        <option value="">كل الشعب</option>
+        <option>أ</option><option>ب</option><option>ج</option>
+      </select>
+      <select id="filter_rating">
+        <option value="">كل التقديرات</option>
+        <option value="excellent">ممتاز</option>
+        <option value="verygood">جيد جدًا</option>
+        <option value="good">جيد</option>
+        <option value="weak">ضعيف</option>
+        <option value="missing">درجات ناقصة</option>
+      </select>
+      <select id="filter_subject"></select>
+
+      <button class="btn" onclick="loadAll()">تطبيق الفلتر</button>
     </div>
   </div>
 
-  <!-- Low Students -->
+  <!-- Students Table -->
   <div class="box">
-    <h3>الطلاب المتعثرين دراسيًا</h3>
+    <h3>قائمة الطلاب</h3>
     <table>
       <thead>
         <tr>
@@ -126,40 +138,22 @@ tr:nth-child(even){
           <th>المادة</th>
           <th>الدرجة</th>
           <th>النهائية</th>
+          <th>النسبة</th>
           <th>التقدير</th>
-          <th>المعلم</th>
         </tr>
       </thead>
-      <tbody id="low_body"></tbody>
-    </table>
-  </div>
-
-  <!-- Missing Marks -->
-  <div class="box">
-    <h3>طلاب لديهم مواد بدون درجات</h3>
-    <table>
-      <thead>
-        <tr>
-          <th>اسم الطالب</th>
-          <th>الصف</th>
-          <th>الشعبة</th>
-          <th>المواد الناقصة</th>
-          <th>المعلم</th>
-        </tr>
-      </thead>
-      <tbody id="missing_body"></tbody>
+      <tbody id="students_body"></tbody>
     </table>
   </div>
 
   <div class="box">
-    <button class="btn-secondary" onclick="location='index.html'">
-      تسجيل الخروج
-    </button>
+    <button class="btn" onclick="location='index.html'">تسجيل الخروج</button>
   </div>
 
 </div>
 
 <script>
+
 var firebaseConfig={
   apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
   authDomain:"results2026-7c0dd.firebaseapp.com",
@@ -171,103 +165,124 @@ var firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
-/* ================== تحميل المواد الرسمية لكل صف ================== */
-var fullMarksByGrade = {};
+var gradesList=[
+ "1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي",
+ "1 متوسط","2 متوسط","3 متوسط",
+ "1 ثانوي","2 ثانوي","3 ثانوي"
+];
 
-async function loadOfficialSubjects(){
-  let grades=[
-    "1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي",
-    "1 متوسط","2 متوسط","3 متوسط",
-    "1 ثانوي","2 ثانوي","3 ثانوي"
-  ];
+function fillGrades(){
+  let g=document.getElementById("filter_grade");
+  gradesList.forEach(x=>{
+    let o=document.createElement("option");
+    o.textContent=x;
+    g.appendChild(o);
+  });
+}
+fillGrades();
 
-  for (let g of grades){
-    let doc = await db.collection("settings").doc("subjects_"+g).get();
-    fullMarksByGrade[g] = {};
-    if(doc.exists){
-      (doc.data().subjects||[]).forEach(s=>{
-        fullMarksByGrade[g][s.name] = Math.round(s.fullMark);
-      });
-    }
+/* load subjects for filter when grade selected */
+document.getElementById("filter_grade").onchange=async ()=>{
+  let grade=document.getElementById("filter_grade").value;
+  let subj=document.getElementById("filter_subject");
+  subj.innerHTML="<option value=''>كل المواد</option>";
+
+  let d=await db.collection("settings").doc("subjects_"+grade).get();
+  if(d.exists){
+    (d.data().subjects||[]).forEach(s=>{
+      let o=document.createElement("option");
+      o.textContent=s.name;
+      subj.appendChild(o);
+    });
   }
+};
+
+function getRateName(p){
+  if(p>=90) return "ممتاز";
+  if(p>=80) return "جيد جدًا";
+  if(p>=70) return "جيد";
+  if(p>=60) return "مقبول";
+  return "ضعيف";
 }
 
-/* ================== تحميل بيانات الطلاب ================== */
+/* =================== MAIN LOAD =================== */
 async function loadAll(){
-  await loadOfficialSubjects();
 
-  let snap=await db.collection("students").get();
-  document.getElementById("count_students").innerText=snap.size;
+  let grade=document.getElementById("filter_grade").value;
+  let section=document.getElementById("filter_section").value;
+  let ratingFilter=document.getElementById("filter_rating").value;
+  let subjectFilter=document.getElementById("filter_subject").value;
 
-  let lowBody=document.getElementById("low_body");
-  let missingBody=document.getElementById("missing_body");
+  let body=document.getElementById("students_body");
+  body.innerHTML="";
 
-  lowBody.innerHTML="";
-  missingBody.innerHTML="";
+  /* load students */
+  let q=db.collection("students");
+  if(grade) q=q.where("grade","==",grade);
+  if(section) q=q.where("section","==",section);
 
-  let lowCount=0, missingCount=0;
+  let snap=await q.get();
 
-  snap.forEach(doc=>{
-    let st=doc.data();
+  /* load official subjects */
+  let offDoc=grade
+    ? await db.collection("settings").doc("subjects_"+grade).get()
+    : null;
+
+  let officialSubs={};
+  if(offDoc?.exists){
+    offDoc.data().subjects.forEach(s=>{
+      officialSubs[s.name]=Number(s.fullMark);
+    });
+  }
+
+  snap.forEach(stuDoc=>{
+    let st=stuDoc.data();
     let subs=st.subjects||{};
-    let missingSubs=[];
 
-    let gradeFullMarks = fullMarksByGrade[st.grade] || {};
+    Object.keys(officialSubs).forEach(subName=>{
 
-    Object.keys(subs).forEach(sub=>{
-      let recorded = subs[sub];
-      let correctFull = gradeFullMarks[sub] || recorded.fullMark || 0;
+      let correctFull = officialSubs[subName];
+      let mark = subs[subName]?.mark ?? null;
 
-      // معالجة الدرجات الخاطئة
-      let mark = Number(recorded.mark || 0);
-      let full = Number(correctFull);
+      /* missing mark: 0 or empty */
+      let isMissing = (mark===0 || mark==="" || mark===null);
 
-      if(full === 0) return;
+      /* fix incorrect fullMark */
+      let pct = isMissing ? 0 : ((mark / correctFull) * 100).toFixed(1);
 
-      let pct = (mark/full) * 100;
+      let rate = isMissing ? "ناقص" : getRateName(pct);
 
-      if(pct < 60){
-        lowCount++;
-        lowBody.innerHTML+=`
-          <tr>
-            <td>${st.name}</td>
-            <td>${st.grade}</td>
-            <td>${st.section}</td>
-            <td>${sub}</td>
-            <td>${mark}</td>
-            <td>${full}</td>
-            <td>${recorded.rating||"—"}</td>
-            <td>—</td>
-          </tr>`;
-      }
+      /* apply filters */
+      if(subjectFilter && subjectFilter!==subName) return;
+
+      if(ratingFilter==="missing" && !isMissing) return;
+      if(ratingFilter==="weak" && !(!isMissing && pct<60)) return;
+      if(ratingFilter==="excellent" && !(pct>=90)) return;
+      if(ratingFilter==="verygood" && !(pct>=80 && pct<90)) return;
+      if(ratingFilter==="good" && !(pct>=70 && pct<80)) return;
+
+      let tr=document.createElement("tr");
+
+      if(isMissing) tr.classList.add("missing");
+      else if(pct<60) tr.classList.add("low");
+
+      tr.innerHTML=`
+        <td>${st.name}</td>
+        <td>${st.grade}</td>
+        <td>${st.section}</td>
+        <td>${subName}</td>
+        <td>${isMissing ? "—" : mark}</td>
+        <td>${correctFull}</td>
+        <td>${isMissing ? "—" : pct+"%"}</td>
+        <td>${rate}</td>
+      `;
+      body.appendChild(tr);
+
     });
-
-    Object.keys(subs).forEach(sub=>{
-      let m=subs[sub].mark;
-      if(m === "" || m === null || m === undefined){
-        missingSubs.push(sub);
-      }
-    });
-
-    if(missingSubs.length){
-      missingCount++;
-      missingBody.innerHTML+=`
-        <tr>
-          <td>${st.name}</td>
-          <td>${st.grade}</td>
-          <td>${st.section}</td>
-          <td>${missingSubs.join(" | ")}</td>
-          <td>—</td>
-        </tr>`;
-    }
 
   });
-
-  document.getElementById("count_low").innerText=lowCount;
-  document.getElementById("count_missing").innerText=missingCount;
 }
 
-loadAll();
 </script>
 
 </body>
