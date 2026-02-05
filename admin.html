@@ -4,9 +4,7 @@
 <meta charset="UTF-8">
 <title>لوحة المشرف العام - مدارس الفلاح الأهلية</title>
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
-<button class="btn-secondary" onclick="location='change_password.html'">
-  تغيير كلمة المرور
-</button>
+
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
@@ -39,7 +37,6 @@ tr:nth-child(even){background:#f9f9f9}
 .badge{display:inline-block;padding:2px 6px;border-radius:10px;font-size:11px;background:#e3f2fd;color:#0d47a1}
 .footer{text-align:center;font-size:12px;color:#555;margin-top:10px}
 
-/* scroll للأقسام الكبيرة */
 .table-wrapper{
   max-height:350px;
   overflow-y:auto;
@@ -53,6 +50,16 @@ tr:nth-child(even){background:#f9f9f9}
   border-radius:6px;
   padding:3px;
 }
+.top-actions{
+  display:flex;
+  justify-content:flex-end;
+  gap:10px;
+  margin:12px 0 0;
+  flex-wrap:wrap;
+}
+.top-actions button{
+  padding:8px 12px;
+}
 </style>
 </head>
 <body>
@@ -60,6 +67,9 @@ tr:nth-child(even){background:#f9f9f9}
 <div class="header">
   <h1>مدارس الفلاح الأهلية</h1>
   <h2 id="header_exam">لوحة المشرف العام - نظام رصد الدرجات</h2>
+  <div class="top-actions" style="justify-content:center;margin-top:10px">
+    <button class="btn-secondary" onclick="location='change_password.html'">تغيير كلمة المرور</button>
+  </div>
 </div>
 
 <div class="container">
@@ -248,7 +258,18 @@ tr:nth-child(even){background:#f9f9f9}
         <select id="assign_subject_select"></select>
       </div>
     </div>
-    <button class="btn-primary" style="margin-top:8px" onclick="addTeacherAssignment()">إضافة إسناد</button>
+
+    <div class="row" style="margin-top:8px">
+      <div class="col-3" style="display:flex;align-items:flex-end">
+        <button class="btn-primary" style="width:100%" onclick="addTeacherAssignment()">إضافة إسناد</button>
+      </div>
+      <div class="col-3" style="display:flex;align-items:flex-end">
+        <button class="btn-secondary" style="width:100%" onclick="refreshAssignSubjects()">تحديث المواد من الإعدادات</button>
+      </div>
+      <div class="col-6" style="display:flex;align-items:flex-end">
+        <span class="badge" id="assign_subject_hint" style="width:100%;text-align:center">المواد هنا تُسحب تلقائياً حسب الصف من صفحة الإعدادات</span>
+      </div>
+    </div>
 
     <div class="table-wrapper-assign">
       <table>
@@ -277,7 +298,6 @@ tr:nth-child(even){background:#f9f9f9}
       </div>
     </div>
 
-    <!-- جدول روابط المشرف/المعلم مع إمكانية حذف الإسناد -->
     <div class="table-wrapper">
       <table>
         <thead>
@@ -316,13 +336,6 @@ var gradesList=[
   "1 ثانوي","2 ثانوي","3 ثانوي"
 ];
 var sectionsList=["أ","ب","ج","د"];
-var subjectsList=[
-  "اللغة العربية","اللغة الإنجليزية","الرياضيات","العلوم",
-  "الدراسات الإسلامية","الدراسات الاجتماعية",
-  "المهارات الرقمية","التقنية الرقمية","التفكير الناقد","المهارات الحياتية",
-  "الكيمياء","الفيزياء","الأحياء","علم الأرض والفضاء",
-  "التاريخ","التفسير","الفقه","التوحيد","كفايات لغوية"
-];
 
 var examType="";
 var studentsCache=[];
@@ -343,10 +356,7 @@ async function loadSettingsExam(){
     if(set.exists){
       examType=set.data().examType||"";
       if(examType){
-        document.getElementById("header_exam").inner
-
-
-Text="لوحة المشرف العام - "+examType;
+        document.getElementById("header_exam").innerText="لوحة المشرف العام - "+examType;
       }
     }
   }catch(e){console.log(e);}
@@ -359,8 +369,8 @@ function initSelectors(){
   var bgDel=document.getElementById("bulk_grade_delete_students");
   var bgMarks=document.getElementById("bulk_grade_clear_marks");
 
-  gradesList.forEach(g=>{
-    [stg,msg,asg,bgDel,bgMarks].forEach(sel=>{
+  gradesList.forEach(function(g){
+    [stg,msg,asg,bgDel,bgMarks].forEach(function(sel){
       let o=document.createElement("option");
       o.value=g;o.textContent=g;
       sel.appendChild(o);
@@ -373,20 +383,16 @@ function initSelectors(){
   var bsDel=document.getElementById("bulk_section_delete_students");
   var bsMarks=document.getElementById("bulk_section_clear_marks");
 
-  sectionsList.forEach(s=>{
-    [stsec,msec,asec,bsDel,bsMarks].forEach(sel=>{
+  sectionsList.forEach(function(s){
+    [stsec,msec,asec,bsDel,bsMarks].forEach(function(sel){
       let o=document.createElement("option");
       o.value=s;o.textContent=s;
       sel.appendChild(o);
     });
   });
 
-  var asub=document.getElementById("assign_subject_select");
-  subjectsList.forEach(sub=>{
-    let o=document.createElement("option");
-    o.value=sub;o.textContent=sub;
-    asub.appendChild(o);
-  });
+  var assignSub=document.getElementById("assign_subject_select");
+  assignSub.innerHTML="<option value=''>اختر مادة</option>";
 }
 
 function calcRating(m,f){
@@ -411,7 +417,7 @@ async function addStudent(){
     return;
   }
   await db.collection("students").doc(code).set({
-    code, name, grade, section, examType: examType||"", subjects: {}
+    code:code, name:name, grade:grade, section:section, examType: examType||"", subjects: {}
   },{merge:true});
   alert("تم حفظ بيانات الطالب");
   loadStudents();
@@ -431,16 +437,16 @@ async function loadStudents(){
 
   let snap=await db.collection("students").get();
   studentsCache=[];
-  snap.forEach(doc=>studentsCache.push(doc.data()));
+  snap.forEach(function(doc){ studentsCache.push(doc.data()); });
 
-  studentsCache.sort((a,b)=>{
+  studentsCache.sort(function(a,b){
     let g1=gradesList.indexOf(a.grade);
     let g2=gradesList.indexOf(b.grade);
     if(g1!==g2)return g1-g2;
     return (a.name||"").localeCompare(b.name||"","ar");
   });
 
-  let filtered=studentsCache.filter(s=>{
+  let filtered=studentsCache.filter(function(s){
     if(fcode && (!s.code || s.code.indexOf(fcode)===-1))return false;
     if(fname && (!s.name || s.name.indexOf(fname)===-1))return false;
     return true;
@@ -452,7 +458,7 @@ async function loadStudents(){
     return;
   }
 
-  filtered.forEach(s=>{
+  filtered.forEach(function(s){
     let tr=document.createElement("tr");
     tr.innerHTML=
       "<td>"+(s.code||"")+"</td>"+
@@ -489,7 +495,7 @@ async function importStudentsFromExcel(){
       }
 
       let batch=db.batch();
-      rows.forEach(row=>{
+      rows.forEach(function(row){
         let code=String(row.code||row.Code||row.CODE||"").trim();
         let name=String(row.name||row.Name||row.NAME||"").trim();
         let grade=String(row.grade||row.Grade||row.GRADE||"").trim();
@@ -526,7 +532,7 @@ async function deleteAllStudents(){
     return;
   }
   let batch=db.batch();
-  snap.forEach(doc=>batch.delete(doc.ref));
+  snap.forEach(function(doc){ batch.delete(doc.ref); });
   await batch.commit();
   alert("تم حذف جميع الطلاب");
   loadStudents();
@@ -549,7 +555,7 @@ async function deleteClassStudents(){
     return;
   }
   let batch=db.batch();
-  snap.forEach(doc=>batch.delete(doc.ref));
+  snap.forEach(function(doc){ batch.delete(doc.ref); });
   await batch.commit();
   alert("تم حذف طلاب الفصل المحدد");
   loadStudents();
@@ -564,7 +570,7 @@ async function clearAllMarks(){
     return;
   }
   let batch=db.batch();
-  snap.forEach(doc=>{
+  snap.forEach(function(doc){
     batch.set(doc.ref,{subjects:{}},{merge:true});
   });
   await batch.commit();
@@ -588,7 +594,7 @@ async function clearClassMarks(){
     return;
   }
   let batch=db.batch();
-  snap.forEach(doc=>{
+  snap.forEach(function(doc){
     batch.set(doc.ref,{subjects:{}},{merge:true});
   });
   await batch.commit();
@@ -602,6 +608,31 @@ async function getSubjectsTemplateForGrade(grade){
     return doc.data().subjects||[];
   }
   return [];
+}
+
+async function refreshAssignSubjects(){
+  var grade = document.getElementById("assign_grade_select").value;
+  var sel = document.getElementById("assign_subject_select");
+
+  sel.innerHTML = "<option value=''>اختر مادة</option>";
+
+  if(!grade) return;
+
+  var subjects = await getSubjectsTemplateForGrade(grade);
+
+  if(!subjects.length){
+    sel.innerHTML = "<option value=''>لا توجد مواد لهذا الصف</option>";
+    return;
+  }
+
+  subjects.forEach(function(sub){
+    var name = (sub && sub.name) ? String(sub.name).trim() : "";
+    if(!name) return;
+    var o = document.createElement("option");
+    o.value = name;
+    o.textContent = name;
+    sel.appendChild(o);
+  });
 }
 
 async function loadGradeMarks(){
@@ -629,7 +660,7 @@ async function loadGradeMarks(){
   let q=db.collection("students").where("grade","==",grade);
   let snap=await q.get();
   let students=[];
-  snap.forEach(doc=>{
+  snap.forEach(function(doc){
     let s=doc.data();
     if(section && s.section!==section)return;
     students.push(s);
@@ -640,19 +671,21 @@ async function loadGradeMarks(){
     return;
   }
 
-  students.sort((a,b)=>(a.name||"").localeCompare(b.name||"","ar"));
+  students.sort(function(a,b){
+    return (a.name||"").localeCompare(b.name||"","ar");
+  });
 
   let trHead=document.createElement("tr");
   trHead.innerHTML="<th>الكود</th><th>اسم الطالب</th>";
-  subjects.forEach(sub=>{
+  subjects.forEach(function(sub){
     trHead.innerHTML+="<th>"+sub.name+" ("+sub.fullMark+")</th>";
   });
   head.appendChild(trHead);
 
-  students.forEach(st=>{
+  students.forEach(function(st){
     let tr=document.createElement("tr");
     let rowHtml="<td>"+(st.code||"")+"</td><td>"+(st.name||"")+"</td>";
-    subjects.forEach(sub=>{
+    subjects.forEach(function(sub){
       let full=sub.fullMark||0;
       let ex=st.subjects && st.subjects[sub.name];
       let mark=ex? (ex.mark||"") : "";
@@ -676,7 +709,7 @@ async function saveGradeMarks(){
   }
 
   let byCode={};
-  inputs.forEach(inp=>{
+  inputs.forEach(function(inp){
     let code=inp.getAttribute("data-code");
     let subject=inp.getAttribute("data-subject");
     let full=Number(inp.getAttribute("data-full"))||0;
@@ -688,7 +721,7 @@ async function saveGradeMarks(){
   });
 
   let batch=db.batch();
-  Object.keys(byCode).forEach(code=>{
+  Object.keys(byCode).forEach(function(code){
     let ref=db.collection("students").doc(code);
     batch.set(ref,{subjects:byCode[code],examType:examType||""},{merge:true});
   });
@@ -736,8 +769,8 @@ async function loadTeachers(){
   tbody.innerHTML="<tr><td colspan='4'>جاري التحميل...</td></tr>";
   let snap=await db.collection("teachers").get();
   teachersCache=[];
-  snap.forEach(doc=>teachersCache.push(doc.data()));
-  teachersCache.sort((a,b)=>(a.name||"").localeCompare(b.name||"","ar"));
+  snap.forEach(function(doc){ teachersCache.push(doc.data()); });
+  teachersCache.sort(function(a,b){ return (a.name||"").localeCompare(b.name||"","ar"); });
 
   tbody.innerHTML="";
   if(!teachersCache.length){
@@ -747,7 +780,7 @@ async function loadTeachers(){
     return;
   }
 
-  teachersCache.forEach(t=>{
+  teachersCache.forEach(function(t){
     let count = (t.assignments && t.assignments.length) ? t.assignments.length : 0;
     let tr=document.createElement("tr");
     tr.innerHTML=
@@ -800,8 +833,8 @@ async function loadSupervisors(){
   tbody.innerHTML="<tr><td colspan='4'>جاري التحميل...</td></tr>";
   let snap=await db.collection("supervisors").get();
   supervisorsCache=[];
-  snap.forEach(doc=>supervisorsCache.push(doc.data()));
-  supervisorsCache.sort((a,b)=>(a.name||"").localeCompare(b.name||"","ar"));
+  snap.forEach(function(doc){ supervisorsCache.push(doc.data()); });
+  supervisorsCache.sort(function(a,b){ return (a.name||"").localeCompare(b.name||"","ar"); });
 
   tbody.innerHTML="";
   if(!supervisorsCache.length){
@@ -810,7 +843,7 @@ async function loadSupervisors(){
     return;
   }
 
-  supervisorsCache.forEach(s=>{
+  supervisorsCache.forEach(function(s){
     let count = (s.teachers && s.teachers.length) ? s.teachers.length : 0;
     let tr=document.createElement("tr");
     tr.innerHTML=
@@ -829,9 +862,9 @@ function renderAssignmentsTable(){
   let tbody=document.getElementById("assignments_body");
   if(!tbody)return;
   tbody.innerHTML="";
-  teachersCache.forEach(t=>{
+  teachersCache.forEach(function(t){
     let arr=t.assignments||[];
-    arr.forEach(a=>{
+    arr.forEach(function(a){
       let tr=document.createElement("tr");
       tr.innerHTML=
         "<td>"+(t.name||"")+"</td>"+
@@ -849,21 +882,29 @@ async function addTeacherAssignment(){
   let grade=document.getElementById("assign_grade_select").value;
   let section=document.getElementById("assign_section_select").value;
   let subject=document.getElementById("assign_subject_select").value;
+
   if(!teacherEmail){
     alert("اختر المعلم");
     return;
   }
+  if(!grade || !section || !subject){
+    alert("اختر الصف والشعبة والمادة");
+    return;
+  }
+
   let docRef=db.collection("teachers").doc(teacherEmail);
   let doc=await docRef.get();
   if(!doc.exists){
     alert("المعلم غير موجود");
     return;
   }
+
   let t=doc.data()||{};
   let arr=t.assignments||[];
-  if(!arr.find(a=>a.grade===grade && a.section===section && a.subject===subject)){
+  if(!arr.find(function(a){ return a.grade===grade && a.section===section && a.subject===subject; })){
     arr.push({grade:grade,section:section,subject:subject});
   }
+
   await docRef.set({assignments:arr},{merge:true});
   alert("تم إضافة الإسناد للمعلم");
   loadTeachers();
@@ -878,7 +919,9 @@ async function deleteTeacherAssignment(email,grade,section,subject){
     return;
   }
   let t=doc.data()||{};
-  let arr=(t.assignments||[]).filter(a=>!(a.grade===grade && a.section===section && a.subject===subject));
+  let arr=(t.assignments||[]).filter(function(a){
+    return !(a.grade===grade && a.section===section && a.subject===subject);
+  });
   await ref.set({assignments:arr},{merge:true});
   alert("تم حذف الإسناد");
   loadTeachers();
@@ -915,7 +958,7 @@ async function unlinkTeacherFromSupervisor(supEmail,tEmail){
     return;
   }
   let s=doc.data()||{};
-  let arr=(s.teachers||[]).filter(e=>e!==tEmail);
+  let arr=(s.teachers||[]).filter(function(e){ return e!==tEmail; });
   await ref.set({teachers:arr},{merge:true});
   alert("تم حذف الإسناد");
   loadSupervisors();
@@ -925,10 +968,10 @@ function renderSupervisorLinks(){
   let tbody=document.getElementById("sup_links_body");
   if(!tbody)return;
   tbody.innerHTML="";
-  supervisorsCache.forEach(s=>{
+  supervisorsCache.forEach(function(s){
     let arr=s.teachers||[];
-    arr.forEach(tEmail=>{
-      let teacher=teachersCache.find(t=>t.email===tEmail);
+    arr.forEach(function(tEmail){
+      let teacher=teachersCache.find(function(t){ return t.email===tEmail; });
       let tName=teacher? teacher.name:tEmail;
       let tr=document.createElement("tr");
       tr.innerHTML=
@@ -949,7 +992,7 @@ async function loadSelectorsFromTeachersSupervisors(){
   ls_t.innerHTML="<option value=''>اختر معلمًا</option>";
   ls_s.innerHTML="<option value=''>اختر مشرفًا</option>";
 
-  teachersCache.forEach(t=>{
+  teachersCache.forEach(function(t){
     let o1=document.createElement("option");
     o1.value=t.email;o1.textContent=t.name+" ("+t.email+")";
     at.appendChild(o1);
@@ -959,7 +1002,7 @@ async function loadSelectorsFromTeachersSupervisors(){
     ls_t.appendChild(o2);
   });
 
-  supervisorsCache.forEach(s=>{
+  supervisorsCache.forEach(function(s){
     let o=document.createElement("option");
     o.value=s.email;o.textContent=s.name+" ("+s.email+")";
     ls_s.appendChild(o);
@@ -973,6 +1016,10 @@ loadSettingsExam();
 loadStudents();
 loadTeachers();
 loadSupervisors();
+
+document.getElementById("assign_grade_select").addEventListener("change", refreshAssignSubjects);
+refreshAssignSubjects();
+
 setTimeout(loadSelectorsFromTeachersSupervisors,1500);
 </script>
 
