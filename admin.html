@@ -714,14 +714,11 @@ async function saveGradeMarks(){
     let subject=inp.getAttribute("data-subject");
     let full=Number(inp.getAttribute("data-full"))||0;
     let markVal=inp.value.trim();
-    let mark = markVal === "" ? null : Number(markVal);
+    let mark=markVal===""?0:Number(markVal);
     if(!code||!subject)return;
     if(!byCode[code])byCode[code]={};
-    byCode[code][subject] = {
-  fullMark: full,
-  mark: mark,
-  rating: mark === null ? null : calcRating(mark, full)
-};
+    byCode[code][subject]={fullMark:full,mark:mark,rating:calcRating(mark,full)};
+  });
 
   let batch=db.batch();
   Object.keys(byCode).forEach(function(code){
