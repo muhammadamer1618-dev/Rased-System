@@ -35,7 +35,7 @@ th{background:#1976d2;color:white;font-size:17px}
 <div class="container">
 
 <div class="no-print" style="text-align:center">
-<label>أدخل كود الطالب</label><br>
+<label>أدخل رقم هوية الطالب</label><br>
 <input id="code_input" placeholder="مثال: 1001">
 <button onclick="loadStudent()">عرض النتيجة</button>
 </div>
@@ -149,9 +149,11 @@ Object.keys(subs).forEach(subName=>{
 if(allowedSubjects.length&&!allowedSubjects.includes(subName))return;
 
 let rawMark=subs[subName].mark;
-let m=(rawMark===null||rawMark===undefined||rawMark==="")?0:Number(rawMark);
-
 let rawFull=subs[subName].fullMark;
+
+let isAbsent=(rawMark===null||rawMark===undefined||rawMark==="");
+
+let m=isAbsent?0:Number(rawMark);
 let f=(rawFull===null||rawFull===undefined||rawFull==="")?0:Number(rawFull);
 
 let p=f?((m/f)*100).toFixed(0):0;
@@ -161,10 +163,12 @@ total+=m;
 totalFull+=f;
 hasRows=true;
 
+let markDisplay=isAbsent?"<span class='red'>غائب</span>":m;
+
 let tr=document.createElement("tr");
 tr.innerHTML=
 "<td>"+subName+"</td>"+
-"<td>"+m+"</td>"+
+"<td>"+markDisplay+"</td>"+
 "<td>"+f+"</td>"+
 "<td>"+p+"%</td>"+
 "<td>"+r+"</td>";
