@@ -471,7 +471,174 @@ async function loadStudents(){
     tbody.appendChild(tr);
   });
 }
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>أرشيف النتائج</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<style>
+body{font-family:Calibri;background:#eef2f7;margin:0}
+.container{max-width:1100px;margin:20px auto}
+.box{background:#fff;padding:20px;border-radius:12px;margin-bottom:15px}
+button{padding:10px;background:#1976d2;color:#fff;border:none;border-radius:8px}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid #ccc;padding:6px;text-align:center}
+th{background:#1976d2;color:#fff}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="box">
+
+<select id="archive_list"></select>
+
+<button onclick="loadArchive()">عرض</button>
+<button onclick="printArchive()">طباعة</button>
+
+</div>
+
+<div class="box">
+
+<table id="table" style="display:none">
+<thead>
+<tr>
+<th>الكود</th>
+<th>الاسم</th>
+<th>الصف</th>
+<th>الشعبة</th>
+<th>المادة</th>
+<th>الدرجة</th>
+</tr>
+</thead>
+<tbody id="body"></tbody>
+</table>
+
+</div>
+
+</div>
+
+<script>
+var firebaseConfig={
+apiKey:"AIzaSyA...",
+authDomain:"results2026-7c0dd.firebaseapp.com",
+projectId:"results2026-7c0dd"
+};
+firebase.initializeApp(firebaseConfig);
+var db=firebase.firestore();
+
+async function loadArchives(){
+
+let snap=await db.collection("archives").get();
+
+archive_list.innerHTML="";
+
+snap.forEach(doc=>{
+archive_list.innerHTML+=`<option>${doc.id}</option>`;
+});
+
+}
+
+async function loadArchive(){
+
+let name=archive_list.value;
+
+let snap=await db.collection("archives")
+.doc(name)
+.collection("students")
+.get();
+
+body.innerHTML="";
+
+snap.forEach(doc=>{
+
+let s=doc.data();
+
+Object.keys(s.subjects||{}).forEach(sub=>{
+
+let mark=s.subjects[sub].mark||0;
+
+let tr=document.createElement("tr");
+
+tr.innerHTML=`
+<td>${s.code}</td>
+<td>${s.name}</td>
+<td>${s.grade}</td>
+<td>${s.section}</td>
+<td>${sub}</td>
+<td>${mark}</td>
+`;
+
+body.appendChild(tr);
+
+});
+
+});
+
+table.style.display="table";
+
+}
+
+function printArchive(){
+
+let rows=body.innerHTML;
+
+let win=window.open("","","width=900,height=700");
+
+win.document.write(`
+<html>
+<head>
+<style>
+body{font-family:Calibri;text-align:center}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid black;padding:8px}
+</style>
+</head>
+<body>
+
+<h2>أرشيف النتائج</h2>
+
+<table>
+<thead>
+<tr>
+<th>الكود</th>
+<th>الاسم</th>
+<th>الصف</th>
+<th>الشعبة</th>
+<th>المادة</th>
+<th>الدرجة</th>
+</tr>
+</thead>
+<tbody>${rows}</tbody>
+</table>
+
+<script>
+window.onload=function(){
+window.print();
+window.close();
+}
+<\/script>
+
+</body>
+</html>
+`);
+
+win.document.close();
+}
+
+loadArchives();
+</script>
+
+</body>
+</html>
 /* استيراد الطلاب من Excel */
 async function importStudentsFromExcel(){
   let input=document.getElementById("excel_input");
