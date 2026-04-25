@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>أرشيف النتائج</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+
+<style>
+body{font-family:Calibri;background:#eef2f7;margin:0}
+.container{max-width:1100px;margin:20px auto}
+.box{background:#fff;padding:20px;border-radius:12px;margin-bottom:15px}
+select,button{padding:8px;width:100%}
+button{background:#1976d2;color:#fff;border:none;border-radius:8px;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid #ccc;padding:6px;text-align:center}
+th{background:#1976d2;color:#fff}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<div class="box">
+
+<select id="archive_list"></select>
+
+<select id="teacher_select" onchange="loadTeacherClasses()">
+<option value="">اختر المعلم</option>
+</select>
+
+<select id="class_select">
+<option value="">اختر الفصل</option>
+</select>
+
+<button onclick="loadClassData()">عرض</button>
+<button onclick="printClass()">طباعة الفصل</button>
+
+</div>
+
+<div class="box">
+
+<table id="table" style="display:none">
+<thead>
+<tr>
+<th>الكود</th>
+<th>الاسم</th>
+<th>المادة</th>
+<th>الدرجة</th>
+</tr>
+</thead>
+<tbody id="body"></tbody>
+</table>
+
+</div>
+
+</div>
+
+<script>
+var firebaseConfig={
+apiKey:"AIzaSyA...",
+authDomain:"results2026-7c0dd.firebaseapp.com",
+projectId:"results2026-7c0dd"
+};
+firebase.initializeApp(firebaseConfig);
+var db=firebase.firestore();
+
+let teachersMap={};
+
+/* تحميل الأرشيف */
+async function loadArchives(){
+let snap=await db.collection("archives").get();
+archive_list.innerHTML="";
+snap.forEach(doc=>{
+archive_list.innerHTML+=`<option>${doc.id}</option>`;
+});
+}
+
+/* تحميل المعلمين */
+async function loadTeachers(){
+let snap=await db.collection("teachers").get();
+teacher_select.innerHTML='<option value="">اختر المعلم</option>';
+
+snap.forEach(doc=>{
+let t=doc.data();
+teachersMap[doc.id]=t;
+teacher_select.innerHTML+=`<option value="${doc.id}">${t.name}</option>`;
+});
+}
+
+/* تحميل فصول المعلم */
+function loadTeacherClasses(){
+
+let tId=teacher_select.value;
+class_select.innerHTML='<option value="">اختر الفصل</option>';
+
+if(!tId) return;
+
+let t=teachersMap[tId];
+
+(t.assignments||[]).forEach(a=>{
+
+let val=`${a.grade}|${a.section}|${a.subject}`;
+
+class_select.innerHTML+=`
+<option value="${val}">
+${a.grade} - ${a.section} - ${a.subject}
+</option>`;
+
+});
+}
+
+/* عرض البيانات */
+async function loadClassData(){
+
+let archive=archive_list.value;
+let val=class_select.value;
+
+if(!val){alert("اختر الفصل");return;}
+
+let [grade,section,subject]=val.split("|");
+
+let snap=await db.collection("archives")
+.doc(archive)
+.collection("students")
+.where("grade","==",grade)
+.where("section","==",section)
+.get();
+
+body.innerHTML="";
+
+snap.forEach(doc=>{
+
+let s=doc.data();
+let mark=s.subjects?.[subject]?.mark || 0;
+
+let tr=document.createElement("tr");
+
+tr.innerHTML=`
+<td>${s.code}</td>
+<td>${s.name}</td>
+<td>${subject}</td>
+<td>${mark}</td>
+`;
+
+body.appendChild(tr);
+
+});
+
+table.style.display="table";
+
+}
+
+/* طباعة */
+function printClass(){
+
+let rows=body.innerHTML;
+
+if(!rows){alert("اعرض البيانات الأول");return;}
+
+let win=window.open("","","width=900,height=700");
+
+win.document.write(`
+<html>
+<head>
+<style>
+body{font-family:Calibri;text-align:center}
+table{width:100%;border-collapse:collapse}
+th,td{border:1px solid black;padding:8px}
+</style>
+</head>
+<body>
+
+<h2>نتائج الفصل</h2>
+
+<table>
+<thead>
+<tr>
+<th>الكود</th>
+<th>الاسم</th>
+<th>المادة</th>
+<th>الدرجة</th>
+</tr>
+</thead>
+<tbody>${rows}</tbody>
+</table>
+
+<script>
+window.onload=function(){
+window.print();
+window.close();
+}
+<\/script>
+
+</body>
+</html>
+`);
+
+win.document.close();
+}
+
+/* تشغيل */
+loadArchives();
+loadTeachers();
+</script>
+
+</body>
+</html>
