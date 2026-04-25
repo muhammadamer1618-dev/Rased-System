@@ -3,70 +3,31 @@
 <head>
 <meta charset="UTF-8">
 <title>لوحة المشرف - نظام راصد</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
-<button class="btn-secondary" onclick="location='change_password.html'">
-  تغيير كلمة المرور
-</button>
+
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
 body{font-family:Calibri;background:#eef2f7;margin:0}
-.header{
-  background:#1976d2;color:#fff;text-align:center;padding:15px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.2)
-}
-.header h1{margin:0;font-size:26px;font-weight:bold}
-.header h2{margin:5px 0 0;font-size:18px;color:#ffeb3b}
-
+.header{background:#1976d2;color:#fff;text-align:center;padding:15px}
 .container{max-width:1100px;margin:25px auto;padding:10px}
+.box{background:#fff;border-radius:14px;padding:20px;margin-bottom:18px}
 
-.box{
-  background:#fff;border-radius:14px;padding:20px;margin-bottom:18px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.12)
-}
+h3{color:#1976d2;border-right:4px solid #1976d2;padding-right:8px}
 
-h3{
-  margin-top:0;color:#1976d2;font-size:20px;font-weight:bold;
-  border-right:4px solid #1976d2;padding-right:8px
-}
-
-.label-title{
-  font-weight:bold;font-size:15px;margin-bottom:4px;color:#444
-}
-
-.info-row{display:flex;gap:15px;flex-wrap:wrap}
-.info-item{
-  flex:1;
-  background:#fff;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #c7d6f5;
-  box-shadow:0 1px 4px rgba(0,0,0,0.08);
-}
-.info-item span{font-weight:bold;color:#1976d2}
-
-button{
-  padding:8px 15px;border:none;border-radius:8px;font-size:14px;
-  cursor:pointer;font-weight:bold
-}
-.btn-primary{background:#1976d2;color:#fff}
+button{padding:8px 15px;border:none;border-radius:8px;cursor:pointer;font-weight:bold}
 .btn-secondary{background:#757575;color:#fff}
 
-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+table{width:100%;border-collapse:collapse;margin-top:12px}
 th,td{border:1px solid #ccc;text-align:center;padding:6px}
-th{
-  background:#1976d2;color:#fff;font-size:15px
-}
-tr:nth-child(even){background:#f9f9f9}
+th{background:#1976d2;color:#fff}
 
-select{
-  padding:7px;border-radius:6px;border:1px solid #999;font-size:15px;
-  width:100%;margin-top:6px
-}
-
+select{width:100%;padding:6px}
 </style>
 </head>
+
 <body>
 
 <div class="header">
@@ -80,51 +41,36 @@ select{
   <div class="box">
     <h3>بيانات المشرف</h3>
 
-    <div class="info-row">
-      <div class="info-item">
-        <div class="label-title">اسم المشرف</div>
-        <span id="sup_name">—</span>
-      </div>
-
-      <div class="info-item">
-        <div class="label-title">اسم المستخدم</div>
-        <span id="sup_email">—</span>
-      </div>
-
-      <div class="info-item">
-        <div class="label-title">عدد المعلمين</div>
-        <span id="sup_t_count">—</span>
-      </div>
+    <div>
+      <span id="sup_name"></span> |
+      <span id="sup_email"></span> |
+      عدد المعلمين: <span id="sup_t_count"></span>
     </div>
 
-    <button class="btn-secondary" onclick="window.print()">طباعة / PDF</button>
+    <br>
+    <button class="btn-secondary" onclick="printStudents()">طباعة / PDF</button>
   </div>
 
-
-  <!-- جدول المعلمين -->
+  <!-- المعلمين -->
   <div class="box">
     <h3>المعلمون التابعون للمشرف</h3>
     <table>
       <thead>
         <tr>
           <th>المعلم</th>
-          <th>اسم المستخدم</th>
-          <th>عدد الفصول</th>
-          <th>اختيار فصل ومادة</th>
+          <th>اختيار الفصل</th>
         </tr>
       </thead>
       <tbody id="sup_teachers_body"></tbody>
     </table>
   </div>
 
-
-  <!-- عرض الطلاب -->
+  <!-- الطلاب -->
   <div class="box">
     <h3>طلاب الفصل المحدد</h3>
 
-    <div class="info-item" style="max-width:350px">
-      <div class="label-title">الفصل والمادة</div>
-      <span id="currentClassInfo">—</span>
+    <div>
+      <span id="currentClassInfo"></span>
     </div>
 
     <table id="sup_students_table" style="display:none">
@@ -141,28 +87,23 @@ select{
     </table>
   </div>
 
-  <div class="box">
-    <button class="btn-secondary" onclick="location='index.html'">تسجيل الخروج</button>
-  </div>
-
 </div>
-
 
 <script>
 var firebaseConfig={
   apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
   authDomain:"results2026-7c0dd.firebaseapp.com",
-  projectId:"results2026-7c0dd",
-  storageBucket:"results2026-7c0dd.firebasestorage.app",
-  messagingSenderId:"241421115694",
-  appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
+  projectId:"results2026-7c0dd"
 };
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
 let currentEmail="";
 let teachersMap={};
+let currentTeacherName="";
+let currentTitle="";
 
+/* 🔒 نفس نظام المشرف */
 function ensureSupervisorGuard(){
   let r=localStorage.getItem("currentUserRole");
   if(r!=="supervisor"){
@@ -183,6 +124,7 @@ async function loadSupervisor(){
   loadSupervisorTeachers(data.teachers);
 }
 
+/* ✅ المعلمين الخاصين بالمشرف فقط */
 async function loadSupervisorTeachers(list){
   let body=document.getElementById("sup_teachers_body");
   body.innerHTML="";
@@ -196,20 +138,17 @@ async function loadSupervisorTeachers(list){
 
     let options="";
     (t.assignments||[]).forEach((a,i)=>{
-      options+=`
-        <option value="${email}|${i}">
-          ${a.grade} - ${a.section} - ${a.subject}
-        </option>`;
+      options+=`<option value="${email}|${i}">
+        ${a.grade} - ${a.section} - ${a.subject}
+      </option>`;
     });
 
     let tr=document.createElement("tr");
     tr.innerHTML=`
       <td>${t.name}</td>
-      <td>${t.email}</td>
-      <td>${(t.assignments||[]).length}</td>
       <td>
         <select onchange="selectClass(this.value)">
-          <option value="">اختر فصلًا ومادة</option>
+          <option>اختر</option>
           ${options}
         </select>
       </td>`;
@@ -226,15 +165,19 @@ function selectClass(val){
   let t=teachersMap[email];
   let assign=t.assignments[idx];
 
+  currentTeacherName = t.name;
+  currentTitle = `${assign.grade} - ${assign.section} - ${assign.subject}`;
+
   loadStudents(assign);
 }
 
 async function loadStudents(assign){
-  document.getElementById("currentClassInfo").innerText=
-    `${assign.grade} - ${assign.section} - ${assign.subject}`;
+
+  document.getElementById("currentClassInfo").innerText = currentTitle;
 
   let table=document.getElementById("sup_students_table");
   let body=document.getElementById("sup_students_body");
+
   body.innerHTML="";
   table.style.display="none";
 
@@ -243,15 +186,10 @@ async function loadStudents(assign){
     .where("section","==",assign.section);
 
   let snap=await q.get();
-  let stds=[];
-  snap.forEach(doc=>stds.push(doc.data()));
 
-  stds.sort((a,b)=>a.name.localeCompare(b.name,"ar"));
-
-  stds.forEach(s=>{
-    let mark=s.subjects && s.subjects[assign.subject]
-      ? s.subjects[assign.subject].mark || 0
-      : 0;
+  snap.forEach(doc=>{
+    let s=doc.data();
+    let mark=s.subjects?.[assign.subject]?.mark || 0;
 
     let tr=document.createElement("tr");
     tr.innerHTML=`
@@ -264,6 +202,61 @@ async function loadStudents(assign){
   });
 
   table.style.display="table";
+}
+
+/* 🔥 طباعة بدون مشاكل */
+function printStudents(){
+
+  let rows = document.getElementById("sup_students_body").innerHTML;
+
+  if(!rows){
+    alert("اختار فصل الأول");
+    return;
+  }
+
+  let win = window.open('', '', 'width=900,height=700');
+
+  win.document.write(`
+    <html>
+    <head>
+      <title>طباعة</title>
+      <style>
+        body { font-family: Calibri; padding:20px; text-align:center; }
+        table { width:100%; border-collapse:collapse; margin-top:15px; }
+        th,td { border:1px solid black; padding:8px; text-align:center; }
+        th { background:#eee; }
+      </style>
+    </head>
+    <body>
+
+      <h2>المعلم: ${currentTeacherName}</h2>
+      <h3>${currentTitle}</h3>
+
+      <table>
+        <thead>
+          <tr>
+            <th>كود</th>
+            <th>اسم الطالب</th>
+            <th>الصف</th>
+            <th>الشعبة</th>
+            <th>الدرجة</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+
+      <script>
+        window.onload = function(){
+          window.print();
+          window.close();
+        }
+      <\/script>
+
+    </body>
+    </html>
+  `);
+
+  win.document.close();
 }
 
 ensureSupervisorGuard();
