@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <title>لوحة المشرف - نظام راصد</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
-<button class="btn-secondary" onclick="location='change_password.html'">
-  تغيير كلمة المرور
-</button>
+
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
@@ -14,59 +13,60 @@
 body{font-family:Calibri;background:#eef2f7;margin:0}
 .header{
   background:#1976d2;color:#fff;text-align:center;padding:15px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.2)
 }
-.header h1{margin:0;font-size:26px;font-weight:bold}
-.header h2{margin:5px 0 0;font-size:18px;color:#ffeb3b}
+.header h1{margin:0}
+.header h2{margin:5px 0 0;color:#ffeb3b}
 
 .container{max-width:1100px;margin:25px auto;padding:10px}
 
 .box{
   background:#fff;border-radius:14px;padding:20px;margin-bottom:18px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.12)
 }
 
 h3{
-  margin-top:0;color:#1976d2;font-size:20px;font-weight:bold;
-  border-right:4px solid #1976d2;padding-right:8px
+  color:#1976d2;
+  border-right:4px solid #1976d2;
+  padding-right:8px
 }
-
-.label-title{
-  font-weight:bold;font-size:15px;margin-bottom:4px;color:#444
-}
-
-.info-row{display:flex;gap:15px;flex-wrap:wrap}
-.info-item{
-  flex:1;
-  background:#fff;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #c7d6f5;
-  box-shadow:0 1px 4px rgba(0,0,0,0.08);
-}
-.info-item span{font-weight:bold;color:#1976d2}
 
 button{
-  padding:8px 15px;border:none;border-radius:8px;font-size:14px;
+  padding:8px 15px;border:none;border-radius:8px;
   cursor:pointer;font-weight:bold
 }
-.btn-primary{background:#1976d2;color:#fff}
 .btn-secondary{background:#757575;color:#fff}
 
-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
+table{width:100%;border-collapse:collapse;margin-top:12px}
 th,td{border:1px solid #ccc;text-align:center;padding:6px}
-th{
-  background:#1976d2;color:#fff;font-size:15px
-}
-tr:nth-child(even){background:#f9f9f9}
+th{background:#1976d2;color:#fff}
 
-select{
-  padding:7px;border-radius:6px;border:1px solid #999;font-size:15px;
-  width:100%;margin-top:6px
-}
+select{width:100%;padding:6px}
 
+/* 🔥 الطباعة فقط */
+@media print {
+
+  body * {
+    visibility: hidden;
+  }
+
+  #printArea, #printArea * {
+    visibility: visible;
+  }
+
+  #printArea {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  @page {
+    size: A4;
+    margin: 10mm;
+  }
+}
 </style>
 </head>
+
 <body>
 
 <div class="header">
@@ -100,7 +100,6 @@ select{
     <button class="btn-secondary" onclick="window.print()">طباعة / PDF</button>
   </div>
 
-
   <!-- جدول المعلمين -->
   <div class="box">
     <h3>المعلمون التابعون للمشرف</h3>
@@ -117,15 +116,11 @@ select{
     </table>
   </div>
 
-
-  <!-- عرض الطلاب -->
-  <div class="box">
-    <h3>طلاب الفصل المحدد</h3>
-
-    <div class="info-item" style="max-width:350px">
-      <div class="label-title">الفصل والمادة</div>
-      <span id="currentClassInfo">—</span>
-    </div>
+  <!-- 🔥 منطقة الطباعة فقط -->
+  <div id="printArea" class="box">
+    
+    <h2 id="printTeacher" style="text-align:center;margin-bottom:5px"></h2>
+    <h3 id="printTitle" style="text-align:center;margin-bottom:10px"></h3>
 
     <table id="sup_students_table" style="display:none">
       <thead>
@@ -139,6 +134,7 @@ select{
       </thead>
       <tbody id="sup_students_body"></tbody>
     </table>
+
   </div>
 
   <div class="box">
@@ -147,15 +143,11 @@ select{
 
 </div>
 
-
 <script>
 var firebaseConfig={
   apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
   authDomain:"results2026-7c0dd.firebaseapp.com",
-  projectId:"results2026-7c0dd",
-  storageBucket:"results2026-7c0dd.firebasestorage.app",
-  messagingSenderId:"241421115694",
-  appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
+  projectId:"results2026-7c0dd"
 };
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
@@ -226,12 +218,18 @@ function selectClass(val){
   let t=teachersMap[email];
   let assign=t.assignments[idx];
 
+  // 🔥 اسم المعلم في الطباعة
+  document.getElementById("printTeacher").innerText = "المعلم: " + t.name;
+
   loadStudents(assign);
 }
 
 async function loadStudents(assign){
-  document.getElementById("currentClassInfo").innerText=
-    `${assign.grade} - ${assign.section} - ${assign.subject}`;
+
+  let title = `${assign.grade} - ${assign.section} - ${assign.subject}`;
+
+  document.getElementById("currentClassInfo").innerText = title;
+  document.getElementById("printTitle").innerText = "الفصل: " + title;
 
   let table=document.getElementById("sup_students_table");
   let body=document.getElementById("sup_students_body");
