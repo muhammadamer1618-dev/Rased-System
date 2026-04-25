@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>نتيجة الطالب - مدارس الفلاح الأهلية</title>
+<title>نتيجة الطالب</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
 
@@ -10,27 +10,16 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
-/* نفس التصميم بدون تغيير */
 body{font-family:Calibri;background:#f4f4f4;margin:0;padding:20px}
-.container{max-width:900px;margin:auto;background:white;padding:20px;border-radius:12px;box-shadow:0 0 10px rgba(0,0,0,0.2)}
-h1{text-align:center;color:#1976d2;margin-bottom:5px}
-h2{text-align:center;color:#d32f2f;margin-top:0}
-label{font-weight:bold}
-input{padding:10px;font-size:18px;width:200px;border-radius:8px;border:1px solid #999;margin-bottom:10px}
-button{padding:10px 20px;border:none;border-radius:8px;background:#1976d2;color:white;font-size:18px;font-weight:bold;cursor:pointer}
+.container{max-width:900px;margin:auto;background:#fff;padding:20px;border-radius:12px}
+h1{text-align:center;color:#1976d2}
+h2{text-align:center;color:#d32f2f}
+input{padding:10px;width:200px}
+button{padding:10px;background:#1976d2;color:#fff;border:none;border-radius:8px}
 
-table{width:100%;border-collapse:collapse;margin-top:15px;font-size:16px}
+table{width:100%;border-collapse:collapse;margin-top:10px}
 th,td{border:1px solid #888;padding:8px;text-align:center}
-th{background:#1976d2;color:white;font-size:17px}
-
-.blue{color:#0d47a1;font-weight:bold}
-.red{color:#d32f2f;font-weight:bold}
-
-@media print{
-  body{background:white}
-  .no-print{display:none}
-  .container{box-shadow:none;border:1px solid #000}
-}
+th{background:#1976d2;color:#fff}
 </style>
 </head>
 
@@ -38,132 +27,97 @@ th{background:#1976d2;color:white;font-size:17px}
 
 <div class="container">
 
-<div class="no-print" style="text-align:center">
-<label>أدخل رقم هوية الطالب</label><br>
-<input id="code_input">
-<button onclick="loadStudent()">عرض النتيجة</button>
+<div style="text-align:center">
+<input id="code">
+<button onclick="loadStudent()">عرض</button>
 </div>
 
-<h1>مدارس الفلاح الأهلية</h1>
-<h2 id="exam_type">—</h2>
+<h1>مدارس الفلاح</h1>
+<h2 id="exam_type"></h2>
 
-<table id="student_info" style="display:none;">
-<tr><th>البيان</th><th>القيمة</th></tr>
-<tr><td class="red">اسم الطالب</td><td id="st_name" class="blue"></td></tr>
-<tr><td class="red">الكود</td><td id="st_code" class="blue"></td></tr>
-<tr><td class="red">الصف</td><td id="st_grade" class="blue"></td></tr>
-<tr><td class="red">الشعبة</td><td id="st_section" class="blue"></td></tr>
-</table>
-
-<table id="subjects_table" style="display:none;">
+<table id="table" style="display:none">
 <thead>
 <tr>
 <th>المادة</th>
 <th>درجة الطالب</th>
-<th>الدرجة النهائية</th>
 <th>النسبة</th>
-<th>التقدير</th>
 </tr>
 </thead>
-<tbody id="subjects_body"></tbody>
-</table>
-
-<table id="summary_table" style="display:none;">
-<tr><th>المجموع الكلي</th><th>التقدير العام</th></tr>
-<tr>
-<td id="total_mark" class="blue"></td>
-<td id="final_rating" class="red"></td>
-</tr>
+<tbody id="body"></tbody>
 </table>
 
 </div>
 
 <script>
-var firebaseConfig = {
-  apiKey: "AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
-  authDomain: "results2026-7c0dd.firebaseapp.com",
-  projectId: "results2026-7c0dd"
+var firebaseConfig={
+apiKey:"AIzaSyA...",
+authDomain:"results2026-7c0dd.firebaseapp.com",
+projectId:"results2026-7c0dd"
 };
-
 firebase.initializeApp(firebaseConfig);
-var db = firebase.firestore();
-
-function getRate(p){
-  if(p>=90)return"ممتاز";
-  if(p>=80)return"جيد جدًا";
-  if(p>=70)return"جيد";
-  if(p>=60)return"مقبول";
-  return"ضعيف";
-}
+var db=firebase.firestore();
 
 function avg(obj){
-  let vals=Object.values(obj||{});
-  if(!vals.length)return 0;
-  return vals.reduce((a,b)=>a+b,0)/vals.length;
+let v=Object.values(obj||{});
+if(!v.length) return 0;
+return v.reduce((a,b)=>a+b,0)/v.length;
 }
 
 async function loadStudent(){
 
-  let code=document.getElementById("code_input").value.trim();
-  if(!code){alert("أدخل الكود");return;}
+let code=document.getElementById("code").value.trim();
+if(!code) return;
 
-  let doc=await db.collection("students").doc(code).get();
-  if(!doc.exists){alert("غير موجود");return;}
+let doc=await db.collection("students").doc(code).get();
+if(!doc.exists){alert("مش موجود");return;}
 
-  let d=doc.data();
+let d=doc.data();
 
-  let settings = await db.collection("settings").doc("general").get();
-  let examType = settings.exists ? settings.data().examType : "term1";
+// 🔥 نوع العرض
+let s=await db.collection("settings").doc("general").get();
+let type=s.exists?s.data().examType:"term1";
 
-  document.getElementById("exam_type").innerText = examType;
+exam_type.innerText=type;
 
-  st_name.innerText=d.name;
-  st_code.innerText=d.code;
-  st_grade.innerText=d.grade;
-  st_section.innerText=d.section;
-  student_info.style.display="table";
+body.innerHTML="";
 
-  let body=subjects_body;
-  body.innerHTML="";
+let total=0;
+let count=0;
 
-  let total=0,totalFull=0;
+Object.keys(d.subjects||{}).forEach(subName=>{
 
-  let subs=d.subjects||{};
+let sub=d.subjects[subName];
 
-  Object.keys(subs).forEach(subName=>{
+let mark=0;
 
-    let sub=subs[subName];
+// 🔥 fallback
+if(type==="term1"){
+mark=sub.term1 ?? sub.mark ?? 0;
+}
+else if(type==="term2"){
+mark=sub.term2 ?? sub.mark ?? 0;
+}
+else if(type==="quiz"){
+mark=avg(sub.quizzes);
+}
 
-    let mark=0;
+total+=mark;
+count++;
 
-    if(examType==="term1") mark=sub.term1 || 0;
-    else if(examType==="term2") mark=sub.term2 || 0;
-    else if(examType==="quiz") mark=avg(sub.quizzes);
+let percent=mark;
 
-    let full=sub.fullMark || 100;
+let tr=document.createElement("tr");
+tr.innerHTML=`
+<td>${subName}</td>
+<td>${mark}</td>
+<td>${percent}%</td>
+`;
+body.appendChild(tr);
 
-    let p=((mark/full)*100)||0;
+});
 
-    total+=mark;
-    totalFull+=full;
+table.style.display="table";
 
-    let tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>${subName}</td>
-      <td>${mark}</td>
-      <td>${full}</td>
-      <td>${p.toFixed(0)}%</td>
-      <td>${getRate(p)}</td>
-    `;
-    body.appendChild(tr);
-  });
-
-  subjects_table.style.display="table";
-
-  total_mark.innerText=total+" / "+totalFull;
-  final_rating.innerText=getRate((total/totalFull)*100);
-
-  summary_table.style.display="table";
 }
 </script>
 
