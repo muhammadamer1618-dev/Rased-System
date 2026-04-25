@@ -471,7 +471,41 @@ async function loadStudents(){
     tbody.appendChild(tr);
   });
 }
+async function archiveNow(){
 
+  let name = prompt("اكتب اسم الاختبار (مثال: اختبار مارس)");
+  if(!name) return;
+
+  let snap = await db.collection("students").get();
+
+  if(snap.empty){
+    alert("لا يوجد طلاب");
+    return;
+  }
+
+  let batch = db.batch();
+
+  snap.forEach(doc => {
+
+    let ref = db.collection("archives")
+      .doc(name)
+      .collection("students")
+      .doc(doc.id);
+
+    batch.set(ref, doc.data());
+
+  });
+
+  await db.collection("archives").doc(name).set({
+    name: name,
+    date: new Date().toISOString()
+  });
+
+  await batch.commit();
+
+  alert("تم حفظ الأرشيف بنجاح ✅");
+
+}
 /* استيراد الطلاب من Excel */
 async function importStudentsFromExcel(){
   let input=document.getElementById("excel_input");
