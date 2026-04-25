@@ -9,6 +9,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
+<!-- PDF -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
@@ -48,23 +49,25 @@ select{width:100%;padding:6px}
 
 /* 🔥 الطباعة */
 @media print {
-  body * { visibility:hidden; }
-  #printArea, #printArea * { visibility:visible; }
+
+  body * {
+    visibility: hidden;
+  }
+
+  #printArea, #printArea * {
+    visibility: visible;
+  }
 
   #printArea {
-    position:absolute;
-    top:0;
-    left:0;
-    width:100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
   }
 
   @page {
-    size:A4;
-    margin:10mm;
-  }
-
-  .page-break {
-    page-break-after: always;
+    size: A4;
+    margin: 10mm;
   }
 }
 </style>
@@ -80,10 +83,11 @@ select{width:100%;padding:6px}
 <div class="container">
 
   <div class="box">
-    <button class="btn-secondary" onclick="window.print()">طباعة الحالي</button>
-    <button class="btn-primary" onclick="exportAllTeachers()">PDF كل المعلمين</button>
+    <button class="btn-secondary" onclick="window.print()">طباعة</button>
+    <button class="btn-primary" onclick="exportPDF()">PDF</button>
   </div>
 
+  <!-- المعلمين -->
   <div class="box">
     <h3>المعلمون</h3>
     <table>
@@ -97,8 +101,9 @@ select{width:100%;padding:6px}
     </table>
   </div>
 
-  <!-- عرض فصل واحد -->
+  <!-- 🔥 منطقة الطباعة فقط -->
   <div id="printArea" class="box">
+
     <h2 id="printTitle" style="text-align:center"></h2>
 
     <table id="sup_students_table" style="display:none">
@@ -113,6 +118,7 @@ select{width:100%;padding:6px}
       </thead>
       <tbody id="sup_students_body"></tbody>
     </table>
+
   </div>
 
 </div>
@@ -167,6 +173,7 @@ function selectClass(val){
 }
 
 async function loadStudents(assign){
+
   let title = `${assign.grade} - ${assign.section} - ${assign.subject}`;
   document.getElementById("printTitle").innerText = "نتائج الطلاب - " + title;
 
@@ -184,6 +191,7 @@ async function loadStudents(assign){
 
   snap.forEach(doc=>{
     let s=doc.data();
+
     let mark = s.subjects?.[assign.subject]?.mark || 0;
 
     let tr=document.createElement("tr");
@@ -199,78 +207,12 @@ async function loadStudents(assign){
   table.style.display="table";
 }
 
-/* 🔥 أهم جزء */
-async function exportAllTeachers(){
+function exportPDF(){
+  let element = document.getElementById("printArea");
 
-  let container = document.createElement("div");
-
-  let teachersSnap = await db.collection("teachers").get();
-
-  for (let doc of teachersSnap.docs){
-
-    let t = doc.data();
-
-    for (let assign of (t.assignments || [])){
-
-      let sectionDiv = document.createElement("div");
-
-      sectionDiv.innerHTML = `
-        <h2 style="text-align:center">
-          ${t.name} - ${assign.grade} ${assign.section} (${assign.subject})
-        </h2>
-      `;
-
-      let table = document.createElement("table");
-      table.style.width="100%";
-      table.border="1";
-
-      table.innerHTML=`
-        <thead>
-          <tr>
-            <th>كود</th>
-            <th>اسم الطالب</th>
-            <th>الصف</th>
-            <th>الشعبة</th>
-            <th>الدرجة</th>
-          </tr>
-        </thead>
-        <tbody></tbody>
-      `;
-
-      let q = db.collection("students")
-        .where("grade","==",assign.grade)
-        .where("section","==",assign.section);
-
-      let snap = await q.get();
-
-      snap.forEach(d=>{
-        let s = d.data();
-        let mark = s.subjects?.[assign.subject]?.mark || 0;
-
-        let row = document.createElement("tr");
-        row.innerHTML=`
-          <td>${s.code}</td>
-          <td>${s.name}</td>
-          <td>${s.grade}</td>
-          <td>${s.section}</td>
-          <td>${mark}</td>
-        `;
-        table.querySelector("tbody").appendChild(row);
-      });
-
-      sectionDiv.appendChild(table);
-
-      let breakDiv = document.createElement("div");
-      breakDiv.className="page-break";
-
-      container.appendChild(sectionDiv);
-      container.appendChild(breakDiv);
-    }
-  }
-
-  html2pdf().from(container).set({
+  html2pdf().from(element).set({
     margin:10,
-    filename:"All_Teachers_Results.pdf",
+    filename:"results.pdf",
     html2canvas:{scale:2},
     jsPDF:{unit:"mm",format:"a4"}
   }).save();
