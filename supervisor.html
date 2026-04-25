@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>لوحة المشرف - نظام راصد</title>
+<title>لوحة المشرف</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
 
@@ -12,269 +12,183 @@
 <style>
 body{font-family:Calibri;background:#eef2f7;margin:0}
 .header{background:#1976d2;color:#fff;text-align:center;padding:15px}
-.container{max-width:1100px;margin:25px auto;padding:10px}
-.box{background:#fff;border-radius:14px;padding:20px;margin-bottom:18px}
-h3{color:#1976d2;border-right:4px solid #1976d2;padding-right:8px}
-button{padding:8px 15px;border:none;border-radius:8px;cursor:pointer;font-weight:bold}
-.btn-secondary{background:#757575;color:#fff}
-table{width:100%;border-collapse:collapse;margin-top:12px}
-th,td{border:1px solid #ccc;text-align:center;padding:6px}
+.container{max-width:1100px;margin:25px auto}
+.box{background:#fff;border-radius:14px;padding:20px;margin-bottom:15px}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid #ccc;padding:6px;text-align:center}
 th{background:#1976d2;color:#fff}
 select{width:100%;padding:6px}
+button{padding:8px;background:#1976d2;color:#fff;border:none;border-radius:8px}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  <h1>مدارس الفلاح الأهلية</h1>
-  <h2>لوحة المشرف</h2>
+<h2>لوحة المشرف</h2>
 </div>
 
 <div class="container">
 
 <div class="box">
-  <h3>بيانات المشرف</h3>
-  <div>
-    <span id="sup_name"></span> |
-    <span id="sup_email"></span> |
-    عدد المعلمين: <span id="sup_t_count"></span>
-  </div>
-  <br>
-  <button class="btn-secondary" onclick="printStudents()">طباعة / PDF</button>
+<span id="sup_name"></span> |
+<span id="sup_email"></span>
 </div>
 
 <div class="box">
-  <h3>المعلمون التابعون للمشرف</h3>
-  <table>
-    <thead>
-      <tr>
-        <th>المعلم</th>
-        <th>اختيار الفصل</th>
-      </tr>
-    </thead>
-    <tbody id="sup_teachers_body"></tbody>
-  </table>
+<table>
+<thead>
+<tr>
+<th>المعلم</th>
+<th>الفصل</th>
+</tr>
+</thead>
+<tbody id="teachers_body"></tbody>
+</table>
 </div>
 
 <div class="box">
-  <h3>طلاب الفصل المحدد</h3>
-  <div>
-    <span id="currentClassInfo"></span>
-  </div>
 
-  <table id="sup_students_table" style="display:none">
-    <thead>
-      <tr>
-        <th>كود</th>
-        <th>اسم الطالب</th>
-        <th>الصف</th>
-        <th>الشعبة</th>
-        <th>الدرجة</th>
-      </tr>
-    </thead>
-    <tbody id="sup_students_body"></tbody>
-  </table>
+<span id="title"></span>
+
+<table id="students_table" style="display:none">
+<thead>
+<tr>
+<th>الكود</th>
+<th>الاسم</th>
+<th>الدرجة</th>
+</tr>
+</thead>
+<tbody id="students_body"></tbody>
+</table>
+
 </div>
 
 </div>
 
 <script>
 var firebaseConfig={
-  apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
-  authDomain:"results2026-7c0dd.firebaseapp.com",
-  projectId:"results2026-7c0dd"
+apiKey:"AIzaSyA...",
+authDomain:"results2026-7c0dd.firebaseapp.com",
+projectId:"results2026-7c0dd"
 };
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
-let currentEmail="";
 let teachersMap={};
-let currentTeacherName="";
 let currentTitle="";
 
 /* 🔥 helper */
 function avg(obj){
-  let vals=Object.values(obj||{});
-  if(!vals.length) return 0;
-  return vals.reduce((a,b)=>a+b,0)/vals.length;
+let v=Object.values(obj||{});
+if(!v.length) return 0;
+return v.reduce((a,b)=>a+b,0)/v.length;
 }
 
-async function getExamType(){
-  let doc=await db.collection("settings").doc("general").get();
-  if(doc.exists) return doc.data().examType || "term1";
-  return "term1";
+async function getType(){
+let d=await db.collection("settings").doc("general").get();
+return d.exists?d.data().examType:"term1";
 }
 
-/* 🔒 */
-function ensureSupervisorGuard(){
-  let r=localStorage.getItem("currentUserRole");
-  if(r!=="supervisor"){
-    alert("هذه الصفحة للمشرفين فقط");
-    location="index.html";
-  }
-  currentEmail=localStorage.getItem("currentUserEmail");
+async function load(){
+
+let email=localStorage.getItem("currentUserEmail");
+
+let doc=await db.collection("supervisors").doc(email).get();
+let data=doc.data();
+
+sup_name.innerText=data.name;
+sup_email.innerText=data.email;
+
+let body=teachers_body;
+
+for(let tEmail of data.teachers){
+
+let tDoc=await db.collection("teachers").doc(tEmail).get();
+let t=tDoc.data();
+
+teachersMap[tEmail]=t;
+
+let options="";
+(t.assignments||[]).forEach((a,i)=>{
+options+=`<option value="${tEmail}|${i}">
+${a.grade} - ${a.section} - ${a.subject}
+</option>`;
+});
+
+let tr=document.createElement("tr");
+tr.innerHTML=`
+<td>${t.name}</td>
+<td>
+<select onchange="selectClass(this.value)">
+<option>اختر</option>
+${options}
+</select>
+</td>`;
+body.appendChild(tr);
+
+}
 }
 
-async function loadSupervisor(){
-  let doc=await db.collection("supervisors").doc(currentEmail).get();
-  let data=doc.data()||{teachers:[]};
+function selectClass(v){
 
-  sup_name.innerText=data.name;
-  sup_email.innerText=data.email;
-  sup_t_count.innerText=data.teachers.length;
+let [email,i]=v.split("|");
 
-  loadSupervisorTeachers(data.teachers);
+let t=teachersMap[email];
+let a=t.assignments[i];
+
+currentTitle=`${a.grade} - ${a.section} - ${a.subject}`;
+
+loadStudents(a);
 }
 
-async function loadSupervisorTeachers(list){
-  let body=sup_teachers_body;
-  body.innerHTML="";
+async function loadStudents(a){
 
-  for(let email of list){
-    let tDoc=await db.collection("teachers").doc(email).get();
-    if(!tDoc.exists) continue;
+title.innerText=currentTitle;
 
-    let t=tDoc.data();
-    teachersMap[email]=t;
+let type=await getType();
 
-    let options="";
-    (t.assignments||[]).forEach((a,i)=>{
-      options+=`<option value="${email}|${i}">
-        ${a.grade} - ${a.section} - ${a.subject}
-      </option>`;
-    });
+students_body.innerHTML="";
 
-    let tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>${t.name}</td>
-      <td>
-        <select onchange="selectClass(this.value)">
-          <option>اختر</option>
-          ${options}
-        </select>
-      </td>`;
-    body.appendChild(tr);
-  }
+let snap=await db.collection("students")
+.where("grade","==",a.grade)
+.where("section","==",a.section)
+.get();
+
+snap.forEach(doc=>{
+
+let s=doc.data();
+let sub=s.subjects?.[a.subject];
+
+let mark=0;
+
+// 🔥 fallback
+if(type==="term1"){
+mark=sub?.term1 ?? sub?.mark ?? 0;
+}
+else if(type==="term2"){
+mark=sub?.term2 ?? sub?.mark ?? 0;
+}
+else if(type==="quiz"){
+mark=avg(sub?.quizzes);
 }
 
-function selectClass(val){
-  if(!val) return;
+let tr=document.createElement("tr");
+tr.innerHTML=`
+<td>${s.code}</td>
+<td>${s.name}</td>
+<td>${Math.round(mark)}</td>
+`;
 
-  let [email, idx]=val.split("|");
-  idx=parseInt(idx);
+students_body.appendChild(tr);
 
-  let t=teachersMap[email];
-  let assign=t.assignments[idx];
+});
 
-  currentTeacherName = t.name;
-  currentTitle = `${assign.grade} - ${assign.section} - ${assign.subject}`;
+students_table.style.display="table";
 
-  loadStudents(assign);
 }
 
-/* 🔥 هنا التعديل الحقيقي */
-async function loadStudents(assign){
-
-  currentClassInfo.innerText = currentTitle;
-
-  let table=sup_students_table;
-  let body=sup_students_body;
-
-  body.innerHTML="";
-  table.style.display="none";
-
-  let examType = await getExamType();
-
-  let snap=await db.collection("students")
-    .where("grade","==",assign.grade)
-    .where("section","==",assign.section)
-    .get();
-
-  snap.forEach(doc=>{
-    let s=doc.data();
-    let sub=s.subjects?.[assign.subject];
-
-    let mark=0;
-
-    if(examType==="term1"){
-      mark=sub?.term1 || 0;
-    }
-    else if(examType==="term2"){
-      mark=sub?.term2 || 0;
-    }
-    else if(examType==="quiz"){
-      mark=avg(sub?.quizzes);
-    }
-
-    let tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>${s.code}</td>
-      <td>${s.name}</td>
-      <td>${s.grade}</td>
-      <td>${s.section}</td>
-      <td>${Math.round(mark)}</td>`;
-    body.appendChild(tr);
-  });
-
-  table.style.display="table";
-}
-
-/* طباعة */
-function printStudents(){
-
-  let rows = sup_students_body.innerHTML;
-
-  if(!rows){
-    alert("اختار فصل الأول");
-    return;
-  }
-
-  let win = window.open('', '', 'width=900,height=700');
-
-  win.document.write(`
-    <html>
-    <head>
-      <style>
-        body{font-family:Calibri;text-align:center;padding:20px}
-        table{width:100%;border-collapse:collapse;margin-top:15px}
-        th,td{border:1px solid black;padding:8px}
-      </style>
-    </head>
-    <body>
-
-    <h2>المعلم: ${currentTeacherName}</h2>
-    <h3>${currentTitle}</h3>
-
-    <table>
-      <thead>
-        <tr>
-          <th>كود</th>
-          <th>اسم الطالب</th>
-          <th>الصف</th>
-          <th>الشعبة</th>
-          <th>الدرجة</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>
-
-    <script>
-      window.onload=function(){
-        window.print();
-        window.close();
-      }
-    <\/script>
-
-    </body>
-    </html>
-  `);
-
-  win.document.close();
-}
-
-ensureSupervisorGuard();
-loadSupervisor();
+load();
 </script>
 
 </body>
