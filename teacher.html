@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>لوحة المعلم - مدارس الفلاح الأهلية</title>
+<title>لوحة المعلم</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
 
@@ -12,87 +12,54 @@
 <style>
 body{font-family:Calibri;background:#eef2f7;margin:0}
 .header{background:#1976d2;color:#fff;text-align:center;padding:15px}
-.container{max-width:1050px;margin:25px auto;padding:10px}
-.box{background:#fff;border-radius:14px;padding:20px;margin-bottom:18px}
-
-h3{color:#1976d2;border-right:4px solid #1976d2;padding-right:8px}
-
-select,input{
-  width:100%;
-  padding:9px;
-  border-radius:7px;
-  border:1px solid #999;
-  margin-top:6px;
-}
-
-button{
-  padding:10px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  font-weight:bold
-}
-.btn-primary{background:#1976d2;color:#fff}
-.btn-secondary{background:#757575;color:#fff}
-
-table{width:100%;border-collapse:collapse;margin-top:12px}
-th,td{border:1px solid #ccc;text-align:center;padding:6px}
-th{background:#1976d2;color:#fff}
+.container{max-width:1000px;margin:20px auto}
+.box{background:#fff;padding:20px;border-radius:12px;margin-bottom:15px}
+select,input{width:100%;padding:8px;margin-top:5px}
+button{padding:10px;border:none;border-radius:8px;background:#1976d2;color:#fff;cursor:pointer}
+table{width:100%;border-collapse:collapse;margin-top:10px}
+th,td{border:1px solid #ccc;padding:6px;text-align:center}
 </style>
 </head>
 
 <body>
 
 <div class="header">
-  <h1>مدارس الفلاح الأهلية</h1>
-  <h2>لوحة المعلم</h2>
+<h2>لوحة المعلم</h2>
 </div>
 
 <div class="container">
 
-  <!-- اختيار -->
-  <div class="box">
-    <h3>اختيار البيانات</h3>
+<div class="box">
+<select id="sel_grade"></select>
+<select id="sel_section"></select>
+<select id="sel_subject"></select>
 
-    <select id="sel_grade"></select>
-    <select id="sel_section"></select>
-    <select id="sel_subject"></select>
+<select id="sel_type">
+<option value="term1">فترة أولى</option>
+<option value="term2">فترة ثانية</option>
+</select>
 
-    <!-- 🔥 نوع الدرجة -->
-    <select id="sel_type">
-      <option value="term1">فترة أولى</option>
-      <option value="term2">فترة ثانية</option>
-      <option value="quiz">اختبار دوري</option>
-    </select>
+<button onclick="loadStudents()">تحميل</button>
+</div>
 
-    <button class="btn-primary" onclick="loadStudents()">تحميل الطلاب</button>
-  </div>
+<div class="box">
+<table id="table" style="display:none">
+<thead>
+<tr><th>الكود</th><th>الاسم</th><th>الدرجة</th></tr>
+</thead>
+<tbody id="body"></tbody>
+</table>
 
-  <!-- رصد -->
-  <div class="box">
-    <h3>رصد الدرجات</h3>
-
-    <table id="marks_table" style="display:none">
-      <thead>
-        <tr>
-          <th>الكود</th>
-          <th>اسم الطالب</th>
-          <th>الدرجة</th>
-        </tr>
-      </thead>
-      <tbody id="marks_body"></tbody>
-    </table>
-
-    <button id="save_btn" class="btn-primary" style="display:none" onclick="saveMarks()">حفظ الدرجات</button>
-  </div>
+<button onclick="saveMarks()">حفظ</button>
+</div>
 
 </div>
 
 <script>
 var firebaseConfig={
-  apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
-  authDomain:"results2026-7c0dd.firebaseapp.com",
-  projectId:"results2026-7c0dd"
+apiKey:"AIzaSyA...",
+authDomain:"results2026-7c0dd.firebaseapp.com",
+projectId:"results2026-7c0dd"
 };
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
@@ -100,102 +67,81 @@ var db=firebase.firestore();
 let assignments=[];
 
 async function loadTeacher(){
-  let email=localStorage.getItem("currentUserEmail");
-  let doc=await db.collection("teachers").doc(email).get();
-  let t=doc.data();
+let email=localStorage.getItem("currentUserEmail");
+let doc=await db.collection("teachers").doc(email).get();
+let t=doc.data();
 
-  assignments=t.assignments||[];
+assignments=t.assignments||[];
 
-  let g=[...new Set(assignments.map(a=>a.grade))];
-  let s=[...new Set(assignments.map(a=>a.section))];
-  let sub=[...new Set(assignments.map(a=>a.subject))];
+let grades=[...new Set(assignments.map(a=>a.grade))];
+let sections=[...new Set(assignments.map(a=>a.section))];
+let subs=[...new Set(assignments.map(a=>a.subject))];
 
-  g.forEach(x=>sel_grade.innerHTML+=`<option>${x}</option>`);
-  s.forEach(x=>sel_section.innerHTML+=`<option>${x}</option>`);
-  sub.forEach(x=>sel_subject.innerHTML+=`<option>${x}</option>`);
+grades.forEach(x=>sel_grade.innerHTML+=`<option>${x}</option>`);
+sections.forEach(x=>sel_section.innerHTML+=`<option>${x}</option>`);
+subs.forEach(x=>sel_subject.innerHTML+=`<option>${x}</option>`);
 }
 
 async function loadStudents(){
 
-  let grade=sel_grade.value;
-  let section=sel_section.value;
-  let subject=sel_subject.value;
-  let type=sel_type.value;
+let grade=sel_grade.value;
+let section=sel_section.value;
+let subject=sel_subject.value;
+let type=sel_type.value;
 
-  let snap=await db.collection("students")
-    .where("grade","==",grade)
-    .where("section","==",section).get();
+let snap=await db.collection("students")
+.where("grade","==",grade)
+.where("section","==",section).get();
 
-  let body=document.getElementById("marks_body");
-  body.innerHTML="";
+body.innerHTML="";
 
-  snap.forEach(doc=>{
-    let s=doc.data();
-    let val="";
+snap.forEach(doc=>{
+let s=doc.data();
+let sub=s.subjects?.[subject];
 
-    let sub=s.subjects?.[subject];
+let val=sub?.[type] ?? sub?.mark ?? "";
 
-    if(type==="term1") val=sub?.term1 ?? "";
-    if(type==="term2") val=sub?.term2 ?? "";
-    if(type==="quiz") val="";
+let tr=document.createElement("tr");
+tr.innerHTML=`
+<td>${s.code}</td>
+<td>${s.name}</td>
+<td><input data-code="${s.code}" value="${val}"></td>
+`;
+body.appendChild(tr);
+});
 
-    let tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>${s.code}</td>
-      <td>${s.name}</td>
-      <td>
-        <input type="number"
-          data-code="${s.code}"
-          data-subject="${subject}"
-          value="${val}">
-      </td>
-    `;
-    body.appendChild(tr);
-  });
-
-  marks_table.style.display="table";
-  save_btn.style.display="inline-block";
+table.style.display="table";
 }
 
-/* 🔥 الحفظ النهائي الصحيح */
 async function saveMarks(){
 
-  let inputs=document.querySelectorAll("#marks_body input");
-  let type=sel_type.value;
+let inputs=document.querySelectorAll("#body input");
+let type=sel_type.value;
 
-  let batch=db.batch();
+let batch=db.batch();
 
-  inputs.forEach(inp=>{
-    let code=inp.dataset.code;
-    let subject=inp.dataset.subject;
-    let mark=inp.value===""?0:+inp.value;
+inputs.forEach(inp=>{
+let code=inp.dataset.code;
+let mark=+inp.value||0;
+let subject=sel_subject.value;
 
-    let ref=db.collection("students").doc(code);
+let ref=db.collection("students").doc(code);
 
-    let data={};
+let data={};
 
-    if(type==="term1"){
-      data[`subjects.${subject}.term1`] = mark;
-    }
+// 🔥 الجديد
+data[`subjects.${subject}.${type}`]=mark;
 
-    else if(type==="term2"){
-      data[`subjects.${subject}.term2`] = mark;
-    }
+// 🔥 القديم (backup)
+data[`subjects.${subject}.mark`]=mark;
 
-    else if(type==="quiz"){
-      let key="q"+Date.now();
-      data[`subjects.${subject}.quizzes.${key}`] = mark;
-    }
+batch.update(ref,data);
+});
 
-    batch.update(ref, data);
-  });
+await batch.commit();
 
-  await batch.commit();
-
-  alert("تم حفظ الدرجات");
-
-  // 🔥 تحديث مباشر بعد الحفظ
-  loadStudents();
+alert("تم الحفظ");
+loadStudents();
 }
 
 loadTeacher();
