@@ -13,7 +13,6 @@
 body{font-family:Calibri;background:#eef2f7;margin:0}
 .header{background:#1976d2;color:#fff;text-align:center;padding:15px}
 .container{max-width:1100px;margin:25px auto;padding:10px}
-
 .box{background:#fff;border-radius:14px;padding:20px;margin-bottom:18px}
 
 h3{color:#1976d2;border-right:4px solid #1976d2;padding-right:8px}
@@ -38,7 +37,17 @@ select{width:100%;padding:6px}
 
 <div class="container">
 
+  <!-- بيانات المشرف -->
   <div class="box">
+    <h3>بيانات المشرف</h3>
+
+    <div>
+      <span id="sup_name"></span> |
+      <span id="sup_email"></span> |
+      عدد المعلمين: <span id="sup_t_count"></span>
+    </div>
+
+    <br>
     <button class="btn-secondary" onclick="printStudents()">طباعة / PDF</button>
   </div>
 
@@ -56,7 +65,7 @@ select{width:100%;padding:6px}
     </table>
   </div>
 
-  <!-- عرض الطلاب -->
+  <!-- الطلاب -->
   <div class="box">
     <h3>طلاب الفصل المحدد</h3>
 
@@ -89,21 +98,47 @@ var firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
+let currentEmail="";
 let teachersMap={};
 let currentTeacherName="";
 let currentTitle="";
 
-async function loadTeachers(){
-  let snap=await db.collection("teachers").get();
-  let body=document.getElementById("sup_teachers_body");
+/* 🔒 نفس نظام المشرف */
+function ensureSupervisorGuard(){
+  let r=localStorage.getItem("currentUserRole");
+  if(r!=="supervisor"){
+    alert("هذه الصفحة للمشرفين فقط");
+    location="index.html";
+  }
+  currentEmail=localStorage.getItem("currentUserEmail");
+}
 
-  snap.forEach(doc=>{
-    let t=doc.data();
-    teachersMap[t.email]=t;
+async function loadSupervisor(){
+  let doc=await db.collection("supervisors").doc(currentEmail).get();
+  let data=doc.data()||{teachers:[]};
+
+  document.getElementById("sup_name").innerText=data.name;
+  document.getElementById("sup_email").innerText=data.email;
+  document.getElementById("sup_t_count").innerText=data.teachers.length;
+
+  loadSupervisorTeachers(data.teachers);
+}
+
+/* ✅ المعلمين الخاصين بالمشرف فقط */
+async function loadSupervisorTeachers(list){
+  let body=document.getElementById("sup_teachers_body");
+  body.innerHTML="";
+
+  for(let email of list){
+    let tDoc=await db.collection("teachers").doc(email).get();
+    if(!tDoc.exists) continue;
+
+    let t=tDoc.data();
+    teachersMap[email]=t;
 
     let options="";
     (t.assignments||[]).forEach((a,i)=>{
-      options+=`<option value="${t.email}|${i}">
+      options+=`<option value="${email}|${i}">
         ${a.grade} - ${a.section} - ${a.subject}
       </option>`;
     });
@@ -118,7 +153,7 @@ async function loadTeachers(){
         </select>
       </td>`;
     body.appendChild(tr);
-  });
+  }
 }
 
 function selectClass(val){
@@ -169,7 +204,7 @@ async function loadStudents(assign){
   table.style.display="table";
 }
 
-/* 🔥 الطباعة المضمونة */
+/* 🔥 طباعة بدون مشاكل */
 function printStudents(){
 
   let rows = document.getElementById("sup_students_body").innerHTML;
@@ -224,7 +259,8 @@ function printStudents(){
   win.document.close();
 }
 
-loadTeachers();
+ensureSupervisorGuard();
+loadSupervisor();
 </script>
 
 </body>
