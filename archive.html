@@ -65,10 +65,25 @@ button:hover{
   background:#125ea7;
 }
 
+/* 🔥 عنوان الأرشيف */
+.archive-title{
+  text-align:center;
+  margin-bottom:15px;
+}
+
+.archive-title h3{
+  margin:0;
+  color:#1976d2;
+}
+
+.archive-title span{
+  color:#555;
+  font-size:14px;
+}
+
 .table-container{
   width:100%;
   overflow-x:auto;
-  margin-top:10px;
 }
 
 table{
@@ -90,7 +105,7 @@ th{
 
 td:nth-child(2){
   text-align:right;
-  min-width:200px;
+  min-width:220px;
   font-weight:bold;
 }
 
@@ -133,6 +148,12 @@ tr:nth-child(even){
 
 <div class="box">
 
+<!-- 🔥 عنوان الأرشيف -->
+<div class="archive-title">
+<h3 id="archive_name">—</h3>
+<span id="archive_info"></span>
+</div>
+
 <div class="table-container">
 <table id="table" style="display:none">
 <thead>
@@ -163,14 +184,16 @@ var db=firebase.firestore();
 
 let teachersMap={};
 
+/* تحميل الأرشيفات */
 async function loadArchives(){
 let snap=await db.collection("archives").get();
 archive_list.innerHTML="";
 snap.forEach(doc=>{
-archive_list.innerHTML+=`<option>${doc.id}</option>`;
+archive_list.innerHTML+=`<option value="${doc.id}">${doc.id}</option>`;
 });
 }
 
+/* تحميل المعلمين */
 async function loadTeachers(){
 let snap=await db.collection("teachers").get();
 teacher_select.innerHTML='<option value="">اختر المعلم</option>';
@@ -182,6 +205,7 @@ teacher_select.innerHTML+=`<option value="${doc.id}">${t.name}</option>`;
 });
 }
 
+/* تحميل فصول المعلم */
 function loadTeacherClasses(){
 
 let tId=teacher_select.value;
@@ -200,12 +224,13 @@ ${a.grade} - ${a.section} - ${a.subject}
 });
 }
 
+/* عرض البيانات */
 async function loadClassData(){
 
 let archive=archive_list.value;
 let val=class_select.value;
 
-if(!val){alert("اختار الفصل");return;}
+if(!val){alert("اختر الفصل");return;}
 
 let [grade,section,subject]=val.split("|");
 
@@ -217,6 +242,7 @@ let snap=await db.collection("archives")
 .get();
 
 body.innerHTML="";
+let count=0;
 
 snap.forEach(doc=>{
 
@@ -233,15 +259,24 @@ tr.innerHTML=`
 `;
 
 body.appendChild(tr);
+count++;
 
 });
 
+/* 🔥 عنوان الأرشيف */
+archive_name.innerText = `📊 ${archive}`;
+archive_info.innerText = `عدد الطلاب: ${count}`;
+
 table.style.display="table";
+
 }
 
+/* طباعة */
 function printClass(){
 
 let rows=body.innerHTML;
+let title=archive_name.innerText;
+let info=archive_info.innerText;
 
 if(!rows){alert("اعرض البيانات الأول");return;}
 
@@ -252,13 +287,15 @@ win.document.write(`
 <head>
 <style>
 body{font-family:Cairo;text-align:center;padding:20px}
+h2{color:#1976d2}
 table{width:100%;border-collapse:collapse}
 th,td{border:1px solid black;padding:8px}
 </style>
 </head>
 <body>
 
-<h2>نتائج الفصل</h2>
+<h2>${title}</h2>
+<p>${info}</p>
 
 <table>
 <thead>
@@ -286,6 +323,7 @@ window.close();
 win.document.close();
 }
 
+/* تشغيل */
 loadArchives();
 loadTeachers();
 
