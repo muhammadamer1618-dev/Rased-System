@@ -10,127 +10,37 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
-
-body{
-  font-family:Cairo;
-  background:#eef2f7;
-  margin:0;
-}
-
-.header{
-  background:#1976d2;
-  color:#fff;
-  text-align:center;
-  padding:15px;
-  font-size:22px;
-  font-weight:bold;
-}
-
-.container{
-  max-width:1200px;
-  margin:20px auto;
-  padding:10px;
-}
-
-.box{
-  background:#fff;
-  padding:20px;
-  border-radius:12px;
-  margin-bottom:15px;
-  box-shadow:0 2px 10px rgba(0,0,0,0.1);
-}
-
-.filters{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.filters select, .filters button{
-  padding:10px;
-  border-radius:8px;
-  border:1px solid #ccc;
-  font-family:Cairo;
-}
-
-button{
-  background:#1976d2;
-  color:#fff;
-  border:none;
-  cursor:pointer;
-  font-weight:bold;
-}
-
-button:hover{
-  background:#125ea7;
-}
-
-/* 🔥 عنوان الأرشيف */
-.archive-title{
-  text-align:center;
-  margin-bottom:15px;
-}
-
-.archive-title h3{
-  margin:0;
-  color:#1976d2;
-}
-
-.archive-title span{
-  color:#555;
-  font-size:14px;
-}
-
-.table-container{
-  width:100%;
-  overflow-x:auto;
-}
-
-table{
-  width:100%;
-  min-width:900px;
-  border-collapse:collapse;
-}
-
-th,td{
-  border:1px solid #ddd;
-  padding:8px;
-  text-align:center;
-}
-
-th{
-  background:#1976d2;
-  color:#fff;
-}
-
-td:nth-child(2){
-  text-align:right;
-  min-width:220px;
-  font-weight:bold;
-}
-
-tr:nth-child(even){
-  background:#f9f9f9;
-}
-
+body{font-family:Cairo;background:#eef2f7;margin:0}
+.header{background:#1976d2;color:#fff;text-align:center;padding:15px;font-size:22px;font-weight:bold}
+.container{max-width:1200px;margin:20px auto;padding:10px}
+.box{background:#fff;padding:20px;border-radius:12px;margin-bottom:15px;box-shadow:0 2px 10px rgba(0,0,0,0.1)}
+.filters{display:flex;gap:10px;flex-wrap:wrap}
+.filters select,.filters button{padding:10px;border-radius:8px;border:1px solid #ccc;font-family:Cairo}
+button{background:#1976d2;color:#fff;border:none;cursor:pointer;font-weight:bold}
+button:hover{background:#125ea7}
+.archive-title{text-align:center;margin-bottom:15px}
+.archive-title h3{margin:0;color:#1976d2}
+.archive-title span{color:#555;font-size:14px}
+.table-container{width:100%;overflow-x:auto}
+table{width:100%;min-width:900px;border-collapse:collapse}
+th,td{border:1px solid #ddd;padding:8px;text-align:center}
+th{background:#1976d2;color:#fff}
+td:nth-child(2){text-align:right;min-width:220px;font-weight:bold}
+tr:nth-child(even){background:#f9f9f9}
 @media print{
   body{background:white}
-  .filters, .header{display:none}
+  .filters,.header{display:none}
 }
-
 </style>
 </head>
 
 <body>
 
-<div class="header">
-📊 أرشيف النتائج
-</div>
+<div class="header">📊 أرشيف النتائج</div>
 
 <div class="container">
 
 <div class="box filters">
-
 <select id="archive_list"></select>
 
 <select id="teacher_select" onchange="loadTeacherClasses()">
@@ -143,12 +53,9 @@ tr:nth-child(even){
 
 <button onclick="loadClassData()">عرض</button>
 <button onclick="printClass()">طباعة</button>
-
 </div>
 
 <div class="box">
-
-<!-- 🔥 عنوان الأرشيف -->
 <div class="archive-title">
 <h3 id="archive_name">—</h3>
 <span id="archive_info"></span>
@@ -167,7 +74,6 @@ tr:nth-child(even){
 <tbody id="body"></tbody>
 </table>
 </div>
-
 </div>
 
 </div>
@@ -183,6 +89,12 @@ firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
 let teachersMap={};
+
+// 🔥 متغيرات للطباعة
+let currentTeacherName="";
+let currentGrade="";
+let currentSection="";
+let currentSubject="";
 
 /* تحميل الأرشيفات */
 async function loadArchives(){
@@ -232,7 +144,16 @@ let val=class_select.value;
 
 if(!val){alert("اختر الفصل");return;}
 
+let teacherId = teacher_select.value;
+let teacherName = teachersMap[teacherId]?.name || "";
+
 let [grade,section,subject]=val.split("|");
+
+// 🔥 تخزين للطباعة
+currentTeacherName = teacherName;
+currentGrade = grade;
+currentSection = section;
+currentSubject = subject;
 
 let snap=await db.collection("archives")
 .doc(archive)
@@ -245,7 +166,6 @@ body.innerHTML="";
 let count=0;
 
 snap.forEach(doc=>{
-
 let s=doc.data();
 let mark=s.subjects?.[subject]?.mark || 0;
 
@@ -260,15 +180,12 @@ tr.innerHTML=`
 
 body.appendChild(tr);
 count++;
-
 });
 
-/* 🔥 عنوان الأرشيف */
 archive_name.innerText = `📊 ${archive}`;
 archive_info.innerText = `عدد الطلاب: ${count}`;
 
 table.style.display="table";
-
 }
 
 /* طباعة */
@@ -288,6 +205,7 @@ win.document.write(`
 <style>
 body{font-family:Cairo;text-align:center;padding:20px}
 h2{color:#1976d2}
+p{font-size:16px}
 table{width:100%;border-collapse:collapse}
 th,td{border:1px solid black;padding:8px}
 </style>
@@ -295,6 +213,13 @@ th,td{border:1px solid black;padding:8px}
 <body>
 
 <h2>${title}</h2>
+
+<p>
+المعلم: ${currentTeacherName} <br>
+الصف: ${currentGrade} - الشعبة: ${currentSection} <br>
+المادة: ${currentSubject}
+</p>
+
 <p>${info}</p>
 
 <table>
@@ -323,7 +248,6 @@ window.close();
 win.document.close();
 }
 
-/* تشغيل */
 loadArchives();
 loadTeachers();
 
