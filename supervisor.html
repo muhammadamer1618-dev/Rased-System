@@ -41,29 +41,45 @@ th{background:#1976d2;color:#fff}
 
 select{width:100%;padding:6px}
 
-/* 🔥 الطباعة */
+/* 🔥 حل مشكلة الطباعة */
 @media print {
 
-  body * { display:none; }
+  body * {
+    visibility: hidden;
+  }
+
+  #printArea, #printArea * {
+    visibility: visible;
+  }
 
   #printArea {
-    display:block !important;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: white;
+    padding: 15px;
+  }
+
+  #printArea h2, #printArea h3 {
+    text-align: center;
+    color: black;
   }
 
   #printArea table {
-    width:100%;
-    border-collapse:collapse;
+    width: 100%;
+    border-collapse: collapse;
   }
 
   #printArea th, #printArea td {
-    border:1px solid #000;
-    padding:6px;
-    text-align:center;
+    border: 1px solid black;
+    padding: 6px;
+    text-align: center;
   }
 
   @page {
-    size:A4;
-    margin:10mm;
+    size: A4;
+    margin: 10mm;
   }
 }
 </style>
@@ -144,8 +160,8 @@ select{width:100%;padding:6px}
   <!-- 🔥 نسخة الطباعة -->
   <div id="printArea" style="display:none">
 
-    <h2 id="printTeacher" style="text-align:center;margin:5px 0"></h2>
-    <h3 id="printTitle" style="text-align:center;margin:5px 0"></h3>
+    <h2 id="printTeacher"></h2>
+    <h3 id="printTitle"></h3>
 
     <table>
       <thead>
