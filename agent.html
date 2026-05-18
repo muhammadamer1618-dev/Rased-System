@@ -9,63 +9,27 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
-body{
-  font-family:Calibri;
-  background:#eef2f7;
-  margin:0;
-}
-.header{
-  background:#1976d2;color:#fff;text-align:center;padding:15px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.2)
-}
+body{font-family:Calibri;background:#eef2f7;margin:0}
+.header{background:#1976d2;color:#fff;text-align:center;padding:15px;box-shadow:0 2px 5px rgba(0,0,0,.2)}
 .header h1{margin:0;font-size:26px;font-weight:bold}
 .header h2{margin:5px 0 0;font-size:18px;color:#ffeb3b}
-
-.container{max-width:1200px;margin:25px auto;padding:10px}
-
-.box{
-  background:#fff;border-radius:14px;padding:20px;margin-bottom:18px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.12)
-}
-
-h3{
-  margin-top:0;color:#1976d2;font-size:19px;font-weight:bold;
-  border-right:4px solid #1976d2;padding-right:8px
-}
-
-.info-grid{
-  display:flex;flex-wrap:wrap;gap:15px
-}
-
-.info-item{
-  flex:1;
-  background:#f5f8ff;
-  border:1px solid #d3defb;
-  border-radius:10px;
-  padding:15px;
-  text-align:center;
-  font-size:20px;
-  font-weight:bold;
-  color:#1976d2;
-  min-width:200px;
-}
-
-.label{
-  font-size:15px;
-  color:#555;
-  margin-bottom:6px;
-  font-weight:bold;
-}
-
-.warning{
-  color:#d32f2f;font-weight:bold;
-}
-
-button{
-  padding:9px 15px;border:none;border-radius:8px;font-size:14px;
-  cursor:pointer;font-weight:bold;
-}
+.container{max-width:1250px;margin:25px auto;padding:10px}
+.box{background:#fff;border-radius:14px;padding:20px;margin-bottom:18px;box-shadow:0 3px 10px rgba(0,0,0,.12)}
+h3{margin-top:0;color:#1976d2;font-size:19px;font-weight:bold;border-right:4px solid #1976d2;padding-right:8px}
+.info-grid{display:flex;flex-wrap:wrap;gap:15px}
+.info-item{flex:1;background:#f5f8ff;border:1px solid #d3defb;border-radius:10px;padding:15px;text-align:center;font-size:20px;font-weight:bold;color:#1976d2;min-width:180px}
+.label{font-size:15px;color:#555;margin-bottom:6px;font-weight:bold}
+table{width:100%;border-collapse:collapse;font-size:14px;margin-top:10px}
+th{background:#1976d2;color:#fff;padding:7px;border:1px solid #ccc}
+td{padding:7px;border:1px solid #ccc;text-align:center}
+tr:nth-child(even){background:#f9f9f9}
+.warning{color:#d32f2f;font-weight:bold}
+.good{color:#2e7d32;font-weight:bold}
+.badge-red{background:#ffebee;color:#c62828;padding:3px 8px;border-radius:10px;font-weight:bold}
+.badge-green{background:#e8f5e9;color:#2e7d32;padding:3px 8px;border-radius:10px;font-weight:bold}
+button{padding:9px 15px;border:none;border-radius:8px;font-size:14px;cursor:pointer;font-weight:bold}
 .btn-secondary{background:#757575;color:#fff}
+.btn-primary{background:#1976d2;color:#fff}
 </style>
 </head>
 
@@ -73,21 +37,18 @@ button{
 
 <div class="header">
   <h1>نظام راصد</h1>
-  <h2>وكيل المدرسة - لوحة التقارير</h2>
+  <h2>وكيل المدرسة - متابعة اكتمال رصد الدرجات</h2>
 </div>
 
 <div class="container">
 
-  <!-- ===== بيانات الوكيل ===== -->
   <div class="box">
     <h3>بيانات المستخدم</h3>
-
     <div class="info-grid">
       <div class="info-item">
         <div class="label">اسم الوكيل</div>
         <span id="agent_name">—</span>
       </div>
-
       <div class="info-item">
         <div class="label">اسم المستخدم</div>
         <span id="agent_email">—</span>
@@ -95,60 +56,77 @@ button{
     </div>
   </div>
 
-  <!-- ===== مؤشرات عامة ===== -->
   <div class="box">
     <h3>المؤشرات العامة</h3>
-
     <div class="info-grid">
       <div class="info-item">
         <div class="label">عدد الطلاب</div>
         <span id="count_students">—</span>
       </div>
-
       <div class="info-item">
         <div class="label">عدد المعلمين</div>
         <span id="count_teachers">—</span>
       </div>
-
       <div class="info-item">
-        <div class="label">عدد المواد المرصودة</div>
-        <span id="count_marked">—</span>
-      </div>
-
-      <div class="info-item">
-        <div class="label">إجمالي المواد المطلوبة</div>
+        <div class="label">المواد المطلوبة</div>
         <span id="count_required">—</span>
       </div>
-
       <div class="info-item">
-        <div class="label">نسبة الرصد العامة</div>
+        <div class="label">المواد المكتملة</div>
+        <span id="count_marked">—</span>
+      </div>
+      <div class="info-item">
+        <div class="label">نسبة الاكتمال</div>
         <span id="percent_all">—</span>
       </div>
     </div>
   </div>
 
-  <!-- ===== المعلمون المتأخرون ===== -->
   <div class="box">
-    <h3>المعلمون المتأخرون في رصد الدرجات</h3>
+    <h3>المواد غير المكتملة في الرصد</h3>
 
-    <table id="late_table" style="width:100%;border-collapse:collapse;font-size:14px;margin-top:10px">
+    <table>
       <thead>
         <tr>
-          <th style="background:#1976d2;color:#fff;padding:6px">اسم المعلم</th>
-          <th style="background:#1976d2;color:#fff;padding:6px">المادة</th>
-          <th style="background:#1976d2;color:#fff;padding:6px">الصف</th>
-          <th style="background:#1976d2;color:#fff;padding:6px">الشعبة</th>
+          <th>الصف</th>
+          <th>الشعبة</th>
+          <th>المادة</th>
+          <th>عدد الطلاب</th>
+          <th>تم الرصد</th>
+          <th>لم يتم الرصد</th>
+          <th>نسبة الاكتمال</th>
+          <th>الحالة</th>
         </tr>
       </thead>
       <tbody id="late_body"></tbody>
     </table>
 
-    <div id="late_empty" class="warning" style="display:none;margin-top:10px">
-      لا يوجد معلمون متأخرون 👌
+    <div id="late_empty" class="good" style="display:none;margin-top:10px">
+      جميع المواد مكتملة الرصد 👌
     </div>
   </div>
 
   <div class="box">
+    <h3>تفصيل كامل لجميع المواد</h3>
+
+    <table>
+      <thead>
+        <tr>
+          <th>الصف</th>
+          <th>الشعبة</th>
+          <th>المادة</th>
+          <th>عدد الطلاب</th>
+          <th>تم الرصد</th>
+          <th>لم يتم الرصد</th>
+          <th>نسبة الاكتمال</th>
+        </tr>
+      </thead>
+      <tbody id="details_body"></tbody>
+    </table>
+  </div>
+
+  <div class="box">
+    <button class="btn-primary" onclick="loadReports()">تحديث التقرير</button>
     <button class="btn-secondary" onclick="location='index.html'">تسجيل الخروج</button>
   </div>
 
@@ -166,6 +144,12 @@ var firebaseConfig={
 firebase.initializeApp(firebaseConfig);
 var db=firebase.firestore();
 
+var gradesList=[
+  "1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي",
+  "1 متوسط","2 متوسط","3 متوسط",
+  "1 ثانوي","2 ثانوي","3 ثانوي"
+];
+
 function guard(){
   let r=localStorage.getItem("currentUserRole");
   if(r!=="agent"){
@@ -175,69 +159,135 @@ function guard(){
 }
 guard();
 
-/* بيانات الوكيل */
-document.getElementById("agent_name").innerText =
-  localStorage.getItem("currentUserName")||"—";
-document.getElementById("agent_email").innerText =
-  localStorage.getItem("currentUserEmail")||"—";
+document.getElementById("agent_name").innerText=localStorage.getItem("currentUserName")||"—";
+document.getElementById("agent_email").innerText=localStorage.getItem("currentUserEmail")||"—";
 
+function isMarked(value){
+  return value !== undefined && value !== null && value !== "";
+}
+
+async function getSubjectsForGrade(grade){
+  let doc=await db.collection("settings").doc("subjects_"+grade).get();
+  if(!doc.exists) return [];
+  return doc.data().subjects||[];
+}
 
 async function loadReports(){
-  let tSnap = await db.collection("teachers").get();
-  let sSnap = await db.collection("students").get();
+  let lateBody=document.getElementById("late_body");
+  let detailsBody=document.getElementById("details_body");
+  lateBody.innerHTML="<tr><td colspan='8'>جاري التحميل...</td></tr>";
+  detailsBody.innerHTML="<tr><td colspan='7'>جاري التحميل...</td></tr>";
+  document.getElementById("late_empty").style.display="none";
 
-  let teachers = [];
+  let tSnap=await db.collection("teachers").get();
+  let sSnap=await db.collection("students").get();
+
+  let teachers=[];
   tSnap.forEach(d=>teachers.push(d.data()));
 
-  let students = [];
+  let students=[];
   sSnap.forEach(d=>students.push(d.data()));
 
-  document.getElementById("count_teachers").innerText = teachers.length;
-  document.getElementById("count_students").innerText = students.length;
+  document.getElementById("count_teachers").innerText=teachers.length;
+  document.getElementById("count_students").innerText=students.length;
 
-  let totalRequired = 0;
-  let totalMarked = 0;
-  let lateRows = [];
+  let classMap={};
 
-  teachers.forEach(t=>{
-    (t.assignments||[]).forEach(assign=>{
+  students.forEach(st=>{
+    if(!st.grade || !st.section) return;
+    let key=st.grade+"__"+st.section;
+    if(!classMap[key]){
+      classMap[key]={
+        grade:st.grade,
+        section:st.section,
+        students:[]
+      };
+    }
+    classMap[key].students.push(st);
+  });
+
+  let settingsCache={};
+  for(let grade of gradesList){
+    settingsCache[grade]=await getSubjectsForGrade(grade);
+  }
+
+  let totalRequired=0;
+  let completedCount=0;
+  let lateRows=[];
+  let detailRows=[];
+
+  Object.keys(classMap).forEach(key=>{
+    let group=classMap[key];
+    let subjects=settingsCache[group.grade]||[];
+
+    subjects.forEach(sub=>{
+      let subjectName=sub.name;
+      if(!subjectName) return;
+
       totalRequired++;
 
-      let hasMarks = students.some(st=>{
-        return st.grade===assign.grade &&
-               st.section===assign.section &&
-               st.subjects &&
-               st.subjects[assign.subject];
+      let totalStudents=group.students.length;
+      let markedCount=0;
+      let missingCount=0;
+
+      group.students.forEach(st=>{
+        let subjectData=st.subjects && st.subjects[subjectName];
+        if(subjectData && isMarked(subjectData.mark)){
+          markedCount++;
+        }else{
+          missingCount++;
+        }
       });
 
-      if(hasMarks) totalMarked++;
-      else{
+      let pct=totalStudents ? Math.round((markedCount/totalStudents)*100) : 0;
+
+      let detailRow=`
+        <tr>
+          <td>${group.grade}</td>
+          <td>${group.section}</td>
+          <td>${subjectName}</td>
+          <td>${totalStudents}</td>
+          <td>${markedCount}</td>
+          <td>${missingCount}</td>
+          <td>${pct}%</td>
+        </tr>
+      `;
+      detailRows.push(detailRow);
+
+      if(missingCount===0){
+        completedCount++;
+      }else{
         lateRows.push(`
           <tr>
-            <td>${t.name}</td>
-            <td>${assign.subject}</td>
-            <td>${assign.grade}</td>
-            <td>${assign.section}</td>
+            <td>${group.grade}</td>
+            <td>${group.section}</td>
+            <td>${subjectName}</td>
+            <td>${totalStudents}</td>
+            <td>${markedCount}</td>
+            <td><span class="badge-red">${missingCount}</span></td>
+            <td>${pct}%</td>
+            <td><span class="badge-red">غير مكتمل</span></td>
           </tr>
         `);
       }
     });
   });
 
-  document.getElementById("count_required").innerText = totalRequired;
-  document.getElementById("count_marked").innerText = totalMarked;
+  document.getElementById("count_required").innerText=totalRequired;
+  document.getElementById("count_marked").innerText=completedCount;
 
-  let percent = totalRequired===0 ? 0 :
-                Math.round((totalMarked/totalRequired)*100);
-
-  document.getElementById("percent_all").innerText = percent+"%";
+  let percent=totalRequired ? Math.round((completedCount/totalRequired)*100) : 0;
+  document.getElementById("percent_all").innerText=percent+"%";
 
   if(lateRows.length){
-    document.getElementById("late_body").innerHTML = lateRows.join("");
-    document.getElementById("late_empty").style.display = "none";
+    lateBody.innerHTML=lateRows.join("");
+    document.getElementById("late_empty").style.display="none";
   }else{
-    document.getElementById("late_empty").style.display = "block";
+    lateBody.innerHTML="";
+    document.getElementById("late_empty").style.display="block";
   }
+
+  detailsBody.innerHTML=detailRows.length ? detailRows.join("") : "<tr><td colspan='7'>لا توجد بيانات</td></tr>";
 }
 
 loadReports();
