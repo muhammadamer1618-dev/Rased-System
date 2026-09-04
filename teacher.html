@@ -832,6 +832,9 @@ tbody tr:nth-child(even){
 <button class="action-btn save-btn" onclick="saveAllGrades()">
 💾 حفظ الدرجات
 </button>
+<button class="action-btn" style="background:#198754;color:#fff" onclick="fillFullMarkForAll()">
+⭐ الدرجة النهائية للجميع
+</button>
 
 <button class="action-btn clear-btn" onclick="clearInputs()">
 🧹 مسح الكل
@@ -2486,6 +2489,47 @@ error.message
 /* ======================================================
    CLEAR INPUTS ONLY
 ====================================================== */
+
+
+/* الدرجة النهائية لجميع الطلاب الحاضرين */
+function fillFullMarkForAll(){
+  if(!selectedTest){
+    alert("اختر الاختبار أولًا.");
+    return;
+  }
+  if(!currentStudents.length){
+    alert("لا يوجد طلاب في الفصل المحدد.");
+    return;
+  }
+
+  const fullMark=Number(selectedTest.fullMark);
+  if(!Number.isFinite(fullMark)){
+    alert("الدرجة النهائية للاختبار غير صحيحة.");
+    return;
+  }
+
+  currentStudents.forEach(student=>{
+    const code=String(student.code);
+    const attendance=el("attendance_"+code);
+    const mark=el("mark_"+code);
+    const status=el("status_"+code);
+
+    if(!attendance || !mark) return;
+
+    // الطالب الغائب يظل غائبًا ودرجته فارغة
+    if(attendance.value==="absent") return;
+
+    mark.disabled=false;
+    mark.value=fullMark;
+
+    if(status){
+      status.innerHTML='<span class="status-unsaved">غير محفوظ</span>';
+    }
+  });
+
+  updateSummary();
+  alert("تم وضع الدرجة النهائية لجميع الطلاب الحاضرين ⭐\nعدّل درجات الطلاب الناقصين ثم اضغط حفظ الدرجات.");
+}
 
 function clearInputs(){
 
