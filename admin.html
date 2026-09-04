@@ -11,10 +11,7 @@
 <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 
 <style>
-
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
     margin:0;
@@ -24,8 +21,9 @@ body{
 }
 
 .header{
+    position:relative;
     background:linear-gradient(135deg,#0f2747,#174f7c);
-    color:white;
+    color:#fff;
     padding:22px 15px;
     text-align:center;
     box-shadow:0 4px 15px rgba(0,0,0,.15);
@@ -35,21 +33,26 @@ body{
     width:90px;
     height:90px;
     object-fit:contain;
-    background:white;
+    background:#fff;
     border-radius:50%;
     padding:5px;
-    margin-bottom:8px;
 }
 
 .header h1{
-    margin:4px 0;
+    margin:8px 0 3px;
     font-size:26px;
 }
 
 .header p{
-    margin:5px 0 0;
+    margin:0;
     color:#f5d77a;
     font-weight:bold;
+}
+
+.logout{
+    position:absolute;
+    left:15px;
+    top:15px;
 }
 
 .container{
@@ -66,7 +69,7 @@ body{
 }
 
 .stat{
-    background:white;
+    background:#fff;
     border-radius:14px;
     padding:18px;
     text-align:center;
@@ -85,7 +88,7 @@ body{
 }
 
 .box{
-    background:white;
+    background:#fff;
     border-radius:15px;
     margin-bottom:18px;
     box-shadow:0 3px 14px rgba(0,0,0,.08);
@@ -125,11 +128,18 @@ label{
 input,
 select{
     width:100%;
-    padding:10px;
+    padding:11px;
     border:1px solid #cbd5e1;
     border-radius:8px;
     font-size:14px;
-    background:white;
+    background:#fff;
+    color:#111827 !important;
+}
+
+select option{
+    background:#fff !important;
+    color:#111827 !important;
+    font-size:15px;
 }
 
 input:focus,
@@ -148,45 +158,27 @@ button{
     font-size:14px;
 }
 
-.btn-primary{
-    background:#174f7c;
-    color:white;
-}
+button:hover{opacity:.9}
 
-.btn-success{
-    background:#198754;
-    color:white;
-}
-
-.btn-danger{
-    background:#dc3545;
-    color:white;
-}
-
-.btn-warning{
-    background:#f0ad4e;
-    color:#222;
-}
-
-.btn-light{
-    background:#e9eef4;
-    color:#263747;
-}
-
-.btn-purple{
-    background:#6f42c1;
-    color:white;
-}
-
-button:hover{
-    opacity:.9;
-}
+.btn-primary{background:#174f7c;color:#fff}
+.btn-success{background:#198754;color:#fff}
+.btn-danger{background:#dc3545;color:#fff}
+.btn-warning{background:#f0ad4e;color:#222}
+.btn-light{background:#e9eef4;color:#263747}
+.btn-purple{background:#6f42c1;color:#fff}
+.btn-dark{background:#343a40;color:#fff}
 
 .actions{
     display:flex;
     flex-wrap:wrap;
     gap:8px;
     margin-top:12px;
+}
+
+.danger-zone{
+    margin-top:15px;
+    padding-top:15px;
+    border-top:1px dashed #dc3545;
 }
 
 .table-wrap{
@@ -207,7 +199,7 @@ th{
     position:sticky;
     top:0;
     background:#174f7c;
-    color:white;
+    color:#fff;
     z-index:1;
 }
 
@@ -243,7 +235,6 @@ tr:nth-child(even){
     padding:12px;
     margin-top:12px;
     border-radius:8px;
-    line-height:1.8;
 }
 
 .status.info{
@@ -270,6 +261,26 @@ tr:nth-child(even){
     flex-wrap:wrap;
     align-items:end;
     margin-bottom:15px;
+}
+
+.teacher-select-wrap{
+    flex:1;
+    min-width:300px;
+}
+
+#assignTeacher{
+    height:48px;
+    font-size:16px;
+    font-weight:bold;
+    color:#111 !important;
+    background:#fff !important;
+    border:2px solid #174f7c;
+}
+
+#assignTeacher option{
+    color:#111 !important;
+    background:#fff !important;
+    font-weight:normal;
 }
 
 .assign-grid{
@@ -302,43 +313,17 @@ tr:nth-child(even){
     padding:15px;
 }
 
-.logout{
-    position:absolute;
-    top:15px;
-    left:15px;
-}
-
 @media(max-width:800px){
-
-    .stats{
-        grid-template-columns:repeat(2,1fr);
-    }
-
-    .header h1{
-        font-size:21px;
-    }
-
-    .logout{
-        position:static;
-        margin-top:10px;
-    }
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .header h1{font-size:21px}
+    .logout{position:static;margin-top:10px}
 }
 
 @media(max-width:480px){
-
-    .stats{
-        grid-template-columns:1fr 1fr;
-    }
-
-    .stat{
-        padding:12px;
-    }
-
-    .stat .number{
-        font-size:24px;
-    }
+    .stats{grid-template-columns:1fr 1fr}
+    .stat{padding:12px}
+    .stat .number{font-size:24px}
 }
-
 </style>
 </head>
 
@@ -346,10 +331,9 @@ tr:nth-child(even){
 
 <header class="header">
 
-    <img src="logo.jpeg" class="logo" alt="شعار مدارس الفلاح الأهلية">
+    <img src="logo.jpeg" class="logo" alt="شعار المدرسة">
 
     <h1>مدارس الفلاح الأهلية</h1>
-
     <p>نظام راصد - لوحة الإدارة</p>
 
     <button class="btn-danger logout" onclick="logout()">
@@ -358,9 +342,7 @@ tr:nth-child(even){
 
 </header>
 
-
 <div class="container">
-
 
 <!-- الإحصائيات -->
 
@@ -389,9 +371,7 @@ tr:nth-child(even){
 </div>
 
 
-<!-- ============================= -->
 <!-- الطلاب -->
-<!-- ============================= -->
 
 <div class="box">
 
@@ -401,105 +381,112 @@ tr:nth-child(even){
 
 <div class="box-body">
 
-    <input type="hidden" id="studentOriginalCode">
+<input type="hidden" id="studentOriginalCode">
 
-    <div class="row">
+<div class="row">
 
-        <div class="col">
-            <label>كود الطالب</label>
-            <input id="studentCode" placeholder="مثال: 1197615022">
-        </div>
-
-        <div class="col">
-            <label>اسم الطالب</label>
-            <input id="studentName" placeholder="اسم الطالب">
-        </div>
-
-        <div class="col">
-            <label>الصف</label>
-            <select id="studentGrade"></select>
-        </div>
-
-        <div class="col">
-            <label>الشعبة</label>
-            <select id="studentSection"></select>
-        </div>
-
-        <div class="col">
-            <label>جوال ولي الأمر</label>
-            <input id="guardianPhone" placeholder="05xxxxxxxx">
-        </div>
-
+    <div class="col">
+        <label>كود الطالب</label>
+        <input id="studentCode">
     </div>
 
-    <div class="actions">
-
-        <button class="btn-primary" onclick="saveStudent()">
-            💾 حفظ الطالب
-        </button>
-
-        <button class="btn-light" onclick="clearStudentForm()">
-            جديد
-        </button>
-
+    <div class="col">
+        <label>اسم الطالب</label>
+        <input id="studentName">
     </div>
 
-
-    <hr style="margin:20px 0;border:0;border-top:1px solid #eee">
-
-
-    <div class="row">
-
-        <div class="col">
-            <label>بحث باسم الطالب</label>
-            <input id="studentSearch" oninput="renderStudents()">
-        </div>
-
-        <div class="col">
-            <label>تصفية حسب الصف</label>
-            <select id="studentFilterGrade" onchange="renderStudents()">
-                <option value="">كل الصفوف</option>
-            </select>
-        </div>
-
-        <div class="col">
-            <label>تصفية حسب الشعبة</label>
-            <select id="studentFilterSection" onchange="renderStudents()">
-                <option value="">كل الشعب</option>
-            </select>
-        </div>
-
+    <div class="col">
+        <label>الصف</label>
+        <select id="studentGrade"></select>
     </div>
 
-
-    <div class="table-wrap">
-
-        <table>
-
-            <thead>
-                <tr>
-                    <th>الكود</th>
-                    <th>الطالب</th>
-                    <th>الصف</th>
-                    <th>الشعبة</th>
-                    <th>جوال ولي الأمر</th>
-                    <th>الإجراءات</th>
-                </tr>
-            </thead>
-
-            <tbody id="studentsBody"></tbody>
-
-        </table>
-
+    <div class="col">
+        <label>الشعبة</label>
+        <select id="studentSection"></select>
     </div>
+
+    <div class="col">
+        <label>جوال ولي الأمر</label>
+        <input id="guardianPhone" placeholder="05xxxxxxxx">
+    </div>
+
+</div>
+
+<div class="actions">
+
+    <button class="btn-primary" onclick="saveStudent()">
+        💾 حفظ الطالب
+    </button>
+
+    <button class="btn-light" onclick="clearStudentForm()">
+        جديد
+    </button>
+
+</div>
+
+
+<div class="row" style="margin-top:20px">
+
+    <div class="col">
+        <label>بحث</label>
+        <input
+            id="studentSearch"
+            placeholder="ابحث باسم الطالب أو الكود"
+            oninput="renderStudents()">
+    </div>
+
+    <div class="col">
+        <label>الصف</label>
+        <select id="studentFilterGrade" onchange="renderStudents()">
+            <option value="">كل الصفوف</option>
+        </select>
+    </div>
+
+    <div class="col">
+        <label>الشعبة</label>
+        <select id="studentFilterSection" onchange="renderStudents()">
+            <option value="">كل الشعب</option>
+        </select>
+    </div>
+
+</div>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+    <th>الكود</th>
+    <th>الطالب</th>
+    <th>الصف</th>
+    <th>الشعبة</th>
+    <th>جوال ولي الأمر</th>
+    <th>الإجراءات</th>
+</tr>
+</thead>
+
+<tbody id="studentsBody"></tbody>
+
+</table>
+
+</div>
+
+
+<div class="danger-zone">
+
+<button class="btn-danger" onclick="deleteAllStudents()">
+    🗑️ حذف جميع الطلاب
+</button>
+
+</div>
 
 </div>
 </div>
 
 
-<!-- ============================= -->
 <!-- Excel -->
-<!-- ============================= -->
 
 <div class="box">
 
@@ -509,52 +496,41 @@ tr:nth-child(even){
 
 <div class="box-body">
 
-    <div class="row">
+<div class="row">
 
-        <div class="col">
-            <label>اختر ملف Excel</label>
-            <input type="file" id="excelFile" accept=".xlsx,.xls">
-        </div>
-
+    <div class="col">
+        <label>ملف Excel</label>
+        <input type="file" id="excelFile" accept=".xlsx,.xls">
     </div>
 
-    <div class="actions">
+</div>
 
-        <button class="btn-success" onclick="importExcel()">
-            ⬆️ استيراد الطلاب
-        </button>
+<div class="actions">
 
-        <button class="btn-primary" onclick="downloadExcelTemplate()">
-            ⬇️ تحميل نموذج Excel
-        </button>
+    <button class="btn-success" onclick="importExcel()">
+        ⬆️ استيراد الطلاب
+    </button>
 
-    </div>
+    <button class="btn-primary" onclick="downloadExcelTemplate()">
+        ⬇️ نموذج Excel
+    </button>
 
-    <div class="note">
+</div>
 
-        الأعمدة التي يتعرف عليها راصد:
-        <strong>code - name - grade - section - phone</strong>
+<div class="note">
+    يمكنك استخدام الملف الجديد بالأعمدة:
+    <strong>code - name - grade - section - phone</strong>
+    <br>
+    إذا كان الطالب موجودًا بنفس الكود سيتم تحديث بياناته ورقم الجوال بدون تكراره.
+</div>
 
-        <br>
-
-        ويمكن أيضًا استخدام:
-        كود الطالب - اسم الطالب - الصف - الشعبة - الجوال.
-
-        <br>
-
-        إعادة استيراد طالب بنفس الكود تقوم بتحديث بياناته ولا تنشئ طالبًا مكررًا.
-
-    </div>
-
-    <div id="importStatus" class="status"></div>
+<div id="importStatus" class="status"></div>
 
 </div>
 </div>
 
 
-<!-- ============================= -->
-<!-- المعلمون -->
-<!-- ============================= -->
+<!-- المعلمين -->
 
 <div class="box">
 
@@ -564,66 +540,73 @@ tr:nth-child(even){
 
 <div class="box-body">
 
-    <input type="hidden" id="teacherOriginalUsername">
+<input type="hidden" id="teacherOriginalUsername">
 
-    <div class="row">
+<div class="row">
 
-        <div class="col">
-            <label>اسم المعلم</label>
-            <input id="teacherName">
-        </div>
-
-        <div class="col">
-            <label>اسم المستخدم</label>
-            <input id="teacherUsername">
-        </div>
-
-        <div class="col">
-            <label>كلمة المرور</label>
-            <input id="teacherPassword">
-        </div>
-
+    <div class="col">
+        <label>اسم المعلم</label>
+        <input id="teacherName">
     </div>
 
-    <div class="actions">
-
-        <button class="btn-primary" onclick="saveTeacher()">
-            💾 حفظ المعلم
-        </button>
-
-        <button class="btn-light" onclick="clearTeacherForm()">
-            جديد
-        </button>
-
+    <div class="col">
+        <label>اسم المستخدم</label>
+        <input id="teacherUsername">
     </div>
 
-
-    <div class="table-wrap">
-
-        <table>
-
-            <thead>
-                <tr>
-                    <th>المعلم</th>
-                    <th>اسم المستخدم</th>
-                    <th>الفصول المسندة</th>
-                    <th>الإجراءات</th>
-                </tr>
-            </thead>
-
-            <tbody id="teachersBody"></tbody>
-
-        </table>
-
+    <div class="col">
+        <label>كلمة المرور</label>
+        <input id="teacherPassword">
     </div>
+
+</div>
+
+<div class="actions">
+
+    <button class="btn-primary" onclick="saveTeacher()">
+        💾 حفظ المعلم
+    </button>
+
+    <button class="btn-light" onclick="clearTeacherForm()">
+        جديد
+    </button>
+
+</div>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+    <th>اسم المعلم</th>
+    <th>اسم المستخدم</th>
+    <th>عدد الفصول</th>
+    <th>الإجراءات</th>
+</tr>
+</thead>
+
+<tbody id="teachersBody"></tbody>
+
+</table>
+
+</div>
+
+
+<div class="danger-zone">
+
+<button class="btn-danger" onclick="deleteAllTeachers()">
+    🗑️ حذف جميع المعلمين
+</button>
+
+</div>
 
 </div>
 </div>
 
 
-<!-- ============================= -->
 <!-- الاختبارات -->
-<!-- ============================= -->
 
 <div class="box">
 
@@ -633,66 +616,73 @@ tr:nth-child(even){
 
 <div class="box-body">
 
-    <input type="hidden" id="testEditId">
+<input type="hidden" id="testEditId">
 
-    <div class="row">
+<div class="row">
 
-        <div class="col">
-            <label>اسم الاختبار</label>
-            <input id="testName" placeholder="مثال: Unit 1 Test">
-        </div>
-
-        <div class="col">
-            <label>الدرجة النهائية</label>
-            <input id="testFullMark" type="number" min="1">
-        </div>
-
-        <div class="col">
-            <label>تاريخ الاختبار</label>
-            <input id="testDate" type="date">
-        </div>
-
+    <div class="col">
+        <label>اسم الاختبار</label>
+        <input id="testName">
     </div>
 
-    <div class="actions">
-
-        <button class="btn-primary" onclick="saveTest()">
-            💾 حفظ الاختبار
-        </button>
-
-        <button class="btn-light" onclick="clearTestForm()">
-            جديد
-        </button>
-
+    <div class="col">
+        <label>الدرجة النهائية</label>
+        <input id="testFullMark" type="number" min="1">
     </div>
 
-
-    <div class="table-wrap">
-
-        <table>
-
-            <thead>
-                <tr>
-                    <th>اسم الاختبار</th>
-                    <th>الدرجة النهائية</th>
-                    <th>التاريخ</th>
-                    <th>الإجراءات</th>
-                </tr>
-            </thead>
-
-            <tbody id="testsBody"></tbody>
-
-        </table>
-
+    <div class="col">
+        <label>تاريخ الاختبار</label>
+        <input id="testDate" type="date">
     </div>
+
+</div>
+
+<div class="actions">
+
+    <button class="btn-primary" onclick="saveTest()">
+        💾 حفظ الاختبار
+    </button>
+
+    <button class="btn-light" onclick="clearTestForm()">
+        جديد
+    </button>
+
+</div>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+    <th>الاختبار</th>
+    <th>الدرجة النهائية</th>
+    <th>التاريخ</th>
+    <th>الإجراءات</th>
+</tr>
+</thead>
+
+<tbody id="testsBody"></tbody>
+
+</table>
+
+</div>
+
+
+<div class="danger-zone">
+
+<button class="btn-danger" onclick="deleteAllTests()">
+    🗑️ حذف جميع الاختبارات
+</button>
+
+</div>
 
 </div>
 </div>
 
 
-<!-- ============================= -->
-<!-- الإسناد الجماعي -->
-<!-- ============================= -->
+<!-- الإسناد -->
 
 <div class="box">
 
@@ -702,62 +692,101 @@ tr:nth-child(even){
 
 <div class="box-body">
 
-    <div class="assign-header">
+<div class="assign-header">
 
-        <div style="flex:1;min-width:250px">
+    <div class="teacher-select-wrap">
 
-            <label>اختر المعلم</label>
+        <label>اختر المعلم</label>
 
-            <select id="assignTeacher" onchange="loadTeacherAssignments()">
-                <option value="">اختر المعلم</option>
-            </select>
-
-        </div>
-
-        <button class="btn-success" onclick="selectAllAssignments()">
-            ✓ تحديد الكل
-        </button>
-
-        <button class="btn-light" onclick="clearAllAssignments()">
-            إلغاء الكل
-        </button>
+        <select id="assignTeacher" onchange="loadTeacherAssignments()">
+            <option value="">-- اختر المعلم --</option>
+        </select>
 
     </div>
 
+    <button class="btn-success" onclick="selectAllAssignments()">
+        ✓ تحديد الكل
+    </button>
 
-    <div class="assign-grid">
+    <button class="btn-light" onclick="clearAllAssignments()">
+        إلغاء الكل
+    </button>
 
-        <table class="assign-table">
-
-            <thead>
-                <tr>
-                    <th>الصف</th>
-                    <th>أ</th>
-                    <th>ب</th>
-                    <th>ج</th>
-                    <th>د</th>
-                </tr>
-            </thead>
-
-            <tbody id="assignmentGrid"></tbody>
-
-        </table>
-
-    </div>
+</div>
 
 
-    <div class="actions" style="justify-content:center;margin-top:18px">
+<div class="assign-grid">
 
-        <button
-            class="btn-purple"
-            style="font-size:17px;padding:13px 30px"
-            onclick="saveAssignments()">
+<table class="assign-table">
 
-            💾 حفظ إسنادات المعلم
+<thead>
+<tr>
+    <th>الصف</th>
+    <th>أ</th>
+    <th>ب</th>
+    <th>ج</th>
+    <th>د</th>
+</tr>
+</thead>
 
-        </button>
+<tbody id="assignmentGrid"></tbody>
 
-    </div>
+</table>
+
+</div>
+
+
+<div class="actions" style="justify-content:center;margin-top:20px">
+
+<button
+    class="btn-purple"
+    style="font-size:17px;padding:14px 35px"
+    onclick="saveAssignments()">
+
+    💾 حفظ إسنادات المعلم
+
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- تنظيف النظام -->
+
+<div class="box">
+
+<div class="box-title">
+    ⚠️ تنظيف البيانات
+</div>
+
+<div class="box-body">
+
+<div class="note">
+    استخدم الأزرار التالية فقط إذا أردت بدء البيانات من جديد.
+    حساب الإدارة نفسه لن يتم حذفه عند حذف المعلمين.
+</div>
+
+<div class="actions">
+
+    <button class="btn-danger" onclick="deleteAllStudents()">
+        حذف جميع الطلاب
+    </button>
+
+    <button class="btn-danger" onclick="deleteAllTeachers()">
+        حذف جميع المعلمين
+    </button>
+
+    <button class="btn-danger" onclick="deleteAllTests()">
+        حذف جميع الاختبارات
+    </button>
+
+    <button class="btn-dark" onclick="deleteAllGrades()">
+        حذف جميع النتائج والدرجات
+    </button>
+
+</div>
 
 </div>
 </div>
@@ -772,28 +801,17 @@ tr:nth-child(even){
 
 <script>
 
-/* Firebase */
+/* =========================
+   FIREBASE
+========================= */
 
 const firebaseConfig = {
-
-    apiKey:
-    "AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
-
-    authDomain:
-    "results2026-7c0dd.firebaseapp.com",
-
-    projectId:
-    "results2026-7c0dd",
-
-    storageBucket:
-    "results2026-7c0dd.firebasestorage.app",
-
-    messagingSenderId:
-    "241421115694",
-
-    appId:
-    "1:241421115694:web:96f55fd9fd1d5b18b31abf"
-
+    apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+    authDomain:"results2026-7c0dd.firebaseapp.com",
+    projectId:"results2026-7c0dd",
+    storageBucket:"results2026-7c0dd.firebasestorage.app",
+    messagingSenderId:"241421115694",
+    appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -801,119 +819,110 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 
-/* القوائم */
+/* =========================
+   البيانات الأساسية
+========================= */
 
 const grades = [
-
     "1 ابتدائي",
     "2 ابتدائي",
     "3 ابتدائي",
     "4 ابتدائي",
     "5 ابتدائي",
     "6 ابتدائي",
-
     "1 متوسط",
     "2 متوسط",
     "3 متوسط",
-
     "1 ثانوي",
     "2 ثانوي",
     "3 ثانوي"
-
 ];
 
 const sections = ["أ","ب","ج","د"];
 
 let students = [];
-
 let teachers = [];
-
 let tests = [];
 
 
-/* حماية الأدمن */
+/* =========================
+   الحماية
+========================= */
 
 function protectAdmin(){
 
     const role =
         localStorage.getItem("currentUserRole") || "";
 
-    if(role !== "superadmin"){
-
+    if(
+        role !== "superadmin" &&
+        role !== "admin"
+    ){
         alert("هذه الصفحة للإدارة فقط");
-
-        location.href = "index.html";
-
+        location.href="index.html";
     }
 
 }
 
 
-/* تجهيز القوائم */
+/* =========================
+   تجهيز القوائم
+========================= */
 
 function fillSelectors(){
 
-    const gradeSelectors = [
+    const studentGrade =
+        document.getElementById("studentGrade");
 
-        document.getElementById("studentGrade"),
-        document.getElementById("studentFilterGrade")
+    const filterGrade =
+        document.getElementById("studentFilterGrade");
 
-    ];
+    grades.forEach(grade=>{
 
-    gradeSelectors.forEach(function(select){
+        const o1=document.createElement("option");
+        o1.value=grade;
+        o1.textContent=grade;
+        studentGrade.appendChild(o1);
 
-        grades.forEach(function(grade){
-
-            const option =
-                document.createElement("option");
-
-            option.value = grade;
-            option.textContent = grade;
-
-            select.appendChild(option);
-
-        });
+        const o2=document.createElement("option");
+        o2.value=grade;
+        o2.textContent=grade;
+        filterGrade.appendChild(o2);
 
     });
 
 
-    const sectionSelectors = [
+    const studentSection =
+        document.getElementById("studentSection");
 
-        document.getElementById("studentSection"),
-        document.getElementById("studentFilterSection")
+    const filterSection =
+        document.getElementById("studentFilterSection");
 
-    ];
+    sections.forEach(section=>{
 
-    sectionSelectors.forEach(function(select){
+        const o1=document.createElement("option");
+        o1.value=section;
+        o1.textContent=section;
+        studentSection.appendChild(o1);
 
-        sections.forEach(function(section){
-
-            const option =
-                document.createElement("option");
-
-            option.value = section;
-            option.textContent = section;
-
-            select.appendChild(option);
-
-        });
+        const o2=document.createElement("option");
+        o2.value=section;
+        o2.textContent=section;
+        filterSection.appendChild(o2);
 
     });
 
 }
 
 
-/* تنظيف النص */
-
 function escapeHtml(value){
 
-    return String(value || "")
-
-    .replace(/&/g,"&amp;")
-    .replace(/</g,"&lt;")
-    .replace(/>/g,"&gt;")
-    .replace(/"/g,"&quot;")
-    .replace(/'/g,"&#039;");
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
 
 }
 
@@ -924,59 +933,45 @@ function escapeHtml(value){
 
 async function loadStudents(){
 
-    const snapshot =
+    const snap =
         await db.collection("students").get();
 
-    students = [];
+    students=[];
 
-    snapshot.forEach(function(doc){
+    snap.forEach(doc=>{
 
-        const data = doc.data() || {};
+        const data=doc.data() || {};
 
-        data.code = data.code || doc.id;
-
-        students.push(data);
-
-    });
-
-
-    students.sort(function(a,b){
-
-        const gradeA =
-            grades.indexOf(a.grade);
-
-        const gradeB =
-            grades.indexOf(b.grade);
-
-        if(gradeA !== gradeB)
-            return gradeA - gradeB;
-
-        if((a.section || "") !== (b.section || "")){
-
-            return (a.section || "")
-            .localeCompare(
-                b.section || "",
-                "ar"
-            );
-
-        }
-
-        return (a.name || "")
-        .localeCompare(
-            b.name || "",
-            "ar"
-        );
+        students.push({
+            ...data,
+            code:data.code || doc.id
+        });
 
     });
 
 
-    document.getElementById(
-        "statStudents"
-    ).textContent = students.length;
+    students.sort((a,b)=>{
 
+        const ga=grades.indexOf(a.grade);
+        const gb=grades.indexOf(b.grade);
+
+        if(ga!==gb)
+            return ga-gb;
+
+        if((a.section||"") !== (b.section||""))
+            return (a.section||"")
+                .localeCompare(b.section||"","ar");
+
+        return (a.name||"")
+            .localeCompare(b.name||"","ar");
+
+    });
+
+
+    document.getElementById("statStudents")
+        .textContent=students.length;
 
     renderStudents();
-
     updateClassCount();
 
 }
@@ -984,116 +979,92 @@ async function loadStudents(){
 
 function renderStudents(){
 
-    const body =
-        document.getElementById(
-            "studentsBody"
-        );
+    const body=
+        document.getElementById("studentsBody");
 
-    const search =
-        document.getElementById(
-            "studentSearch"
-        ).value.trim();
+    const search=
+        document.getElementById("studentSearch")
+        .value.trim().toLowerCase();
 
-    const grade =
-        document.getElementById(
-            "studentFilterGrade"
-        ).value;
+    const grade=
+        document.getElementById("studentFilterGrade")
+        .value;
 
-    const section =
-        document.getElementById(
-            "studentFilterSection"
-        ).value;
+    const section=
+        document.getElementById("studentFilterSection")
+        .value;
 
 
-    let filtered =
-        students.filter(function(student){
+    const filtered=students.filter(s=>{
 
-            if(
-                search &&
-                !(student.name || "")
-                .includes(search)
-            ){
-                return false;
-            }
+        const name=
+            String(s.name||"").toLowerCase();
 
-            if(
-                grade &&
-                student.grade !== grade
-            ){
-                return false;
-            }
+        const code=
+            String(s.code||"").toLowerCase();
 
-            if(
-                section &&
-                student.section !== section
-            ){
-                return false;
-            }
+        if(
+            search &&
+            !name.includes(search) &&
+            !code.includes(search)
+        ){
+            return false;
+        }
 
-            return true;
+        if(grade && s.grade!==grade)
+            return false;
 
-        });
+        if(section && s.section!==section)
+            return false;
+
+        return true;
+
+    });
 
 
-    body.innerHTML = "";
+    body.innerHTML="";
 
 
     if(!filtered.length){
 
-        body.innerHTML =
-        "<tr><td colspan='6'>لا يوجد طلاب</td></tr>";
+        body.innerHTML=
+            "<tr><td colspan='6'>لا يوجد طلاب</td></tr>";
 
         return;
 
     }
 
 
-    filtered.forEach(function(student){
+    filtered.forEach(student=>{
 
-        const tr =
-            document.createElement("tr");
+        const tr=document.createElement("tr");
 
-
-        tr.innerHTML =
-
-        "<td>"+
-        escapeHtml(student.code)+
-        "</td>"+
-
-        "<td>"+
-        escapeHtml(student.name)+
-        "</td>"+
-
-        "<td>"+
-        escapeHtml(student.grade)+
-        "</td>"+
-
-        "<td>"+
-        escapeHtml(student.section)+
-        "</td>"+
-
-        "<td>"+
-        escapeHtml(
+        const phone=
             student.guardianPhone ||
             student.phone ||
-            ""
-        )+
-        "</td>"+
+            "";
 
-        "<td>"+
+        tr.innerHTML=`
+            <td>${escapeHtml(student.code)}</td>
+            <td>${escapeHtml(student.name)}</td>
+            <td>${escapeHtml(student.grade)}</td>
+            <td>${escapeHtml(student.section)}</td>
+            <td>${escapeHtml(phone)}</td>
 
-        "<button class='small-btn btn-warning' "+
-        "onclick='editStudent("+
-        JSON.stringify(student.code)+
-        ")'>تعديل</button>"+
+            <td>
+                <button
+                    class="small-btn btn-warning"
+                    onclick='editStudent(${JSON.stringify(student.code)})'>
+                    تعديل
+                </button>
 
-        "<button class='small-btn btn-danger' "+
-        "onclick='deleteStudent("+
-        JSON.stringify(student.code)+
-        ")'>حذف</button>"+
-
-        "</td>";
-
+                <button
+                    class="small-btn btn-danger"
+                    onclick='deleteStudent(${JSON.stringify(student.code)})'>
+                    حذف
+                </button>
+            </td>
+        `;
 
         body.appendChild(tr);
 
@@ -1104,112 +1075,80 @@ function renderStudents(){
 
 async function saveStudent(){
 
-    const originalCode =
-        document.getElementById(
-            "studentOriginalCode"
-        ).value.trim();
+    const original=
+        document.getElementById("studentOriginalCode")
+        .value.trim();
 
-    const code =
-        document.getElementById(
-            "studentCode"
-        ).value.trim();
+    const code=
+        document.getElementById("studentCode")
+        .value.trim();
 
-    const name =
-        document.getElementById(
-            "studentName"
-        ).value.trim();
+    const name=
+        document.getElementById("studentName")
+        .value.trim();
 
-    const grade =
-        document.getElementById(
-            "studentGrade"
-        ).value;
+    const grade=
+        document.getElementById("studentGrade")
+        .value;
 
-    const section =
-        document.getElementById(
-            "studentSection"
-        ).value;
+    const section=
+        document.getElementById("studentSection")
+        .value;
 
-    const guardianPhone =
-        document.getElementById(
-            "guardianPhone"
-        ).value.trim();
+    const guardianPhone=
+        document.getElementById("guardianPhone")
+        .value.trim();
 
 
     if(!code || !name){
 
-        alert(
-            "أدخل كود الطالب واسم الطالب"
-        );
-
+        alert("أدخل كود الطالب واسم الطالب");
         return;
 
     }
 
 
-    /*
-    لو المستخدم غيّر كود طالب موجود،
-    ننقل البيانات للوثيقة الجديدة.
-    */
+    let previousData={};
 
-    if(
-        originalCode &&
-        originalCode !== code
-    ){
 
-        const oldDoc =
+    if(original){
+
+        const oldDoc=
             await db.collection("students")
-            .doc(originalCode)
+            .doc(original)
             .get();
 
-        let oldData = {};
-
-        if(oldDoc.exists){
-
-            oldData =
-                oldDoc.data() || {};
-
-        }
-
-
-        await db.collection("students")
-        .doc(code)
-        .set({
-
-            ...oldData,
-
-            code:code,
-            name:name,
-            grade:grade,
-            section:section,
-            guardianPhone:guardianPhone
-
-        },{merge:true});
-
-
-        await db.collection("students")
-        .doc(originalCode)
-        .delete();
-
-    }
-
-    else{
-
-        await db.collection("students")
-        .doc(code)
-        .set({
-
-            code:code,
-            name:name,
-            grade:grade,
-            section:section,
-            guardianPhone:guardianPhone
-
-        },{merge:true});
+        if(oldDoc.exists)
+            previousData=oldDoc.data() || {};
 
     }
 
 
-    alert("تم حفظ الطالب");
+    await db.collection("students")
+        .doc(code)
+        .set({
+
+            ...previousData,
+
+            code,
+            name,
+            grade,
+            section,
+            guardianPhone
+
+        },{merge:true});
+
+
+    if(original && original!==code){
+
+        await db.collection("students")
+            .doc(original)
+            .delete();
+
+    }
+
+
+    alert("تم حفظ الطالب ✅");
 
     clearStudentForm();
 
@@ -1220,42 +1159,31 @@ async function saveStudent(){
 
 function editStudent(code){
 
-    const student =
-        students.find(function(s){
-
-            return String(s.code) ===
-                   String(code);
-
-        });
-
+    const student=
+        students.find(
+            s=>String(s.code)===String(code)
+        );
 
     if(!student)
         return;
 
 
-    document.getElementById(
-        "studentOriginalCode"
-    ).value = student.code || "";
+    document.getElementById("studentOriginalCode").value=
+        student.code || "";
 
-    document.getElementById(
-        "studentCode"
-    ).value = student.code || "";
+    document.getElementById("studentCode").value=
+        student.code || "";
 
-    document.getElementById(
-        "studentName"
-    ).value = student.name || "";
+    document.getElementById("studentName").value=
+        student.name || "";
 
-    document.getElementById(
-        "studentGrade"
-    ).value = student.grade || "";
+    document.getElementById("studentGrade").value=
+        student.grade || "";
 
-    document.getElementById(
-        "studentSection"
-    ).value = student.section || "";
+    document.getElementById("studentSection").value=
+        student.section || "";
 
-    document.getElementById(
-        "guardianPhone"
-    ).value =
+    document.getElementById("guardianPhone").value=
         student.guardianPhone ||
         student.phone ||
         "";
@@ -1271,40 +1199,22 @@ function editStudent(code){
 
 function clearStudentForm(){
 
-    document.getElementById(
-        "studentOriginalCode"
-    ).value = "";
-
-    document.getElementById(
-        "studentCode"
-    ).value = "";
-
-    document.getElementById(
-        "studentName"
-    ).value = "";
-
-    document.getElementById(
-        "guardianPhone"
-    ).value = "";
+    document.getElementById("studentOriginalCode").value="";
+    document.getElementById("studentCode").value="";
+    document.getElementById("studentName").value="";
+    document.getElementById("guardianPhone").value="";
 
 }
 
 
 async function deleteStudent(code){
 
-    if(
-        !confirm(
-            "هل تريد حذف هذا الطالب نهائيًا؟"
-        )
-    ){
+    if(!confirm("هل تريد حذف الطالب؟"))
         return;
-    }
-
 
     await db.collection("students")
-    .doc(String(code))
-    .delete();
-
+        .doc(String(code))
+        .delete();
 
     await loadStudents();
 
@@ -1312,55 +1222,110 @@ async function deleteStudent(code){
 
 
 /* =========================
-   Excel
+   حذف مجموعة Collection
+========================= */
+
+async function deleteCollection(collectionName){
+
+    while(true){
+
+        const snap=
+            await db.collection(collectionName)
+            .limit(400)
+            .get();
+
+        if(snap.empty)
+            break;
+
+        const batch=db.batch();
+
+        snap.docs.forEach(doc=>{
+            batch.delete(doc.ref);
+        });
+
+        await batch.commit();
+
+    }
+
+}
+
+
+/* =========================
+   حذف جميع الطلاب
+========================= */
+
+async function deleteAllStudents(){
+
+    if(!students.length){
+
+        alert("لا يوجد طلاب للحذف");
+        return;
+
+    }
+
+    const answer=prompt(
+        "⚠️ سيتم حذف جميع الطلاب وعددهم "+
+        students.length+
+        ".\n\nاكتب كلمة حذف للتأكيد:"
+    );
+
+    if(answer!=="حذف"){
+
+        alert("تم إلغاء العملية");
+        return;
+
+    }
+
+
+    try{
+
+        await deleteCollection("students");
+
+        students=[];
+
+        alert("تم حذف جميع الطلاب ✅");
+
+        await loadStudents();
+
+    }catch(error){
+
+        console.error(error);
+        alert("حدث خطأ أثناء الحذف");
+
+    }
+
+}
+
+
+/* =========================
+   EXCEL
 ========================= */
 
 function normalizeHeader(value){
 
-    return String(value || "")
-
-    .trim()
-    .toLowerCase()
-
-    .replace(/\uFEFF/g,"")
-
-    .replace(
-        /[\u064B-\u065F\u0670]/g,
-        ""
-    )
-
-    .replace(/[أإآ]/g,"ا")
-    .replace(/ة/g,"ه")
-    .replace(/ى/g,"ي")
-
-    .replace(
-        /[\s_\-\/\\().]+/g,
-        ""
-    );
+    return String(value||"")
+        .trim()
+        .toLowerCase()
+        .replace(/\uFEFF/g,"")
+        .replace(/[\u064B-\u065F\u0670]/g,"")
+        .replace(/[أإآ]/g,"ا")
+        .replace(/ة/g,"ه")
+        .replace(/ى/g,"ي")
+        .replace(/[\s_\-\/\\().]+/g,"");
 
 }
 
 
 function excelValue(row,aliases){
 
-    const keys =
-        Object.keys(row);
+    for(const key of Object.keys(row)){
 
-    for(let key of keys){
+        const nk=normalizeHeader(key);
 
-        const normalizedKey =
-            normalizeHeader(key);
+        for(const alias of aliases){
 
-        for(let alias of aliases){
-
-            if(
-                normalizedKey ===
-                normalizeHeader(alias)
-            ){
-
+            if(nk===normalizeHeader(alias))
                 return row[key];
-
-            }
 
         }
 
@@ -1373,12 +1338,8 @@ function excelValue(row,aliases){
 
 function cleanValue(value){
 
-    if(
-        value === undefined ||
-        value === null
-    ){
+    if(value===undefined || value===null)
         return "";
-    }
 
     return String(value).trim();
 
@@ -1387,38 +1348,30 @@ function cleanValue(value){
 
 function normalizeSection(value){
 
-    let section =
-        cleanValue(value);
+    let section=cleanValue(value);
 
+    const map={
+        "A":"أ",
+        "a":"أ",
+        "ا":"أ",
+        "B":"ب",
+        "b":"ب",
+        "C":"ج",
+        "c":"ج",
+        "D":"د",
+        "d":"د"
+    };
 
-    if(section === "A" || section === "a")
-        return "أ";
-
-    if(section === "B" || section === "b")
-        return "ب";
-
-    if(section === "C" || section === "c")
-        return "ج";
-
-    if(section === "D" || section === "d")
-        return "د";
-
-    if(section === "ا")
-        return "أ";
-
-
-    return section;
+    return map[section] || section;
 
 }
 
 
 function normalizeGrade(value){
 
-    let grade =
-        cleanValue(value);
+    let grade=cleanValue(value);
 
-
-    const map = {
+    const map={
 
         "أول ابتدائي":"1 ابتدائي",
         "اول ابتدائي":"1 ابتدائي",
@@ -1427,11 +1380,8 @@ function normalizeGrade(value){
         "ثان ابتدائي":"2 ابتدائي",
 
         "ثالث ابتدائي":"3 ابتدائي",
-
         "رابع ابتدائي":"4 ابتدائي",
-
         "خامس ابتدائي":"5 ابتدائي",
-
         "سادس ابتدائي":"6 ابتدائي",
 
         "أول متوسط":"1 متوسط",
@@ -1452,7 +1402,6 @@ function normalizeGrade(value){
 
     };
 
-
     return map[grade] || grade;
 
 }
@@ -1460,42 +1409,27 @@ function normalizeGrade(value){
 
 function setImportStatus(text,type){
 
-    const box =
-        document.getElementById(
-            "importStatus"
-        );
+    const box=document.getElementById("importStatus");
 
-    box.className =
-        "status "+type;
-
-    box.innerHTML = text;
+    box.className="status "+type;
+    box.innerHTML=text;
 
 }
 
 
 async function importExcel(){
 
-    const input =
-        document.getElementById(
-            "excelFile"
-        );
-
+    const input=document.getElementById("excelFile");
 
     if(!input.files.length){
 
         alert("اختر ملف Excel");
-
         return;
 
     }
 
 
-    const file =
-        input.files[0];
-
-    const reader =
-        new FileReader();
-
+    const reader=new FileReader();
 
     setImportStatus(
         "جاري قراءة الملف...",
@@ -1503,31 +1437,21 @@ async function importExcel(){
     );
 
 
-    reader.onload =
-    async function(event){
+    reader.onload=async event=>{
 
         try{
 
-            const data =
-                new Uint8Array(
-                    event.target.result
-                );
+            const workbook=XLSX.read(
+                new Uint8Array(event.target.result),
+                {type:"array"}
+            );
 
-
-            const workbook =
-                XLSX.read(
-                    data,
-                    {type:"array"}
-                );
-
-
-            const sheet =
+            const sheet=
                 workbook.Sheets[
                     workbook.SheetNames[0]
                 ];
 
-
-            const rows =
+            const rows=
                 XLSX.utils.sheet_to_json(
                     sheet,
                     {
@@ -1540,7 +1464,7 @@ async function importExcel(){
             if(!rows.length){
 
                 setImportStatus(
-                    "الملف لا يحتوي على بيانات.",
+                    "الملف فارغ",
                     "error"
                 );
 
@@ -1549,125 +1473,80 @@ async function importExcel(){
             }
 
 
-            const imported = [];
-
-            const skipped = [];
-
-            const usedCodes =
-                new Set();
+            const imported=[];
+            const usedCodes=new Set();
 
 
-            rows.forEach(
-            function(row,index){
+            rows.forEach(row=>{
 
-                let code =
-                    cleanValue(
-                        excelValue(
-                            row,
-                            [
-                                "code",
-                                "id",
-                                "studentcode",
-                                "كود",
-                                "كود الطالب",
-                                "الهوية",
-                                "رقم الهوية",
-                                "السجل المدني"
-                            ]
-                        )
-                    );
+                let code=cleanValue(
+                    excelValue(row,[
+                        "code",
+                        "id",
+                        "studentcode",
+                        "كود",
+                        "كود الطالب",
+                        "الهوية",
+                        "رقم الهوية",
+                        "السجل المدني"
+                    ])
+                ).replace(/\.0$/,"");
 
 
-                code =
-                    code.replace(
-                        /\.0$/,
-                        ""
-                    );
+                const name=cleanValue(
+                    excelValue(row,[
+                        "name",
+                        "studentname",
+                        "اسم",
+                        "الاسم",
+                        "اسم الطالب"
+                    ])
+                );
 
 
-                const name =
-                    cleanValue(
-                        excelValue(
-                            row,
-                            [
-                                "name",
-                                "studentname",
-                                "اسم",
-                                "الاسم",
-                                "اسم الطالب"
-                            ]
-                        )
-                    );
+                const grade=normalizeGrade(
+                    excelValue(row,[
+                        "grade",
+                        "الصف",
+                        "صف",
+                        "الصف الدراسي"
+                    ])
+                );
 
 
-                const grade =
-                    normalizeGrade(
-                        excelValue(
-                            row,
-                            [
-                                "grade",
-                                "الصف",
-                                "صف",
-                                "الصف الدراسي"
-                            ]
-                        )
-                    );
+                const section=normalizeSection(
+                    excelValue(row,[
+                        "section",
+                        "الشعبة",
+                        "الفصل",
+                        "شعبة"
+                    ])
+                );
 
 
-                const section =
-                    normalizeSection(
-                        excelValue(
-                            row,
-                            [
-                                "section",
-                                "الشعبة",
-                                "الفصل",
-                                "شعبة"
-                            ]
-                        )
-                    );
+                const phone=cleanValue(
+                    excelValue(row,[
+                        "phone",
+                        "mobile",
+                        "guardianphone",
+                        "parentphone",
+                        "الجوال",
+                        "جوال",
+                        "رقم الجوال",
+                        "جوال ولي الامر",
+                        "جوال ولي الأمر",
+                        "رقم ولي الامر",
+                        "رقم ولي الأمر"
+                    ])
+                ).replace(/\.0$/,"");
 
 
-                const guardianPhone =
-                    cleanValue(
-                        excelValue(
-                            row,
-                            [
-                                "phone",
-                                "mobile",
-                                "guardianphone",
-                                "parentphone",
-                                "الجوال",
-                                "جوال",
-                                "رقم الجوال",
-                                "جوال ولي الامر",
-                                "جوال ولي الأمر",
-                                "رقم ولي الامر",
-                                "رقم ولي الأمر"
-                            ]
-                        )
-                    );
-
-
-                if(!code || !name){
-
-                    skipped.push(
-                        index + 2
-                    );
-
+                if(
+                    !code ||
+                    !name ||
+                    usedCodes.has(code)
+                ){
                     return;
-
-                }
-
-
-                if(usedCodes.has(code)){
-
-                    skipped.push(
-                        index + 2
-                    );
-
-                    return;
-
                 }
 
 
@@ -1675,13 +1554,12 @@ async function importExcel(){
 
 
                 imported.push({
-
-                    code:code,
-                    name:name,
-                    grade:grade,
-                    section:section,
-                    guardianPhone:guardianPhone
-
+                    code,
+                    name,
+                    grade,
+                    section,
+                    guardianPhone:phone,
+                    phone:phone
                 });
 
             });
@@ -1690,7 +1568,7 @@ async function importExcel(){
             if(!imported.length){
 
                 setImportStatus(
-                    "لم يتم العثور على طلاب صالحين للاستيراد.",
+                    "لم يتم العثور على بيانات صالحة.",
                     "error"
                 );
 
@@ -1703,52 +1581,32 @@ async function importExcel(){
                 !confirm(
                     "سيتم استيراد / تحديث "+
                     imported.length+
-                    " طالب.\n\nمتابعة؟"
+                    " طالب.\nمتابعة؟"
                 )
             ){
                 return;
             }
 
 
-            const size = 400;
+            for(let i=0;i<imported.length;i+=400){
 
-
-            for(
-                let i=0;
-                i<imported.length;
-                i+=size
-            ){
-
-                const batch =
-                    db.batch();
-
+                const batch=db.batch();
 
                 imported
-                .slice(i,i+size)
-                .forEach(
-                function(student){
+                    .slice(i,i+400)
+                    .forEach(student=>{
 
-                    const ref =
-                        db.collection(
-                            "students"
-                        )
-                        .doc(
-                            student.code
+                        const ref=
+                            db.collection("students")
+                            .doc(student.code);
+
+                        batch.set(
+                            ref,
+                            student,
+                            {merge:true}
                         );
 
-
-                    /*
-                    لا نلمس درجات الطالب القديمة.
-                    */
-
-                    batch.set(
-                        ref,
-                        student,
-                        {merge:true}
-                    );
-
-                });
-
+                    });
 
                 await batch.commit();
 
@@ -1756,41 +1614,23 @@ async function importExcel(){
 
 
             setImportStatus(
-
-                "تم الاستيراد بنجاح ✅<br>"+
-                "تم حفظ / تحديث: <strong>"+
+                "تم استيراد / تحديث "+
                 imported.length+
-                "</strong> طالب"+
-                (
-                    skipped.length
-                    ?
-                    "<br>تم تجاهل: "+
-                    skipped.length+
-                    " صف."
-                    :
-                    ""
-                ),
-
+                " طالب بنجاح ✅",
                 "success"
-
             );
 
 
-            input.value = "";
+            input.value="";
 
             await loadStudents();
 
-        }
-
-        catch(error){
+        }catch(error){
 
             console.error(error);
 
             setImportStatus(
-                "حدث خطأ أثناء الاستيراد: "+
-                escapeHtml(
-                    error.message
-                ),
+                "خطأ: "+escapeHtml(error.message),
                 "error"
             );
 
@@ -1799,22 +1639,16 @@ async function importExcel(){
     };
 
 
-    reader.readAsArrayBuffer(file);
+    reader.readAsArrayBuffer(input.files[0]);
 
 }
 
 
 function downloadExcelTemplate(){
 
-    const data = [
+    const rows=[
 
-        [
-            "code",
-            "name",
-            "grade",
-            "section",
-            "phone"
-        ],
+        ["code","name","grade","section","phone"],
 
         [
             "1001",
@@ -1826,24 +1660,17 @@ function downloadExcelTemplate(){
 
     ];
 
-
-    const worksheet =
-        XLSX.utils.aoa_to_sheet(data);
-
-
-    const workbook =
-        XLSX.utils.book_new();
-
+    const ws=XLSX.utils.aoa_to_sheet(rows);
+    const wb=XLSX.utils.book_new();
 
     XLSX.utils.book_append_sheet(
-        workbook,
-        worksheet,
+        wb,
+        ws,
         "students"
     );
 
-
     XLSX.writeFile(
-        workbook,
+        wb,
         "Rased_Students_Template.xlsx"
     );
 
@@ -1851,119 +1678,129 @@ function downloadExcelTemplate(){
 
 
 /* =========================
-   المعلمون
+   المعلمين
 ========================= */
 
 async function loadTeachers(){
 
-    const snapshot =
-        await db.collection(
-            "teachers"
-        ).get();
+    const snap=
+        await db.collection("teachers").get();
+
+    teachers=[];
 
 
-    teachers = [];
+    snap.forEach(doc=>{
 
+        const data=doc.data() || {};
 
-    snapshot.forEach(
-    function(doc){
-
-        const data =
-            doc.data() || {};
-
-        data.email =
-            data.email || doc.id;
-
-        teachers.push(data);
+        teachers.push({
+            ...data,
+            email:data.email || doc.id
+        });
 
     });
 
 
     teachers.sort(
-    function(a,b){
-
-        return (a.name || "")
+        (a,b)=>
+        String(a.name||"")
         .localeCompare(
-            b.name || "",
+            String(b.name||""),
             "ar"
-        );
+        )
+    );
 
-    });
 
-
-    document.getElementById(
-        "statTeachers"
-    ).textContent =
-        teachers.length;
+    document.getElementById("statTeachers")
+        .textContent=teachers.length;
 
 
     renderTeachers();
-
     fillTeacherSelector();
+
+}
+
+
+function getTeacherAssignments(teacher){
+
+    /*
+    يدعم النظام الجديد والقديم معًا
+    */
+
+    if(
+        Array.isArray(teacher.classes) &&
+        teacher.classes.length
+    ){
+        return teacher.classes;
+    }
+
+    if(Array.isArray(teacher.assignments)){
+        return teacher.assignments;
+    }
+
+    return [];
 
 }
 
 
 function renderTeachers(){
 
-    const body =
-        document.getElementById(
-            "teachersBody"
-        );
+    const body=
+        document.getElementById("teachersBody");
 
-
-    body.innerHTML = "";
+    body.innerHTML="";
 
 
     if(!teachers.length){
 
-        body.innerHTML =
-        "<tr><td colspan='4'>لا يوجد معلمون</td></tr>";
+        body.innerHTML=
+            "<tr><td colspan='4'>لا يوجد معلمون</td></tr>";
 
         return;
 
     }
 
 
-    teachers.forEach(
-    function(teacher){
+    teachers.forEach(teacher=>{
 
-        const assignments =
-            teacher.assignments || [];
+        const assignments=
+            getTeacherAssignments(teacher);
+
+        const unique=new Set();
+
+        assignments.forEach(a=>{
+
+            if(a.grade && a.section)
+                unique.add(a.grade+"|||"+a.section);
+
+        });
 
 
-        const tr =
-            document.createElement("tr");
+        const tr=document.createElement("tr");
 
+        tr.innerHTML=`
+            <td>${escapeHtml(teacher.name)}</td>
 
-        tr.innerHTML =
+            <td>${escapeHtml(teacher.email)}</td>
 
-        "<td>"+
-        escapeHtml(teacher.name)+
-        "</td>"+
+            <td>${unique.size}</td>
 
-        "<td>"+
-        escapeHtml(teacher.email)+
-        "</td>"+
+            <td>
 
-        "<td>"+
-        assignments.length+
-        "</td>"+
+                <button
+                    class="small-btn btn-warning"
+                    onclick='editTeacher(${JSON.stringify(teacher.email)})'>
+                    تعديل
+                </button>
 
-        "<td>"+
+                <button
+                    class="small-btn btn-danger"
+                    onclick='deleteTeacher(${JSON.stringify(teacher.email)})'>
+                    حذف
+                </button>
 
-        "<button class='small-btn btn-warning' "+
-        "onclick='editTeacher("+
-        JSON.stringify(teacher.email)+
-        ")'>تعديل</button>"+
-
-        "<button class='small-btn btn-danger' "+
-        "onclick='deleteTeacher("+
-        JSON.stringify(teacher.email)+
-        ")'>حذف</button>"+
-
-        "</td>";
-
+            </td>
+        `;
 
         body.appendChild(tr);
 
@@ -1974,37 +1811,24 @@ function renderTeachers(){
 
 async function saveTeacher(){
 
-    const original =
-        document.getElementById(
-            "teacherOriginalUsername"
-        ).value.trim();
+    const original=
+        document.getElementById("teacherOriginalUsername")
+        .value.trim();
+
+    const name=
+        document.getElementById("teacherName")
+        .value.trim();
+
+    const username=
+        document.getElementById("teacherUsername")
+        .value.trim().toLowerCase();
+
+    const password=
+        document.getElementById("teacherPassword")
+        .value.trim();
 
 
-    const name =
-        document.getElementById(
-            "teacherName"
-        ).value.trim();
-
-
-    const username =
-        document.getElementById(
-            "teacherUsername"
-        ).value
-        .trim()
-        .toLowerCase();
-
-
-    const password =
-        document.getElementById(
-            "teacherPassword"
-        ).value.trim();
-
-
-    if(
-        !name ||
-        !username ||
-        !password
-    ){
+    if(!name || !username || !password){
 
         alert(
             "أدخل اسم المعلم واسم المستخدم وكلمة المرور"
@@ -2015,71 +1839,59 @@ async function saveTeacher(){
     }
 
 
-    let assignments = [];
+    let oldTeacherData={};
 
 
     if(original){
 
-        const oldTeacher =
-            teachers.find(
-            function(t){
+        const oldDoc=
+            await db.collection("teachers")
+            .doc(original)
+            .get();
 
-                return t.email === original;
-
-            });
-
-
-        if(oldTeacher){
-
-            assignments =
-                oldTeacher.assignments || [];
-
-        }
+        if(oldDoc.exists)
+            oldTeacherData=oldDoc.data() || {};
 
     }
 
 
-    if(
-        original &&
-        original !== username
-    ){
+    if(original && original!==username){
 
         await db.collection("teachers")
-        .doc(original)
-        .delete();
-
+            .doc(original)
+            .delete();
 
         await db.collection("users")
-        .doc(original)
-        .delete();
+            .doc(original)
+            .delete();
 
     }
 
 
     await db.collection("teachers")
-    .doc(username)
-    .set({
+        .doc(username)
+        .set({
 
-        name:name,
-        email:username,
-        assignments:assignments
+            ...oldTeacherData,
 
-    },{merge:true});
+            name,
+            email:username
+
+        },{merge:true});
 
 
     await db.collection("users")
-    .doc(username)
-    .set({
+        .doc(username)
+        .set({
 
-        name:name,
-        role:"teacher",
-        password:password
+            name,
+            role:"teacher",
+            password
 
-    },{merge:true});
+        },{merge:true});
 
 
-    alert("تم حفظ المعلم");
-
+    alert("تم حفظ المعلم ✅");
 
     clearTeacherForm();
 
@@ -2088,80 +1900,48 @@ async function saveTeacher(){
 }
 
 
-function editTeacher(username){
+async function editTeacher(username){
 
-    const teacher =
+    const teacher=
         teachers.find(
-        function(t){
-
-            return t.email === username;
-
-        });
-
+            t=>t.email===username
+        );
 
     if(!teacher)
         return;
 
 
-    document.getElementById(
-        "teacherOriginalUsername"
-    ).value =
-        teacher.email;
+    document.getElementById("teacherOriginalUsername")
+        .value=teacher.email;
+
+    document.getElementById("teacherName")
+        .value=teacher.name || "";
+
+    document.getElementById("teacherUsername")
+        .value=teacher.email || "";
 
 
-    document.getElementById(
-        "teacherName"
-    ).value =
-        teacher.name || "";
+    const userDoc=
+        await db.collection("users")
+        .doc(username)
+        .get();
 
 
-    document.getElementById(
-        "teacherUsername"
-    ).value =
-        teacher.email || "";
-
-
-    /*
-    كلمة المرور لا تُحفظ في teachers.
-    نقرأها من users.
-    */
-
-    db.collection("users")
-    .doc(username)
-    .get()
-    .then(function(doc){
-
-        if(doc.exists){
-
-            document.getElementById(
-                "teacherPassword"
-            ).value =
-                doc.data().password || "";
-
-        }
-
-    });
+    document.getElementById("teacherPassword")
+        .value=
+        userDoc.exists
+        ? (userDoc.data().password || "")
+        : "";
 
 }
 
 
 function clearTeacherForm(){
 
-    document.getElementById(
-        "teacherOriginalUsername"
-    ).value = "";
-
-    document.getElementById(
-        "teacherName"
-    ).value = "";
-
-    document.getElementById(
-        "teacherUsername"
-    ).value = "";
-
-    document.getElementById(
-        "teacherPassword"
-    ).value = "";
+    document.getElementById("teacherOriginalUsername").value="";
+    document.getElementById("teacherName").value="";
+    document.getElementById("teacherUsername").value="";
+    document.getElementById("teacherPassword").value="";
 
 }
 
@@ -2170,7 +1950,7 @@ async function deleteTeacher(username){
 
     if(
         !confirm(
-            "سيتم حذف المعلم وحساب دخوله.\nهل أنت متأكد؟"
+            "سيتم حذف المعلم وحساب دخوله.\nمتابعة؟"
         )
     ){
         return;
@@ -2178,16 +1958,112 @@ async function deleteTeacher(username){
 
 
     await db.collection("teachers")
-    .doc(username)
-    .delete();
+        .doc(username)
+        .delete();
 
 
-    await db.collection("users")
-    .doc(username)
-    .delete();
+    const userDoc=
+        await db.collection("users")
+        .doc(username)
+        .get();
+
+
+    if(
+        userDoc.exists &&
+        userDoc.data().role==="teacher"
+    ){
+
+        await db.collection("users")
+            .doc(username)
+            .delete();
+
+    }
 
 
     await loadTeachers();
+
+}
+
+
+/* =========================
+   حذف جميع المعلمين
+========================= */
+
+async function deleteAllTeachers(){
+
+    if(!teachers.length){
+
+        alert("لا يوجد معلمون للحذف");
+        return;
+
+    }
+
+
+    const answer=prompt(
+        "⚠️ سيتم حذف جميع المعلمين وحسابات دخولهم.\n\n"+
+        "لن يتم حذف حساب الإدارة.\n\n"+
+        "اكتب كلمة حذف للتأكيد:"
+    );
+
+
+    if(answer!=="حذف"){
+
+        alert("تم إلغاء العملية");
+        return;
+
+    }
+
+
+    try{
+
+        /*
+        حذف حسابات المعلمين فقط من users
+        حتى لا نحذف الأدمن.
+        */
+
+        const usersSnap=
+            await db.collection("users").get();
+
+
+        const teacherUsers=
+            usersSnap.docs.filter(doc=>{
+
+                const data=doc.data() || {};
+
+                return data.role==="teacher";
+
+            });
+
+
+        for(let i=0;i<teacherUsers.length;i+=400){
+
+            const batch=db.batch();
+
+            teacherUsers
+                .slice(i,i+400)
+                .forEach(doc=>{
+                    batch.delete(doc.ref);
+                });
+
+            await batch.commit();
+
+        }
+
+
+        await deleteCollection("teachers");
+
+
+        alert("تم حذف جميع المعلمين ✅");
+
+        await loadTeachers();
+
+    }catch(error){
+
+        console.error(error);
+
+        alert("حدث خطأ أثناء حذف المعلمين");
+
+    }
 
 }
 
@@ -2198,46 +2074,33 @@ async function deleteTeacher(username){
 
 async function loadTests(){
 
-    const snapshot =
-        await db.collection("tests")
-        .get();
+    const snap=
+        await db.collection("tests").get();
+
+    tests=[];
 
 
-    tests = [];
-
-
-    snapshot.forEach(
-    function(doc){
+    snap.forEach(doc=>{
 
         tests.push({
-
             id:doc.id,
             ...doc.data()
-
         });
 
     });
 
 
     tests.sort(
-    function(a,b){
-
-        return String(
-            a.date || ""
-        ).localeCompare(
-            String(
-                b.date || ""
-            )
-        );
-
-    });
+        (a,b)=>
+        String(a.date||"")
+        .localeCompare(
+            String(b.date||"")
+        )
+    );
 
 
-    document.getElementById(
-        "statTests"
-    ).textContent =
-        tests.length;
-
+    document.getElementById("statTests")
+        .textContent=tests.length;
 
     renderTests();
 
@@ -2246,60 +2109,47 @@ async function loadTests(){
 
 function renderTests(){
 
-    const body =
-        document.getElementById(
-            "testsBody"
-        );
+    const body=
+        document.getElementById("testsBody");
 
-
-    body.innerHTML = "";
+    body.innerHTML="";
 
 
     if(!tests.length){
 
-        body.innerHTML =
-        "<tr><td colspan='4'>لا توجد اختبارات</td></tr>";
+        body.innerHTML=
+            "<tr><td colspan='4'>لا توجد اختبارات</td></tr>";
 
         return;
 
     }
 
 
-    tests.forEach(
-    function(test){
+    tests.forEach(test=>{
 
-        const tr =
-            document.createElement("tr");
+        const tr=document.createElement("tr");
 
+        tr.innerHTML=`
+            <td>${escapeHtml(test.name)}</td>
+            <td>${escapeHtml(test.fullMark)}</td>
+            <td>${escapeHtml(test.date)}</td>
 
-        tr.innerHTML =
+            <td>
 
-        "<td>"+
-        escapeHtml(test.name)+
-        "</td>"+
+                <button
+                    class="small-btn btn-warning"
+                    onclick='editTest(${JSON.stringify(test.id)})'>
+                    تعديل
+                </button>
 
-        "<td>"+
-        escapeHtml(test.fullMark)+
-        "</td>"+
+                <button
+                    class="small-btn btn-danger"
+                    onclick='deleteTest(${JSON.stringify(test.id)})'>
+                    حذف
+                </button>
 
-        "<td>"+
-        escapeHtml(test.date)+
-        "</td>"+
-
-        "<td>"+
-
-        "<button class='small-btn btn-warning' "+
-        "onclick='editTest("+
-        JSON.stringify(test.id)+
-        ")'>تعديل</button>"+
-
-        "<button class='small-btn btn-danger' "+
-        "onclick='deleteTest("+
-        JSON.stringify(test.id)+
-        ")'>حذف</button>"+
-
-        "</td>";
-
+            </td>
+        `;
 
         body.appendChild(tr);
 
@@ -2310,37 +2160,26 @@ function renderTests(){
 
 async function saveTest(){
 
-    const editId =
-        document.getElementById(
-            "testEditId"
-        ).value;
+    const id=
+        document.getElementById("testEditId")
+        .value;
 
+    const name=
+        document.getElementById("testName")
+        .value.trim();
 
-    const name =
-        document.getElementById(
-            "testName"
-        ).value.trim();
-
-
-    const fullMark =
+    const fullMark=
         Number(
-            document.getElementById(
-                "testFullMark"
-            ).value
+            document.getElementById("testFullMark")
+            .value
         );
 
-
-    const date =
-        document.getElementById(
-            "testDate"
-        ).value;
+    const date=
+        document.getElementById("testDate")
+        .value;
 
 
-    if(
-        !name ||
-        !fullMark ||
-        !date
-    ){
+    if(!name || !fullMark || !date){
 
         alert(
             "أدخل اسم الاختبار والدرجة النهائية والتاريخ"
@@ -2351,40 +2190,36 @@ async function saveTest(){
     }
 
 
-    if(editId){
+    if(id){
 
         await db.collection("tests")
-        .doc(editId)
-        .set({
+            .doc(id)
+            .set({
+                name,
+                fullMark,
+                date
+            },{merge:true});
 
-            name:name,
-            fullMark:fullMark,
-            date:date
-
-        },{merge:true});
-
-    }
-
-    else{
+    }else{
 
         await db.collection("tests")
-        .add({
+            .add({
 
-            name:name,
-            fullMark:fullMark,
-            date:date,
-            createdAt:
-                firebase.firestore
-                .FieldValue
-                .serverTimestamp()
+                name,
+                fullMark,
+                date,
 
-        });
+                createdAt:
+                    firebase.firestore
+                    .FieldValue
+                    .serverTimestamp()
+
+            });
 
     }
 
 
-    alert("تم حفظ الاختبار");
-
+    alert("تم حفظ الاختبار ✅");
 
     clearTestForm();
 
@@ -2395,39 +2230,23 @@ async function saveTest(){
 
 function editTest(id){
 
-    const test =
-        tests.find(
-        function(t){
-
-            return t.id === id;
-
-        });
-
+    const test=
+        tests.find(t=>t.id===id);
 
     if(!test)
         return;
 
 
-    document.getElementById(
-        "testEditId"
-    ).value = test.id;
+    document.getElementById("testEditId").value=
+        test.id;
 
-
-    document.getElementById(
-        "testName"
-    ).value =
+    document.getElementById("testName").value=
         test.name || "";
 
-
-    document.getElementById(
-        "testFullMark"
-    ).value =
+    document.getElementById("testFullMark").value=
         test.fullMark || "";
 
-
-    document.getElementById(
-        "testDate"
-    ).value =
+    document.getElementById("testDate").value=
         test.date || "";
 
 }
@@ -2435,40 +2254,22 @@ function editTest(id){
 
 function clearTestForm(){
 
-    document.getElementById(
-        "testEditId"
-    ).value = "";
-
-    document.getElementById(
-        "testName"
-    ).value = "";
-
-    document.getElementById(
-        "testFullMark"
-    ).value = "";
-
-    document.getElementById(
-        "testDate"
-    ).value = "";
+    document.getElementById("testEditId").value="";
+    document.getElementById("testName").value="";
+    document.getElementById("testFullMark").value="";
+    document.getElementById("testDate").value="";
 
 }
 
 
 async function deleteTest(id){
 
-    if(
-        !confirm(
-            "هل تريد حذف الاختبار؟"
-        )
-    ){
+    if(!confirm("هل تريد حذف الاختبار؟"))
         return;
-    }
-
 
     await db.collection("tests")
-    .doc(id)
-    .delete();
-
+        .doc(id)
+        .delete();
 
     await loadTests();
 
@@ -2476,62 +2277,128 @@ async function deleteTest(id){
 
 
 /* =========================
-   الإسناد الجماعي
+   حذف جميع الاختبارات
+========================= */
+
+async function deleteAllTests(){
+
+    if(!tests.length){
+
+        alert("لا توجد اختبارات للحذف");
+        return;
+
+    }
+
+
+    const answer=prompt(
+        "⚠️ سيتم حذف جميع الاختبارات.\n\n"+
+        "اكتب كلمة حذف للتأكيد:"
+    );
+
+
+    if(answer!=="حذف"){
+
+        alert("تم إلغاء العملية");
+        return;
+
+    }
+
+
+    try{
+
+        await deleteCollection("tests");
+
+        alert("تم حذف جميع الاختبارات ✅");
+
+        await loadTests();
+
+    }catch(error){
+
+        console.error(error);
+
+        alert("حدث خطأ أثناء الحذف");
+
+    }
+
+}
+
+
+/* =========================
+   حذف جميع الدرجات
+========================= */
+
+async function deleteAllGrades(){
+
+    const answer=prompt(
+        "⚠️ سيتم حذف جميع النتائج والدرجات المحفوظة في النظام الجديد.\n\n"+
+        "اكتب حذف الدرجات للتأكيد:"
+    );
+
+
+    if(answer!=="حذف الدرجات"){
+
+        alert("تم إلغاء العملية");
+        return;
+
+    }
+
+
+    try{
+
+        await deleteCollection("grades");
+
+        alert("تم حذف جميع الدرجات والنتائج ✅");
+
+    }catch(error){
+
+        console.error(error);
+
+        alert("حدث خطأ أثناء حذف النتائج");
+
+    }
+
+}
+
+
+/* =========================
+   الإسناد
 ========================= */
 
 function renderAssignmentGrid(){
 
-    const body =
-        document.getElementById(
-            "assignmentGrid"
-        );
+    const body=
+        document.getElementById("assignmentGrid");
+
+    body.innerHTML="";
 
 
-    body.innerHTML = "";
+    grades.forEach(grade=>{
+
+        const tr=document.createElement("tr");
+
+        let html=`
+            <td class="assign-row-title">
+                ${escapeHtml(grade)}
+            </td>
+        `;
 
 
-    grades.forEach(
-    function(grade){
+        sections.forEach(section=>{
 
-        const tr =
-            document.createElement("tr");
-
-
-        let html =
-
-        "<td class='assign-row-title'>"+
-        escapeHtml(grade)+
-        "</td>";
-
-
-        sections.forEach(
-        function(section){
-
-            const key =
-                encodeURIComponent(
-                    grade+"|||"+section
-                );
-
-
-            html +=
-
-            "<td>"+
-            "<input "+
-            "type='checkbox' "+
-            "class='assign-check' "+
-            "data-grade='"+
-            escapeHtml(grade)+
-            "' "+
-            "data-section='"+
-            escapeHtml(section)+
-            "' "+
-            "id='assign_"+key+"'>"+
-            "</td>";
+            html+=`
+                <td>
+                    <input
+                        type="checkbox"
+                        class="assign-check"
+                        data-grade="${escapeHtml(grade)}"
+                        data-section="${escapeHtml(section)}">
+                </td>
+            `;
 
         });
 
 
-        tr.innerHTML = html;
+        tr.innerHTML=html;
 
         body.appendChild(tr);
 
@@ -2540,38 +2407,53 @@ function renderAssignmentGrid(){
 }
 
 
+/*
+مهم:
+ننشئ القائمة من جديد بطريقة صريحة،
+ونجبر النص على الظهور.
+*/
+
 function fillTeacherSelector(){
 
-    const select =
-        document.getElementById(
-            "assignTeacher"
-        );
+    const select=
+        document.getElementById("assignTeacher");
 
-
-    const current =
+    const previous=
         select.value;
 
 
-    select.innerHTML =
-        "<option value=''>اختر المعلم</option>";
+    select.innerHTML="";
 
 
-    teachers.forEach(
-    function(teacher){
+    const first=
+        document.createElement("option");
 
-        const option =
-            document.createElement(
-                "option"
-            );
+    first.value="";
+    first.textContent="-- اختر المعلم --";
 
-
-        option.value =
-            teacher.email;
+    select.appendChild(first);
 
 
-        option.textContent =
-            teacher.name;
+    teachers.forEach(teacher=>{
 
+        const option=
+            document.createElement("option");
+
+        option.value=
+            String(teacher.email || "");
+
+        /*
+        الاسم + اسم المستخدم
+        عشان يظهر بوضوح
+        */
+
+        option.textContent=
+            (teacher.name || "بدون اسم")+
+            "  —  "+
+            (teacher.email || "");
+
+        option.style.color="#111";
+        option.style.backgroundColor="#fff";
 
         select.appendChild(option);
 
@@ -2579,13 +2461,12 @@ function fillTeacherSelector(){
 
 
     if(
+        previous &&
         teachers.some(
-            t => t.email === current
+            t=>t.email===previous
         )
     ){
-
-        select.value = current;
-
+        select.value=previous;
     }
 
 }
@@ -2596,60 +2477,42 @@ function loadTeacherAssignments(){
     clearAllAssignments();
 
 
-    const username =
-        document.getElementById(
-            "assignTeacher"
-        ).value;
+    const username=
+        document.getElementById("assignTeacher")
+        .value;
 
 
     if(!username)
         return;
 
 
-    const teacher =
+    const teacher=
         teachers.find(
-        function(t){
-
-            return t.email === username;
-
-        });
+            t=>t.email===username
+        );
 
 
     if(!teacher)
         return;
 
 
-    const assignments =
-        teacher.assignments || [];
+    const assignments=
+        getTeacherAssignments(teacher);
 
 
-    assignments.forEach(
-    function(assignment){
+    document
+        .querySelectorAll(".assign-check")
+        .forEach(box=>{
 
-        const checkboxes =
-            document.querySelectorAll(
-                ".assign-check"
-            );
+            box.checked=
+                assignments.some(a=>
 
+                    a.grade===box.dataset.grade &&
+                    a.section===box.dataset.section
 
-        checkboxes.forEach(
-        function(box){
-
-            if(
-                box.dataset.grade ===
-                assignment.grade
-                &&
-                box.dataset.section ===
-                assignment.section
-            ){
-
-                box.checked = true;
-
-            }
+                );
 
         });
-
-    });
 
 }
 
@@ -2657,14 +2520,10 @@ function loadTeacherAssignments(){
 function selectAllAssignments(){
 
     document
-    .querySelectorAll(
-        ".assign-check"
-    )
-    .forEach(function(box){
-
-        box.checked = true;
-
-    });
+        .querySelectorAll(".assign-check")
+        .forEach(box=>{
+            box.checked=true;
+        });
 
 }
 
@@ -2672,88 +2531,85 @@ function selectAllAssignments(){
 function clearAllAssignments(){
 
     document
-    .querySelectorAll(
-        ".assign-check"
-    )
-    .forEach(function(box){
-
-        box.checked = false;
-
-    });
+        .querySelectorAll(".assign-check")
+        .forEach(box=>{
+            box.checked=false;
+        });
 
 }
 
 
 async function saveAssignments(){
 
-    const username =
-        document.getElementById(
-            "assignTeacher"
-        ).value;
+    const username=
+        document.getElementById("assignTeacher")
+        .value;
 
 
     if(!username){
 
         alert("اختر المعلم أولًا");
-
         return;
 
     }
 
 
-    const assignments = [];
+    const classes=[];
 
 
     document
-    .querySelectorAll(
-        ".assign-check:checked"
-    )
-    .forEach(function(box){
+        .querySelectorAll(".assign-check:checked")
+        .forEach(box=>{
 
-        assignments.push({
+            classes.push({
 
-            grade:
-                box.dataset.grade,
+                grade:box.dataset.grade,
+                section:box.dataset.section
 
-            section:
-                box.dataset.section,
-
-            /*
-            نحتفظ باسم المادة حتى
-            تظل الصفحات القديمة متوافقة.
-            */
-
-            subject:"English"
+            });
 
         });
 
-    });
+
+    /*
+    classes = الشكل الجديد البسيط
+
+    assignments = نحتفظ به أيضًا
+    مؤقتًا للتوافق مع teacher القديمة.
+    */
+
+    const legacyAssignments=
+        classes.map(c=>({
+
+            grade:c.grade,
+            section:c.section,
+            subject:"English"
+
+        }));
 
 
     await db.collection("teachers")
-    .doc(username)
-    .set({
+        .doc(username)
+        .set({
 
-        assignments:assignments
+            classes:classes,
+            assignments:legacyAssignments
 
-    },{merge:true});
+        },{merge:true});
 
 
     alert(
-        "تم حفظ الإسنادات بنجاح ✅\n"+
-        "عدد الفصول: "+
-        assignments.length
+        "تم حفظ الإسناد بنجاح ✅\n\n"+
+        "عدد الفصول المسندة: "+
+        classes.length
     );
 
 
     await loadTeachers();
 
 
-    document.getElementById(
-        "assignTeacher"
-    ).value =
-        username;
-
+    document.getElementById("assignTeacher")
+        .value=username;
 
     loadTeacherAssignments();
 
@@ -2766,19 +2622,13 @@ async function saveAssignments(){
 
 function updateClassCount(){
 
-    const unique =
-        new Set();
+    const set=new Set();
 
+    students.forEach(student=>{
 
-    students.forEach(
-    function(student){
+        if(student.grade && student.section){
 
-        if(
-            student.grade &&
-            student.section
-        ){
-
-            unique.add(
+            set.add(
                 student.grade+
                 "|||"+
                 student.section
@@ -2789,37 +2639,35 @@ function updateClassCount(){
     });
 
 
-    document.getElementById(
-        "statClasses"
-    ).textContent =
-        unique.size;
+    document.getElementById("statClasses")
+        .textContent=set.size;
 
 }
 
 
-/* تسجيل الخروج */
+/* =========================
+   تسجيل الخروج
+========================= */
 
 function logout(){
 
-    localStorage.removeItem(
-        "currentUserRole"
+    [
+        "currentUserRole",
+        "currentUser",
+        "currentUserName",
+        "currentUserEmail"
+    ].forEach(key=>
+        localStorage.removeItem(key)
     );
 
-    localStorage.removeItem(
-        "currentUser"
-    );
-
-    localStorage.removeItem(
-        "currentUserName"
-    );
-
-    location.href =
-        "index.html";
+    location.href="index.html";
 
 }
 
 
-/* تشغيل الصفحة */
+/* =========================
+   تشغيل
+========================= */
 
 async function start(){
 
@@ -2833,23 +2681,17 @@ async function start(){
     try{
 
         await Promise.all([
-
             loadStudents(),
-
             loadTeachers(),
-
             loadTests()
-
         ]);
 
-    }
-
-    catch(error){
+    }catch(error){
 
         console.error(error);
 
         alert(
-            "حدث خطأ أثناء تحميل بيانات النظام"
+            "حدث خطأ أثناء تحميل بيانات راصد"
         );
 
     }
