@@ -860,6 +860,10 @@ tbody tr:nth-child(even){
 <button class="action-btn messages-btn" onclick="scrollToMessages()">
 📨 سجل رسائلي لأولياء الأمور
 </button>
+
+<button class="action-btn" style="background:#6f42c1;color:#fff" onclick="openUploadLinkModal()">
+📎 رفع ملف وتوليد رابط
+</button>
 </div>
 
 
@@ -1023,6 +1027,42 @@ tbody tr:nth-child(even){
 </div>
 </div>
 </div>
+</div>
+
+
+
+<div class="file-modal-overlay" id="uploadLinkModalOverlay">
+  <div class="file-modal">
+    <div class="file-modal-head">📎 رفع ملف وتوليد رابط</div>
+    <div class="file-modal-body">
+      <p style="margin:0 0 14px;color:#475569;line-height:1.8">
+        ارفع الملف مرة واحدة، ثم انسخ الرابط وضعه داخل رسالة أي ولي أمر.
+      </p>
+
+      <label style="display:block;font-weight:bold;margin-bottom:7px">اختر الملف</label>
+      <input type="file" id="generalUploadFile"
+        accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.webp,.txt"
+        style="width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px">
+
+      <div id="generalUploadProgress" class="file-progress"></div>
+
+      <div id="generatedFileArea" style="display:none;margin-top:14px">
+        <div style="font-weight:bold;margin-bottom:8px">
+          تم رفع: <span id="generatedFileName"></span>
+        </div>
+        <input type="text" id="generatedFileLink" readonly
+          style="width:100%;box-sizing:border-box;padding:10px;border:1px solid #cbd5e1;border-radius:8px;direction:ltr;text-align:left">
+        <button class="action-btn save-btn" style="width:100%;margin-top:9px"
+          onclick="copyGeneratedFileLink()">📋 نسخ الرابط</button>
+      </div>
+
+      <div class="file-modal-actions">
+        <button class="action-btn clear-btn" onclick="closeUploadLinkModal()">إغلاق</button>
+        <button class="action-btn" style="background:#6f42c1;color:#fff"
+          id="generateLinkBtn" onclick="uploadFileAndGenerateLink()">⬆️ رفع وتوليد الرابط</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div class="footer">
@@ -1957,12 +1997,6 @@ onclick='openCustomMessage(${JSON.stringify(String(student.code))})'
 ✉️ رسالة
 </button>
 
-<button
-class="whatsapp-file"
-onclick='openFileModal(${JSON.stringify(String(student.code))})'
->
-📎 ملف
-</button>
 </div>
 
 </td>
@@ -2864,30 +2898,7 @@ function printMessageLog(){
 const rows=getFilteredTeacherLogs();
 if(!rows.length){alert("لا توجد رسائل للطباعة.");return;}
 const body=rows.map((log,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(formatMessageDate(log.sentAt))}</td><td>${escapeHtml(log.studentName||"-")}</td><td>${escapeHtml(log.grade||"-")} / ${escapeHtml(log.section||"-")}</td><td>${escapeHtml(log.subjectName||"-")}</td><td>${escapeHtml(log.messageType==="custom"?"رسالة عامة":(log.testName||"نتيجة اختبار"))}</td><td>${escapeHtml(log.guardianPhone||"-")}</td><td class="msg">${escapeHtml(log.message||"-")}</td></tr>`).join("");
-const html=`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>سجل رسائل المعلم</title><style>@page{size:A4 landscape;margin:7mm}*{box-sizing:border-box;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{font-family:Tahoma,Arial,sans-serif;margin:0}.head{text-align:center;border-bottom:2px solid #073b68;margin-bottom:7px;padding-bottom:5px}.head img{width:48px;height:48px;object-fit:contain}.head h1{font-size:16px;margin:2px}.head h2{font-size:12px;margin:2px;color:#073b68}.meta{font-size:8pt;margin:5px 0}.meta span{margin-left:25px}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #777;padding:3px;font-size:6.5pt;text-align:center;vertical-align:middle}th{background:#073b68!important;color:#fff!important}.msg{text-align:right;white-space:pre-wrap;word-break:break-word}th:nth-child(1){width:3%}th:nth-child(2){width:11%}th:nth-child(3){width:11%}th:nth-child(4){width:8%}th:nth-child(5){width:9%}th:nth-child(6){width:11%}th:nth-child(7){width:10%}th:nth-child(8){width:37%}.foot{display:flex;justify-content:space-between;border-top:1px solid #777;margin-top:5px;padding-top:3px;font-size:6.5pt}</style></head><body><div class="head"><img src="logo.jpeg"><h1>مدارس الفلاح الأهلية</h1><h2>سجل رسائل أولياء الأمور - المعلم</h2></div><div class="meta"><span><strong>المعلم:</strong> ${escapeHtml(currentTeacher?.name||"")}</span><span><strong>عدد الرسائل:</strong> ${rows.length}</span></div><table><thead><tr><th>م</th><th>التاريخ والوقت</th><th>الطالب</th><th>الفصل</th><th>المادة</th><th>الاختبار / النوع</th><th>الجوال</th><th>نص الرسالة</th></tr></thead><tbody>${body}</tbody></table><div class="foot"><span>نظام راصد - مدارس الفلاح الأهلية</span><span>تصميم محمد عامر أحمد - 2026</span></div><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></div>
-
-
-<div id="uploadLinkModalOverlay" class="file-modal-overlay">
-  <div class="file-modal">
-    <div class="file-modal-head">📎 رفع ملف وتوليد رابط</div>
-    <div class="file-modal-body">
-      <p style="margin-top:0;color:#475569">ارفع الملف مرة واحدة، ثم انسخ الرابط وضعه داخل أي رسالة لولي الأمر.</p>
-      <label>اختر الملف</label>
-      <input type="file" id="generalUploadFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.jpg,.jpeg,.png,.webp,.txt">
-      <div id="generalUploadProgress" class="file-progress"></div>
-      <div id="generatedFileArea" style="display:none;margin-top:14px">
-        <div style="font-weight:bold;margin-bottom:7px">الملف: <span id="generatedFileName"></span></div>
-        <input id="generatedFileLink" type="text" readonly style="width:100%;padding:10px;border:1px solid #cbd5e1;border-radius:8px;direction:ltr;text-align:left">
-        <button class="btn-success" style="margin-top:8px;width:100%" onclick="copyGeneratedFileLink()">📋 نسخ الرابط</button>
-      </div>
-      <div class="file-modal-actions">
-        <button class="btn-light" onclick="closeUploadLinkModal()">إغلاق</button>
-        <button class="btn-primary" id="generateLinkBtn" onclick="uploadFileAndGenerateLink()">⬆️ رفع وتوليد الرابط</button>
-      </div>
-    </div>
-  </div>
-</div>
-
+const html=`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>سجل رسائل المعلم</title><style>@page{size:A4 landscape;margin:7mm}*{box-sizing:border-box;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{font-family:Tahoma,Arial,sans-serif;margin:0}.head{text-align:center;border-bottom:2px solid #073b68;margin-bottom:7px;padding-bottom:5px}.head img{width:48px;height:48px;object-fit:contain}.head h1{font-size:16px;margin:2px}.head h2{font-size:12px;margin:2px;color:#073b68}.meta{font-size:8pt;margin:5px 0}.meta span{margin-left:25px}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #777;padding:3px;font-size:6.5pt;text-align:center;vertical-align:middle}th{background:#073b68!important;color:#fff!important}.msg{text-align:right;white-space:pre-wrap;word-break:break-word}th:nth-child(1){width:3%}th:nth-child(2){width:11%}th:nth-child(3){width:11%}th:nth-child(4){width:8%}th:nth-child(5){width:9%}th:nth-child(6){width:11%}th:nth-child(7){width:10%}th:nth-child(8){width:37%}.foot{display:flex;justify-content:space-between;border-top:1px solid #777;margin-top:5px;padding-top:3px;font-size:6.5pt}</style></head><body><div class="head"><img src="logo.jpeg"><h1>مدارس الفلاح الأهلية</h1><h2>سجل رسائل أولياء الأمور - المعلم</h2></div><div class="meta"><span><strong>المعلم:</strong> ${escapeHtml(currentTeacher?.name||"")}</span><span><strong>عدد الرسائل:</strong> ${rows.length}</span></div><table><thead><tr><th>م</th><th>التاريخ والوقت</th><th>الطالب</th><th>الفصل</th><th>المادة</th><th>الاختبار / النوع</th><th>الجوال</th><th>نص الرسالة</th></tr></thead><tbody>${body}</tbody></table><div class="foot"><span>نظام راصد - مدارس الفلاح الأهلية</span><span>تصميم محمد عامر أحمد - 2026</span></div><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script>
 </body></html>`;
 const w=window.open("","_blank");if(!w){alert("اسمح بالنوافذ المنبثقة للطباعة.");return;}w.document.open();w.document.write(html);w.document.close();
 }
@@ -3044,98 +3055,88 @@ el("studentsArea").innerHTML=`
 ====================================================== */
 
 
-/* =========================================
-   إرسال ملف لولي الأمر
-========================================= */
-function openFileModal(code){
-  const student=currentStudents.find(s=>String(s.code)===String(code));
-  if(!student){alert("تعذر العثور على بيانات الطالب.");return;}
-  const phone=student.guardianPhone||student.phone||"";
-  if(!phone){alert("لا يوجد رقم جوال ولي أمر مسجل لهذا الطالب.");return;}
-  document.getElementById("fileStudentCode").value=String(code);
-  document.getElementById("fileStudentInfo").innerHTML=
-    "الطالب: <strong>"+escapeHtml(student.name||"")+"</strong> — "+escapeHtml(student.grade||selectedGrade||"")+" / "+escapeHtml(student.section||selectedSection||"");
-  document.getElementById("guardianFile").value="";
-  document.getElementById("fileMessage").value="";
-  document.getElementById("fileProgress").style.display="none";
-  document.getElementById("fileProgress").textContent="";
-  document.getElementById("fileModalOverlay").style.display="flex";
+
+/* ======================================================
+   رفع ملف عام وتوليد رابط
+====================================================== */
+function openUploadLinkModal(){
+  el("generalUploadFile").value="";
+  el("generatedFileLink").value="";
+  el("generatedFileArea").style.display="none";
+  el("generalUploadProgress").style.display="none";
+  el("generalUploadProgress").textContent="";
+  el("uploadLinkModalOverlay").style.display="flex";
 }
-function closeFileModal(){
-  document.getElementById("fileModalOverlay").style.display="none";
+
+function closeUploadLinkModal(){
+  el("uploadLinkModalOverlay").style.display="none";
 }
-function normalizeGuardianPhone(value){
-  let phone=String(value||"").replace(/\D/g,"");
-  if(phone.startsWith("00966")) phone=phone.slice(2);
-  if(phone.startsWith("966")) return phone;
-  if(phone.startsWith("0")) phone=phone.slice(1);
-  if(phone.length===9) return "966"+phone;
-  return phone;
-}
-function safeFileName(name){
+
+function safeUploadFileName(name){
   const parts=String(name||"file").split(".");
   const ext=parts.length>1?"."+parts.pop().replace(/[^a-zA-Z0-9]/g,""):"";
-  const base=parts.join(".").replace(/[^\u0600-\u06FFa-zA-Z0-9_-]/g,"_").slice(0,80)||"file";
+  const base=parts.join(".")
+    .replace(/[^\u0600-\u06FFa-zA-Z0-9_-]/g,"_")
+    .slice(0,80) || "file";
   return base+ext;
 }
-async function uploadAndSendGuardianFile(){
-  const code=document.getElementById("fileStudentCode").value;
-  const student=currentStudents.find(s=>String(s.code)===String(code));
-  const input=document.getElementById("guardianFile");
-  const file=input.files[0];
-  if(!student){alert("تعذر العثور على الطالب.");return;}
-  if(!file){alert("اختر الملف أولًا.");return;}
-  if(file.size>20*1024*1024){alert("حجم الملف كبير. الحد الأقصى 20 ميجابايت.");return;}
-  const phone=normalizeGuardianPhone(student.guardianPhone||student.phone||"");
-  if(!phone){alert("لا يوجد رقم ولي أمر صالح.");return;}
-  const waWindow=window.open("about:blank","_blank");
-  if(!waWindow){alert("اسمح بالنوافذ المنبثقة للموقع ثم حاول مرة أخرى.");return;}
-  const progress=document.getElementById("fileProgress");
-  const btn=document.getElementById("uploadFileBtn");
+
+async function uploadFileAndGenerateLink(){
+  const file=el("generalUploadFile").files[0];
+
+  if(!file){
+    alert("اختر الملف أولًا.");
+    return;
+  }
+
+  if(file.size > 20*1024*1024){
+    alert("حجم الملف أكبر من 20 ميجابايت.");
+    return;
+  }
+
+  const progress=el("generalUploadProgress");
+  const btn=el("generateLinkBtn");
+
   btn.disabled=true;
   progress.style.display="block";
   progress.textContent="جاري رفع الملف...";
+
   try{
-    const path="guardianFiles/"+encodeURIComponent(currentUsername||"teacher")+"/"+Date.now()+"_"+safeFileName(file.name);
-    const ref=storage.ref().child(path);
-    const snapshot=await ref.put(file);
-    const fileUrl=await snapshot.ref.getDownloadURL();
-    const custom=document.getElementById("fileMessage").value.trim();
-    const message=(custom?custom+"\n\n":"")+"📎 الملف المرفق: "+file.name+"\n"+fileUrl;
-    const subjectId=selectedSubjectId||"";
-    const subjectName=selectedSubjectName||"";
-    const test=selectedTest||{};
-    await db.collection("messageLogs").add({
-      type:"file",
-      teacherEmail:currentUsername,
-      teacherName:currentTeacher?.name||"",
-      studentCode:String(student.code||code),
-      studentName:student.name||"",
-      guardianPhone:phone,
-      subjectId,
-      subjectName,
-      grade:student.grade||selectedGrade||"",
-      section:student.section||selectedSection||"",
-      testId:test.id||"",
-      testName:test.name||"",
-      testDate:test.date||"",
-      message,
-      fileName:file.name,
-      fileUrl,
-      storagePath:path,
-      fileType:file.type||"",
-      fileSize:file.size,
-      sentAt:firebase.firestore.FieldValue.serverTimestamp()
-    });
-    waWindow.location.href="https://wa.me/"+phone+"?text="+encodeURIComponent(message);
-    closeFileModal();
-    if(typeof loadMessageLogs==="function") await loadMessageLogs();
+    const path=
+      "teacherFiles/"+
+      encodeURIComponent(currentUsername||"teacher")+"/"+
+      Date.now()+"_"+safeUploadFileName(file.name);
+
+    const storageRef=storage.ref().child(path);
+    const snapshot=await storageRef.put(file);
+    const url=await snapshot.ref.getDownloadURL();
+
+    el("generatedFileName").textContent=file.name;
+    el("generatedFileLink").value=url;
+    el("generatedFileArea").style.display="block";
+    progress.textContent="✅ تم رفع الملف وتوليد الرابط بنجاح.";
+
   }catch(error){
-    console.error(error);
-    if(waWindow&&!waWindow.closed) waWindow.close();
-    alert("تعذر رفع الملف أو تسجيل الرسالة:\n"+error.message);
+    console.error("UPLOAD ERROR:",error);
+    progress.textContent="❌ تعذر رفع الملف.";
+    alert("تعذر رفع الملف. تأكد من تفعيل Firebase Storage وصلاحيات الرفع.\n\n"+error.message);
   }finally{
     btn.disabled=false;
+  }
+}
+
+async function copyGeneratedFileLink(){
+  const link=el("generatedFileLink").value.trim();
+  if(!link)return;
+
+  try{
+    await navigator.clipboard.writeText(link);
+    alert("تم نسخ الرابط ✅");
+  }catch(error){
+    el("generatedFileLink").focus();
+    el("generatedFileLink").select();
+    document.execCommand("copy");
+    alert("تم نسخ الرابط ✅");
   }
 }
 
