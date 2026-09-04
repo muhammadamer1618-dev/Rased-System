@@ -11,7 +11,10 @@
 <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
 
 <style>
-*{box-sizing:border-box}
+
+*{
+box-sizing:border-box
+}
 
 body{
 margin:0;
@@ -25,13 +28,13 @@ position:relative;
 background:linear-gradient(135deg,#0c2745,#174f7c);
 color:#fff;
 text-align:center;
-padding:22px 15px;
+padding:20px 15px;
 box-shadow:0 4px 15px rgba(0,0,0,.15)
 }
 
 .logo{
-width:88px;
-height:88px;
+width:82px;
+height:82px;
 object-fit:contain;
 background:#fff;
 border-radius:50%;
@@ -39,8 +42,8 @@ padding:5px
 }
 
 .header h1{
-margin:8px 0 3px;
-font-size:27px
+margin:7px 0 3px;
+font-size:26px
 }
 
 .header p{
@@ -61,6 +64,18 @@ margin:20px auto;
 padding:0 12px 40px
 }
 
+.top-actions{
+display:flex;
+flex-wrap:wrap;
+gap:10px;
+margin-bottom:18px
+}
+
+.top-actions button{
+font-size:15px;
+padding:12px 20px
+}
+
 .stats{
 display:grid;
 grid-template-columns:repeat(5,1fr);
@@ -71,13 +86,13 @@ margin-bottom:18px
 .stat{
 background:#fff;
 border-radius:14px;
-padding:17px;
+padding:16px;
 text-align:center;
 box-shadow:0 3px 12px rgba(0,0,0,.08)
 }
 
 .stat-number{
-font-size:29px;
+font-size:28px;
 font-weight:bold;
 color:#174f7c
 }
@@ -125,26 +140,91 @@ font-size:13px;
 font-weight:bold
 }
 
-input,select{
+input{
 width:100%;
-padding:11px;
+height:44px;
+padding:10px 12px;
 border:1px solid #cbd5e1;
 border-radius:8px;
+font-family:Tahoma,Arial,sans-serif;
 font-size:14px;
-background:#fff !important;
-color:#111 !important
+background:#fff;
+color:#111
 }
 
-select option{
-background:#fff !important;
-color:#111 !important
-}
-
-input:focus,select:focus{
+input:focus{
 outline:none;
 border-color:#174f7c;
 box-shadow:0 0 0 2px rgba(23,79,124,.12)
 }
+
+/* =========================================
+   القوائم المنسدلة
+========================================= */
+
+select{
+display:block !important;
+width:100% !important;
+height:44px !important;
+
+direction:rtl !important;
+text-align:right !important;
+text-align-last:right !important;
+
+padding:8px 12px 8px 35px !important;
+
+border:1px solid #b9c5d1 !important;
+border-radius:8px !important;
+
+background-color:#fff !important;
+color:#111 !important;
+
+font-family:Tahoma,Arial,sans-serif !important;
+font-size:14px !important;
+
+-webkit-appearance:auto !important;
+appearance:auto !important;
+}
+
+select option{
+direction:rtl !important;
+text-align:right !important;
+background:#fff !important;
+color:#111 !important;
+font-family:Tahoma,Arial,sans-serif !important;
+font-size:14px !important;
+}
+
+select:focus{
+outline:none;
+border-color:#174f7c !important;
+box-shadow:0 0 0 2px rgba(23,79,124,.12)
+}
+
+.subject-select-wrap{
+width:100%;
+max-width:520px
+}
+
+.subject-select{
+font-size:15px !important;
+font-weight:bold !important;
+background:#fff !important;
+color:#172b3f !important
+}
+
+.selected-subject{
+display:none;
+margin-top:7px;
+padding:8px 10px;
+border-radius:7px;
+background:#eef4fa;
+color:#174f7c;
+font-size:13px;
+font-weight:bold
+}
+
+/* ========================================= */
 
 button{
 border:0;
@@ -159,13 +239,45 @@ button:hover{
 opacity:.9
 }
 
-.btn-primary{background:#174f7c;color:#fff}
-.btn-success{background:#198754;color:#fff}
-.btn-danger{background:#dc3545;color:#fff}
-.btn-warning{background:#f0ad4e;color:#222}
-.btn-light{background:#e9eef4;color:#263747}
-.btn-purple{background:#6f42c1;color:#fff}
-.btn-dark{background:#343a40;color:#fff}
+.btn-primary{
+background:#174f7c;
+color:#fff
+}
+
+.btn-success{
+background:#198754;
+color:#fff
+}
+
+.btn-danger{
+background:#dc3545;
+color:#fff
+}
+
+.btn-warning{
+background:#f0ad4e;
+color:#222
+}
+
+.btn-light{
+background:#e9eef4;
+color:#263747
+}
+
+.btn-purple{
+background:#6f42c1;
+color:#fff
+}
+
+.btn-dark{
+background:#343a40;
+color:#fff
+}
+
+.btn-gold{
+background:#c69a2b;
+color:#fff
+}
 
 .actions{
 display:flex;
@@ -226,9 +338,10 @@ line-height:1.8
 .info-box{
 background:#e7f1ff;
 color:#084298;
-padding:12px;
-border-radius:9px;
+padding:11px;
+border-radius:8px;
 margin:12px 0;
+font-size:13px;
 font-weight:bold
 }
 
@@ -238,23 +351,29 @@ padding-top:15px;
 border-top:1px dashed #dc3545
 }
 
-/* بطاقات المعلمين */
+/* =========================================
+   بطاقات المعلمين المصغرة
+========================================= */
 
 .teacher-cards{
-display:grid;
-grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
-gap:10px;
-margin:12px 0 18px
+display:flex;
+flex-wrap:wrap;
+gap:7px;
+margin:10px 0 15px
 }
 
 .teacher-card{
+width:auto;
+min-width:115px;
+max-width:175px;
 background:#fff;
-border:2px solid #d6dee8;
-border-radius:12px;
-padding:14px 10px;
+border:1px solid #cbd5e1;
+border-radius:7px;
+padding:8px 12px;
 text-align:center;
 cursor:pointer;
-transition:.2s
+transition:.15s;
+color:#172b3f
 }
 
 .teacher-card:hover{
@@ -269,23 +388,20 @@ color:#fff
 }
 
 .teacher-card-name{
-font-size:16px;
-font-weight:bold
+font-size:13px;
+font-weight:bold;
+white-space:nowrap;
+overflow:hidden;
+text-overflow:ellipsis
 }
 
 .teacher-card-user{
-font-size:11px;
-margin-top:5px;
-direction:ltr;
-opacity:.7
+display:none
 }
 
-.teacher-card.active .teacher-card-user{
-color:#f4d77b;
-opacity:1
-}
-
-/* شبكة الفصول */
+/* =========================================
+   شبكة الفصول
+========================================= */
 
 .class-grid{
 overflow:auto;
@@ -301,8 +417,8 @@ position:static
 }
 
 .class-check{
-width:22px;
-height:22px;
+width:21px;
+height:21px;
 cursor:pointer
 }
 
@@ -310,6 +426,8 @@ cursor:pointer
 font-weight:bold;
 color:#174f7c
 }
+
+/* ========================================= */
 
 .assignment-summary{
 margin-top:20px;
@@ -377,32 +495,54 @@ font-size:12px
 }
 
 @media(max-width:900px){
-.stats{grid-template-columns:repeat(2,1fr)}
+
+.stats{
+grid-template-columns:repeat(2,1fr)
+}
+
 }
 
 @media(max-width:700px){
-.logout{position:static;margin-top:10px}
-.header h1{font-size:22px}
+
+.logout{
+position:static;
+margin-top:10px
 }
 
-@media(max-width:450px){
-.stats{grid-template-columns:1fr 1fr}
+.header h1{
+font-size:22px
 }
+
+.teacher-card{
+min-width:100px;
+max-width:150px
+}
+
+}
+
 </style>
 </head>
+
 
 <body>
 
 <header class="header">
 
-<img src="logo.jpeg" class="logo" alt="شعار المدرسة">
+<img
+src="logo.jpeg"
+class="logo"
+alt="شعار المدرسة">
 
 <h1>مدارس الفلاح الأهلية</h1>
 
 <p>نظام راصد - لوحة الإدارة</p>
 
-<button class="btn-danger logout" onclick="logout()">
+<button
+class="btn-danger logout"
+onclick="logout()">
+
 تسجيل الخروج
+
 </button>
 
 </header>
@@ -410,43 +550,146 @@ font-size:12px
 
 <div class="container">
 
-<!-- الإحصائيات -->
+
+<!-- =========================================
+     أزرار أعلى الصفحة
+========================================= -->
+
+<div class="top-actions">
+
+<button
+class="btn-purple"
+onclick="openAnalysis()">
+
+📊 تحليل النتائج
+
+</button>
+
+<button
+class="btn-primary"
+onclick="scrollToSection('studentsSection')">
+
+👨‍🎓 الطلاب
+
+</button>
+
+<button
+class="btn-primary"
+onclick="scrollToSection('subjectsSection')">
+
+📚 المواد
+
+</button>
+
+<button
+class="btn-primary"
+onclick="scrollToSection('teachersSection')">
+
+👨‍🏫 المعلمون
+
+</button>
+
+<button
+class="btn-gold"
+onclick="scrollToSection('testsSection')">
+
+📝 الاختبارات
+
+</button>
+
+</div>
+
+
+<!-- =========================================
+     الإحصائيات
+========================================= -->
 
 <div class="stats">
 
 <div class="stat">
-<div class="stat-number" id="statStudents">0</div>
-<div class="stat-label">الطلاب</div>
+
+<div
+class="stat-number"
+id="statStudents">
+0
 </div>
+
+<div class="stat-label">
+الطلاب
+</div>
+
+</div>
+
 
 <div class="stat">
-<div class="stat-number" id="statTeachers">0</div>
-<div class="stat-label">المعلمون</div>
+
+<div
+class="stat-number"
+id="statTeachers">
+0
 </div>
+
+<div class="stat-label">
+المعلمون
+</div>
+
+</div>
+
 
 <div class="stat">
-<div class="stat-number" id="statSubjects">0</div>
-<div class="stat-label">المواد</div>
+
+<div
+class="stat-number"
+id="statSubjects">
+0
 </div>
+
+<div class="stat-label">
+المواد
+</div>
+
+</div>
+
 
 <div class="stat">
-<div class="stat-number" id="statTests">0</div>
-<div class="stat-label">الاختبارات</div>
+
+<div
+class="stat-number"
+id="statTests">
+0
 </div>
+
+<div class="stat-label">
+الاختبارات
+</div>
+
+</div>
+
 
 <div class="stat">
-<div class="stat-number" id="statClasses">0</div>
-<div class="stat-label">الفصول</div>
+
+<div
+class="stat-number"
+id="statClasses">
+0
+</div>
+
+<div class="stat-label">
+الفصول
 </div>
 
 </div>
 
+</div>
 
-<!-- ================================================= -->
-<!-- الطلاب -->
-<!-- ================================================= -->
 
-<div class="box">
+<!-- =========================================
+     الطلاب
+========================================= -->
+
+<div
+class="box"
+id="studentsSection">
 
 <div class="box-title">
 👨‍🎓 إدارة الطلاب
@@ -454,81 +697,148 @@ font-size:12px
 
 <div class="box-body">
 
-<input type="hidden" id="studentOriginalCode">
+<input
+type="hidden"
+id="studentOriginalCode">
+
 
 <div class="row">
 
 <div class="col">
-<label>كود الطالب</label>
+
+<label>
+كود الطالب
+</label>
+
 <input id="studentCode">
+
 </div>
 
+
 <div class="col">
-<label>اسم الطالب</label>
+
+<label>
+اسم الطالب
+</label>
+
 <input id="studentName">
+
 </div>
 
+
 <div class="col">
-<label>الصف</label>
+
+<label>
+الصف
+</label>
+
 <select id="studentGrade"></select>
+
 </div>
 
+
 <div class="col">
-<label>الشعبة</label>
+
+<label>
+الشعبة
+</label>
+
 <select id="studentSection"></select>
+
 </div>
+
 
 <div class="col">
-<label>جوال ولي الأمر</label>
-<input id="guardianPhone" placeholder="05xxxxxxxx">
+
+<label>
+جوال ولي الأمر
+</label>
+
+<input
+id="guardianPhone"
+placeholder="05xxxxxxxx">
+
 </div>
 
 </div>
+
 
 <div class="actions">
 
-<button class="btn-primary" onclick="saveStudent()">
+<button
+class="btn-primary"
+onclick="saveStudent()">
+
 💾 حفظ الطالب
+
 </button>
 
-<button class="btn-light" onclick="clearStudentForm()">
+
+<button
+class="btn-light"
+onclick="clearStudentForm()">
+
 جديد
+
 </button>
 
 </div>
 
 
-<div class="row" style="margin-top:20px">
+<div
+class="row"
+style="margin-top:20px">
+
 
 <div class="col">
-<label>بحث</label>
+
+<label>
+بحث
+</label>
+
 <input
 id="studentSearch"
 placeholder="اسم الطالب أو الكود"
 oninput="renderStudents()">
+
 </div>
 
+
 <div class="col">
-<label>الصف</label>
+
+<label>
+الصف
+</label>
+
 <select
 id="studentFilterGrade"
 onchange="renderStudents()">
 
-<option value="">كل الصفوف</option>
+<option value="">
+كل الصفوف
+</option>
 
 </select>
+
 </div>
 
+
 <div class="col">
-<label>الشعبة</label>
+
+<label>
+الشعبة
+</label>
 
 <select
 id="studentFilterSection"
 onchange="renderStudents()">
 
-<option value="">كل الشعب</option>
+<option value="">
+كل الشعب
+</option>
 
 </select>
+
 </div>
 
 </div>
@@ -539,15 +849,20 @@ onchange="renderStudents()">
 <table>
 
 <thead>
+
 <tr>
+
 <th>الكود</th>
-<th>الطالب</th>
+<th>اسم الطالب</th>
 <th>الصف</th>
 <th>الشعبة</th>
 <th>جوال ولي الأمر</th>
 <th>الإجراءات</th>
+
 </tr>
+
 </thead>
+
 
 <tbody id="studentsBody"></tbody>
 
@@ -558,8 +873,12 @@ onchange="renderStudents()">
 
 <div class="danger-zone">
 
-<button class="btn-danger" onclick="deleteAllStudents()">
+<button
+class="btn-danger"
+onclick="deleteAllStudents()">
+
 🗑️ حذف جميع الطلاب
+
 </button>
 
 </div>
@@ -568,9 +887,9 @@ onchange="renderStudents()">
 </div>
 
 
-<!-- ================================================= -->
-<!-- Excel -->
-<!-- ================================================= -->
+<!-- =========================================
+     Excel
+========================================= -->
 
 <div class="box">
 
@@ -580,23 +899,37 @@ onchange="renderStudents()">
 
 <div class="box-body">
 
-<input type="file" id="excelFile" accept=".xlsx,.xls">
+<input
+type="file"
+id="excelFile"
+accept=".xlsx,.xls">
+
 
 <div class="actions">
 
-<button class="btn-success" onclick="importExcel()">
+<button
+class="btn-success"
+onclick="importExcel()">
+
 ⬆️ استيراد الطلاب
+
 </button>
 
-<button class="btn-primary" onclick="downloadExcelTemplate()">
-⬇️ تحميل نموذج Excel
+
+<button
+class="btn-primary"
+onclick="downloadExcelTemplate()">
+
+⬇️ نموذج Excel
+
 </button>
 
 </div>
 
+
 <div class="note">
 
-الأعمدة المطلوبة:
+ترتيب الأعمدة:
 
 <strong>
 code - name - grade - section - phone
@@ -604,39 +937,51 @@ code - name - grade - section - phone
 
 <br>
 
-يمكنك استيراد ملف الـ487 طالب الجديد مباشرة.
+إذا كان كود الطالب موجودًا بالفعل،
+سيتم تحديث بياناته بدل تكراره.
 
 </div>
 
-<div id="importStatus" class="status"></div>
+
+<div
+id="importStatus"
+class="status">
+</div>
 
 </div>
 </div>
 
 
-<!-- ================================================= -->
-<!-- المواد -->
-<!-- ================================================= -->
+<!-- =========================================
+     المواد
+========================================= -->
 
-<div class="box">
+<div
+class="box"
+id="subjectsSection">
 
 <div class="box-title">
-📚 إدارة المواد الدراسية
+📚 إدارة جميع مواد المدرسة
 </div>
 
 <div class="box-body">
 
-<input type="hidden" id="subjectEditId">
+<input
+type="hidden"
+id="subjectEditId">
+
 
 <div class="row">
 
 <div class="col">
 
-<label>اسم المادة</label>
+<label>
+اسم المادة
+</label>
 
 <input
 id="subjectName"
-placeholder="مثال: اللغة الإنجليزية">
+placeholder="مثال: الرياضيات">
 
 </div>
 
@@ -645,13 +990,30 @@ placeholder="مثال: اللغة الإنجليزية">
 
 <div class="actions">
 
-<button class="btn-primary" onclick="saveSubject()">
+<button
+class="btn-primary"
+onclick="saveSubject()">
+
 💾 حفظ المادة
+
 </button>
 
-<button class="btn-light" onclick="clearSubjectForm()">
+
+<button
+class="btn-light"
+onclick="clearSubjectForm()">
+
 مادة جديدة
+
 </button>
+
+</div>
+
+
+<div class="note">
+
+أضف هنا جميع مواد المدرسة مرة واحدة.
+بعد ذلك ستظهر المواد في الإسناد والاختبارات والتحليل.
 
 </div>
 
@@ -661,11 +1023,16 @@ placeholder="مثال: اللغة الإنجليزية">
 <table>
 
 <thead>
+
 <tr>
+
 <th>اسم المادة</th>
 <th>الإجراءات</th>
+
 </tr>
+
 </thead>
+
 
 <tbody id="subjectsBody"></tbody>
 
@@ -676,8 +1043,12 @@ placeholder="مثال: اللغة الإنجليزية">
 
 <div class="danger-zone">
 
-<button class="btn-danger" onclick="deleteAllSubjects()">
+<button
+class="btn-danger"
+onclick="deleteAllSubjects()">
+
 🗑️ حذف جميع المواد
+
 </button>
 
 </div>
@@ -686,11 +1057,13 @@ placeholder="مثال: اللغة الإنجليزية">
 </div>
 
 
-<!-- ================================================= -->
-<!-- المعلمين -->
-<!-- ================================================= -->
+<!-- =========================================
+     المعلمون
+========================================= -->
 
-<div class="box">
+<div
+class="box"
+id="teachersSection">
 
 <div class="box-title">
 👨‍🏫 إدارة المعلمين
@@ -698,23 +1071,43 @@ placeholder="مثال: اللغة الإنجليزية">
 
 <div class="box-body">
 
-<input type="hidden" id="teacherOriginalUsername">
+<input
+type="hidden"
+id="teacherOriginalUsername">
+
 
 <div class="row">
 
 <div class="col">
-<label>اسم المعلم</label>
+
+<label>
+اسم المعلم
+</label>
+
 <input id="teacherName">
+
 </div>
 
+
 <div class="col">
-<label>اسم المستخدم</label>
+
+<label>
+اسم المستخدم
+</label>
+
 <input id="teacherUsername">
+
 </div>
 
+
 <div class="col">
-<label>كلمة المرور</label>
+
+<label>
+كلمة المرور
+</label>
+
 <input id="teacherPassword">
+
 </div>
 
 </div>
@@ -722,12 +1115,21 @@ placeholder="مثال: اللغة الإنجليزية">
 
 <div class="actions">
 
-<button class="btn-primary" onclick="saveTeacher()">
+<button
+class="btn-primary"
+onclick="saveTeacher()">
+
 💾 حفظ المعلم
+
 </button>
 
-<button class="btn-light" onclick="clearTeacherForm()">
+
+<button
+class="btn-light"
+onclick="clearTeacherForm()">
+
 معلم جديد
+
 </button>
 
 </div>
@@ -738,13 +1140,18 @@ placeholder="مثال: اللغة الإنجليزية">
 <table>
 
 <thead>
+
 <tr>
+
 <th>اسم المعلم</th>
 <th>اسم المستخدم</th>
 <th>عدد الإسنادات</th>
 <th>الإجراءات</th>
+
 </tr>
+
 </thead>
+
 
 <tbody id="teachersBody"></tbody>
 
@@ -755,8 +1162,12 @@ placeholder="مثال: اللغة الإنجليزية">
 
 <div class="danger-zone">
 
-<button class="btn-danger" onclick="deleteAllTeachers()">
+<button
+class="btn-danger"
+onclick="deleteAllTeachers()">
+
 🗑️ حذف جميع المعلمين
+
 </button>
 
 </div>
@@ -765,9 +1176,9 @@ placeholder="مثال: اللغة الإنجليزية">
 </div>
 
 
-<!-- ================================================= -->
-<!-- الإسناد -->
-<!-- ================================================= -->
+<!-- =========================================
+     الإسناد
+========================================= -->
 
 <div class="box">
 
@@ -777,33 +1188,51 @@ placeholder="مثال: اللغة الإنجليزية">
 
 <div class="box-body">
 
+
 <div class="note">
-1- اضغط على اسم المعلم.
-2- اختر المادة.
-3- حدد الفصول.
-4- اضغط حفظ إسناد المادة.
+
+اختر المعلم ← اختر المادة ← حدد الفصول ← احفظ الإسناد.
+
 </div>
 
 
-<label style="font-size:16px;margin-top:15px">
+<label
+style="font-size:15px;margin-top:15px">
+
 اختر المعلم:
+
 </label>
 
-<div id="teacherCards" class="teacher-cards"></div>
 
-<input type="hidden" id="assignTeacher">
+<div
+id="teacherCards"
+class="teacher-cards">
+</div>
 
 
-<div id="selectedTeacherInfo" class="info-box" style="display:none"></div>
+<input
+type="hidden"
+id="assignTeacher">
 
 
-<div class="row">
+<div
+id="selectedTeacherInfo"
+class="info-box"
+style="display:none">
+</div>
 
-<div class="col">
 
-<label>المادة المراد إسنادها</label>
+<div class="subject-select-wrap">
 
-<select id="assignmentSubject" onchange="loadAssignmentChecks()">
+<label>
+المادة المراد إسنادها
+</label>
+
+
+<select
+id="assignmentSubject"
+class="subject-select"
+onchange="assignmentSubjectChanged()">
 
 <option value="">
 -- اختر المادة --
@@ -811,6 +1240,10 @@ placeholder="مثال: اللغة الإنجليزية">
 
 </select>
 
+
+<div
+id="selectedAssignmentSubject"
+class="selected-subject">
 </div>
 
 </div>
@@ -818,12 +1251,21 @@ placeholder="مثال: اللغة الإنجليزية">
 
 <div class="actions">
 
-<button class="btn-success" onclick="selectAllAssignments()">
+<button
+class="btn-success"
+onclick="selectAllAssignments()">
+
 ✓ تحديد كل الفصول
+
 </button>
 
-<button class="btn-light" onclick="clearAllAssignments()">
+
+<button
+class="btn-light"
+onclick="clearAllAssignments()">
+
 إلغاء التحديد
+
 </button>
 
 </div>
@@ -836,14 +1278,17 @@ placeholder="مثال: اللغة الإنجليزية">
 <thead>
 
 <tr>
+
 <th>الصف</th>
 <th>أ</th>
 <th>ب</th>
 <th>ج</th>
 <th>د</th>
+
 </tr>
 
 </thead>
+
 
 <tbody id="assignmentGrid"></tbody>
 
@@ -852,14 +1297,17 @@ placeholder="مثال: اللغة الإنجليزية">
 </div>
 
 
-<div class="actions" style="justify-content:center;margin-top:18px">
+<div
+class="actions"
+style="justify-content:center;margin-top:18px">
+
 
 <button
 class="btn-purple"
-style="font-size:17px;padding:14px 35px"
+style="font-size:16px;padding:13px 30px"
 onclick="saveAssignments()">
 
-💾 حفظ إسناد المادة للمعلم
+💾 حفظ إسناد المادة
 
 </button>
 
@@ -868,18 +1316,31 @@ onclick="saveAssignments()">
 
 <div class="assignment-summary">
 
-<div style="font-weight:bold;font-size:16px;color:#123c63">
+<div
+style="font-weight:bold;font-size:16px;color:#123c63">
+
 إسنادات المعلم الحالي
+
 </div>
 
-<div id="assignmentSummary" style="margin-top:10px">
+
+<div
+id="assignmentSummary"
+style="margin-top:10px">
+
 اختر معلمًا لعرض إسناداته.
+
 </div>
+
 
 <div class="actions">
 
-<button class="btn-danger" onclick="clearCurrentTeacherAssignments()">
+<button
+class="btn-danger"
+onclick="clearCurrentTeacherAssignments()">
+
 🗑️ حذف جميع إسنادات هذا المعلم
+
 </button>
 
 </div>
@@ -890,11 +1351,13 @@ onclick="saveAssignments()">
 </div>
 
 
-<!-- ================================================= -->
-<!-- الاختبارات -->
-<!-- ================================================= -->
+<!-- =========================================
+     الاختبارات
+========================================= -->
 
-<div class="box">
+<div
+class="box"
+id="testsSection">
 
 <div class="box-title">
 📝 إدارة الاختبارات
@@ -902,22 +1365,36 @@ onclick="saveAssignments()">
 
 <div class="box-body">
 
-<input type="hidden" id="testEditId">
+<input
+type="hidden"
+id="testEditId">
+
 
 <div class="row">
 
 <div class="col">
-<label>اسم الاختبار</label>
+
+<label>
+اسم الاختبار
+</label>
+
 <input
 id="testName"
 placeholder="مثال: الاختبار الدوري الأول">
+
 </div>
+
 
 <div class="col">
 
-<label>المادة</label>
+<label>
+المادة
+</label>
 
-<select id="testSubject">
+<select
+id="testSubject"
+class="subject-select"
+onchange="testSubjectChanged()">
 
 <option value="">
 -- اختر المادة --
@@ -925,38 +1402,70 @@ placeholder="مثال: الاختبار الدوري الأول">
 
 </select>
 
+
+<div
+id="selectedTestSubject"
+class="selected-subject">
 </div>
 
+</div>
+
+
 <div class="col">
-<label>الدرجة النهائية</label>
+
+<label>
+الدرجة النهائية
+</label>
+
 <input
 id="testFullMark"
 type="number"
 min="1"
 step="0.01">
+
 </div>
 
+
 <div class="col">
-<label>تاريخ الاختبار</label>
-<input id="testDate" type="date">
+
+<label>
+تاريخ الاختبار
+</label>
+
+<input
+id="testDate"
+type="date">
+
 </div>
 
 </div>
 
 
 <div class="info-box">
-حدد الفصول التي يخصها الاختبار. المعلم لا يتم اختياره هنا؛ راصد سيعرف المعلم تلقائيًا من إسناد المادة والفصل.
+
+الاختبار يرتبط بالمادة والفصول.
+راصد سيعرف المعلم المسؤول تلقائيًا من الإسناد.
+
 </div>
 
 
 <div class="actions">
 
-<button class="btn-success" onclick="selectAllTestClasses()">
+<button
+class="btn-success"
+onclick="selectAllTestClasses()">
+
 ✓ تحديد كل الفصول
+
 </button>
 
-<button class="btn-light" onclick="clearAllTestClasses()">
+
+<button
+class="btn-light"
+onclick="clearAllTestClasses()">
+
 إلغاء التحديد
+
 </button>
 
 </div>
@@ -969,14 +1478,17 @@ step="0.01">
 <thead>
 
 <tr>
+
 <th>الصف</th>
 <th>أ</th>
 <th>ب</th>
 <th>ج</th>
 <th>د</th>
+
 </tr>
 
 </thead>
+
 
 <tbody id="testClassGrid"></tbody>
 
@@ -987,12 +1499,21 @@ step="0.01">
 
 <div class="actions">
 
-<button class="btn-primary" onclick="saveTest()">
+<button
+class="btn-primary"
+onclick="saveTest()">
+
 💾 حفظ الاختبار
+
 </button>
 
-<button class="btn-light" onclick="clearTestForm()">
+
+<button
+class="btn-light"
+onclick="clearTestForm()">
+
 اختبار جديد
+
 </button>
 
 </div>
@@ -1005,15 +1526,18 @@ step="0.01">
 <thead>
 
 <tr>
+
 <th>الاختبار</th>
 <th>المادة</th>
 <th>الدرجة</th>
 <th>التاريخ</th>
 <th>الفصول</th>
 <th>الإجراءات</th>
+
 </tr>
 
 </thead>
+
 
 <tbody id="testsBody"></tbody>
 
@@ -1024,8 +1548,12 @@ step="0.01">
 
 <div class="danger-zone">
 
-<button class="btn-danger" onclick="deleteAllTests()">
+<button
+class="btn-danger"
+onclick="deleteAllTests()">
+
 🗑️ حذف جميع الاختبارات
+
 </button>
 
 </div>
@@ -1034,9 +1562,9 @@ step="0.01">
 </div>
 
 
-<!-- ================================================= -->
-<!-- تنظيف البيانات -->
-<!-- ================================================= -->
+<!-- =========================================
+     تنظيف البيانات
+========================================= -->
 
 <div class="box">
 
@@ -1047,29 +1575,57 @@ step="0.01">
 <div class="box-body">
 
 <div class="note">
-الحذف من هنا نهائي. حساب الإدارة لا يتم حذفه عند حذف جميع المعلمين.
+
+الحذف الجماعي نهائي.
+حذف المعلمين لا يحذف حساب الإدارة.
+
 </div>
+
 
 <div class="actions">
 
-<button class="btn-danger" onclick="deleteAllStudents()">
+<button
+class="btn-danger"
+onclick="deleteAllStudents()">
+
 حذف جميع الطلاب
+
 </button>
 
-<button class="btn-danger" onclick="deleteAllSubjects()">
+
+<button
+class="btn-danger"
+onclick="deleteAllSubjects()">
+
 حذف جميع المواد
+
 </button>
 
-<button class="btn-danger" onclick="deleteAllTeachers()">
+
+<button
+class="btn-danger"
+onclick="deleteAllTeachers()">
+
 حذف جميع المعلمين
+
 </button>
 
-<button class="btn-danger" onclick="deleteAllTests()">
+
+<button
+class="btn-danger"
+onclick="deleteAllTests()">
+
 حذف جميع الاختبارات
+
 </button>
 
-<button class="btn-dark" onclick="deleteAllGrades()">
+
+<button
+class="btn-dark"
+onclick="deleteAllGrades()">
+
 حذف جميع النتائج والدرجات
+
 </button>
 
 </div>
@@ -1079,7 +1635,9 @@ step="0.01">
 
 
 <div class="footer">
+
 تصميم محمد عامر أحمد - نظام راصد 2026
+
 </div>
 
 </div>
@@ -1087,13 +1645,14 @@ step="0.01">
 
 <script>
 
-/* =====================================================
-   FIREBASE
-===================================================== */
+/* =========================================
+   Firebase
+========================================= */
 
 const firebaseConfig={
 
-apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+apiKey:
+"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
 
 authDomain:
 "results2026-7c0dd.firebaseapp.com",
@@ -1112,14 +1671,19 @@ appId:
 
 };
 
-firebase.initializeApp(firebaseConfig);
 
-const db=firebase.firestore();
+firebase.initializeApp(
+firebaseConfig
+);
 
 
-/* =====================================================
-   البيانات
-===================================================== */
+const db=
+firebase.firestore();
+
+
+/* =========================================
+   بيانات ثابتة
+========================================= */
 
 const grades=[
 
@@ -1140,7 +1704,13 @@ const grades=[
 
 ];
 
-const sections=["أ","ب","ج","د"];
+
+const sections=[
+"أ",
+"ب",
+"ج",
+"د"
+];
 
 
 let students=[];
@@ -1149,36 +1719,44 @@ let subjects=[];
 let tests=[];
 
 
-/* =====================================================
+/* =========================================
    الحماية
-===================================================== */
+========================================= */
 
 function protectAdmin(){
 
 const role=
-localStorage.getItem("currentUserRole")||"";
+localStorage.getItem(
+"currentUserRole"
+)||"";
+
 
 if(
 role!=="superadmin" &&
 role!=="admin"
 ){
 
-alert("هذه الصفحة للإدارة فقط");
+alert(
+"هذه الصفحة للإدارة فقط"
+);
 
-location.href="index.html";
+location.href=
+"index.html";
 
 }
 
 }
 
 
-/* =====================================================
+/* =========================================
    أدوات
-===================================================== */
+========================================= */
 
 function escapeHtml(value){
 
-return String(value??"")
+return String(
+value??""
+)
 
 .replace(/&/g,"&amp;")
 .replace(/</g,"&lt;")
@@ -1189,7 +1767,10 @@ return String(value??"")
 }
 
 
-function classKey(grade,section){
+function classKey(
+grade,
+section
+){
 
 return grade+"|||"+section;
 
@@ -1203,14 +1784,24 @@ return c.grade+" / "+c.section;
 }
 
 
-function sortClasses(classes){
+function sortClasses(list){
 
-return classes.sort((a,b)=>{
+return list.sort(
+(a,b)=>{
 
-const ga=grades.indexOf(a.grade);
-const gb=grades.indexOf(b.grade);
+const ga=
+grades.indexOf(a.grade);
 
-if(ga!==gb)return ga-gb;
+const gb=
+grades.indexOf(b.grade);
+
+
+if(ga!==gb){
+
+return ga-gb;
+
+}
+
 
 return sections.indexOf(a.section)-
 sections.indexOf(b.section);
@@ -1220,57 +1811,94 @@ sections.indexOf(b.section);
 }
 
 
-/* =====================================================
-   القوائم
-===================================================== */
+function scrollToSection(id){
+
+const el=
+document.getElementById(id);
+
+if(el){
+
+el.scrollIntoView({
+behavior:"smooth",
+block:"start"
+});
+
+}
+
+}
+
+
+function openAnalysis(){
+
+location.href=
+"analysis.html";
+
+}
+
+
+/* =========================================
+   تجهيز القوائم
+========================================= */
 
 function fillSelectors(){
 
 grades.forEach(grade=>{
 
-let o1=document.createElement("option");
+const option1=
+document.createElement("option");
 
-o1.value=grade;
-o1.textContent=grade;
+option1.value=grade;
+option1.textContent=grade;
 
-studentGrade.appendChild(o1);
+studentGrade.appendChild(
+option1
+);
 
 
-let o2=document.createElement("option");
+const option2=
+document.createElement("option");
 
-o2.value=grade;
-o2.textContent=grade;
+option2.value=grade;
+option2.textContent=grade;
 
-studentFilterGrade.appendChild(o2);
+studentFilterGrade.appendChild(
+option2
+);
 
 });
 
 
 sections.forEach(section=>{
 
-let o1=document.createElement("option");
+const option1=
+document.createElement("option");
 
-o1.value=section;
-o1.textContent=section;
+option1.value=section;
+option1.textContent=section;
 
-studentSection.appendChild(o1);
+studentSection.appendChild(
+option1
+);
 
 
-let o2=document.createElement("option");
+const option2=
+document.createElement("option");
 
-o2.value=section;
-o2.textContent=section;
+option2.value=section;
+option2.textContent=section;
 
-studentFilterSection.appendChild(o2);
+studentFilterSection.appendChild(
+option2
+);
 
 });
 
 }
 
 
-/* =====================================================
+/* =========================================
    شبكة الفصول
-===================================================== */
+========================================= */
 
 function buildClassGrid(
 elementId,
@@ -1278,19 +1906,26 @@ checkClass
 ){
 
 const body=
-document.getElementById(elementId);
+document.getElementById(
+elementId
+);
+
 
 body.innerHTML="";
 
 
 grades.forEach(grade=>{
 
-const tr=document.createElement("tr");
+const tr=
+document.createElement("tr");
+
 
 let html=`
 
 <td class="grade-title">
+
 ${escapeHtml(grade)}
+
 </td>
 
 `;
@@ -1331,6 +1966,7 @@ buildClassGrid(
 "assign-check"
 );
 
+
 buildClassGrid(
 "testClassGrid",
 "test-class-check"
@@ -1339,21 +1975,26 @@ buildClassGrid(
 }
 
 
-/* =====================================================
+/* =========================================
    الطلاب
-===================================================== */
+========================================= */
 
 async function loadStudents(){
 
 const snap=
-await db.collection("students").get();
+await db
+.collection("students")
+.get();
+
 
 students=[];
 
 
 snap.forEach(doc=>{
 
-const data=doc.data()||{};
+const data=
+doc.data()||{};
+
 
 students.push({
 
@@ -1367,7 +2008,8 @@ data.code||doc.id
 });
 
 
-students.sort((a,b)=>{
+students.sort(
+(a,b)=>{
 
 const ga=
 grades.indexOf(a.grade);
@@ -1376,8 +2018,11 @@ const gb=
 grades.indexOf(b.grade);
 
 
-if(ga!==gb)
+if(ga!==gb){
+
 return ga-gb;
+
+}
 
 
 if(
@@ -1385,7 +2030,9 @@ if(
 (b.section||"")
 ){
 
-return String(a.section||"")
+return String(
+a.section||""
+)
 .localeCompare(
 String(b.section||""),
 "ar"
@@ -1394,7 +2041,9 @@ String(b.section||""),
 }
 
 
-return String(a.name||"")
+return String(
+a.name||""
+)
 .localeCompare(
 String(b.name||""),
 "ar"
@@ -1403,7 +2052,11 @@ String(b.name||""),
 });
 
 
-statStudents.textContent=
+document
+.getElementById(
+"statStudents"
+)
+.textContent=
 students.length;
 
 
@@ -1417,28 +2070,45 @@ updateClassCount();
 function renderStudents(){
 
 const search=
-studentSearch.value
+document
+.getElementById(
+"studentSearch"
+)
+.value
 .trim()
 .toLowerCase();
 
 
 const grade=
-studentFilterGrade.value;
+document
+.getElementById(
+"studentFilterGrade"
+)
+.value;
 
 
 const section=
-studentFilterSection.value;
+document
+.getElementById(
+"studentFilterSection"
+)
+.value;
 
 
 const filtered=
 students.filter(student=>{
 
 const name=
-String(student.name||"")
+String(
+student.name||""
+)
 .toLowerCase();
 
+
 const code=
-String(student.code||"")
+String(
+student.code||""
+)
 .toLowerCase();
 
 
@@ -1478,12 +2148,18 @@ return true;
 });
 
 
-studentsBody.innerHTML="";
+const body=
+document.getElementById(
+"studentsBody"
+);
+
+
+body.innerHTML="";
 
 
 if(!filtered.length){
 
-studentsBody.innerHTML=
+body.innerHTML=
 
 "<tr><td colspan='6'>لا يوجد طلاب</td></tr>";
 
@@ -1536,7 +2212,6 @@ onclick='editStudent(${JSON.stringify(student.code)})'>
 
 </button>
 
-
 <button
 class="small-btn btn-danger"
 onclick='deleteStudent(${JSON.stringify(student.code)})'>
@@ -1550,7 +2225,7 @@ onclick='deleteStudent(${JSON.stringify(student.code)})'>
 `;
 
 
-studentsBody.appendChild(tr);
+body.appendChild(tr);
 
 });
 
@@ -1560,25 +2235,61 @@ studentsBody.appendChild(tr);
 async function saveStudent(){
 
 const original=
-studentOriginalCode.value.trim();
+document
+.getElementById(
+"studentOriginalCode"
+)
+.value
+.trim();
+
 
 const code=
-studentCode.value.trim();
+document
+.getElementById(
+"studentCode"
+)
+.value
+.trim();
+
 
 const name=
-studentName.value.trim();
+document
+.getElementById(
+"studentName"
+)
+.value
+.trim();
+
 
 const grade=
-studentGrade.value;
+document
+.getElementById(
+"studentGrade"
+)
+.value;
+
 
 const section=
-studentSection.value;
+document
+.getElementById(
+"studentSection"
+)
+.value;
+
 
 const phone=
-guardianPhone.value.trim();
+document
+.getElementById(
+"guardianPhone"
+)
+.value
+.trim();
 
 
-if(!code||!name){
+if(
+!code ||
+!name
+){
 
 alert(
 "أدخل كود الطالب واسم الطالب"
@@ -1627,7 +2338,9 @@ section,
 guardianPhone:phone,
 phone:phone
 
-},{merge:true});
+},{
+merge:true
+});
 
 
 if(
@@ -1643,7 +2356,9 @@ await db
 }
 
 
-alert("تم حفظ الطالب ✅");
+alert(
+"تم حفظ الطالب ✅"
+);
 
 
 clearStudentForm();
@@ -1657,48 +2372,104 @@ function editStudent(code){
 
 const student=
 students.find(
-s=>String(s.code)===String(code)
+s=>
+String(s.code)===
+String(code)
 );
 
 
-if(!student)return;
+if(!student){
+
+return;
+
+}
 
 
-studentOriginalCode.value=
+document
+.getElementById(
+"studentOriginalCode"
+)
+.value=
 student.code||"";
 
-studentCode.value=
+
+document
+.getElementById(
+"studentCode"
+)
+.value=
 student.code||"";
 
-studentName.value=
+
+document
+.getElementById(
+"studentName"
+)
+.value=
 student.name||"";
 
-studentGrade.value=
+
+document
+.getElementById(
+"studentGrade"
+)
+.value=
 student.grade||"";
 
-studentSection.value=
+
+document
+.getElementById(
+"studentSection"
+)
+.value=
 student.section||"";
 
-guardianPhone.value=
+
+document
+.getElementById(
+"guardianPhone"
+)
+.value=
 student.guardianPhone ||
 student.phone ||
 "";
 
 
-window.scrollTo({
-top:0,
-behavior:"smooth"
-});
+scrollToSection(
+"studentsSection"
+);
 
 }
 
 
 function clearStudentForm(){
 
-studentOriginalCode.value="";
-studentCode.value="";
-studentName.value="";
-guardianPhone.value="";
+document
+.getElementById(
+"studentOriginalCode"
+)
+.value="";
+
+
+document
+.getElementById(
+"studentCode"
+)
+.value="";
+
+
+document
+.getElementById(
+"studentName"
+)
+.value="";
+
+
+document
+.getElementById(
+"guardianPhone"
+)
+.value="";
 
 }
 
@@ -1709,7 +2480,11 @@ if(
 !confirm(
 "هل تريد حذف هذا الطالب؟"
 )
-)return;
+){
+
+return;
+
+}
 
 
 await db
@@ -1723,13 +2498,15 @@ await loadStudents();
 }
 
 
-/* =====================================================
-   EXCEL
-===================================================== */
+/* =========================================
+   Excel
+========================================= */
 
 function normalizeHeader(value){
 
-return String(value||"")
+return String(
+value||""
+)
 
 .trim()
 .toLowerCase()
@@ -1800,6 +2577,7 @@ return "";
 
 }
 
+
 return String(value).trim();
 
 }
@@ -1807,7 +2585,7 @@ return String(value).trim();
 
 function normalizeSection(value){
 
-let section=
+const section=
 cleanValue(value);
 
 
@@ -1836,7 +2614,7 @@ return map[section]||section;
 
 function normalizeGrade(value){
 
-let grade=
+const grade=
 cleanValue(value);
 
 
@@ -1856,7 +2634,6 @@ const map={
 
 "سادس ابتدائي":"6 ابتدائي",
 
-
 "أول متوسط":"1 متوسط",
 "اول متوسط":"1 متوسط",
 
@@ -1864,7 +2641,6 @@ const map={
 "ثان متوسط":"2 متوسط",
 
 "ثالث متوسط":"3 متوسط",
-
 
 "أول ثانوي":"1 ثانوي",
 "اول ثانوي":"1 ثانوي",
@@ -1887,21 +2663,36 @@ text,
 type
 ){
 
-importStatus.className=
+const el=
+document.getElementById(
+"importStatus"
+);
+
+
+el.className=
 "status "+type;
 
-importStatus.innerHTML=text;
+
+el.innerHTML=text;
 
 }
 
 
 async function importExcel(){
 
+const input=
+document.getElementById(
+"excelFile"
+);
+
+
 if(
-!excelFile.files.length
+!input.files.length
 ){
 
-alert("اختر ملف Excel");
+alert(
+"اختر ملف Excel"
+);
 
 return;
 
@@ -1930,7 +2721,9 @@ new Uint8Array(
 event.target.result
 ),
 
-{type:"array"}
+{
+type:"array"
+}
 
 );
 
@@ -1959,7 +2752,7 @@ new Set();
 
 rows.forEach(row=>{
 
-let code=
+const code=
 cleanValue(
 
 excelValue(
@@ -1976,7 +2769,8 @@ row,
 ]
 )
 
-).replace(/\.0$/,"");
+)
+.replace(/\.0$/,"");
 
 
 const name=
@@ -2048,7 +2842,8 @@ row,
 ]
 )
 
-).replace(/\.0$/,"");
+)
+.replace(/\.0$/,"");
 
 
 if(
@@ -2065,22 +2860,42 @@ return;
 usedCodes.add(code);
 
 
-imported.push({
+const studentData={
 
 code,
 name,
 grade,
-section,
+section
 
-guardianPhone:phone,
-phone:phone
+};
+
+
+/*
+لا نمسح رقمًا قديمًا
+إذا كان ملف Excel لا يحتوي على رقم.
+*/
+
+if(phone){
+
+studentData.guardianPhone=
+phone;
+
+studentData.phone=
+phone;
+
+}
+
+
+imported.push(
+studentData
+);
 
 });
 
-});
 
-
-if(!imported.length){
+if(
+!imported.length
+){
 
 setImportStatus(
 "لم يتم العثور على طلاب صالحين.",
@@ -2094,9 +2909,11 @@ return;
 
 if(
 !confirm(
+
 "سيتم استيراد / تحديث "+
 imported.length+
-" طالب.\nمتابعة؟"
+" طالب.\n\nمتابعة؟"
+
 )
 ){
 
@@ -2127,7 +2944,9 @@ db
 
 student,
 
-{merge:true}
+{
+merge:true
+}
 
 );
 
@@ -2150,7 +2969,7 @@ imported.length+
 );
 
 
-excelFile.value="";
+input.value="";
 
 
 await loadStudents();
@@ -2161,10 +2980,16 @@ catch(error){
 
 console.error(error);
 
+
 setImportStatus(
+
 "حدث خطأ: "+
-escapeHtml(error.message),
+escapeHtml(
+error.message
+),
+
 "error"
+
 );
 
 }
@@ -2173,7 +2998,7 @@ escapeHtml(error.message),
 
 
 reader.readAsArrayBuffer(
-excelFile.files[0]
+input.files[0]
 );
 
 }
@@ -2203,7 +3028,9 @@ const data=[
 
 
 const ws=
-XLSX.utils.aoa_to_sheet(data);
+XLSX.utils.aoa_to_sheet(
+data
+);
 
 
 const wb=
@@ -2225,9 +3052,9 @@ wb,
 }
 
 
-/* =====================================================
+/* =========================================
    المواد
-===================================================== */
+========================================= */
 
 async function loadSubjects(){
 
@@ -2255,15 +3082,23 @@ id:doc.id,
 
 subjects.sort(
 (a,b)=>
-String(a.name||"")
+
+String(
+a.name||""
+)
 .localeCompare(
 String(b.name||""),
 "ar"
 )
+
 );
 
 
-statSubjects.textContent=
+document
+.getElementById(
+"statSubjects"
+)
+.textContent=
 subjects.length;
 
 
@@ -2276,12 +3111,18 @@ fillSubjectSelectors();
 
 function renderSubjects(){
 
-subjectsBody.innerHTML="";
+const body=
+document.getElementById(
+"subjectsBody"
+);
+
+
+body.innerHTML="";
 
 
 if(!subjects.length){
 
-subjectsBody.innerHTML=
+body.innerHTML=
 
 "<tr><td colspan='2'>لا توجد مواد</td></tr>";
 
@@ -2299,7 +3140,11 @@ document.createElement("tr");
 tr.innerHTML=`
 
 <td>
-${escapeHtml(subject.name)}
+
+${escapeHtml(
+subject.name
+)}
+
 </td>
 
 <td>
@@ -2326,7 +3171,7 @@ onclick='deleteSubject(${JSON.stringify(subject.id)})'>
 `;
 
 
-subjectsBody.appendChild(tr);
+body.appendChild(tr);
 
 });
 
@@ -2335,52 +3180,200 @@ subjectsBody.appendChild(tr);
 
 function fillSubjectSelectors(){
 
-const selects=[
-
-assignmentSubject,
-testSubject
-
-];
+const assignment=
+document.getElementById(
+"assignmentSubject"
+);
 
 
-selects.forEach(select=>{
+const test=
+document.getElementById(
+"testSubject"
+);
 
-const current=
-select.value;
+
+const assignmentCurrent=
+assignment.value;
 
 
-select.innerHTML=
+const testCurrent=
+test.value;
+
+
+assignment.innerHTML=
+
+'<option value="">-- اختر المادة --</option>';
+
+
+test.innerHTML=
 
 '<option value="">-- اختر المادة --</option>';
 
 
 subjects.forEach(subject=>{
 
-const option=
+const option1=
 document.createElement("option");
 
-option.value=
+option1.value=
 subject.id;
 
-option.textContent=
+option1.textContent=
 subject.name;
 
-select.appendChild(option);
+assignment.appendChild(
+option1
+);
+
+
+const option2=
+document.createElement("option");
+
+option2.value=
+subject.id;
+
+option2.textContent=
+subject.name;
+
+test.appendChild(
+option2
+);
 
 });
 
 
 if(
 subjects.some(
-s=>s.id===current
+s=>s.id===assignmentCurrent
 )
 ){
 
-select.value=current;
+assignment.value=
+assignmentCurrent;
 
 }
 
-});
+
+if(
+subjects.some(
+s=>s.id===testCurrent
+)
+){
+
+test.value=
+testCurrent;
+
+}
+
+
+assignmentSubjectChanged();
+
+testSubjectChanged();
+
+}
+
+
+function assignmentSubjectChanged(){
+
+const select=
+document.getElementById(
+"assignmentSubject"
+);
+
+
+const info=
+document.getElementById(
+"selectedAssignmentSubject"
+);
+
+
+if(!select.value){
+
+info.style.display=
+"none";
+
+info.innerHTML="";
+
+clearAllAssignments();
+
+return;
+
+}
+
+
+const subject=
+subjects.find(
+s=>s.id===select.value
+);
+
+
+if(subject){
+
+info.style.display=
+"block";
+
+
+info.innerHTML=
+
+"المادة المختارة: "+
+escapeHtml(
+subject.name
+);
+
+}
+
+
+loadAssignmentChecks();
+
+}
+
+
+function testSubjectChanged(){
+
+const select=
+document.getElementById(
+"testSubject"
+);
+
+
+const info=
+document.getElementById(
+"selectedTestSubject"
+);
+
+
+if(!select.value){
+
+info.style.display=
+"none";
+
+info.innerHTML="";
+
+return;
+
+}
+
+
+const subject=
+subjects.find(
+s=>s.id===select.value
+);
+
+
+if(subject){
+
+info.style.display=
+"block";
+
+
+info.innerHTML=
+
+"المادة المختارة: "+
+escapeHtml(
+subject.name
+);
+
+}
 
 }
 
@@ -2388,16 +3381,27 @@ select.value=current;
 async function saveSubject(){
 
 const id=
-subjectEditId.value;
+document
+.getElementById(
+"subjectEditId"
+)
+.value;
 
 
 const name=
-subjectName.value.trim();
+document
+.getElementById(
+"subjectName"
+)
+.value
+.trim();
 
 
 if(!name){
 
-alert("أدخل اسم المادة");
+alert(
+"أدخل اسم المادة"
+);
 
 return;
 
@@ -2407,8 +3411,14 @@ return;
 const duplicate=
 subjects.find(subject=>
 
-subject.name.trim()===
-name &&
+String(subject.name||"")
+.trim()
+.toLowerCase()
+===
+name.toLowerCase()
+
+&&
+
 subject.id!==id
 
 );
@@ -2416,7 +3426,9 @@ subject.id!==id
 
 if(duplicate){
 
-alert("هذه المادة موجودة بالفعل");
+alert(
+"هذه المادة موجودة بالفعل"
+);
 
 return;
 
@@ -2432,7 +3444,9 @@ await db
 
 name
 
-},{merge:true});
+},{
+merge:true
+});
 
 }
 
@@ -2454,7 +3468,9 @@ firebase.firestore
 }
 
 
-alert("تم حفظ المادة ✅");
+alert(
+"تم حفظ المادة ✅"
+);
 
 
 clearSubjectForm();
@@ -2472,22 +3488,50 @@ s=>s.id===id
 );
 
 
-if(!subject)return;
+if(!subject){
+
+return;
+
+}
 
 
-subjectEditId.value=
+document
+.getElementById(
+"subjectEditId"
+)
+.value=
 subject.id;
 
-subjectName.value=
+
+document
+.getElementById(
+"subjectName"
+)
+.value=
 subject.name||"";
+
+
+scrollToSection(
+"subjectsSection"
+);
 
 }
 
 
 function clearSubjectForm(){
 
-subjectEditId.value="";
-subjectName.value="";
+document
+.getElementById(
+"subjectEditId"
+)
+.value="";
+
+
+document
+.getElementById(
+"subjectName"
+)
+.value="";
 
 }
 
@@ -2500,14 +3544,20 @@ s=>s.id===id
 );
 
 
-if(!subject)return;
+if(!subject){
+
+return;
+
+}
 
 
 if(
 !confirm(
+
 "هل تريد حذف مادة:\n"+
 subject.name+
 " ؟"
+
 )
 ){
 
@@ -2516,15 +3566,8 @@ return;
 }
 
 
-await db
-.collection("subjects")
-.doc(id)
-.delete();
-
-
 /*
-نزيل المادة من إسنادات المعلمين
-بدون حذف باقي الإسنادات.
+نحذف المادة من إسنادات المعلمين.
 */
 
 for(
@@ -2532,12 +3575,15 @@ const teacher of teachers
 ){
 
 const assignments=
-getAssignments(teacher);
+getAssignments(
+teacher
+);
 
 
 const filtered=
 assignments.filter(
-a=>a.subjectId!==id
+a=>
+a.subjectId!==id
 );
 
 
@@ -2551,13 +3597,22 @@ await db
 .doc(teacher.email)
 .set({
 
-assignments:filtered
+assignments:
+filtered
 
-},{merge:true});
+},{
+merge:true
+});
 
 }
 
 }
+
+
+await db
+.collection("subjects")
+.doc(id)
+.delete();
 
 
 await loadSubjects();
@@ -2567,9 +3622,9 @@ await loadTeachers();
 }
 
 
-/* =====================================================
-   المعلمين
-===================================================== */
+/* =========================================
+   المعلمون
+========================================= */
 
 async function loadTeachers(){
 
@@ -2603,7 +3658,9 @@ data.email||doc.id
 teachers.sort(
 (a,b)=>
 
-String(a.name||"")
+String(
+a.name||""
+)
 .localeCompare(
 String(b.name||""),
 "ar"
@@ -2612,7 +3669,11 @@ String(b.name||""),
 );
 
 
-statTeachers.textContent=
+document
+.getElementById(
+"statTeachers"
+)
+.textContent=
 teachers.length;
 
 
@@ -2623,7 +3684,9 @@ renderTeacherCards();
 }
 
 
-function getAssignments(teacher){
+function getAssignments(
+teacher
+){
 
 if(
 Array.isArray(
@@ -2643,12 +3706,18 @@ return [];
 
 function renderTeachers(){
 
-teachersBody.innerHTML="";
+const body=
+document.getElementById(
+"teachersBody"
+);
+
+
+body.innerHTML="";
 
 
 if(!teachers.length){
 
-teachersBody.innerHTML=
+body.innerHTML=
 
 "<tr><td colspan='4'>لا يوجد معلمون</td></tr>";
 
@@ -2660,7 +3729,9 @@ return;
 teachers.forEach(teacher=>{
 
 const assignments=
-getAssignments(teacher);
+getAssignments(
+teacher
+);
 
 
 const tr=
@@ -2670,15 +3741,25 @@ document.createElement("tr");
 tr.innerHTML=`
 
 <td>
-${escapeHtml(teacher.name)}
+
+${escapeHtml(
+teacher.name
+)}
+
 </td>
 
 <td>
-${escapeHtml(teacher.email)}
+
+${escapeHtml(
+teacher.email
+)}
+
 </td>
 
 <td>
+
 ${assignments.length}
+
 </td>
 
 <td>
@@ -2705,7 +3786,7 @@ onclick='deleteTeacher(${JSON.stringify(teacher.email)})'>
 `;
 
 
-teachersBody.appendChild(tr);
+body.appendChild(tr);
 
 });
 
@@ -2715,26 +3796,38 @@ teachersBody.appendChild(tr);
 async function saveTeacher(){
 
 const original=
-teacherOriginalUsername
+document
+.getElementById(
+"teacherOriginalUsername"
+)
 .value
 .trim();
 
 
 const name=
-teacherName
+document
+.getElementById(
+"teacherName"
+)
 .value
 .trim();
 
 
 const username=
-teacherUsername
+document
+.getElementById(
+"teacherUsername"
+)
 .value
 .trim()
 .toLowerCase();
 
 
 const password=
-teacherPassword
+document
+.getElementById(
+"teacherPassword"
+)
 .value
 .trim();
 
@@ -2821,7 +3914,9 @@ await db
 name,
 email:username
 
-},{merge:true});
+},{
+merge:true
+});
 
 
 await db
@@ -2833,10 +3928,14 @@ name,
 role:"teacher",
 password
 
-},{merge:true});
+},{
+merge:true
+});
 
 
-alert("تم حفظ المعلم ✅");
+alert(
+"تم حفظ المعلم ✅"
+);
 
 
 clearTeacherForm();
@@ -2846,7 +3945,9 @@ await loadTeachers();
 }
 
 
-async function editTeacher(username){
+async function editTeacher(
+username
+){
 
 const teacher=
 teachers.find(
@@ -2854,18 +3955,34 @@ t=>t.email===username
 );
 
 
-if(!teacher)return;
+if(!teacher){
+
+return;
+
+}
 
 
-teacherOriginalUsername.value=
+document
+.getElementById(
+"teacherOriginalUsername"
+)
+.value=
 teacher.email;
 
 
-teacherName.value=
+document
+.getElementById(
+"teacherName"
+)
+.value=
 teacher.name||"";
 
 
-teacherUsername.value=
+document
+.getElementById(
+"teacherUsername"
+)
+.value=
 teacher.email||"";
 
 
@@ -2877,7 +3994,11 @@ await db
 .get();
 
 
-teacherPassword.value=
+document
+.getElementById(
+"teacherPassword"
+)
+.value=
 
 userDoc.exists
 ?
@@ -2885,24 +4006,55 @@ userDoc.exists
 :
 "";
 
+
+scrollToSection(
+"teachersSection"
+);
+
 }
 
 
 function clearTeacherForm(){
 
-teacherOriginalUsername.value="";
-teacherName.value="";
-teacherUsername.value="";
-teacherPassword.value="";
+document
+.getElementById(
+"teacherOriginalUsername"
+)
+.value="";
+
+
+document
+.getElementById(
+"teacherName"
+)
+.value="";
+
+
+document
+.getElementById(
+"teacherUsername"
+)
+.value="";
+
+
+document
+.getElementById(
+"teacherPassword"
+)
+.value="";
 
 }
 
 
-async function deleteTeacher(username){
+async function deleteTeacher(
+username
+){
 
 if(
 !confirm(
-"سيتم حذف المعلم وحساب دخوله.\nمتابعة؟"
+
+"سيتم حذف المعلم وحساب دخوله.\n\nمتابعة؟"
+
 )
 ){
 
@@ -2939,15 +4091,36 @@ await db
 
 
 if(
-assignTeacher.value===username
+document
+.getElementById(
+"assignTeacher"
+)
+.value===username
 ){
 
-assignTeacher.value="";
+document
+.getElementById(
+"assignTeacher"
+)
+.value="";
 
-selectedTeacherInfo.style.display="none";
 
-assignmentSummary.innerHTML=
+document
+.getElementById(
+"selectedTeacherInfo"
+)
+.style.display=
+"none";
+
+
+document
+.getElementById(
+"assignmentSummary"
+)
+.innerHTML=
+
 "اختر معلمًا لعرض إسناداته.";
+
 
 clearAllAssignments();
 
@@ -2959,9 +4132,9 @@ await loadTeachers();
 }
 
 
-/* =====================================================
-   بطاقات المعلمين - حل مشكلة القائمة نهائياً
-===================================================== */
+/* =========================================
+   بطاقات المعلمين
+========================================= */
 
 function renderTeacherCards(){
 
@@ -2972,7 +4145,11 @@ document.getElementById(
 
 
 const selected=
-assignTeacher.value;
+document
+.getElementById(
+"assignTeacher"
+)
+.value;
 
 
 container.innerHTML="";
@@ -2982,8 +4159,9 @@ if(!teachers.length){
 
 container.innerHTML=`
 
-<div class="note"
-style="grid-column:1/-1">
+<div
+class="note"
+style="width:100%">
 
 لا يوجد معلمون مسجلون.
 
@@ -3017,6 +4195,12 @@ card.classList.add(
 }
 
 
+card.title=
+teacher.name+
+" - "+
+teacher.email;
+
+
 card.innerHTML=`
 
 <div class="teacher-card-name">
@@ -3027,18 +4211,11 @@ teacher.name||"بدون اسم"
 
 </div>
 
-<div class="teacher-card-user">
-
-${escapeHtml(
-teacher.email
-)}
-
-</div>
-
 `;
 
 
-card.onclick=()=>{
+card.onclick=
+()=>{
 
 selectTeacher(
 teacher.email
@@ -3047,16 +4224,24 @@ teacher.email
 };
 
 
-container.appendChild(card);
+container.appendChild(
+card
+);
 
 });
 
 }
 
 
-function selectTeacher(username){
+function selectTeacher(
+username
+){
 
-assignTeacher.value=
+document
+.getElementById(
+"assignTeacher"
+)
+.value=
 username;
 
 
@@ -3069,14 +4254,24 @@ t=>t.email===username
 );
 
 
-if(!teacher)return;
+if(!teacher){
+
+return;
+
+}
 
 
-selectedTeacherInfo.style.display=
+const info=
+document.getElementById(
+"selectedTeacherInfo"
+);
+
+
+info.style.display=
 "block";
 
 
-selectedTeacherInfo.innerHTML=
+info.innerHTML=
 
 "المعلم المختار: "+
 escapeHtml(
@@ -3084,20 +4279,31 @@ teacher.name
 );
 
 
-assignmentSubject.value="";
+document
+.getElementById(
+"assignmentSubject"
+)
+.value="";
+
+
+document
+.getElementById(
+"selectedAssignmentSubject"
+)
+.style.display=
+"none";
 
 
 clearAllAssignments();
-
 
 renderAssignmentSummary();
 
 }
 
 
-/* =====================================================
+/* =========================================
    الإسناد
-===================================================== */
+========================================= */
 
 function loadAssignmentChecks(){
 
@@ -3105,11 +4311,19 @@ clearAllAssignments();
 
 
 const username=
-assignTeacher.value;
+document
+.getElementById(
+"assignTeacher"
+)
+.value;
 
 
 const subjectId=
-assignmentSubject.value;
+document
+.getElementById(
+"assignmentSubject"
+)
+.value;
 
 
 if(
@@ -3128,11 +4342,17 @@ t=>t.email===username
 );
 
 
-if(!teacher)return;
+if(!teacher){
+
+return;
+
+}
 
 
 const assignments=
-getAssignments(teacher);
+getAssignments(
+teacher
+);
 
 
 document
@@ -3142,6 +4362,7 @@ document
 .forEach(box=>{
 
 box.checked=
+
 assignments.some(a=>
 
 a.subjectId===subjectId &&
@@ -3192,16 +4413,26 @@ box.checked=false;
 async function saveAssignments(){
 
 const username=
-assignTeacher.value;
+document
+.getElementById(
+"assignTeacher"
+)
+.value;
 
 
 const subjectId=
-assignmentSubject.value;
+document
+.getElementById(
+"assignmentSubject"
+)
+.value;
 
 
 if(!username){
 
-alert("اختر المعلم أولًا");
+alert(
+"اختر المعلم أولًا"
+);
 
 return;
 
@@ -3210,7 +4441,9 @@ return;
 
 if(!subjectId){
 
-alert("اختر المادة أولًا");
+alert(
+"اختر المادة أولًا"
+);
 
 return;
 
@@ -3225,7 +4458,9 @@ s=>s.id===subjectId
 
 if(!subject){
 
-alert("المادة غير موجودة");
+alert(
+"المادة غير موجودة"
+);
 
 return;
 
@@ -3240,7 +4475,9 @@ t=>t.email===username
 
 if(!teacher){
 
-alert("المعلم غير موجود");
+alert(
+"المعلم غير موجود"
+);
 
 return;
 
@@ -3248,14 +4485,17 @@ return;
 
 
 /*
-نحتفظ بإسنادات المواد الأخرى.
-ونستبدل فقط إسناد المادة الحالية.
+نحافظ على إسنادات المواد الأخرى.
+ونستبدل فقط إسناد المادة المختارة.
 */
 
 let assignments=
-getAssignments(teacher)
+getAssignments(
+teacher
+)
 .filter(
-a=>a.subjectId!==subjectId
+a=>
+a.subjectId!==subjectId
 );
 
 
@@ -3291,28 +4531,32 @@ await db
 
 assignments
 
-},{merge:true});
+},{
+merge:true
+});
 
 
 alert(
+
 "تم حفظ إسناد مادة "+
 subject.name+
 " للمعلم بنجاح ✅"
+
 );
 
 
 await loadTeachers();
 
 
-assignTeacher.value=
+document
+.getElementById(
+"assignTeacher"
+)
+.value=
 username;
 
 
 renderTeacherCards();
-
-
-selectedTeacherInfo.style.display=
-"block";
 
 
 const freshTeacher=
@@ -3321,7 +4565,17 @@ t=>t.email===username
 );
 
 
-selectedTeacherInfo.innerHTML=
+const info=
+document.getElementById(
+"selectedTeacherInfo"
+);
+
+
+info.style.display=
+"block";
+
+
+info.innerHTML=
 
 "المعلم المختار: "+
 escapeHtml(
@@ -3329,7 +4583,15 @@ freshTeacher?.name||username
 );
 
 
-loadAssignmentChecks();
+document
+.getElementById(
+"assignmentSubject"
+)
+.value=
+subjectId;
+
+
+assignmentSubjectChanged();
 
 renderAssignmentSummary();
 
@@ -3339,12 +4601,23 @@ renderAssignmentSummary();
 function renderAssignmentSummary(){
 
 const username=
-assignTeacher.value;
+document
+.getElementById(
+"assignTeacher"
+)
+.value;
+
+
+const container=
+document.getElementById(
+"assignmentSummary"
+);
 
 
 if(!username){
 
-assignmentSummary.innerHTML=
+container.innerHTML=
+
 "اختر معلمًا لعرض إسناداته.";
 
 return;
@@ -3358,16 +4631,22 @@ t=>t.email===username
 );
 
 
-if(!teacher)return;
+if(!teacher){
+
+return;
+
+}
 
 
 const assignments=
-getAssignments(teacher);
+getAssignments(
+teacher
+);
 
 
 if(!assignments.length){
 
-assignmentSummary.innerHTML=
+container.innerHTML=
 
 "<div class='note'>لا توجد إسنادات لهذا المعلم.</div>";
 
@@ -3375,10 +4654,6 @@ return;
 
 }
 
-
-/*
-تجميع حسب المادة
-*/
 
 const grouped={};
 
@@ -3388,7 +4663,8 @@ assignments.forEach(a=>{
 const key=
 a.subjectId ||
 a.subjectName ||
-"old";
+a.subject ||
+"unknown";
 
 
 if(!grouped[key]){
@@ -3407,10 +4683,15 @@ classes:[]
 }
 
 
-grouped[key].classes.push({
+grouped[key]
+.classes
+.push({
 
-grade:a.grade,
-section:a.section
+grade:
+a.grade,
+
+section:
+a.section
 
 });
 
@@ -3420,10 +4701,13 @@ section:a.section
 let html="";
 
 
-Object.values(grouped)
+Object
+.values(grouped)
 .forEach(group=>{
 
-sortClasses(group.classes);
+sortClasses(
+group.classes
+);
 
 
 html+=`
@@ -3432,19 +4716,26 @@ html+=`
 
 <div class="subject-name">
 
-📚 ${escapeHtml(group.name)}
+📚
+${escapeHtml(
+group.name
+)}
 
 </div>
 
 <div>
 
-${group.classes.map(c=>
+${group.classes.map(c=>`
 
-`<span class="tag">
-${escapeHtml(classLabel(c))}
-</span>`
+<span class="tag">
 
-).join("")}
+${escapeHtml(
+classLabel(c)
+)}
+
+</span>
+
+`).join("")}
 
 </div>
 
@@ -3455,7 +4746,8 @@ ${escapeHtml(classLabel(c))}
 });
 
 
-assignmentSummary.innerHTML=html;
+container.innerHTML=
+html;
 
 }
 
@@ -3463,12 +4755,18 @@ assignmentSummary.innerHTML=html;
 async function clearCurrentTeacherAssignments(){
 
 const username=
-assignTeacher.value;
+document
+.getElementById(
+"assignTeacher"
+)
+.value;
 
 
 if(!username){
 
-alert("اختر المعلم أولًا");
+alert(
+"اختر المعلم أولًا"
+);
 
 return;
 
@@ -3481,14 +4779,20 @@ t=>t.email===username
 );
 
 
-if(!teacher)return;
+if(!teacher){
+
+return;
+
+}
 
 
 if(
 !confirm(
+
 "هل تريد حذف جميع إسنادات المعلم:\n"+
 teacher.name+
 " ؟"
+
 )
 ){
 
@@ -3504,7 +4808,9 @@ await db
 
 assignments:[]
 
-},{merge:true});
+},{
+merge:true
+});
 
 
 alert(
@@ -3515,7 +4821,11 @@ alert(
 await loadTeachers();
 
 
-assignTeacher.value=
+document
+.getElementById(
+"assignTeacher"
+)
+.value=
 username;
 
 
@@ -3528,9 +4838,9 @@ clearAllAssignments();
 }
 
 
-/* =====================================================
+/* =========================================
    الاختبارات
-===================================================== */
+========================================= */
 
 async function loadTests(){
 
@@ -3556,9 +4866,12 @@ id:doc.id,
 });
 
 
-tests.sort((a,b)=>
+tests.sort(
+(a,b)=>
 
-String(a.date||"")
+String(
+a.date||""
+)
 .localeCompare(
 String(b.date||"")
 )
@@ -3566,7 +4879,11 @@ String(b.date||"")
 );
 
 
-statTests.textContent=
+document
+.getElementById(
+"statTests"
+)
+.textContent=
 tests.length;
 
 
@@ -3577,12 +4894,18 @@ renderTests();
 
 function renderTests(){
 
-testsBody.innerHTML="";
+const body=
+document.getElementById(
+"testsBody"
+);
+
+
+body.innerHTML="";
 
 
 if(!tests.length){
 
-testsBody.innerHTML=
+body.innerHTML=
 
 "<tr><td colspan='6'>لا توجد اختبارات</td></tr>";
 
@@ -3594,7 +4917,9 @@ return;
 tests.forEach(test=>{
 
 const classes=
-Array.isArray(test.classes)
+Array.isArray(
+test.classes
+)
 ?
 test.classes
 :
@@ -3602,9 +4927,10 @@ test.classes
 
 
 const classesText=
-
 classes
-.map(c=>classLabel(c))
+.map(
+c=>classLabel(c)
+)
 .join(" - ");
 
 
@@ -3615,23 +4941,43 @@ document.createElement("tr");
 tr.innerHTML=`
 
 <td>
-${escapeHtml(test.name)}
+
+${escapeHtml(
+test.name
+)}
+
 </td>
 
 <td>
-${escapeHtml(test.subjectName)}
+
+${escapeHtml(
+test.subjectName||""
+)}
+
 </td>
 
 <td>
-${escapeHtml(test.fullMark)}
+
+${escapeHtml(
+test.fullMark
+)}
+
 </td>
 
 <td>
-${escapeHtml(test.date)}
+
+${escapeHtml(
+test.date||""
+)}
+
 </td>
 
 <td>
-${escapeHtml(classesText)}
+
+${escapeHtml(
+classesText
+)}
+
 </td>
 
 <td>
@@ -3658,7 +5004,7 @@ onclick='deleteTest(${JSON.stringify(test.id)})'>
 `;
 
 
-testsBody.appendChild(tr);
+body.appendChild(tr);
 
 });
 
@@ -3689,7 +5035,9 @@ box.dataset.section
 });
 
 
-return sortClasses(classes);
+return sortClasses(
+classes
+);
 
 }
 
@@ -3727,25 +5075,48 @@ box.checked=false;
 async function saveTest(){
 
 const id=
-testEditId.value;
+document
+.getElementById(
+"testEditId"
+)
+.value;
 
 
 const name=
-testName.value.trim();
+document
+.getElementById(
+"testName"
+)
+.value
+.trim();
 
 
 const subjectId=
-testSubject.value;
+document
+.getElementById(
+"testSubject"
+)
+.value;
 
 
 const fullMark=
 Number(
-testFullMark.value
+
+document
+.getElementById(
+"testFullMark"
+)
+.value
+
 );
 
 
 const date=
-testDate.value;
+document
+.getElementById(
+"testDate"
+)
+.value;
 
 
 const classes=
@@ -3754,7 +5125,9 @@ getCheckedTestClasses();
 
 if(!name){
 
-alert("أدخل اسم الاختبار");
+alert(
+"أدخل اسم الاختبار"
+);
 
 return;
 
@@ -3763,7 +5136,9 @@ return;
 
 if(!subjectId){
 
-alert("اختر المادة");
+alert(
+"اختر المادة"
+);
 
 return;
 
@@ -3775,7 +5150,9 @@ if(
 fullMark<=0
 ){
 
-alert("أدخل الدرجة النهائية");
+alert(
+"أدخل الدرجة النهائية"
+);
 
 return;
 
@@ -3784,7 +5161,9 @@ return;
 
 if(!date){
 
-alert("حدد تاريخ الاختبار");
+alert(
+"حدد تاريخ الاختبار"
+);
 
 return;
 
@@ -3810,7 +5189,9 @@ s=>s.id===subjectId
 
 if(!subject){
 
-alert("المادة غير موجودة");
+alert(
+"المادة غير موجودة"
+);
 
 return;
 
@@ -3843,7 +5224,9 @@ await db
 .doc(id)
 .set(
 data,
-{merge:true}
+{
+merge:true
+}
 );
 
 }
@@ -3866,7 +5249,9 @@ firebase.firestore
 }
 
 
-alert("تم حفظ الاختبار بنجاح ✅");
+alert(
+"تم حفظ الاختبار بنجاح ✅"
+);
 
 
 clearTestForm();
@@ -3884,34 +5269,62 @@ t=>t.id===id
 );
 
 
-if(!test)return;
+if(!test){
+
+return;
+
+}
 
 
-testEditId.value=
+document
+.getElementById(
+"testEditId"
+)
+.value=
 test.id;
 
 
-testName.value=
+document
+.getElementById(
+"testName"
+)
+.value=
 test.name||"";
 
 
-testSubject.value=
+document
+.getElementById(
+"testSubject"
+)
+.value=
 test.subjectId||"";
 
 
-testFullMark.value=
+document
+.getElementById(
+"testFullMark"
+)
+.value=
 test.fullMark||"";
 
 
-testDate.value=
+document
+.getElementById(
+"testDate"
+)
+.value=
 test.date||"";
 
+
+testSubjectChanged();
 
 clearAllTestClasses();
 
 
 const classes=
-Array.isArray(test.classes)
+Array.isArray(
+test.classes
+)
 ?
 test.classes
 :
@@ -3938,23 +5351,57 @@ box.dataset.section
 });
 
 
-document
-.getElementById("testName")
-.scrollIntoView({
-behavior:"smooth",
-block:"center"
-});
+scrollToSection(
+"testsSection"
+);
 
 }
 
 
 function clearTestForm(){
 
-testEditId.value="";
-testName.value="";
-testSubject.value="";
-testFullMark.value="";
-testDate.value="";
+document
+.getElementById(
+"testEditId"
+)
+.value="";
+
+
+document
+.getElementById(
+"testName"
+)
+.value="";
+
+
+document
+.getElementById(
+"testSubject"
+)
+.value="";
+
+
+document
+.getElementById(
+"testFullMark"
+)
+.value="";
+
+
+document
+.getElementById(
+"testDate"
+)
+.value="";
+
+
+document
+.getElementById(
+"selectedTestSubject"
+)
+.style.display=
+"none";
+
 
 clearAllTestClasses();
 
@@ -3969,14 +5416,20 @@ t=>t.id===id
 );
 
 
-if(!test)return;
+if(!test){
+
+return;
+
+}
 
 
 if(
 !confirm(
+
 "هل تريد حذف الاختبار:\n"+
 test.name+
 " ؟"
+
 )
 ){
 
@@ -3996,9 +5449,9 @@ await loadTests();
 }
 
 
-/* =====================================================
+/* =========================================
    عدد الفصول
-===================================================== */
+========================================= */
 
 function updateClassCount(){
 
@@ -4027,24 +5480,32 @@ student.section
 });
 
 
-statClasses.textContent=
+document
+.getElementById(
+"statClasses"
+)
+.textContent=
 unique.size;
 
 }
 
 
-/* =====================================================
-   حذف Collection على دفعات
-===================================================== */
+/* =========================================
+   حذف Collection
+========================================= */
 
-async function deleteCollection(name){
+async function deleteCollection(
+collectionName
+){
 
 while(true){
 
 const snap=
 
 await db
-.collection(name)
+.collection(
+collectionName
+)
 .limit(400)
 .get();
 
@@ -4062,7 +5523,9 @@ db.batch();
 
 snap.docs.forEach(doc=>{
 
-batch.delete(doc.ref);
+batch.delete(
+doc.ref
+);
 
 });
 
@@ -4074,15 +5537,17 @@ await batch.commit();
 }
 
 
-/* =====================================================
-   حذف الجميع
-===================================================== */
+/* =========================================
+   حذف جميع الطلاب
+========================================= */
 
 async function deleteAllStudents(){
 
 if(!students.length){
 
-alert("لا يوجد طلاب");
+alert(
+"لا يوجد طلاب"
+);
 
 return;
 
@@ -4101,7 +5566,9 @@ students.length+
 
 if(answer!=="حذف"){
 
-alert("تم إلغاء العملية");
+alert(
+"تم إلغاء العملية"
+);
 
 return;
 
@@ -4113,7 +5580,9 @@ await deleteCollection(
 );
 
 
-alert("تم حذف جميع الطلاب ✅");
+alert(
+"تم حذف جميع الطلاب ✅"
+);
 
 
 await loadStudents();
@@ -4121,11 +5590,17 @@ await loadStudents();
 }
 
 
+/* =========================================
+   حذف جميع المواد
+========================================= */
+
 async function deleteAllSubjects(){
 
 if(!subjects.length){
 
-alert("لا توجد مواد");
+alert(
+"لا توجد مواد"
+);
 
 return;
 
@@ -4136,8 +5611,8 @@ const answer=
 prompt(
 
 "⚠️ سيتم حذف جميع المواد.\n"+
-"وسيتم مسح الإسنادات الحالية أيضًا.\n\n"+
-"اكتب حذف المواد للتأكيد:"
+"وسيتم حذف إسنادات المواد من المعلمين.\n\n"+
+"اكتب: حذف المواد"
 
 );
 
@@ -4146,25 +5621,19 @@ if(
 answer!=="حذف المواد"
 ){
 
-alert("تم إلغاء العملية");
+alert(
+"تم إلغاء العملية"
+);
 
 return;
 
 }
 
 
-/*
-مسح المواد
-*/
-
 await deleteCollection(
 "subjects"
 );
 
-
-/*
-مسح الإسنادات من المعلمين
-*/
 
 for(
 const teacher of teachers
@@ -4177,7 +5646,9 @@ await db
 
 assignments:[]
 
-},{merge:true});
+},{
+merge:true
+});
 
 }
 
@@ -4194,11 +5665,17 @@ await loadTeachers();
 }
 
 
+/* =========================================
+   حذف جميع المعلمين
+========================================= */
+
 async function deleteAllTeachers(){
 
 if(!teachers.length){
 
-alert("لا يوجد معلمون");
+alert(
+"لا يوجد معلمون"
+);
 
 return;
 
@@ -4209,8 +5686,8 @@ const answer=
 prompt(
 
 "⚠️ سيتم حذف جميع المعلمين وحسابات دخولهم.\n"+
-"حساب الإدارة لن يتم حذفه.\n\n"+
-"اكتب حذف المعلمين للتأكيد:"
+"لن يتم حذف حساب الإدارة.\n\n"+
+"اكتب: حذف المعلمين"
 
 );
 
@@ -4219,18 +5696,17 @@ if(
 answer!=="حذف المعلمين"
 ){
 
-alert("تم إلغاء العملية");
+alert(
+"تم إلغاء العملية"
+);
 
 return;
 
 }
 
 
-/*
-حذف حسابات teacher فقط
-*/
-
 const usersSnap=
+
 await db
 .collection("users")
 .get();
@@ -4261,7 +5737,9 @@ teacherUsers
 .slice(i,i+400)
 .forEach(doc=>{
 
-batch.delete(doc.ref);
+batch.delete(
+doc.ref
+);
 
 });
 
@@ -4276,17 +5754,33 @@ await deleteCollection(
 );
 
 
-assignTeacher.value="";
+document
+.getElementById(
+"assignTeacher"
+)
+.value="";
 
-selectedTeacherInfo.style.display=
+
+document
+.getElementById(
+"selectedTeacherInfo"
+)
+.style.display=
 "none";
 
 
-assignmentSummary.innerHTML=
+document
+.getElementById(
+"assignmentSummary"
+)
+.innerHTML=
+
 "اختر معلمًا لعرض إسناداته.";
 
 
-alert("تم حذف جميع المعلمين ✅");
+alert(
+"تم حذف جميع المعلمين ✅"
+);
 
 
 await loadTeachers();
@@ -4294,11 +5788,17 @@ await loadTeachers();
 }
 
 
+/* =========================================
+   حذف جميع الاختبارات
+========================================= */
+
 async function deleteAllTests(){
 
 if(!tests.length){
 
-alert("لا توجد اختبارات");
+alert(
+"لا توجد اختبارات"
+);
 
 return;
 
@@ -4309,7 +5809,7 @@ const answer=
 prompt(
 
 "⚠️ سيتم حذف جميع الاختبارات.\n\n"+
-"اكتب حذف الاختبارات للتأكيد:"
+"اكتب: حذف الاختبارات"
 
 );
 
@@ -4318,7 +5818,9 @@ if(
 answer!=="حذف الاختبارات"
 ){
 
-alert("تم إلغاء العملية");
+alert(
+"تم إلغاء العملية"
+);
 
 return;
 
@@ -4340,13 +5842,17 @@ await loadTests();
 }
 
 
+/* =========================================
+   حذف جميع الدرجات
+========================================= */
+
 async function deleteAllGrades(){
 
 const answer=
 prompt(
 
 "⚠️ سيتم حذف جميع النتائج والدرجات المسجلة.\n\n"+
-"اكتب حذف الدرجات للتأكيد:"
+"اكتب: حذف الدرجات"
 
 );
 
@@ -4355,7 +5861,9 @@ if(
 answer!=="حذف الدرجات"
 ){
 
-alert("تم إلغاء العملية");
+alert(
+"تم إلغاء العملية"
+);
 
 return;
 
@@ -4374,9 +5882,9 @@ alert(
 }
 
 
-/* =====================================================
+/* =========================================
    تسجيل الخروج
-===================================================== */
+========================================= */
 
 function logout(){
 
@@ -4388,7 +5896,9 @@ function logout(){
 ]
 .forEach(key=>{
 
-localStorage.removeItem(key);
+localStorage.removeItem(
+key
+);
 
 });
 
@@ -4399,9 +5909,9 @@ location.href=
 }
 
 
-/* =====================================================
+/* =========================================
    تشغيل الصفحة
-===================================================== */
+========================================= */
 
 async function start(){
 
@@ -4417,11 +5927,8 @@ try{
 await Promise.all([
 
 loadStudents(),
-
 loadSubjects(),
-
 loadTeachers(),
-
 loadTests()
 
 ]);
@@ -4430,11 +5937,16 @@ loadTests()
 
 catch(error){
 
-console.error(error);
+console.error(
+error
+);
+
 
 alert(
+
 "حدث خطأ أثناء تحميل بيانات راصد:\n"+
 error.message
+
 );
 
 }
