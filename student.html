@@ -801,7 +801,7 @@ tbody tr:last-child td{
 </h2>
 
 <p>
-أدخل كود الطالب لعرض نتائج الاختبارات المسجلة له في جميع المواد.
+أدخل رقم الهوية لعرض نتائج الاختبارات المسجلة له في جميع المواد.
 </p>
 
 </div>
@@ -810,7 +810,7 @@ tbody tr:last-child td{
 <div class="search-box">
 
 <label for="studentCode">
-كود الطالب
+رقم هوية الطالب
 </label>
 
 <div class="search-row">
@@ -819,7 +819,7 @@ tbody tr:last-child td{
 type="text"
 id="studentCode"
 class="student-code"
-placeholder="أدخل كود الطالب"
+placeholder="أدخل رقم هوية الطالب"
 autocomplete="off"
 inputmode="numeric">
 
@@ -835,7 +835,7 @@ onclick="searchStudent()">
 </div>
 
 <div class="example">
-اكتب كود الطالب كما هو مسجل لدى المدرسة.
+اكتب رقم هوية الطالب كما هو مسجل لدى المدرسة.
 </div>
 
 <div id="message" class="message"></div>
@@ -1201,7 +1201,7 @@ async function searchStudent(){
     if(!code){
 
         showMessage(
-            "من فضلك أدخل كود الطالب.",
+            "من فضلك أدخل رقم هوية الطالب.",
             "error"
         );
 
@@ -1357,7 +1357,7 @@ async function searchStudent(){
         ){
 
             showMessage(
-                "لم يتم العثور على طالب بهذا الكود. تأكد من الكود وحاول مرة أخرى.",
+                "لم يتم العثور على طالب بهذا الرقم. تأكد من رقم الهوية وحاول مرة أخرى.",
                 "error"
             );
 
