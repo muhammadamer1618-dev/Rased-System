@@ -2,294 +2,3996 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>تحليل النتائج - مدارس الفلاح الأهلية</title>
-<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>راصد - تحليل النتائج</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
-body{font-family:Calibri;background:#f7f7f7;margin:0}
-.container{max-width:1100px;margin:25px auto;padding:10px}
 
-h2{text-align:center;color:#1976d2}
-.box{background:#fff;padding:20px;border-radius:10px;margin-bottom:15px;box-shadow:0 2px 6px rgba(0,0,0,0.1)}
-
-.select-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:15px}
-select,button{
-  padding:8px 12px;
-  font-size:15px;
-  border-radius:6px;
-  border:1px solid #999;
-  font-family:Calibri;
+*{
+box-sizing:border-box
 }
-button{cursor:pointer;font-weight:bold}
-.btn-primary{background:#1976d2;color:#fff;border:none}
 
-table{width:100%;border-collapse:collapse;margin-top:15px;font-size:14px}
-th,td{border:1px solid #ccc;padding:6px;text-align:center}
-th{background:#1976d2;color:#fff}
-tr:nth-child(even){background:#f9f9f9}
-
-.title{font-size:18px;font-weight:bold;color:#1976d2;margin-bottom:10px}
-.sub-title{font-size:16px;font-weight:bold;margin:10px 0;color:#444;text-decoration:underline}
-
-.col-table-container{
-  display:flex;
-  justify-content:space-between;
-  gap:10px;
+body{
+margin:0;
+font-family:Tahoma,Arial,sans-serif;
+background:#f4f7fb;
+color:#1f2937
 }
-.col-table{
-  flex:1;
-  border:1px solid #ddd;
-  padding:5px;
-  border-radius:8px;
-  background:#fff;
+
+/* ================================
+   Header
+================================ */
+
+.header{
+position:relative;
+background:linear-gradient(135deg,#0c2745,#174f7c);
+color:white;
+text-align:center;
+padding:18px 15px;
+box-shadow:0 4px 15px rgba(0,0,0,.15)
 }
-.col-table h4{text-align:center;margin:5px 0;color:#1976d2;font-size:15px}
-.col-table .count{font-size:13px;margin-top:5px;color:#444;text-align:center}
+
+.logo{
+width:78px;
+height:78px;
+object-fit:contain;
+background:white;
+border-radius:50%;
+padding:5px
+}
+
+.header h1{
+margin:6px 0 3px;
+font-size:25px
+}
+
+.header p{
+margin:0;
+color:#f4d77b;
+font-weight:bold
+}
+
+.header-actions{
+position:absolute;
+left:15px;
+top:15px;
+display:flex;
+gap:7px
+}
+
+/* ================================
+   General
+================================ */
+
+.container{
+max-width:1300px;
+margin:20px auto;
+padding:0 12px 40px
+}
+
+.box{
+background:white;
+border-radius:15px;
+margin-bottom:18px;
+box-shadow:0 3px 14px rgba(0,0,0,.08);
+overflow:hidden
+}
+
+.box-title{
+background:#eef4fa;
+border-bottom:1px solid #dbe5ef;
+padding:13px 18px;
+color:#123c63;
+font-size:18px;
+font-weight:bold
+}
+
+.box-body{
+padding:18px
+}
+
+.row{
+display:flex;
+flex-wrap:wrap;
+gap:12px
+}
+
+.col{
+flex:1 1 190px
+}
+
+label{
+display:block;
+font-size:13px;
+font-weight:bold;
+margin-bottom:6px
+}
+
+select,
+input{
+display:block;
+width:100%;
+height:44px;
+padding:8px 12px;
+border:1px solid #b9c5d1;
+border-radius:8px;
+background:white;
+color:#111;
+font-family:Tahoma,Arial,sans-serif;
+font-size:14px
+}
+
+select{
+direction:rtl;
+text-align:right;
+text-align-last:right
+}
+
+select option{
+direction:rtl;
+text-align:right;
+background:white;
+color:#111
+}
+
+select:focus,
+input:focus{
+outline:none;
+border-color:#174f7c;
+box-shadow:0 0 0 2px rgba(23,79,124,.12)
+}
+
+button{
+border:0;
+border-radius:8px;
+padding:10px 15px;
+font-family:Tahoma,Arial,sans-serif;
+font-size:13px;
+font-weight:bold;
+cursor:pointer
+}
+
+button:hover{
+opacity:.9
+}
+
+.btn-primary{
+background:#174f7c;
+color:white
+}
+
+.btn-success{
+background:#198754;
+color:white
+}
+
+.btn-danger{
+background:#dc3545;
+color:white
+}
+
+.btn-light{
+background:#e9eef4;
+color:#263747
+}
+
+.btn-purple{
+background:#6f42c1;
+color:white
+}
+
+.btn-gold{
+background:#c69a2b;
+color:white
+}
+
+.actions{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:12px
+}
+
+.note{
+background:#fff8db;
+color:#715d00;
+padding:10px 12px;
+border-radius:8px;
+font-size:12px;
+line-height:1.8
+}
+
+.empty{
+padding:35px 15px;
+text-align:center;
+color:#64748b;
+background:#fafafa;
+border-radius:10px
+}
+
+/* ================================
+   Selected test
+================================ */
+
+.selected-test{
+display:none;
+background:#e7f1ff;
+color:#084298;
+padding:11px 13px;
+border-radius:9px;
+margin-top:15px;
+font-weight:bold;
+font-size:13px
+}
+
+/* ================================
+   Main Statistics
+================================ */
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+margin-bottom:10px
+}
+
+.stat{
+background:#fff;
+border:1px solid #e2e8f0;
+border-radius:12px;
+padding:13px 8px;
+text-align:center
+}
+
+.stat-number{
+font-size:25px;
+font-weight:bold;
+color:#174f7c
+}
+
+.stat-label{
+font-size:11px;
+color:#64748b;
+margin-top:4px
+}
+
+.stat.gold .stat-number{
+color:#a77a00
+}
+
+.stat.green .stat-number{
+color:#198754
+}
+
+.stat.red .stat-number{
+color:#dc3545
+}
+
+.stat.purple .stat-number{
+color:#6f42c1
+}
+
+/* ================================
+   Level settings
+================================ */
+
+.level-settings{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px
+}
+
+.level-setting{
+background:#f8fafc;
+border:1px solid #e2e8f0;
+border-radius:10px;
+padding:11px
+}
+
+.level-setting strong{
+display:block;
+margin-bottom:7px;
+color:#174f7c
+}
+
+.level-setting input{
+height:39px;
+text-align:center
+}
+
+.range-preview{
+font-size:11px;
+color:#64748b;
+margin-top:6px;
+text-align:center
+}
+
+/* ================================
+   Levels
+================================ */
+
+.levels{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+margin-top:12px
+}
+
+.level-card{
+border-radius:12px;
+padding:14px 10px;
+text-align:center;
+border:1px solid #e2e8f0;
+background:white
+}
+
+.level-title{
+font-weight:bold;
+font-size:14px
+}
+
+.level-number{
+font-size:27px;
+font-weight:bold;
+margin:7px 0
+}
+
+.level-percent{
+font-size:12px;
+color:#64748b
+}
+
+.level-high{
+border-top:4px solid #198754
+}
+
+.level-high .level-number{
+color:#198754
+}
+
+.level-medium{
+border-top:4px solid #174f7c
+}
+
+.level-medium .level-number{
+color:#174f7c
+}
+
+.level-care{
+border-top:4px solid #f0ad4e
+}
+
+.level-care .level-number{
+color:#c48400
+}
+
+.level-case{
+border-top:4px solid #dc3545
+}
+
+.level-case .level-number{
+color:#dc3545
+}
+
+/* ================================
+   Chart
+================================ */
+
+.chart-container{
+padding:15px 5px 5px
+}
+
+.chart{
+height:270px;
+display:flex;
+align-items:flex-end;
+justify-content:center;
+gap:30px;
+border-bottom:2px solid #cbd5e1;
+padding:20px 20px 0;
+position:relative
+}
+
+.bar-wrap{
+height:100%;
+width:110px;
+display:flex;
+flex-direction:column;
+justify-content:flex-end;
+align-items:center
+}
+
+.bar-value{
+font-weight:bold;
+margin-bottom:5px;
+font-size:13px
+}
+
+.bar{
+width:58px;
+min-height:2px;
+border-radius:7px 7px 0 0;
+transition:.3s
+}
+
+.bar.high{
+background:#198754
+}
+
+.bar.medium{
+background:#174f7c
+}
+
+.bar.care{
+background:#f0ad4e
+}
+
+.bar.case{
+background:#dc3545
+}
+
+.bar-label{
+font-size:11px;
+font-weight:bold;
+margin-top:7px;
+height:32px;
+text-align:center
+}
+
+/* ================================
+   Student level lists
+================================ */
+
+.lists{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:12px
+}
+
+.list-card{
+border:1px solid #e2e8f0;
+border-radius:11px;
+overflow:hidden
+}
+
+.list-title{
+padding:10px;
+font-weight:bold;
+text-align:center
+}
+
+.list-title.high{
+background:#d1e7dd;
+color:#0f5132
+}
+
+.list-title.medium{
+background:#dbeafe;
+color:#174f7c
+}
+
+.list-title.care{
+background:#fff3cd;
+color:#856404
+}
+
+.list-title.case{
+background:#f8d7da;
+color:#842029
+}
+
+.student-list{
+padding:10px
+}
+
+.student-chip{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:10px;
+padding:7px 9px;
+border-bottom:1px solid #edf0f3;
+font-size:12px
+}
+
+.student-chip:last-child{
+border-bottom:0
+}
+
+.student-score{
+font-weight:bold;
+white-space:nowrap
+}
+
+/* ================================
+   Table
+================================ */
+
+.table-wrap{
+overflow:auto;
+border:1px solid #e1e7ee;
+border-radius:10px
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:800px
+}
+
+th{
+background:#174f7c;
+color:white
+}
+
+th,td{
+padding:9px 7px;
+border-bottom:1px solid #e5e7eb;
+text-align:center;
+font-size:12px
+}
+
+tbody tr:nth-child(even){
+background:#f8fafc
+}
+
+.student-name{
+text-align:right;
+font-weight:bold
+}
+
+.badge{
+display:inline-block;
+padding:5px 8px;
+border-radius:20px;
+font-size:10px;
+font-weight:bold
+}
+
+.badge-high{
+background:#d1e7dd;
+color:#0f5132
+}
+
+.badge-medium{
+background:#dbeafe;
+color:#174f7c
+}
+
+.badge-care{
+background:#fff3cd;
+color:#856404
+}
+
+.badge-case{
+background:#f8d7da;
+color:#842029
+}
+
+.badge-absent{
+background:#e5e7eb;
+color:#374151
+}
+
+/* ================================
+   Print
+================================ */
+
+.print-header{
+display:none
+}
+
+.print-footer{
+display:none
+}
+
+.footer{
+text-align:center;
+padding:15px;
+font-size:12px;
+color:#64748b
+}
+
+@media(max-width:900px){
+
+.stats{
+grid-template-columns:repeat(2,1fr)
+}
+
+.level-settings{
+grid-template-columns:repeat(2,1fr)
+}
+
+.levels{
+grid-template-columns:repeat(2,1fr)
+}
+
+}
+
+@media(max-width:650px){
+
+.header-actions{
+position:static;
+justify-content:center;
+margin-top:10px
+}
+
+.lists{
+grid-template-columns:1fr
+}
+
+.chart{
+gap:8px;
+padding-left:5px;
+padding-right:5px
+}
+
+.bar-wrap{
+width:70px
+}
+
+.bar{
+width:40px
+}
+
+}
+
+
+/* ================================
+   PRINT
+================================ */
+
+@media print{
+
+@page{
+size:A4 landscape;
+margin:7mm
+}
+
+body{
+background:white;
+font-family:Tahoma,Arial,sans-serif
+}
+
+.header,
+.selection-box,
+.level-control-box,
+.screen-actions,
+.footer{
+display:none !important
+}
+
+.container{
+max-width:none;
+margin:0;
+padding:0
+}
+
+.print-header{
+display:block;
+text-align:center;
+margin-bottom:8px
+}
+
+.print-logo{
+width:58px;
+height:58px;
+object-fit:contain
+}
+
+.print-header h2{
+margin:2px 0;
+font-size:18px
+}
+
+.print-header h3{
+margin:2px 0;
+font-size:14px
+}
+
+.print-meta{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:4px;
+margin-top:7px
+}
+
+.print-meta div{
+border:1px solid #999;
+padding:4px;
+font-size:9px
+}
+
+.box{
+box-shadow:none;
+border:0;
+margin-bottom:7px
+}
+
+.box-title{
+font-size:11px;
+padding:5px;
+background:#eee !important;
+color:#000 !important;
+border:1px solid #aaa
+}
+
+.box-body{
+padding:5px 0
+}
+
+.stats{
+grid-template-columns:repeat(8,1fr);
+gap:3px;
+margin-bottom:5px
+}
+
+.stat{
+padding:4px 2px;
+border-radius:0
+}
+
+.stat-number{
+font-size:13px !important;
+color:#000 !important
+}
+
+.stat-label{
+font-size:7px
+}
+
+.levels{
+grid-template-columns:repeat(4,1fr);
+gap:4px;
+margin-top:4px
+}
+
+.level-card{
+padding:4px;
+border-radius:0;
+border:1px solid #777
+}
+
+.level-title{
+font-size:8px
+}
+
+.level-number{
+font-size:15px !important;
+margin:2px
+}
+
+.level-percent{
+font-size:7px
+}
+
+.chart-container{
+padding:0
+}
+
+.chart{
+height:125px;
+padding:5px 10px 0;
+gap:25px
+}
+
+.bar-wrap{
+width:75px
+}
+
+.bar{
+width:35px
+}
+
+.bar-label,
+.bar-value{
+font-size:7px
+}
+
+.lists{
+grid-template-columns:repeat(4,1fr);
+gap:4px
+}
+
+.list-card{
+border-radius:0
+}
+
+.list-title{
+padding:4px;
+font-size:8px;
+background:#eee !important;
+color:#000 !important
+}
+
+.student-list{
+padding:2px
+}
+
+.student-chip{
+padding:2px 4px;
+font-size:7px
+}
+
+table{
+min-width:0
+}
+
+th,td{
+padding:3px;
+font-size:7px;
+border:1px solid #777
+}
+
+th{
+background:#eee !important;
+color:#000 !important
+}
+
+.badge{
+background:transparent !important;
+color:#000 !important;
+padding:0;
+font-size:7px
+}
+
+.print-footer{
+display:flex;
+justify-content:space-between;
+margin-top:8px;
+font-size:8px;
+font-weight:bold
+}
+
+}
 </style>
 </head>
 
 <body>
 
+<header class="header">
+
+<img src="logo.jpeg" class="logo">
+
+<h1>مدارس الفلاح الأهلية</h1>
+
+<p>نظام راصد - تحليل النتائج</p>
+
+<div class="header-actions">
+
+<button class="btn-light" onclick="goBack()">
+↩ رجوع
+</button>
+
+<button class="btn-gold" onclick="printAnalysis()">
+🖨️ طباعة / PDF
+</button>
+
+</div>
+
+</header>
+
+
 <div class="container">
 
-<h2>تحليل النتائج</h2>
+<!-- ===============================
+     PRINT HEADER
+================================ -->
 
-<!-- ========================== تحليل فصل واحد ========================== -->
-<div class="box">
-  <div class="title">أولاً: تحليل نتائج فصل</div>
+<div class="print-header">
 
-  <div class="select-row">
-    <select id="grade"></select>
-    <select id="section">
-      <option value="أ">أ</option>
-      <option value="ب">ب</option>
-      <option value="ج">ج</option>
-    </select>
-    <select id="subject"></select>
-    <button class="btn-primary" onclick="showAnalysis()">عرض التحليل</button>
-  </div>
+<img src="logo.jpeg" class="print-logo">
 
-  <div id="analysis_area"></div>
+<h2>مدارس الفلاح الأهلية</h2>
+
+<h3>تحليل نتائج الاختبارات</h3>
+
+<div class="print-meta">
+
+<div>
+<strong>المادة:</strong>
+<span id="printSubject">-</span>
 </div>
 
-<!-- ========================== المقارنة بين الفصول ========================== -->
-<div class="box">
-  <div class="title">ثانياً: المقارنة بين الفصول</div>
+<div>
+<strong>الفصل:</strong>
+<span id="printClass">-</span>
+</div>
 
-  <div class="select-row">
-    <select id="cmp_grade"></select>
+<div>
+<strong>الاختبار:</strong>
+<span id="printTest">-</span>
+</div>
 
-    <select id="cmp_s1">
-      <option value="">—</option>
-      <option>أ</option><option>ب</option><option>ج</option>
-    </select>
-
-    <select id="cmp_s2">
-      <option value="">—</option>
-      <option>أ</option><option>ب</option><option>ج</option>
-    </select>
-
-    <select id="cmp_s3">
-      <option value="">—</option>
-      <option>أ</option><option>ب</option><option>ج</option>
-    </select>
-
-    <select id="cmp_subject"></select>
-
-    <button class="btn-primary" onclick="showCompare()">عرض المقارنة</button>
-  </div>
-
-  <div id="compare_area"></div>
+<div>
+<strong>التاريخ:</strong>
+<span id="printDate">-</span>
 </div>
 
 </div>
+
+</div>
+
+
+<!-- ===============================
+     SELECTION
+================================ -->
+
+<div class="box selection-box">
+
+<div class="box-title">
+🔎 تحديد نتائج التحليل
+</div>
+
+<div class="box-body">
+
+<div id="modeNote" class="note">
+جاري تحميل البيانات...
+</div>
+
+<div class="row" style="margin-top:15px">
+
+<div class="col">
+
+<label>المادة</label>
+
+<select id="subjectSelect" onchange="subjectChanged()">
+
+<option value="">
+-- اختر المادة --
+</option>
+
+</select>
+
+</div>
+
+
+<div class="col">
+
+<label>الصف</label>
+
+<select id="gradeSelect" onchange="gradeChanged()">
+
+<option value="">
+-- اختر الصف --
+</option>
+
+</select>
+
+</div>
+
+
+<div class="col">
+
+<label>الشعبة</label>
+
+<select id="sectionSelect" onchange="sectionChanged()">
+
+<option value="">
+-- اختر الشعبة --
+</option>
+
+</select>
+
+</div>
+
+
+<div class="col">
+
+<label>الاختبار</label>
+
+<select id="testSelect" onchange="testChanged()">
+
+<option value="">
+-- اختر الاختبار --
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div id="selectedTestInfo" class="selected-test"></div>
+
+</div>
+</div>
+
+
+<!-- ===============================
+     LEVEL SETTINGS
+================================ -->
+
+<div class="box level-control-box">
+
+<div class="box-title">
+⚙️ مستويات التحليل
+</div>
+
+<div class="box-body">
+
+<div class="note">
+
+المستويات تعتمد على نسبة درجة الطالب من الدرجة النهائية للاختبار.
+يمكنك تغيير الحدود ثم الضغط على إعادة التحليل.
+
+</div>
+
+
+<div class="level-settings" style="margin-top:12px">
+
+<div class="level-setting">
+
+<strong>مستوى مرتفع</strong>
+
+<label>من %</label>
+
+<input
+type="number"
+id="highMin"
+value="85"
+min="0"
+max="100">
+
+<div class="range-preview">
+85% فأعلى
+</div>
+
+</div>
+
+
+<div class="level-setting">
+
+<strong>مستوى متوسط</strong>
+
+<label>من %</label>
+
+<input
+type="number"
+id="mediumMin"
+value="70"
+min="0"
+max="100">
+
+<div class="range-preview">
+70% إلى أقل من المرتفع
+</div>
+
+</div>
+
+
+<div class="level-setting">
+
+<strong>أولى بالرعاية</strong>
+
+<label>من %</label>
+
+<input
+type="number"
+id="careMin"
+value="50"
+min="0"
+max="100">
+
+<div class="range-preview">
+50% إلى أقل من المتوسط
+</div>
+
+</div>
+
+
+<div class="level-setting">
+
+<strong>دراسة حالة</strong>
+
+<label>أقل من %</label>
+
+<input
+type="number"
+id="caseMax"
+value="50"
+disabled>
+
+<div class="range-preview">
+أقل من 50%
+</div>
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button
+class="btn-purple"
+onclick="reanalyze()">
+
+📊 إعادة التحليل
+
+</button>
+
+<button
+class="btn-light"
+onclick="resetLevels()">
+
+إعادة الحدود الافتراضية
+
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- ===============================
+     ANALYSIS AREA
+================================ -->
+
+<div id="analysisArea">
+
+<div class="empty">
+
+اختر المادة والفصل والاختبار لعرض تحليل النتائج.
+
+</div>
+
+</div>
+
+
+<div class="print-footer">
+
+<div>
+نظام راصد - مدارس الفلاح الأهلية
+</div>
+
+<div>
+تصميم محمد عامر أحمد - 2026
+</div>
+
+</div>
+
+
+<div class="footer">
+
+تصميم محمد عامر أحمد - نظام راصد 2026
+
+</div>
+
+</div>
+
 
 <script>
-/* ================= FIREBASE ================== */
-var firebaseConfig={
-  apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
-  authDomain:"results2026-7c0dd.firebaseapp.com",
-  projectId:"results2026-7c0dd",
-  storageBucket:"results2026-7c0dd.firebasestorage.app",
-  messagingSenderId:"241421115694",
-  appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
-};
-firebase.initializeApp(firebaseConfig);
-var db=firebase.firestore();
 
-/* =============== تعبئة الصفوف =============== */
-var gradesList=[
- "1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي",
- "1 متوسط","2 متوسط","3 متوسط",
- "1 ثانوي","2 ثانوي","3 ثانوي"
+/* =========================================
+   FIREBASE
+========================================= */
+
+const firebaseConfig={
+
+apiKey:
+"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+
+authDomain:
+"results2026-7c0dd.firebaseapp.com",
+
+projectId:
+"results2026-7c0dd",
+
+storageBucket:
+"results2026-7c0dd.firebasestorage.app",
+
+messagingSenderId:
+"241421115694",
+
+appId:
+"1:241421115694:web:96f55fd9fd1d5b18b31abf"
+
+};
+
+
+firebase.initializeApp(
+firebaseConfig
+);
+
+
+const db=
+firebase.firestore();
+
+
+/* =========================================
+   CONSTANTS
+========================================= */
+
+const gradesOrder=[
+
+"1 ابتدائي",
+"2 ابتدائي",
+"3 ابتدائي",
+"4 ابتدائي",
+"5 ابتدائي",
+"6 ابتدائي",
+
+"1 متوسط",
+"2 متوسط",
+"3 متوسط",
+
+"1 ثانوي",
+"2 ثانوي",
+"3 ثانوي"
+
 ];
 
-function fillGrades(){
-  let g=document.getElementById("grade");
-  let cg=document.getElementById("cmp_grade");
-  gradesList.forEach(x=>{
-    let o=document.createElement("option");
-    o.textContent=x;
-    g.appendChild(o.cloneNode(true));
-    cg.appendChild(o);
-  });
+
+const sectionsOrder=[
+"أ",
+"ب",
+"ج",
+"د"
+];
+
+
+/* =========================================
+   VARIABLES
+========================================= */
+
+let role="";
+
+let isAdmin=false;
+let isTeacher=false;
+
+let currentUsername="";
+let currentTeacher=null;
+
+let subjects=[];
+let tests=[];
+let assignments=[];
+
+let selectedSubjectId="";
+let selectedSubjectName="";
+let selectedGrade="";
+let selectedSection="";
+let selectedTest=null;
+
+let students=[];
+let gradeRecords=[];
+
+let analyzedStudents=[];
+
+
+/* =========================================
+   URL PARAMETERS
+========================================= */
+
+const params=
+new URLSearchParams(
+window.location.search
+);
+
+
+const incoming={
+
+source:
+params.get("source")||"",
+
+subjectId:
+params.get("subjectId")||"",
+
+grade:
+params.get("grade")||"",
+
+section:
+params.get("section")||"",
+
+testId:
+params.get("testId")||""
+
+};
+
+
+/* =========================================
+   HELPERS
+========================================= */
+
+function escapeHtml(value){
+
+return String(
+value??""
+)
+
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
 }
+
+
+function unique(array){
+
+return [
+...new Set(array)
+];
+
+}
+
+
+function formatNumber(number){
+
+if(
+number===null ||
+number===undefined ||
+Number.isNaN(number)
+){
+
+return "-";
+
+}
+
+
+const n=
+Number(number);
+
+
+if(
+Number.isInteger(n)
+){
+
+return n;
+
+}
+
+
+return n.toFixed(2);
+
+}
+
+
+function todayArabic(){
+
+return new Date()
+.toLocaleDateString(
+"ar-SA"
+);
+
+}
+
+
+function clearSelect(
+select,
+text
+){
+
+select.innerHTML=
+
+`<option value="">
+${text}
+</option>`;
+
+}
+
+
+function sortGrades(list){
+
+return list.sort(
+(a,b)=>
+
+gradesOrder.indexOf(a)-
+gradesOrder.indexOf(b)
+
+);
+
+}
+
+
+function sortSections(list){
+
+return list.sort(
+(a,b)=>
+
+sectionsOrder.indexOf(a)-
+sectionsOrder.indexOf(b)
+
+);
+
+}
+
+
+/* =========================================
+   SECURITY
+========================================= */
+
+function protectPage(){
+
+role=
+localStorage.getItem(
+"currentUserRole"
+)||"";
+
+
+isAdmin=
+
+role==="admin" ||
+role==="superadmin";
+
+
+isTeacher=
+role==="teacher";
+
+
+if(
+!isAdmin &&
+!isTeacher
+){
+
+alert(
+"يجب تسجيل الدخول أولًا"
+);
+
+location.href=
+"index.html";
+
+return false;
+
+}
+
+
+return true;
+
+}
+
+
+/* =========================================
+   LOAD TEACHER IF NEEDED
+========================================= */
+
+async function loadTeacher(){
+
+if(!isTeacher){
+
+return;
+
+}
+
+
+currentUsername=
+
+(
+localStorage.getItem(
+"currentUserEmail"
+)
+||
+localStorage.getItem(
+"currentUser"
+)
+||
+""
+)
+.trim()
+.toLowerCase();
+
+
+if(!currentUsername){
+
+throw new Error(
+"لم يتم العثور على حساب المعلم"
+);
+
+}
+
+
+const doc=
+
+await db
+.collection("teachers")
+.doc(currentUsername)
+.get();
+
+
+if(!doc.exists){
+
+throw new Error(
+"لم يتم العثور على بيانات المعلم"
+);
+
+}
+
+
+currentTeacher={
+
+email:
+doc.id,
+
+...doc.data()
+
+};
+
+
+assignments=
+
+Array.isArray(
+currentTeacher.assignments
+)
+?
+currentTeacher.assignments.filter(
+a=>
+a.subjectId &&
+a.grade &&
+a.section
+)
+:
+[];
+
+}
+
+
+/* =========================================
+   LOAD SUBJECTS
+========================================= */
+
+async function loadSubjects(){
+
+const snap=
+
+await db
+.collection("subjects")
+.get();
+
+
+subjects=[];
+
+
+snap.forEach(doc=>{
+
+subjects.push({
+
+id:
+doc.id,
+
+...doc.data()
+
+});
+
+});
+
+
+subjects.sort(
+(a,b)=>
+
+String(a.name||"")
+.localeCompare(
+String(b.name||""),
+"ar"
+)
+
+);
+
+
+renderSubjects();
+
+}
+
+
+/* =========================================
+   RENDER SUBJECTS
+========================================= */
+
+function renderSubjects(){
+
+const select=
+document.getElementById(
+"subjectSelect"
+);
+
+
+clearSelect(
+select,
+"-- اختر المادة --"
+);
+
+
+let allowedSubjects=[];
+
+
+if(isAdmin){
+
+allowedSubjects=
+subjects;
+
+}
+
+else{
+
+const allowedIds=
+new Set(
+
+assignments.map(
+a=>a.subjectId
+)
+
+);
+
+
+allowedSubjects=
+subjects.filter(
+subject=>
+allowedIds.has(subject.id)
+);
+
+}
+
+
+/*
+في حالة وجود إسناد قديم واسم المادة موجود
+لكن المادة لم تعد موجودة في subjects
+نتجاهله.
+*/
+
+
+allowedSubjects.forEach(
+subject=>{
+
+const option=
+document.createElement(
+"option"
+);
+
+option.value=
+subject.id;
+
+option.textContent=
+subject.name;
+
+select.appendChild(
+option
+);
+
+});
+
+}
+
+
+/* =========================================
+   SUBJECT CHANGED
+========================================= */
+
+async function subjectChanged(){
+
+selectedSubjectId=
+document
+.getElementById(
+"subjectSelect"
+)
+.value;
+
+
+const subject=
+subjects.find(
+s=>s.id===selectedSubjectId
+);
+
+
+selectedSubjectName=
+subject?.name||"";
+
+
+selectedGrade="";
+selectedSection="";
+selectedTest=null;
+
+
 fillGrades();
 
-/* ========== تحميل المواد من الإعدادات ========== */
-async function loadSubjects(grade, target){
-  let s=await db.collection("settings").doc("subjects_"+grade).get();
-  let sel=document.getElementById(target);
-  sel.innerHTML="";
-  if(!s.exists)return;
-
-  let list=s.data().subjects||[];
-  list.forEach(sub=>{
-    let o=document.createElement("option");
-    o.value=sub.name;
-    o.textContent=sub.name;
-    sel.appendChild(o);
-  });
-}
-
-document.getElementById("grade").onchange=()=>loadSubjects(
-  document.getElementById("grade").value,"subject"
-);
-document.getElementById("cmp_grade").onchange=()=>loadSubjects(
-  document.getElementById("cmp_grade").value,"cmp_subject"
+clearSelect(
+sectionSelect,
+"-- اختر الشعبة --"
 );
 
-/* ===================== تحليل فصل واحد ===================== */
-async function showAnalysis(){
-  let grade=document.getElementById("grade").value;
-  let section=document.getElementById("section").value;
-  let subject=document.getElementById("subject").value;
 
-  let area=document.getElementById("analysis_area");
-  area.innerHTML="جار التحميل...";
+clearSelect(
+testSelect,
+"-- اختر الاختبار --"
+);
 
-  // قراءة الطلاب
-  let q=await db.collection("students")
-    .where("grade","==",grade)
-    .where("section","==",section)
-    .get();
 
-  let students=[];
-  q.forEach(d=>students.push(d.data()));
+clearAnalysis();
 
-  // تصنيفات
-  let cats={
-    "دراسة حالة":[],
-    "أولى بالرعاية":[],
-    "جيد":[],
-    "جيد جدًا":[],
-    "ممتاز":[],
-    "الدرجة النهائية":[]
-  };
-
-  let total=0, full=0;
-
-  students.forEach(st=>{
-    let s=st.subjects && st.subjects[subject];
-    if(!s)return;
-
-    // *** تعديل مهم: تجاهل الطالب الذي درجته صفر أو غير مرصودة ***
-    if (!s.mark || s.mark <= 0) return;
-
-    total+=s.mark;
-    full+=s.fullMark;
-
-    let pct=(s.mark/s.fullMark)*100;
-
-    if(s.mark===s.fullMark) cats["الدرجة النهائية"].push(st.name);
-    else if(pct<50) cats["دراسة حالة"].push(st.name);
-    else if(pct<65) cats["أولى بالرعاية"].push(st.name);
-    else if(pct<75) cats["جيد"].push(st.name);
-    else if(pct<85) cats["جيد جدًا"].push(st.name);
-    else cats["ممتاز"].push(st.name);
-  });
-
-  let overall = full? ((total/full)*100).toFixed(1):"—";
-
-  // بناء الجداول
-  let html=`<div class="sub-title">الصف: ${grade} — الشعبة: ${section} — المادة: ${subject}</div>`;
-  html+=`<div class="col-table-container">`;
-
-  for(const cat in cats){
-    html+=`
-      <div class="col-table">
-        <h4>${cat}</h4>
-        ${cats[cat].map(n=>"<div>"+n+"</div>").join("") || "<div>—</div>"}
-        <div class="count">العدد: ${cats[cat].length}</div>
-      </div>
-    `;
-  }
-  html+=`</div>`;
-
-  html+=`
-    <table>
-      <tr><th>النسبة المئوية لدرجات الفصل</th></tr>
-      <tr><td>${overall}%</td></tr>
-    </table>
-  `;
-
-  area.innerHTML=html;
 }
 
-/* ===================== المقارنة بين الفصول ===================== */
-async function showCompare(){
-  let grade=document.getElementById("cmp_grade").value;
-  let subject=document.getElementById("cmp_subject").value;
-  let s1=document.getElementById("cmp_s1").value;
-  let s2=document.getElementById("cmp_s2").value;
-  let s3=document.getElementById("cmp_s3").value;
 
-  let groups=[s1,s2,s3].filter(x=>x);
+/* =========================================
+   GRADES AVAILABLE
+========================================= */
 
-  let area=document.getElementById("compare_area");
-  area.innerHTML="جار التحميل...";
+async function fillGrades(){
 
-  let rows="";
+const select=
+document.getElementById(
+"gradeSelect"
+);
 
-  for(let s of groups){
-    let q=await db.collection("students")
-      .where("grade","==",grade)
-      .where("section","==",s)
-      .get();
 
-    let total=0, full=0;
+clearSelect(
+select,
+"-- اختر الصف --"
+);
 
-    q.forEach(d=>{
-      let st=d.data();
-      let sub=st.subjects && st.subjects[subject];
 
-      // *** تجاهل الصفر ***
-      if(sub && sub.mark > 0){
-        total+=sub.mark;
-        full+=sub.fullMark;
-      }
-    });
+if(!selectedSubjectId){
 
-    let pct=full? ((total/full)*100).toFixed(1) : "—";
+return;
 
-    rows+=`
-      <tr>
-        <td>${pct}%</td>
-        <td>${grade} فصل ${s}</td>
-      </tr>
-    `;
-  }
-
-  area.innerHTML=`
-    <table>
-      <tr><th>النسبة المئوية</th><th>الفصل</th></tr>
-      ${rows}
-    </table>
-  `;
 }
+
+
+let gradeList=[];
+
+
+if(isTeacher){
+
+gradeList=
+unique(
+
+assignments
+.filter(
+a=>
+a.subjectId===
+selectedSubjectId
+)
+.map(
+a=>a.grade
+)
+
+);
+
+}
+
+else{
+
+/*
+للإدارة نحدد الصفوف التي توجد لها اختبارات
+لهذه المادة.
+*/
+
+const snap=
+
+await db
+.collection("tests")
+.where(
+"subjectId",
+"==",
+selectedSubjectId
+)
+.get();
+
+
+const set=
+new Set();
+
+
+snap.forEach(doc=>{
+
+const data=
+doc.data()||{};
+
+
+const classes=
+Array.isArray(
+data.classes
+)
+?
+data.classes
+:
+[];
+
+
+classes.forEach(c=>{
+
+if(c.grade){
+
+set.add(
+c.grade
+);
+
+}
+
+});
+
+});
+
+
+gradeList=
+[...set];
+
+}
+
+
+sortGrades(
+gradeList
+);
+
+
+gradeList.forEach(
+grade=>{
+
+const option=
+document.createElement(
+"option"
+);
+
+option.value=
+grade;
+
+option.textContent=
+grade;
+
+select.appendChild(
+option
+);
+
+});
+
+}
+
+
+/* =========================================
+   GRADE CHANGED
+========================================= */
+
+async function gradeChanged(){
+
+selectedGrade=
+gradeSelect.value;
+
+
+selectedSection="";
+selectedTest=null;
+
+
+await fillSections();
+
+
+clearSelect(
+testSelect,
+"-- اختر الاختبار --"
+);
+
+
+clearAnalysis();
+
+}
+
+
+/* =========================================
+   SECTIONS
+========================================= */
+
+async function fillSections(){
+
+const select=
+document.getElementById(
+"sectionSelect"
+);
+
+
+clearSelect(
+select,
+"-- اختر الشعبة --"
+);
+
+
+if(
+!selectedSubjectId ||
+!selectedGrade
+){
+
+return;
+
+}
+
+
+let list=[];
+
+
+if(isTeacher){
+
+list=
+unique(
+
+assignments
+.filter(a=>
+
+a.subjectId===
+selectedSubjectId &&
+
+a.grade===
+selectedGrade
+
+)
+.map(
+a=>a.section
+)
+
+);
+
+}
+
+else{
+
+const snap=
+
+await db
+.collection("tests")
+.where(
+"subjectId",
+"==",
+selectedSubjectId
+)
+.get();
+
+
+const set=
+new Set();
+
+
+snap.forEach(doc=>{
+
+const data=
+doc.data()||{};
+
+
+const classes=
+Array.isArray(
+data.classes
+)
+?
+data.classes
+:
+[];
+
+
+classes.forEach(c=>{
+
+if(
+c.grade===
+selectedGrade &&
+c.section
+){
+
+set.add(
+c.section
+);
+
+}
+
+});
+
+});
+
+
+list=
+[...set];
+
+}
+
+
+sortSections(
+list
+);
+
+
+list.forEach(
+section=>{
+
+const option=
+document.createElement(
+"option"
+);
+
+option.value=
+section;
+
+option.textContent=
+section;
+
+select.appendChild(
+option
+);
+
+});
+
+}
+
+
+/* =========================================
+   SECTION CHANGED
+========================================= */
+
+async function sectionChanged(){
+
+selectedSection=
+sectionSelect.value;
+
+selectedTest=null;
+
+
+clearAnalysis();
+
+
+if(
+selectedSubjectId &&
+selectedGrade &&
+selectedSection
+){
+
+await loadTests();
+
+}
+
+else{
+
+clearSelect(
+testSelect,
+"-- اختر الاختبار --"
+);
+
+}
+
+}
+
+
+/* =========================================
+   TESTS
+========================================= */
+
+async function loadTests(){
+
+const select=
+document.getElementById(
+"testSelect"
+);
+
+
+clearSelect(
+select,
+"-- اختر الاختبار --"
+);
+
+
+const snap=
+
+await db
+.collection("tests")
+.where(
+"subjectId",
+"==",
+selectedSubjectId
+)
+.get();
+
+
+tests=[];
+
+
+snap.forEach(doc=>{
+
+const data=
+doc.data()||{};
+
+
+const classes=
+Array.isArray(
+data.classes
+)
+?
+data.classes
+:
+[];
+
+
+const validClass=
+classes.some(c=>
+
+c.grade===
+selectedGrade &&
+
+c.section===
+selectedSection
+
+);
+
+
+if(validClass){
+
+tests.push({
+
+id:
+doc.id,
+
+...data
+
+});
+
+}
+
+});
+
+
+tests.sort(
+(a,b)=>
+
+String(a.date||"")
+.localeCompare(
+String(b.date||"")
+)
+
+);
+
+
+if(!tests.length){
+
+clearSelect(
+select,
+"لا توجد اختبارات"
+);
+
+return;
+
+}
+
+
+tests.forEach(
+test=>{
+
+const option=
+document.createElement(
+"option"
+);
+
+option.value=
+test.id;
+
+
+option.textContent=
+
+test.name+
+(
+test.date
+?
+" - "+test.date
+:
+""
+);
+
+
+select.appendChild(
+option
+);
+
+});
+
+}
+
+
+/* =========================================
+   TEST CHANGED
+========================================= */
+
+async function testChanged(){
+
+const id=
+testSelect.value;
+
+
+selectedTest=
+tests.find(
+t=>t.id===id
+)||null;
+
+
+if(!selectedTest){
+
+clearAnalysis();
+
+return;
+
+}
+
+
+showSelectedTest();
+
+
+await loadResults();
+
+}
+
+
+/* =========================================
+   LOAD STUDENTS + RESULTS
+========================================= */
+
+async function loadResults(){
+
+const area=
+document.getElementById(
+"analysisArea"
+);
+
+
+area.innerHTML=`
+
+<div class="empty">
+
+جاري تحليل النتائج...
+
+</div>
+
+`;
+
+
+/*
+تحميل طلاب الفصل
+*/
+
+const studentSnap=
+
+await db
+.collection("students")
+.where(
+"grade",
+"==",
+selectedGrade
+)
+.get();
+
+
+students=[];
+
+
+studentSnap.forEach(doc=>{
+
+const data=
+doc.data()||{};
+
+
+if(
+data.section===
+selectedSection
+){
+
+students.push({
+
+...data,
+
+code:
+data.code||doc.id
+
+});
+
+}
+
+});
+
+
+students.sort(
+(a,b)=>
+
+String(a.name||"")
+.localeCompare(
+String(b.name||""),
+"ar"
+)
+
+);
+
+
+/*
+تحميل درجات الاختبار
+*/
+
+const gradesSnap=
+
+await db
+.collection("grades")
+.where(
+"testId",
+"==",
+selectedTest.id
+)
+.get();
+
+
+gradeRecords=[];
+
+
+gradesSnap.forEach(doc=>{
+
+const data=
+doc.data()||{};
+
+
+if(
+data.grade===
+selectedGrade &&
+
+data.section===
+selectedSection
+){
+
+gradeRecords.push({
+
+id:
+doc.id,
+
+...data
+
+});
+
+}
+
+});
+
+
+reanalyze();
+
+}
+
+
+/* =========================================
+   LEVEL SETTINGS
+========================================= */
+
+function getLevelSettings(){
+
+let high=
+Number(
+highMin.value
+);
+
+
+let medium=
+Number(
+mediumMin.value
+);
+
+
+let care=
+Number(
+careMin.value
+);
+
+
+if(
+Number.isNaN(high)
+)
+high=85;
+
+
+if(
+Number.isNaN(medium)
+)
+medium=70;
+
+
+if(
+Number.isNaN(care)
+)
+care=50;
+
+
+high=
+Math.max(
+0,
+Math.min(100,high)
+);
+
+
+medium=
+Math.max(
+0,
+Math.min(100,medium)
+);
+
+
+care=
+Math.max(
+0,
+Math.min(100,care)
+);
+
+
+/*
+منع تداخل المستويات
+*/
+
+if(
+medium>=high
+){
+
+medium=
+Math.max(
+0,
+high-1
+);
+
+mediumMin.value=
+medium;
+
+}
+
+
+if(
+care>=medium
+){
+
+care=
+Math.max(
+0,
+medium-1
+);
+
+careMin.value=
+care;
+
+}
+
+
+highMin.value=
+high;
+
+mediumMin.value=
+medium;
+
+careMin.value=
+care;
+
+caseMax.value=
+care;
+
+
+return{
+high,
+medium,
+care
+};
+
+}
+
+
+function resetLevels(){
+
+highMin.value=85;
+mediumMin.value=70;
+careMin.value=50;
+caseMax.value=50;
+
+
+reanalyze();
+
+}
+
+
+/* =========================================
+   REANALYZE
+========================================= */
+
+function reanalyze(){
+
+if(!selectedTest){
+
+return;
+
+}
+
+
+const levels=
+getLevelSettings();
+
+
+analyzedStudents=
+students.map(student=>{
+
+const record=
+gradeRecords.find(
+r=>
+String(r.studentCode)===
+String(student.code)
+);
+
+
+if(!record){
+
+return{
+
+student,
+attendance:"not-recorded",
+mark:null,
+percentage:null,
+level:"not-recorded"
+
+};
+
+}
+
+
+if(
+record.attendance===
+"absent"
+){
+
+return{
+
+student,
+record,
+attendance:"absent",
+mark:null,
+percentage:null,
+level:"absent"
+
+};
+
+}
+
+
+const mark=
+Number(
+record.mark
+);
+
+
+const fullMark=
+Number(
+record.fullMark ||
+selectedTest.fullMark
+);
+
+
+const percentage=
+
+fullMark>0
+?
+(mark/fullMark)*100
+:
+0;
+
+
+let level="case";
+
+
+if(
+percentage>=levels.high
+){
+
+level="high";
+
+}
+
+else if(
+percentage>=levels.medium
+){
+
+level="medium";
+
+}
+
+else if(
+percentage>=levels.care
+){
+
+level="care";
+
+}
+
+
+return{
+
+student,
+record,
+attendance:"present",
+mark,
+fullMark,
+percentage,
+level
+
+};
+
+});
+
+
+renderAnalysis();
+
+}
+
+
+/* =========================================
+   RENDER ANALYSIS
+========================================= */
+
+function renderAnalysis(){
+
+const totalStudents=
+analyzedStudents.length;
+
+
+const present=
+analyzedStudents.filter(
+x=>x.attendance==="present"
+);
+
+
+const absent=
+analyzedStudents.filter(
+x=>x.attendance==="absent"
+);
+
+
+const notRecorded=
+analyzedStudents.filter(
+x=>x.attendance==="not-recorded"
+);
+
+
+const high=
+present.filter(
+x=>x.level==="high"
+);
+
+
+const medium=
+present.filter(
+x=>x.level==="medium"
+);
+
+
+const care=
+present.filter(
+x=>x.level==="care"
+);
+
+
+const cases=
+present.filter(
+x=>x.level==="case"
+);
+
+
+const marks=
+present.map(
+x=>x.mark
+);
+
+
+const average=
+marks.length
+?
+marks.reduce(
+(a,b)=>a+b,
+0
+)/marks.length
+:
+null;
+
+
+const highest=
+marks.length
+?
+Math.max(...marks)
+:
+null;
+
+
+const lowest=
+marks.length
+?
+Math.min(...marks)
+:
+null;
+
+
+/*
+نسبة النجاح = 50% فأعلى
+بغض النظر عن حدود التصنيف.
+*/
+
+const passed=
+present.filter(
+x=>x.percentage>=50
+).length;
+
+
+const successRate=
+present.length
+?
+(passed/present.length)*100
+:
+0;
+
+
+const attendanceRate=
+totalStudents
+?
+(present.length/totalStudents)*100
+:
+0;
+
+
+const fullMark=
+Number(
+selectedTest.fullMark
+);
+
+
+const levels=
+getLevelSettings();
+
+
+const html=`
+
+<!-- إحصائيات عامة -->
+
+<div class="box">
+
+<div class="box-title">
+📈 المؤشرات العامة
+</div>
+
+<div class="box-body">
+
+<div class="stats">
+
+<div class="stat">
+
+<div class="stat-number">
+${totalStudents}
+</div>
+
+<div class="stat-label">
+إجمالي الطلاب
+</div>
+
+</div>
+
+
+<div class="stat green">
+
+<div class="stat-number">
+${present.length}
+</div>
+
+<div class="stat-label">
+الحاضرون
+</div>
+
+</div>
+
+
+<div class="stat red">
+
+<div class="stat-number">
+${absent.length}
+</div>
+
+<div class="stat-label">
+الغائبون
+</div>
+
+</div>
+
+
+<div class="stat purple">
+
+<div class="stat-number">
+${notRecorded.length}
+</div>
+
+<div class="stat-label">
+لم يتم الرصد
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-number">
+${formatNumber(average)}
+</div>
+
+<div class="stat-label">
+متوسط الدرجات
+</div>
+
+</div>
+
+
+<div class="stat gold">
+
+<div class="stat-number">
+${formatNumber(highest)}
+</div>
+
+<div class="stat-label">
+أعلى درجة
+</div>
+
+</div>
+
+
+<div class="stat red">
+
+<div class="stat-number">
+${formatNumber(lowest)}
+</div>
+
+<div class="stat-label">
+أقل درجة
+</div>
+
+</div>
+
+
+<div class="stat green">
+
+<div class="stat-number">
+${successRate.toFixed(1)}%
+</div>
+
+<div class="stat-label">
+نسبة النجاح
+</div>
+
+</div>
+
+</div>
+
+
+<div class="stats" style="margin-top:10px">
+
+<div class="stat">
+
+<div class="stat-number">
+${fullMark}
+</div>
+
+<div class="stat-label">
+الدرجة النهائية
+</div>
+
+</div>
+
+
+<div class="stat green">
+
+<div class="stat-number">
+${attendanceRate.toFixed(1)}%
+</div>
+
+<div class="stat-label">
+نسبة الحضور
+</div>
+
+</div>
+
+
+<div class="stat">
+
+<div class="stat-number">
+${present.length ? ((average/fullMark)*100).toFixed(1) : "0.0"}%
+</div>
+
+<div class="stat-label">
+متوسط الفصل %
+</div>
+
+</div>
+
+
+<div class="stat gold">
+
+<div class="stat-number">
+${passed}
+</div>
+
+<div class="stat-label">
+الناجحون
+</div>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- المستويات -->
+
+<div class="box">
+
+<div class="box-title">
+🎯 توزيع مستويات الطلاب
+</div>
+
+<div class="box-body">
+
+<div class="levels">
+
+${levelCard(
+"مستوى مرتفع",
+high.length,
+present.length,
+"high",
+levels.high+"% فأعلى"
+)}
+
+${levelCard(
+"مستوى متوسط",
+medium.length,
+present.length,
+"medium",
+levels.medium+"% إلى أقل من "+levels.high+"%"
+)}
+
+${levelCard(
+"أولى بالرعاية",
+care.length,
+present.length,
+"care",
+levels.care+"% إلى أقل من "+levels.medium+"%"
+)}
+
+${levelCard(
+"دراسة حالة",
+cases.length,
+present.length,
+"case",
+"أقل من "+levels.care+"%"
+)}
+
+</div>
+
+</div>
+</div>
+
+
+<!-- الرسم البياني -->
+
+<div class="box">
+
+<div class="box-title">
+📊 الرسم البياني للمستويات
+</div>
+
+<div class="box-body">
+
+${buildChart(
+high.length,
+medium.length,
+care.length,
+cases.length
+)}
+
+</div>
+</div>
+
+
+<!-- أسماء الطلاب -->
+
+<div class="box">
+
+<div class="box-title">
+👥 الطلاب حسب المستوى
+</div>
+
+<div class="box-body">
+
+<div class="lists">
+
+${buildStudentList(
+"مستوى مرتفع",
+high,
+"high"
+)}
+
+${buildStudentList(
+"مستوى متوسط",
+medium,
+"medium"
+)}
+
+${buildStudentList(
+"أولى بالرعاية",
+care,
+"care"
+)}
+
+${buildStudentList(
+"دراسة حالة",
+cases,
+"case"
+)}
+
+</div>
+
+</div>
+</div>
+
+
+<!-- الجدول التفصيلي -->
+
+<div class="box">
+
+<div class="box-title">
+📋 التفاصيل الكاملة
+</div>
+
+<div class="box-body">
+
+${buildDetailsTable()}
+
+</div>
+</div>
+
+`;
+
+
+analysisArea.innerHTML=
+html;
+
+
+updatePrintData();
+
+}
+
+
+/* =========================================
+   LEVEL CARD
+========================================= */
+
+function levelCard(
+title,
+count,
+total,
+type,
+range
+){
+
+const percent=
+total
+?
+(count/total)*100
+:
+0;
+
+
+return`
+
+<div class="level-card level-${type}">
+
+<div class="level-title">
+${title}
+</div>
+
+<div class="level-number">
+${count}
+</div>
+
+<div class="level-percent">
+${percent.toFixed(1)}%
+</div>
+
+<div class="level-percent" style="margin-top:4px">
+${range}
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================================
+   CHART
+========================================= */
+
+function buildChart(
+high,
+medium,
+care,
+cases
+){
+
+const values=[
+high,
+medium,
+care,
+cases
+];
+
+
+const max=
+Math.max(
+...values,
+1
+);
+
+
+function height(value){
+
+return Math.max(
+2,
+(value/max)*190
+);
+
+}
+
+
+return`
+
+<div class="chart-container">
+
+<div class="chart">
+
+<div class="bar-wrap">
+
+<div class="bar-value">
+${high}
+</div>
+
+<div
+class="bar high"
+style="height:${height(high)}px">
+</div>
+
+<div class="bar-label">
+مستوى مرتفع
+</div>
+
+</div>
+
+
+<div class="bar-wrap">
+
+<div class="bar-value">
+${medium}
+</div>
+
+<div
+class="bar medium"
+style="height:${height(medium)}px">
+</div>
+
+<div class="bar-label">
+مستوى متوسط
+</div>
+
+</div>
+
+
+<div class="bar-wrap">
+
+<div class="bar-value">
+${care}
+</div>
+
+<div
+class="bar care"
+style="height:${height(care)}px">
+</div>
+
+<div class="bar-label">
+أولى بالرعاية
+</div>
+
+</div>
+
+
+<div class="bar-wrap">
+
+<div class="bar-value">
+${cases}
+</div>
+
+<div
+class="bar case"
+style="height:${height(cases)}px">
+</div>
+
+<div class="bar-label">
+دراسة حالة
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================================
+   STUDENT LIST
+========================================= */
+
+function buildStudentList(
+title,
+list,
+type
+){
+
+let content="";
+
+
+if(!list.length){
+
+content=`
+
+<div
+style="
+padding:15px;
+text-align:center;
+color:#94a3b8;
+font-size:11px
+">
+
+لا يوجد طلاب
+
+</div>
+
+`;
+
+}
+
+else{
+
+content=
+list
+.sort(
+(a,b)=>
+b.percentage-
+a.percentage
+)
+.map(item=>`
+
+<div class="student-chip">
+
+<span>
+${escapeHtml(
+item.student.name
+)}
+</span>
+
+<span class="student-score">
+
+${formatNumber(
+item.mark
+)}
+/
+${formatNumber(
+item.fullMark
+)}
+
+&nbsp;
+
+(${item.percentage.toFixed(1)}%)
+
+</span>
+
+</div>
+
+`)
+.join("");
+
+}
+
+
+return`
+
+<div class="list-card">
+
+<div class="list-title ${type}">
+${title}
+</div>
+
+<div class="student-list">
+${content}
+</div>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================================
+   DETAILS TABLE
+========================================= */
+
+function buildDetailsTable(){
+
+if(!analyzedStudents.length){
+
+return`
+
+<div class="empty">
+لا يوجد طلاب.
+</div>
+
+`;
+
+}
+
+
+let rows="";
+
+
+analyzedStudents
+.forEach(
+(item,index)=>{
+
+let attendanceText="";
+let markText="-";
+let percentText="-";
+let levelText="";
+let badgeClass="";
+
+
+if(
+item.attendance==="absent"
+){
+
+attendanceText="غائب";
+
+levelText="غائب";
+
+badgeClass=
+"badge-absent";
+
+}
+
+else if(
+item.attendance===
+"not-recorded"
+){
+
+attendanceText=
+"لم يتم الرصد";
+
+levelText=
+"لم يتم الرصد";
+
+badgeClass=
+"badge-absent";
+
+}
+
+else{
+
+attendanceText="حاضر";
+
+markText=
+formatNumber(
+item.mark
+)+
+" / "+
+formatNumber(
+item.fullMark
+);
+
+
+percentText=
+item.percentage
+.toFixed(1)+
+"%";
+
+
+if(
+item.level==="high"
+){
+
+levelText=
+"مستوى مرتفع";
+
+badgeClass=
+"badge-high";
+
+}
+
+else if(
+item.level==="medium"
+){
+
+levelText=
+"مستوى متوسط";
+
+badgeClass=
+"badge-medium";
+
+}
+
+else if(
+item.level==="care"
+){
+
+levelText=
+"أولى بالرعاية";
+
+badgeClass=
+"badge-care";
+
+}
+
+else{
+
+levelText=
+"دراسة حالة";
+
+badgeClass=
+"badge-case";
+
+}
+
+}
+
+
+rows+=`
+
+<tr>
+
+<td>
+${index+1}
+</td>
+
+<td>
+${escapeHtml(
+item.student.code
+)}
+</td>
+
+<td class="student-name">
+${escapeHtml(
+item.student.name
+)}
+</td>
+
+<td>
+${attendanceText}
+</td>
+
+<td>
+${markText}
+</td>
+
+<td>
+${percentText}
+</td>
+
+<td>
+
+<span class="badge ${badgeClass}">
+
+${levelText}
+
+</span>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+
+return`
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>#</th>
+<th>كود الطالب</th>
+<th>اسم الطالب</th>
+<th>الحضور</th>
+<th>الدرجة</th>
+<th>النسبة</th>
+<th>التصنيف</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+${rows}
+
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+}
+
+
+/* =========================================
+   SELECTED TEST INFO
+========================================= */
+
+function showSelectedTest(){
+
+const box=
+document.getElementById(
+"selectedTestInfo"
+);
+
+
+if(!selectedTest){
+
+box.style.display=
+"none";
+
+return;
+
+}
+
+
+box.style.display=
+"block";
+
+
+box.innerHTML=
+
+"📚 "+
+escapeHtml(
+selectedSubjectName
+)+
+
+" &nbsp; | &nbsp; "+
+
+"🏫 "+
+escapeHtml(
+selectedGrade+
+" / "+
+selectedSection
+)+
+
+" &nbsp; | &nbsp; "+
+
+"📝 "+
+escapeHtml(
+selectedTest.name
+)+
+
+" &nbsp; | &nbsp; "+
+
+"الدرجة النهائية: "+
+escapeHtml(
+selectedTest.fullMark
+)+
+
+(
+selectedTest.date
+?
+" &nbsp; | &nbsp; التاريخ: "+
+escapeHtml(
+selectedTest.date
+)
+:
+""
+);
+
+}
+
+
+/* =========================================
+   PRINT DATA
+========================================= */
+
+function updatePrintData(){
+
+document
+.getElementById(
+"printSubject"
+)
+.textContent=
+
+selectedSubjectName||"-";
+
+
+document
+.getElementById(
+"printClass"
+)
+.textContent=
+
+selectedGrade+
+" / "+
+selectedSection;
+
+
+document
+.getElementById(
+"printTest"
+)
+.textContent=
+
+selectedTest?.name||"-";
+
+
+document
+.getElementById(
+"printDate"
+)
+.textContent=
+
+selectedTest?.date||
+todayArabic();
+
+}
+
+
+/* =========================================
+   CLEAR ANALYSIS
+========================================= */
+
+function clearAnalysis(){
+
+students=[];
+gradeRecords=[];
+analyzedStudents=[];
+
+
+document
+.getElementById(
+"selectedTestInfo"
+)
+.style.display=
+"none";
+
+
+document
+.getElementById(
+"analysisArea"
+)
+.innerHTML=`
+
+<div class="empty">
+
+اختر المادة والفصل والاختبار لعرض تحليل النتائج.
+
+</div>
+
+`;
+
+}
+
+
+/* =========================================
+   PRINT
+========================================= */
+
+function printAnalysis(){
+
+if(!selectedTest){
+
+alert(
+"اختر الاختبار أولًا"
+);
+
+return;
+
+}
+
+
+if(!students.length){
+
+alert(
+"لا توجد بيانات للطباعة"
+);
+
+return;
+
+}
+
+
+updatePrintData();
+
+window.print();
+
+}
+
+
+/* =========================================
+   BACK
+========================================= */
+
+function goBack(){
+
+if(isTeacher){
+
+location.href=
+"teacher.html";
+
+}
+else{
+
+location.href=
+"admin.html";
+
+}
+
+}
+
+
+/* =========================================
+   APPLY INCOMING SELECTION
+========================================= */
+
+async function applyIncomingSelection(){
+
+if(
+!incoming.subjectId
+){
+
+return;
+
+}
+
+
+/*
+المعلم يجب أن يكون الإسناد ضمن صلاحياته
+*/
+
+if(isTeacher){
+
+const allowed=
+assignments.some(a=>
+
+a.subjectId===
+incoming.subjectId &&
+
+a.grade===
+incoming.grade &&
+
+a.section===
+incoming.section
+
+);
+
+
+if(!allowed){
+
+return;
+
+}
+
+}
+
+
+const subjectExists=
+[...subjectSelect.options]
+.some(
+option=>
+option.value===
+incoming.subjectId
+);
+
+
+if(!subjectExists){
+
+return;
+
+}
+
+
+subjectSelect.value=
+incoming.subjectId;
+
+
+selectedSubjectId=
+incoming.subjectId;
+
+
+const subject=
+subjects.find(
+s=>s.id===selectedSubjectId
+);
+
+
+selectedSubjectName=
+subject?.name||"";
+
+
+await fillGrades();
+
+
+if(incoming.grade){
+
+const exists=
+[...gradeSelect.options]
+.some(
+o=>o.value===
+incoming.grade
+);
+
+
+if(exists){
+
+gradeSelect.value=
+incoming.grade;
+
+selectedGrade=
+incoming.grade;
+
+
+await fillSections();
+
+}
+
+}
+
+
+if(
+incoming.section &&
+selectedGrade
+){
+
+const exists=
+[...sectionSelect.options]
+.some(
+o=>o.value===
+incoming.section
+);
+
+
+if(exists){
+
+sectionSelect.value=
+incoming.section;
+
+selectedSection=
+incoming.section;
+
+
+await loadTests();
+
+}
+
+}
+
+
+if(
+incoming.testId &&
+selectedSection
+){
+
+const exists=
+tests.some(
+t=>t.id===
+incoming.testId
+);
+
+
+if(exists){
+
+testSelect.value=
+incoming.testId;
+
+
+selectedTest=
+tests.find(
+t=>t.id===
+incoming.testId
+);
+
+
+showSelectedTest();
+
+await loadResults();
+
+}
+
+}
+
+}
+
+
+/* =========================================
+   MODE NOTE
+========================================= */
+
+function renderModeNote(){
+
+const note=
+document.getElementById(
+"modeNote"
+);
+
+
+if(isAdmin){
+
+note.innerHTML=
+
+"👑 <strong>وضع الإدارة:</strong> يمكنك تحليل نتائج أي مادة وأي فصل وأي اختبار في المدرسة.";
+
+}
+
+else{
+
+note.innerHTML=
+
+"👨‍🏫 <strong>وضع المعلم:</strong> تظهر لك فقط المواد والفصول المسندة إليك.";
+
+}
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+async function start(){
+
+if(!protectPage()){
+
+return;
+
+}
+
+
+try{
+
+await loadTeacher();
+
+await loadSubjects();
+
+renderModeNote();
+
+await applyIncomingSelection();
+
+}
+
+catch(error){
+
+console.error(
+error
+);
+
+
+alert(
+
+"حدث خطأ أثناء تحميل صفحة التحليل:\n"+
+error.message
+
+);
+
+}
+
+}
+
+
+start();
+
 </script>
 
 </body>
