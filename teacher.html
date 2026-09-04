@@ -832,6 +832,14 @@ tbody tr:nth-child(even){
 <button class="action-btn save-btn" onclick="saveAllGrades()">
 💾 حفظ الدرجات
 </button>
+<button class="action-btn" style="background:#0d6efd;color:#fff" onclick="setAttendanceForAll('present')">
+✅ الكل حاضر
+</button>
+
+<button class="action-btn" style="background:#6c757d;color:#fff" onclick="setAttendanceForAll('absent')">
+🚫 الكل غائب
+</button>
+
 <button class="action-btn" style="background:#198754;color:#fff" onclick="fillFullMarkForAll()">
 ⭐ الدرجة النهائية للجميع
 </button>
@@ -2492,6 +2500,51 @@ error.message
 
 
 /* الدرجة النهائية لجميع الطلاب الحاضرين */
+function setAttendanceForAll(status){
+  if(!selectedTest){
+    alert("اختر الاختبار أولًا.");
+    return;
+  }
+
+  if(!currentStudents.length){
+    alert("لا يوجد طلاب في الفصل المحدد.");
+    return;
+  }
+
+  currentStudents.forEach(student=>{
+    const code=String(student.code);
+    const attendance=el("attendance_"+code);
+    const mark=el("mark_"+code);
+    const row=el("row_"+code);
+    const statusCell=el("status_"+code);
+
+    if(!attendance || !mark) return;
+
+    attendance.value=status;
+
+    if(status==="absent"){
+      mark.value="";
+      mark.disabled=true;
+      if(row) row.classList.add("absent-row");
+    }else{
+      mark.disabled=false;
+      if(row) row.classList.remove("absent-row");
+    }
+
+    if(statusCell){
+      statusCell.innerHTML='<span class="status-unsaved">غير محفوظ</span>';
+    }
+  });
+
+  updateSummary();
+
+  if(status==="present"){
+    alert("تم تحديد جميع الطلاب: حاضر ✅\nيمكنك الآن إدخال الدرجات أو استخدام زر الدرجة النهائية للجميع.");
+  }else{
+    alert("تم تحديد جميع الطلاب: غائب 🚫\nتم تفريغ درجاتهم، ويمكنك تعديل أي طالب يدويًا قبل الحفظ.");
+  }
+}
+
 function fillFullMarkForAll(){
   if(!selectedTest){
     alert("اختر الاختبار أولًا.");
