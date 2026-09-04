@@ -8,7 +8,7 @@
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <style>
 
@@ -1108,7 +1108,17 @@ appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
 firebase.initializeApp(firebaseConfig);
 
 const db=firebase.firestore();
-const storage=firebase.storage();
+
+const SUPABASE_URL="https://xalqjwuewdgxrxuejqyg.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY="sb_publishable_BJozLqjByOtWcLi3Zb_MPg_pzNwV8jb";
+const SUPABASE_BUCKET="rased-files";
+
+const supabaseClient=
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_PUBLISHABLE_KEY
+    );
+
 
 
 /* ======================================================
@@ -3186,8 +3196,8 @@ async function uploadFileAndGenerateLink(){
     return;
   }
 
-  if(file.size > 20*1024*1024){
-    alert("حجم الملف أكبر من 20 ميجابايت.");
+  if(file.size > 50*1024*1024){
+    alert("حجم الملف أكبر من 50 ميجابايت.");
     return;
   }
 
@@ -3199,14 +3209,44 @@ async function uploadFileAndGenerateLink(){
   progress.textContent="جاري رفع الملف...";
 
   try{
-    const path=
-      "teacherFiles/"+
-      encodeURIComponent(currentUsername||"teacher")+"/"+
+    const teacherFolder=
+      String(currentUsername||"teacher")
+      .replace(/[^a-zA-Z0-9_-]/g,"_");
+
+    const filePath=
+      teacherFolder+"/"+
       Date.now()+"_"+safeUploadFileName(file.name);
 
-    const storageRef=storage.ref().child(path);
-    const snapshot=await storageRef.put(file);
-    const url=await snapshot.ref.getDownloadURL();
+    const {data,error}=
+      await supabaseClient
+        .storage
+        .from(SUPABASE_BUCKET)
+        .upload(
+          filePath,
+          file,
+          {
+            cacheControl:"3600",
+            upsert:false,
+            contentType:file.type||undefined
+          }
+        );
+
+    if(error){
+      throw error;
+    }
+
+    const publicResult=
+      supabaseClient
+        .storage
+        .from(SUPABASE_BUCKET)
+        .getPublicUrl(data.path);
+
+    const url=
+      publicResult?.data?.publicUrl||"";
+
+    if(!url){
+      throw new Error("لم يتم إنشاء رابط عام للملف.");
+    }
 
     el("generatedFileName").textContent=file.name;
     el("generatedFileLink").value=url;
@@ -3214,9 +3254,12 @@ async function uploadFileAndGenerateLink(){
     progress.textContent="✅ تم رفع الملف وتوليد الرابط بنجاح.";
 
   }catch(error){
-    console.error("UPLOAD ERROR:",error);
+    console.error("SUPABASE UPLOAD ERROR:",error);
     progress.textContent="❌ تعذر رفع الملف.";
-    alert("تعذر رفع الملف. تأكد من تفعيل Firebase Storage وصلاحيات الرفع.\n\n"+error.message);
+    alert(
+      "تعذر رفع الملف إلى Supabase.\\n\\n"+
+      (error?.message||error)
+    );
   }finally{
     btn.disabled=false;
   }
