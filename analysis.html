@@ -4,1000 +4,952 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>راصد - تحليل النتائج</title>
+<title>راصد - تحليل نتائج الاختبار</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
 
-*{
-box-sizing:border-box
+*{box-sizing:border-box}
+
+:root{
+  --navy:#073b68;
+  --navy2:#0d558c;
+  --blue:#2585d8;
+  --green:#35b765;
+  --yellow:#ffd44d;
+  --red:#ef3f4a;
+  --gray:#d9dee3;
+  --border:#ccd5de;
+  --text:#14283c;
 }
 
 body{
-margin:0;
-font-family:Tahoma,Arial,sans-serif;
-background:#f4f7fb;
-color:#1f2937
+  margin:0;
+  font-family:Tahoma,Arial,sans-serif;
+  background:#f3f6f9;
+  color:var(--text);
 }
 
-/* ================================
+/* =====================================================
    HEADER
-================================ */
+===================================================== */
 
 .header{
-position:relative;
-background:linear-gradient(135deg,#0c2745,#174f7c);
-color:white;
-text-align:center;
-padding:18px 15px;
-box-shadow:0 4px 15px rgba(0,0,0,.15)
+  background:linear-gradient(135deg,#06365f,#0a558b);
+  color:#fff;
+  text-align:center;
+  padding:15px;
+  position:relative;
+  box-shadow:0 3px 12px rgba(0,0,0,.16);
 }
 
 .logo{
-width:78px;
-height:78px;
-object-fit:contain;
-background:white;
-border-radius:50%;
-padding:5px
+  width:68px;
+  height:68px;
+  object-fit:contain;
+  background:#fff;
+  border-radius:50%;
+  padding:4px;
 }
 
 .header h1{
-margin:6px 0 3px;
-font-size:25px
+  margin:4px 0 2px;
+  font-size:24px;
 }
 
 .header p{
-margin:0;
-color:#f4d77b;
-font-weight:bold
+  margin:0;
+  color:#f0c739;
+  font-weight:bold;
 }
 
 .header-actions{
-position:absolute;
-left:15px;
-top:15px;
-display:flex;
-gap:7px
+  position:absolute;
+  left:18px;
+  top:22px;
+  display:flex;
+  gap:8px;
 }
 
-/* ================================
+button{
+  font-family:Tahoma,Arial,sans-serif;
+  border:0;
+  border-radius:7px;
+  padding:10px 14px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+.back-btn{
+  background:#fff;
+  color:#183b5a;
+}
+
+.print-btn{
+  background:#d6a821;
+  color:#fff;
+}
+
+/* =====================================================
    GENERAL
-================================ */
+===================================================== */
 
 .container{
-max-width:1300px;
-margin:20px auto;
-padding:0 12px 40px
+  width:min(1200px,96%);
+  margin:18px auto 35px;
 }
 
-.box{
-background:white;
-border-radius:15px;
-margin-bottom:18px;
-box-shadow:0 3px 14px rgba(0,0,0,.08);
-overflow:hidden
+.card{
+  background:#fff;
+  border:1px solid #dce3e9;
+  border-radius:10px;
+  box-shadow:0 2px 12px rgba(0,0,0,.055);
+  margin-bottom:13px;
+  overflow:hidden;
 }
 
-.box-title{
-background:#eef4fa;
-border-bottom:1px solid #dbe5ef;
-padding:13px 18px;
-color:#123c63;
-font-size:18px;
-font-weight:bold
+.card-title{
+  padding:11px 15px;
+  border-bottom:1px solid #e2e7eb;
+  color:#0b4776;
+  font-size:15px;
+  font-weight:bold;
 }
 
-.box-body{
-padding:18px
+.card-body{
+  padding:14px;
 }
 
-.row{
-display:flex;
-flex-wrap:wrap;
-gap:12px
+.empty{
+  text-align:center;
+  padding:35px 15px;
+  color:#7b8997;
 }
 
-.col{
-flex:1 1 190px
+/* =====================================================
+   FILTERS
+===================================================== */
+
+.mode-note{
+  background:#e8f3ff;
+  border:1px solid #c3dcf4;
+  color:#174f7c;
+  border-radius:7px;
+  padding:9px 11px;
+  font-size:11px;
+  margin-bottom:11px;
 }
 
-label{
-display:block;
-font-size:13px;
-font-weight:bold;
-margin-bottom:6px
+.filters{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:10px;
+}
+
+.field label{
+  display:block;
+  text-align:center;
+  font-size:11px;
+  font-weight:bold;
+  margin-bottom:5px;
 }
 
 select,
 input{
-display:block;
-width:100%;
-height:44px;
-padding:8px 12px;
-border:1px solid #b9c5d1;
-border-radius:8px;
-background:white;
-color:#111;
-font-family:Tahoma,Arial,sans-serif;
-font-size:14px
+  width:100%;
+  height:41px;
+  border:1px solid #bec9d3;
+  border-radius:6px;
+  background:#fff;
+  color:#111;
+  padding:6px 10px;
+  font-family:Tahoma,Arial,sans-serif;
+  direction:rtl;
+  text-align:right;
 }
 
-select{
-direction:rtl;
-text-align:right;
-text-align-last:right
+.selected-info{
+  margin-top:10px;
+  padding:8px;
+  text-align:center;
+  border-radius:6px;
+  background:#f6f8fa;
+  border:1px solid #dce2e7;
+  font-size:11px;
+  font-weight:bold;
 }
 
-select option{
-direction:rtl;
-text-align:right;
-background:white;
-color:#111
-}
-
-select:focus,
-input:focus{
-outline:none;
-border-color:#174f7c;
-box-shadow:0 0 0 2px rgba(23,79,124,.12)
-}
-
-button{
-border:0;
-border-radius:8px;
-padding:10px 15px;
-font-family:Tahoma,Arial,sans-serif;
-font-size:13px;
-font-weight:bold;
-cursor:pointer
-}
-
-button:hover{
-opacity:.9
-}
-
-.btn-primary{
-background:#174f7c;
-color:white
-}
-
-.btn-success{
-background:#198754;
-color:white
-}
-
-.btn-danger{
-background:#dc3545;
-color:white
-}
-
-.btn-light{
-background:#e9eef4;
-color:#263747
-}
-
-.btn-purple{
-background:#6f42c1;
-color:white
-}
-
-.btn-gold{
-background:#c69a2b;
-color:white
-}
-
-.actions{
-display:flex;
-flex-wrap:wrap;
-gap:8px;
-margin-top:12px
-}
-
-.note{
-background:#fff8db;
-color:#715d00;
-padding:10px 12px;
-border-radius:8px;
-font-size:12px;
-line-height:1.8
-}
-
-.empty{
-padding:35px 15px;
-text-align:center;
-color:#64748b;
-background:#fafafa;
-border-radius:10px
-}
-
-/* ================================
-   SELECTED TEST
-================================ */
-
-.selected-test{
-display:none;
-background:#e7f1ff;
-color:#084298;
-padding:11px 13px;
-border-radius:9px;
-margin-top:15px;
-font-weight:bold;
-font-size:13px
-}
-
-/* ================================
-   MAIN STATISTICS
-================================ */
-
-.stats{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:10px;
-margin-bottom:10px
-}
-
-.stat{
-background:#fff;
-border:1px solid #e2e8f0;
-border-radius:12px;
-padding:13px 8px;
-text-align:center
-}
-
-.stat-number{
-font-size:25px;
-font-weight:bold;
-color:#174f7c
-}
-
-.stat-label{
-font-size:11px;
-color:#64748b;
-margin-top:4px
-}
-
-.stat.gold .stat-number{
-color:#a77a00
-}
-
-.stat.green .stat-number{
-color:#198754
-}
-
-.stat.red .stat-number{
-color:#dc3545
-}
-
-.stat.purple .stat-number{
-color:#6f42c1
-}
-
-/* ================================
+/* =====================================================
    LEVEL SETTINGS
-================================ */
+===================================================== */
 
-.level-settings{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:10px
+.settings{
+  display:grid;
+  grid-template-columns:repeat(3,1fr) auto;
+  gap:8px;
+  align-items:end;
 }
 
-.level-setting{
-background:#f8fafc;
-border:1px solid #e2e8f0;
-border-radius:10px;
-padding:11px
+.setting label{
+  display:block;
+  font-size:10px;
+  font-weight:bold;
+  margin-bottom:4px;
 }
 
-.level-setting strong{
-display:block;
-margin-bottom:7px;
-color:#174f7c
+.setting input{
+  height:36px;
+  text-align:center;
 }
 
-.level-setting input{
-height:39px;
-text-align:center
+.analyze-btn{
+  height:36px;
+  background:#6f42c1;
+  color:#fff;
 }
 
-.range-preview{
-font-size:11px;
-color:#64748b;
-margin-top:6px;
-text-align:center
+/* =====================================================
+   PRINT HEADER
+===================================================== */
+
+.report-header{
+  background:#fff;
+  text-align:center;
+  padding:8px 12px 6px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  margin-bottom:9px;
 }
 
-/* ================================
-   LEVEL CARDS
-================================ */
-
-.levels{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:10px;
-margin-top:12px
+.report-logo{
+  width:62px;
+  height:62px;
+  object-fit:contain;
 }
 
-.level-card{
-border-radius:12px;
-padding:14px 10px;
-text-align:center;
-border:1px solid #e2e8f0;
-background:white
+.report-header h2{
+  margin:1px 0;
+  font-size:21px;
+  color:#073b68;
 }
 
-.level-title{
-font-weight:bold;
-font-size:14px
+.report-header h3{
+  margin:2px 0 8px;
+  font-size:15px;
 }
 
-.level-number{
-font-size:27px;
-font-weight:bold;
-margin:7px 0
+.meta{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  border:1px solid #aeb9c3;
+  border-left:0;
 }
 
-.level-percent{
-font-size:12px;
-color:#64748b
+.meta-item{
+  border-left:1px solid #aeb9c3;
+}
+
+.meta-title{
+  background:#edf1f4;
+  font-weight:bold;
+  padding:5px;
+  font-size:10px;
+}
+
+.meta-value{
+  padding:6px 4px;
+  font-size:11px;
+  font-weight:bold;
+}
+
+/* =====================================================
+   KPI - COMPACT
+===================================================== */
+
+.kpi-grid{
+  display:grid;
+  grid-template-columns:repeat(8,1fr);
+  gap:5px;
+  margin-bottom:9px;
+}
+
+.kpi{
+  min-height:60px;
+  background:#fff;
+  border:1px solid #cfd7de;
+  border-radius:6px;
+  text-align:center;
+  padding:6px 3px;
+}
+
+.kpi-label{
+  font-size:9px;
+  font-weight:bold;
+  min-height:20px;
+}
+
+.kpi-value{
+  font-size:19px;
+  line-height:22px;
+  font-weight:bold;
+  color:#073b68;
+}
+
+.kpi.green .kpi-value{color:#198754}
+.kpi.red .kpi-value{color:#e0333e}
+.kpi.gold .kpi-value{color:#b88700}
+.kpi.purple .kpi-value{color:#6f42c1}
+
+/* =====================================================
+   LEVEL STRIP
+===================================================== */
+
+.level-section{
+  border:1px solid #ccd5dc;
+  border-radius:7px;
+  background:#fff;
+  padding:8px;
+  margin-bottom:9px;
+}
+
+.small-heading{
+  text-align:center;
+  font-size:12px;
+  font-weight:bold;
+  margin-bottom:7px;
+}
+
+.level-strip{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  overflow:hidden;
+  border-radius:5px;
+  border:1px solid #d2d7dc;
+}
+
+.level-segment{
+  text-align:center;
+  padding:7px 3px 5px;
+  font-weight:bold;
+}
+
+.level-segment .count{
+  font-size:18px;
+  display:block;
+}
+
+.level-segment .percent{
+  font-size:9px;
+  display:block;
+  margin-top:2px;
 }
 
 .level-high{
-border-top:4px solid #198754
-}
-
-.level-high .level-number{
-color:#198754
+  background:#40ba67;
+  color:white;
 }
 
 .level-medium{
-border-top:4px solid #174f7c
-}
-
-.level-medium .level-number{
-color:#174f7c
+  background:#3488d8;
+  color:white;
 }
 
 .level-care{
-border-top:4px solid #f0ad4e
-}
-
-.level-care .level-number{
-color:#c48400
+  background:#ffd44d;
+  color:#222;
 }
 
 .level-case{
-border-top:4px solid #dc3545
+  background:#ef404a;
+  color:white;
 }
 
-.level-case .level-number{
-color:#dc3545
+.level-labels{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
 }
 
-/* ================================
+.level-label{
+  text-align:center;
+  padding-top:4px;
+  font-size:9px;
+  line-height:1.45;
+}
+
+.level-label strong{
+  display:block;
+  font-size:10px;
+}
+
+/* =====================================================
    CHART
-================================ */
+===================================================== */
 
-.chart-container{
-padding:15px 5px 5px
+.chart-box{
+  background:#fff;
+  border:1px solid #ccd5dc;
+  border-radius:7px;
+  padding:8px 12px 7px;
+  margin-bottom:9px;
 }
 
-.chart{
-height:270px;
-display:flex;
-align-items:flex-end;
-justify-content:center;
-gap:30px;
-border-bottom:2px solid #cbd5e1;
-padding:20px 20px 0;
-position:relative
+.chart-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:4px;
 }
 
-.bar-wrap{
-height:100%;
-width:110px;
-display:flex;
-flex-direction:column;
-justify-content:flex-end;
-align-items:center
+.chart-title{
+  font-size:12px;
+  font-weight:bold;
+  color:#073b68;
+}
+
+.chart-caption{
+  font-size:9px;
+}
+
+.chart-area{
+  height:190px;
+  display:flex;
+  direction:ltr;
+  position:relative;
+}
+
+.y-axis{
+  width:31px;
+  height:160px;
+  margin-top:2px;
+  border-right:1px solid #8c98a3;
+  position:relative;
+}
+
+.y-label{
+  position:absolute;
+  right:5px;
+  transform:translateY(50%);
+  font-size:8px;
+  color:#475569;
+}
+
+.plot{
+  flex:1;
+  height:160px;
+  margin-top:2px;
+  border-bottom:1px solid #8c98a3;
+  position:relative;
+  display:flex;
+  align-items:flex-end;
+  justify-content:space-around;
+  padding:0 4%;
+  background:
+    repeating-linear-gradient(
+      to top,
+      transparent 0,
+      transparent 31px,
+      #edf0f2 31px,
+      #edf0f2 32px
+    );
+}
+
+.bar-group{
+  width:18%;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  position:relative;
 }
 
 .bar-value{
-font-weight:bold;
-margin-bottom:5px;
-font-size:13px
+  font-size:11px;
+  font-weight:bold;
+  margin-bottom:3px;
+  direction:rtl;
 }
 
 .bar{
-width:58px;
-min-height:2px;
-border-radius:7px 7px 0 0;
-transition:.3s
+  width:58%;
+  min-height:2px;
+  border-radius:3px 3px 0 0;
 }
 
-.bar.high{
-background:#198754
+.bar.green{background:#35b765}
+.bar.blue{background:#3488d8}
+.bar.yellow{background:#ffd44d}
+.bar.red{background:#ef404a}
+
+.bar-name{
+  position:absolute;
+  top:165px;
+  width:130%;
+  text-align:center;
+  font-size:9px;
+  font-weight:bold;
+  direction:rtl;
 }
 
-.bar.medium{
-background:#174f7c
-}
-
-.bar.care{
-background:#f0ad4e
-}
-
-.bar.case{
-background:#dc3545
-}
-
-.bar-label{
-font-size:11px;
-font-weight:bold;
-margin-top:7px;
-height:32px;
-text-align:center
-}
-
-/* ================================
-   STUDENT LISTS
-================================ */
-
-.lists{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:12px
-}
-
-.list-card{
-border:1px solid #e2e8f0;
-border-radius:11px;
-overflow:hidden
-}
-
-.list-title{
-padding:10px;
-font-weight:bold;
-text-align:center
-}
-
-.list-title.high{
-background:#d1e7dd;
-color:#0f5132
-}
-
-.list-title.medium{
-background:#dbeafe;
-color:#174f7c
-}
-
-.list-title.care{
-background:#fff3cd;
-color:#856404
-}
-
-.list-title.case{
-background:#f8d7da;
-color:#842029
-}
-
-.student-list{
-padding:10px
-}
-
-.student-chip{
-display:flex;
-justify-content:space-between;
-align-items:center;
-gap:10px;
-padding:7px 9px;
-border-bottom:1px solid #edf0f3;
-font-size:12px
-}
-
-.student-chip:last-child{
-border-bottom:0
-}
-
-.student-score{
-font-weight:bold;
-white-space:nowrap
-}
-
-/* ================================
+/* =====================================================
    TABLE
-================================ */
+===================================================== */
+
+.details-box{
+  background:#fff;
+  border:1px solid #ccd5dc;
+  border-radius:7px;
+  overflow:hidden;
+}
+
+.details-title{
+  padding:7px;
+  font-size:12px;
+  font-weight:bold;
+  text-align:center;
+  color:#073b68;
+  border-bottom:1px solid #ccd5dc;
+}
 
 .table-wrap{
-overflow:auto;
-border:1px solid #e1e7ee;
-border-radius:10px
+  overflow:auto;
 }
 
 table{
-width:100%;
-border-collapse:collapse;
-min-width:800px
+  width:100%;
+  border-collapse:collapse;
+  min-width:720px;
 }
 
 th{
-background:#174f7c;
-color:white
+  background:#e8edf1;
+  color:#152a3e;
+  font-size:10px;
 }
 
 th,td{
-padding:9px 7px;
-border-bottom:1px solid #e5e7eb;
-text-align:center;
-font-size:12px
+  padding:6px 5px;
+  border-left:1px solid #cbd3da;
+  border-bottom:1px solid #cbd3da;
+  text-align:center;
 }
 
-tbody tr:nth-child(even){
-background:#f8fafc
+td{
+  font-size:10px;
 }
 
-.student-name{
-text-align:right;
-font-weight:bold
+td.student-name{
+  text-align:right;
+  font-weight:bold;
 }
 
-.badge{
-display:inline-block;
-padding:5px 8px;
-border-radius:20px;
-font-size:10px;
-font-weight:bold
+/* whole row classification */
+
+.row-high td{
+  background:#c9f0cd;
 }
 
-.badge-high{
-background:#d1e7dd;
-color:#0f5132
+.row-medium td{
+  background:#d5eaff;
 }
 
-.badge-medium{
-background:#dbeafe;
-color:#174f7c
+.row-care td{
+  background:#fff0a9;
 }
 
-.badge-care{
-background:#fff3cd;
-color:#856404
+.row-case td{
+  background:#ffc8cb;
 }
 
-.badge-case{
-background:#f8d7da;
-color:#842029
+.row-absent td,
+.row-unrecorded td{
+  background:#e3e6e8;
+  color:#3d4852;
 }
 
-.badge-absent{
-background:#e5e7eb;
-color:#374151
+.percent-high{
+  font-weight:bold;
+  color:#0d6c32;
 }
 
-/* ================================
-   PRINT HEADER / FOOTER
-================================ */
-
-.print-header{
-display:none
+.percent-medium{
+  font-weight:bold;
+  color:#125da3;
 }
 
-.print-footer{
-display:none
+.percent-care{
+  font-weight:bold;
+  color:#7c6000;
 }
 
-.footer{
-text-align:center;
-padding:15px;
-font-size:12px;
-color:#64748b
+.percent-case{
+  font-weight:bold;
+  color:#b51f28;
 }
 
-/* ================================
+/* =====================================================
+   LEGEND
+===================================================== */
+
+.legend{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:17px;
+  padding:7px;
+  margin-top:7px;
+  border:1px solid #e0e4e7;
+  border-radius:6px;
+  background:#f8f9fa;
+  font-size:9px;
+}
+
+.legend-item{
+  display:flex;
+  align-items:center;
+  gap:5px;
+}
+
+.dot{
+  width:11px;
+  height:11px;
+  border-radius:50%;
+}
+
+.dot.green{background:#35b765}
+.dot.blue{background:#3488d8}
+.dot.yellow{background:#ffd44d}
+.dot.red{background:#ef404a}
+.dot.gray{background:#9da5ac}
+
+/* =====================================================
+   FOOTER
+===================================================== */
+
+.report-footer{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  border-top:2px solid #173d61;
+  margin-top:8px;
+  padding:6px 3px 0;
+  font-size:9px;
+  font-weight:bold;
+}
+
+.screen-footer{
+  text-align:center;
+  color:#71808e;
+  padding:14px;
+  font-size:10px;
+}
+
+/* =====================================================
    RESPONSIVE
-================================ */
+===================================================== */
 
-@media(max-width:900px){
+@media(max-width:850px){
 
-.stats{
-grid-template-columns:repeat(2,1fr)
-}
+  .header-actions{
+    position:static;
+    justify-content:center;
+    margin-top:10px;
+  }
 
-.level-settings{
-grid-template-columns:repeat(2,1fr)
-}
+  .filters{
+    grid-template-columns:repeat(2,1fr);
+  }
 
-.levels{
-grid-template-columns:repeat(2,1fr)
-}
+  .kpi-grid{
+    grid-template-columns:repeat(4,1fr);
+  }
 
-}
-
-@media(max-width:650px){
-
-.header-actions{
-position:static;
-justify-content:center;
-margin-top:10px
-}
-
-.lists{
-grid-template-columns:1fr
-}
-
-.chart{
-gap:8px;
-padding-left:5px;
-padding-right:5px
-}
-
-.bar-wrap{
-width:70px
-}
-
-.bar{
-width:40px
-}
+  .settings{
+    grid-template-columns:repeat(2,1fr);
+  }
 
 }
 
-
-/* =========================================================
-   الطباعة A4 طولي
-========================================================= */
+/* =====================================================
+   PRINT - A4 PORTRAIT
+===================================================== */
 
 @media print{
 
-@page{
-size:A4 portrait;
-margin:8mm
-}
+  @page{
+    size:A4 portrait;
+    margin:5mm;
+  }
 
-html,
-body{
-width:100%;
-margin:0;
-padding:0;
-background:#fff;
-font-family:Tahoma,Arial,sans-serif
-}
+  html,
+  body{
+    width:100%;
+    margin:0;
+    padding:0;
+    background:white;
+  }
 
-.header,
-.selection-box,
-.level-control-box,
-.screen-actions,
-.footer{
-display:none !important
-}
+  .header,
+  .selection-card,
+  .settings-card,
+  .screen-footer{
+    display:none !important;
+  }
 
-.container{
-width:100%;
-max-width:none;
-margin:0;
-padding:0
-}
+  .container{
+    width:100%;
+    margin:0;
+    padding:0;
+  }
 
-/* رأس التقرير */
+  #analysisArea{
+    width:100%;
+  }
 
-.print-header{
-display:block;
-text-align:center;
-margin:0 0 7px 0
-}
+  .report-header{
+    padding:2px 4px 3px;
+    margin:0 0 3px;
+    border-radius:0;
+  }
 
-.print-logo{
-width:52px;
-height:52px;
-object-fit:contain
-}
+  .report-logo{
+    width:40px;
+    height:40px;
+  }
 
-.print-header h2{
-margin:1px 0;
-font-size:17px
-}
+  .report-header h2{
+    font-size:14px;
+    margin:0;
+  }
 
-.print-header h3{
-margin:2px 0 5px;
-font-size:13px
-}
+  .report-header h3{
+    font-size:10px;
+    margin:0 0 3px;
+  }
 
-.print-meta{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:3px;
-margin-top:6px
-}
+  .meta{
+    margin-top:2px;
+  }
 
-.print-meta div{
-border:1px solid #777;
-padding:4px 5px;
-font-size:8.5px;
-text-align:right
-}
+  .meta-title{
+    padding:2px;
+    font-size:6.8px;
+  }
 
-/* الأقسام */
+  .meta-value{
+    padding:2px;
+    font-size:7px;
+  }
 
-.box{
-width:100%;
-box-shadow:none;
-border:0;
-border-radius:0;
-margin:0 0 7px 0;
-overflow:visible
-}
+  .kpi-grid{
+    grid-template-columns:repeat(8,1fr);
+    gap:2px;
+    margin-bottom:3px;
+  }
 
-.box-title{
-font-size:10px;
-padding:5px 7px;
-background:#eee !important;
-color:#000 !important;
-border:1px solid #888;
-border-bottom:0;
-border-radius:0
-}
+  .kpi{
+    min-height:36px;
+    padding:2px 1px;
+    border-radius:2px;
+  }
 
-.box-body{
-padding:4px 0
-}
+  .kpi-label{
+    font-size:5.8px;
+    min-height:13px;
+  }
 
-/* المؤشرات */
+  .kpi-value{
+    font-size:11px;
+    line-height:12px;
+  }
 
-.stats{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:3px;
-margin:0 0 4px 0
-}
+  .level-section{
+    padding:3px;
+    margin-bottom:3px;
+    border-radius:0;
+  }
 
-.stat{
-padding:4px 2px;
-border:1px solid #888;
-border-radius:0;
-min-height:42px
-}
+  .small-heading{
+    font-size:7px;
+    margin-bottom:2px;
+  }
 
-.stat-number,
-.stat.gold .stat-number,
-.stat.green .stat-number,
-.stat.red .stat-number,
-.stat.purple .stat-number{
-font-size:13px !important;
-color:#000 !important
-}
+  .level-segment{
+    padding:2px;
+  }
 
-.stat-label{
-font-size:7px;
-color:#000
-}
+  .level-segment .count{
+    font-size:10px;
+  }
 
-/* المستويات */
+  .level-segment .percent{
+    font-size:5.5px;
+  }
 
-.levels{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:4px;
-margin-top:3px
-}
+  .level-label{
+    padding-top:1px;
+    font-size:5.5px;
+    line-height:1.2;
+  }
 
-.level-card{
-padding:5px 3px;
-border-radius:0;
-border:1px solid #777 !important
-}
+  .level-label strong{
+    font-size:6px;
+  }
 
-.level-title{
-font-size:8.5px
-}
+  .chart-box{
+    padding:3px 5px 2px;
+    margin-bottom:3px;
+    border-radius:0;
+  }
 
-.level-number{
-font-size:15px !important;
-margin:2px 0;
-color:#000 !important
-}
+  .chart-header{
+    margin-bottom:1px;
+  }
 
-.level-percent{
-font-size:7px;
-color:#000
-}
+  .chart-title{
+    font-size:7px;
+  }
 
-/* الرسم البياني */
+  .chart-caption{
+    font-size:5.5px;
+  }
 
-.chart-container{
-padding:0
-}
+  .chart-area{
+    height:108px;
+  }
 
-.chart{
-height:125px;
-gap:18px;
-padding:5px 5px 0;
-border-bottom:1px solid #777
-}
+  .y-axis{
+    width:21px;
+    height:87px;
+  }
 
-.bar-wrap{
-width:60px
-}
+  .y-label{
+    font-size:5px;
+  }
 
-.bar{
-width:30px
-}
+  .plot{
+    height:87px;
+    background:
+      repeating-linear-gradient(
+        to top,
+        transparent 0,
+        transparent 16px,
+        #e7eaed 16px,
+        #e7eaed 17px
+      );
+  }
 
-.bar-value{
-font-size:7px;
-margin-bottom:2px
-}
+  .bar-value{
+    font-size:6px;
+    margin-bottom:1px;
+  }
 
-.bar-label{
-font-size:6.5px;
-height:22px
-}
+  .bar{
+    width:48%;
+  }
 
-/*
-نحافظ على الألوان في الرسم
-حتى عند اختيار Background graphics
-*/
+  .bar-name{
+    top:90px;
+    font-size:5.5px;
+  }
 
-.bar.high{
-background:#198754 !important
-}
+  .details-box{
+    border-radius:0;
+  }
 
-.bar.medium{
-background:#174f7c !important
-}
+  .details-title{
+    padding:3px;
+    font-size:7px;
+  }
 
-.bar.care{
-background:#f0ad4e !important
-}
+  .table-wrap{
+    overflow:visible;
+  }
 
-.bar.case{
-background:#dc3545 !important
-}
+  table{
+    min-width:0;
+    table-layout:fixed;
+  }
 
-/* قوائم الطلاب */
+  th,td{
+    padding:2px 2px;
+    font-size:5.8px;
+    border:1px solid #888;
+    line-height:1.15;
+  }
 
-.lists{
-display:grid;
-grid-template-columns:repeat(2,1fr);
-gap:4px
-}
+  th{
+    font-size:5.8px;
+  }
 
-.list-card{
-border-radius:0;
-border:1px solid #777
-}
+  th:nth-child(1),
+  td:nth-child(1){
+    width:5%;
+  }
 
-.list-title{
-padding:4px;
-font-size:8px;
-background:#eee !important;
-color:#000 !important
-}
+  th:nth-child(2),
+  td:nth-child(2){
+    width:16%;
+  }
 
-.student-list{
-padding:2px
-}
+  th:nth-child(3),
+  td:nth-child(3){
+    width:38%;
+  }
 
-.student-chip{
-padding:2px 4px;
-font-size:7px;
-gap:3px
-}
+  th:nth-child(4),
+  td:nth-child(4){
+    width:13%;
+  }
 
-.student-score{
-font-size:6.5px
-}
+  th:nth-child(5),
+  td:nth-child(5){
+    width:15%;
+  }
 
-/* الجدول */
+  th:nth-child(6),
+  td:nth-child(6){
+    width:13%;
+  }
 
-.table-wrap{
-overflow:visible;
-border-radius:0;
-border:0
-}
+  tr{
+    break-inside:avoid;
+    page-break-inside:avoid;
+  }
 
-table{
-width:100%;
-min-width:0 !important;
-table-layout:fixed;
-border-collapse:collapse
-}
+  .legend{
+    gap:8px;
+    padding:2px;
+    margin-top:2px;
+    font-size:5.5px;
+    border-radius:0;
+  }
 
-th,
-td{
-padding:3px 2px;
-font-size:6.8px;
-border:1px solid #777;
-word-break:normal;
-overflow-wrap:anywhere
-}
+  .dot{
+    width:6px;
+    height:6px;
+  }
 
-th{
-background:#eee !important;
-color:#000 !important
-}
-
-/* ترتيب عرض الأعمدة في الورقة الطولية */
-
-th:nth-child(1),
-td:nth-child(1){
-width:5%
-}
-
-th:nth-child(2),
-td:nth-child(2){
-width:13%
-}
-
-th:nth-child(3),
-td:nth-child(3){
-width:30%
-}
-
-th:nth-child(4),
-td:nth-child(4){
-width:11%
-}
-
-th:nth-child(5),
-td:nth-child(5){
-width:14%
-}
-
-th:nth-child(6),
-td:nth-child(6){
-width:11%
-}
-
-th:nth-child(7),
-td:nth-child(7){
-width:16%
-}
-
-.student-name{
-text-align:right
-}
-
-.badge{
-background:transparent !important;
-color:#000 !important;
-padding:0;
-font-size:6.5px;
-white-space:normal
-}
-
-/* منع قطع الكروت بشكل سيئ */
-
-.stat,
-.level-card,
-.list-card,
-.student-chip,
-tr{
-break-inside:avoid;
-page-break-inside:avoid
-}
-
-/* الفوتر */
-
-.print-footer{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-top:7px;
-padding-top:4px;
-border-top:1px solid #777;
-font-size:7.5px;
-font-weight:bold
-}
+  .report-footer{
+    margin-top:3px;
+    padding-top:2px;
+    font-size:5.8px;
+    border-top:1px solid #173d61;
+  }
 
 }
 
 </style>
 </head>
 
-
 <body>
+
+<!-- =====================================================
+     HEADER
+===================================================== -->
 
 <header class="header">
 
@@ -1005,15 +957,15 @@ font-weight:bold
 
 <h1>مدارس الفلاح الأهلية</h1>
 
-<p>نظام راصد - تحليل النتائج</p>
+<p>نظام راصد - تحليل نتائج الاختبار</p>
 
 <div class="header-actions">
 
-<button class="btn-light" onclick="goBack()">
+<button class="back-btn" onclick="goBack()">
 ↩ رجوع
 </button>
 
-<button class="btn-gold" onclick="printAnalysis()">
+<button class="print-btn" onclick="printAnalysis()">
 🖨️ طباعة / PDF
 </button>
 
@@ -1024,71 +976,32 @@ font-weight:bold
 
 <div class="container">
 
-<!-- =========================================
-     رأس الطباعة
-========================================= -->
+<!-- =====================================================
+     FILTERS
+===================================================== -->
 
-<div class="print-header">
+<div class="card selection-card">
 
-<img src="logo.jpeg" class="print-logo">
-
-<h2>مدارس الفلاح الأهلية</h2>
-
-<h3>تحليل نتائج الاختبارات</h3>
-
-<div class="print-meta">
-
-<div>
-<strong>المادة:</strong>
-<span id="printSubject">-</span>
+<div class="card-title">
+🔎 تحديد الاختبار
 </div>
 
-<div>
-<strong>الفصل:</strong>
-<span id="printClass">-</span>
-</div>
+<div class="card-body">
 
-<div>
-<strong>الاختبار:</strong>
-<span id="printTest">-</span>
-</div>
-
-<div>
-<strong>تاريخ الاختبار:</strong>
-<span id="printDate">-</span>
-</div>
-
-</div>
-
-</div>
-
-
-<!-- =========================================
-     الاختيار
-========================================= -->
-
-<div class="box selection-box">
-
-<div class="box-title">
-🔎 تحديد نتائج التحليل
-</div>
-
-<div class="box-body">
-
-<div id="modeNote" class="note">
+<div id="modeNote" class="mode-note">
 جاري تحميل البيانات...
 </div>
 
-<div class="row" style="margin-top:15px">
+<div class="filters">
 
-<div class="col">
+<div class="field">
 
 <label>المادة</label>
 
 <select id="subjectSelect" onchange="subjectChanged()">
 
 <option value="">
--- اختر المادة --
+اختر المادة
 </option>
 
 </select>
@@ -1096,14 +1009,14 @@ font-weight:bold
 </div>
 
 
-<div class="col">
+<div class="field">
 
 <label>الصف</label>
 
 <select id="gradeSelect" onchange="gradeChanged()">
 
 <option value="">
--- اختر الصف --
+اختر الصف
 </option>
 
 </select>
@@ -1111,14 +1024,14 @@ font-weight:bold
 </div>
 
 
-<div class="col">
+<div class="field">
 
 <label>الشعبة</label>
 
 <select id="sectionSelect" onchange="sectionChanged()">
 
 <option value="">
--- اختر الشعبة --
+اختر الشعبة
 </option>
 
 </select>
@@ -1126,14 +1039,14 @@ font-weight:bold
 </div>
 
 
-<div class="col">
+<div class="field">
 
 <label>الاختبار</label>
 
 <select id="testSelect" onchange="testChanged()">
 
 <option value="">
--- اختر الاختبار --
+اختر الاختبار
 </option>
 
 </select>
@@ -1142,172 +1055,105 @@ font-weight:bold
 
 </div>
 
-
-<div id="selectedTestInfo" class="selected-test"></div>
-
-</div>
-</div>
-
-
-<!-- =========================================
-     إعداد مستويات التحليل
-========================================= -->
-
-<div class="box level-control-box">
-
-<div class="box-title">
-⚙️ مستويات التحليل
+<div
+id="selectedInfo"
+class="selected-info"
+style="display:none">
 </div>
 
-<div class="box-body">
-
-<div class="note">
-
-المستويات تعتمد على نسبة درجة الطالب من الدرجة النهائية للاختبار.
-يمكنك تغيير الحدود ثم الضغط على إعادة التحليل.
+</div>
 
 </div>
 
 
-<div class="level-settings" style="margin-top:12px">
+<!-- =====================================================
+     SETTINGS
+===================================================== -->
 
-<div class="level-setting">
+<div class="card settings-card">
 
-<strong>مستوى مرتفع</strong>
+<div class="card-title">
+⚙️ حدود التصنيف
+</div>
 
-<label>من %</label>
+<div class="card-body">
+
+<div class="settings">
+
+<div class="setting">
+
+<label>المستوى المرتفع يبدأ من %</label>
 
 <input
-type="number"
 id="highMin"
+type="number"
 value="85"
 min="0"
 max="100">
 
-<div class="range-preview">
-85% فأعلى
-</div>
-
 </div>
 
 
-<div class="level-setting">
+<div class="setting">
 
-<strong>مستوى متوسط</strong>
-
-<label>من %</label>
+<label>المستوى المتوسط يبدأ من %</label>
 
 <input
-type="number"
 id="mediumMin"
+type="number"
 value="70"
 min="0"
 max="100">
 
-<div class="range-preview">
-70% إلى أقل من المرتفع
-</div>
-
 </div>
 
 
-<div class="level-setting">
+<div class="setting">
 
-<strong>أولى بالرعاية</strong>
-
-<label>من %</label>
+<label>أولى بالرعاية تبدأ من %</label>
 
 <input
-type="number"
 id="careMin"
+type="number"
 value="50"
 min="0"
 max="100">
 
-<div class="range-preview">
-50% إلى أقل من المتوسط
 </div>
 
-</div>
-
-
-<div class="level-setting">
-
-<strong>دراسة حالة</strong>
-
-<label>أقل من %</label>
-
-<input
-type="number"
-id="caseMax"
-value="50"
-disabled>
-
-<div class="range-preview">
-أقل من 50%
-</div>
-
-</div>
-
-</div>
-
-
-<div class="actions">
 
 <button
-class="btn-purple"
+class="analyze-btn"
 onclick="reanalyze()">
 
 📊 إعادة التحليل
 
 </button>
 
-<button
-class="btn-light"
-onclick="resetLevels()">
-
-إعادة الحدود الافتراضية
-
-</button>
+</div>
 
 </div>
 
 </div>
-</div>
 
 
-<!-- =========================================
-     منطقة التحليل
-========================================= -->
+<!-- =====================================================
+     ANALYSIS
+===================================================== -->
 
 <div id="analysisArea">
 
 <div class="empty">
 
-اختر المادة والفصل والاختبار لعرض تحليل النتائج.
+اختر المادة والصف والشعبة والاختبار لعرض التحليل.
 
 </div>
 
 </div>
 
 
-<div class="print-footer">
-
-<div>
-نظام راصد - مدارس الفلاح الأهلية
-</div>
-
-<div>
-تصميم محمد عامر أحمد - 2026
-</div>
-
-</div>
-
-
-<div class="footer">
-
+<div class="screen-footer">
 تصميم محمد عامر أحمد - نظام راصد 2026
-
 </div>
 
 </div>
@@ -1315,47 +1161,36 @@ onclick="resetLevels()">
 
 <script>
 
-/* =========================================
+/* =====================================================
    FIREBASE
-========================================= */
+===================================================== */
 
 const firebaseConfig={
 
-apiKey:
-"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
 
-authDomain:
-"results2026-7c0dd.firebaseapp.com",
+authDomain:"results2026-7c0dd.firebaseapp.com",
 
-projectId:
-"results2026-7c0dd",
+projectId:"results2026-7c0dd",
 
-storageBucket:
-"results2026-7c0dd.firebasestorage.app",
+storageBucket:"results2026-7c0dd.firebasestorage.app",
 
-messagingSenderId:
-"241421115694",
+messagingSenderId:"241421115694",
 
-appId:
-"1:241421115694:web:96f55fd9fd1d5b18b31abf"
+appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
 
 };
 
+firebase.initializeApp(firebaseConfig);
 
-firebase.initializeApp(
-firebaseConfig
-);
-
-
-const db=
-firebase.firestore();
+const db=firebase.firestore();
 
 
-/* =========================================
+/* =====================================================
    CONSTANTS
-========================================= */
+===================================================== */
 
-const gradesOrder=[
+const gradeOrder=[
 
 "1 ابتدائي",
 "2 ابتدائي",
@@ -1374,30 +1209,25 @@ const gradesOrder=[
 
 ];
 
-
-const sectionsOrder=[
-"أ",
-"ب",
-"ج",
-"د"
+const sectionOrder=[
+"أ","ب","ج","د"
 ];
 
 
-/* =========================================
+/* =====================================================
    VARIABLES
-========================================= */
+===================================================== */
 
 let role="";
-
 let isAdmin=false;
 let isTeacher=false;
 
 let currentUsername="";
 let currentTeacher=null;
 
+let assignments=[];
 let subjects=[];
 let tests=[];
-let assignments=[];
 
 let selectedSubjectId="";
 let selectedSubjectName="";
@@ -1407,49 +1237,47 @@ let selectedTest=null;
 
 let students=[];
 let gradeRecords=[];
-
 let analyzedStudents=[];
 
 
-/* =========================================
-   URL PARAMETERS
-========================================= */
+/* =====================================================
+   URL
+===================================================== */
 
-const params=
+const urlParams=
 new URLSearchParams(
 window.location.search
 );
 
-
 const incoming={
 
-source:
-params.get("source")||"",
-
 subjectId:
-params.get("subjectId")||"",
+urlParams.get("subjectId")||"",
 
 grade:
-params.get("grade")||"",
+urlParams.get("grade")||"",
 
 section:
-params.get("section")||"",
+urlParams.get("section")||"",
 
 testId:
-params.get("testId")||""
+urlParams.get("testId")||""
 
 };
 
 
-/* =========================================
+/* =====================================================
    HELPERS
-========================================= */
+===================================================== */
+
+function el(id){
+return document.getElementById(id);
+}
+
 
 function escapeHtml(value){
 
-return String(
-value??""
-)
+return String(value??"")
 
 .replace(/&/g,"&amp;")
 .replace(/</g,"&lt;")
@@ -1460,53 +1288,8 @@ value??""
 }
 
 
-function unique(array){
-
-return [
-...new Set(array)
-];
-
-}
-
-
-function formatNumber(number){
-
-if(
-number===null ||
-number===undefined ||
-Number.isNaN(number)
-){
-
-return "-";
-
-}
-
-
-const n=
-Number(number);
-
-
-if(
-Number.isInteger(n)
-){
-
-return n;
-
-}
-
-
-return n.toFixed(2);
-
-}
-
-
-function todayArabic(){
-
-return new Date()
-.toLocaleDateString(
-"ar-SA"
-);
-
+function unique(values){
+return [...new Set(values)];
 }
 
 
@@ -1515,11 +1298,38 @@ select,
 text
 ){
 
-select.innerHTML=
+select.innerHTML="";
 
-`<option value="">
-${text}
-</option>`;
+const option=
+document.createElement("option");
+
+option.value="";
+option.textContent=text;
+
+select.appendChild(option);
+
+}
+
+
+function formatNumber(value){
+
+if(
+value===null ||
+value===undefined ||
+Number.isNaN(Number(value))
+){
+
+return "-";
+
+}
+
+const n=Number(value);
+
+return Number.isInteger(n)
+?
+String(n)
+:
+n.toFixed(2);
 
 }
 
@@ -1528,10 +1338,8 @@ function sortGrades(list){
 
 return list.sort(
 (a,b)=>
-
-gradesOrder.indexOf(a)-
-gradesOrder.indexOf(b)
-
+gradeOrder.indexOf(a)-
+gradeOrder.indexOf(b)
 );
 
 }
@@ -1541,18 +1349,16 @@ function sortSections(list){
 
 return list.sort(
 (a,b)=>
-
-sectionsOrder.indexOf(a)-
-sectionsOrder.indexOf(b)
-
+sectionOrder.indexOf(a)-
+sectionOrder.indexOf(b)
 );
 
 }
 
 
-/* =========================================
+/* =====================================================
    SECURITY
-========================================= */
+===================================================== */
 
 function protectPage(){
 
@@ -1563,7 +1369,6 @@ localStorage.getItem(
 
 
 isAdmin=
-
 role==="admin" ||
 role==="superadmin";
 
@@ -1578,7 +1383,7 @@ if(
 ){
 
 alert(
-"يجب تسجيل الدخول أولًا"
+"يجب تسجيل الدخول أولًا."
 );
 
 location.href=
@@ -1588,46 +1393,37 @@ return false;
 
 }
 
-
 return true;
 
 }
 
 
-/* =========================================
-   LOAD TEACHER
-========================================= */
+/* =====================================================
+   TEACHER
+===================================================== */
 
 async function loadTeacher(){
 
 if(!isTeacher){
-
 return;
-
 }
 
 
-currentUsername=
+currentUsername=(
 
-(
-localStorage.getItem(
-"currentUserEmail"
-)
-||
-localStorage.getItem(
-"currentUser"
-)
-||
+localStorage.getItem("currentUserEmail") ||
+
+localStorage.getItem("currentUser") ||
+
 ""
-)
-.trim()
-.toLowerCase();
+
+).trim().toLowerCase();
 
 
 if(!currentUsername){
 
 throw new Error(
-"لم يتم العثور على حساب المعلم"
+"لم يتم العثور على حساب المعلم."
 );
 
 }
@@ -1644,19 +1440,15 @@ await db
 if(!doc.exists){
 
 throw new Error(
-"لم يتم العثور على بيانات المعلم"
+"لم يتم العثور على بيانات المعلم."
 );
 
 }
 
 
 currentTeacher={
-
-email:
-doc.id,
-
+email:doc.id,
 ...doc.data()
-
 };
 
 
@@ -1665,27 +1457,30 @@ assignments=
 Array.isArray(
 currentTeacher.assignments
 )
+
 ?
+
 currentTeacher.assignments.filter(
 a=>
 a.subjectId &&
 a.grade &&
 a.section
 )
+
 :
+
 [];
 
 }
 
 
-/* =========================================
-   LOAD SUBJECTS
-========================================= */
+/* =====================================================
+   SUBJECTS
+===================================================== */
 
 async function loadSubjects(){
 
 const snap=
-
 await db
 .collection("subjects")
 .get();
@@ -1697,12 +1492,8 @@ subjects=[];
 snap.forEach(doc=>{
 
 subjects.push({
-
-id:
-doc.id,
-
+id:doc.id,
 ...doc.data()
-
 });
 
 });
@@ -1725,57 +1516,46 @@ renderSubjects();
 }
 
 
-/* =========================================
-   RENDER SUBJECTS
-========================================= */
-
 function renderSubjects(){
 
 const select=
-document.getElementById(
-"subjectSelect"
-);
+el("subjectSelect");
 
 
 clearSelect(
 select,
-"-- اختر المادة --"
+"اختر المادة"
 );
 
 
-let allowedSubjects=[];
+let list=[];
 
 
 if(isAdmin){
 
-allowedSubjects=
-subjects;
+list=subjects;
 
 }
 
 else{
 
-const allowedIds=
+const ids=
 new Set(
-
 assignments.map(
 a=>a.subjectId
 )
-
 );
 
 
-allowedSubjects=
+list=
 subjects.filter(
-subject=>
-allowedIds.has(subject.id)
+s=>ids.has(s.id)
 );
 
 }
 
 
-allowedSubjects.forEach(
-subject=>{
+list.forEach(subject=>{
 
 const option=
 document.createElement(
@@ -1788,27 +1568,21 @@ subject.id;
 option.textContent=
 subject.name;
 
-select.appendChild(
-option
-);
+select.appendChild(option);
 
 });
 
 }
 
 
-/* =========================================
-   SUBJECT CHANGED
-========================================= */
+/* =====================================================
+   SUBJECT CHANGE
+===================================================== */
 
 async function subjectChanged(){
 
 selectedSubjectId=
-document
-.getElementById(
-"subjectSelect"
-)
-.value;
+el("subjectSelect").value;
 
 
 const subject=
@@ -1830,14 +1604,14 @@ await fillGrades();
 
 
 clearSelect(
-document.getElementById("sectionSelect"),
-"-- اختر الشعبة --"
+el("sectionSelect"),
+"اختر الشعبة"
 );
 
 
 clearSelect(
-document.getElementById("testSelect"),
-"-- اختر الاختبار --"
+el("testSelect"),
+"اختر الاختبار"
 );
 
 
@@ -1846,37 +1620,33 @@ clearAnalysis();
 }
 
 
-/* =========================================
-   GRADES AVAILABLE
-========================================= */
+/* =====================================================
+   GRADES
+===================================================== */
 
 async function fillGrades(){
 
 const select=
-document.getElementById(
-"gradeSelect"
-);
+el("gradeSelect");
 
 
 clearSelect(
 select,
-"-- اختر الصف --"
+"اختر الصف"
 );
 
 
 if(!selectedSubjectId){
-
 return;
-
 }
 
 
-let gradeList=[];
+let list=[];
 
 
 if(isTeacher){
 
-gradeList=
+list=
 unique(
 
 assignments
@@ -1885,9 +1655,7 @@ a=>
 a.subjectId===
 selectedSubjectId
 )
-.map(
-a=>a.grade
-)
+.map(a=>a.grade)
 
 );
 
@@ -1896,7 +1664,6 @@ a=>a.grade
 else{
 
 const snap=
-
 await db
 .collection("tests")
 .where(
@@ -1913,14 +1680,11 @@ new Set();
 
 snap.forEach(doc=>{
 
-const data=
-doc.data()||{};
+const data=doc.data()||{};
 
 
 const classes=
-Array.isArray(
-data.classes
-)
+Array.isArray(data.classes)
 ?
 data.classes
 :
@@ -1930,11 +1694,7 @@ data.classes
 classes.forEach(c=>{
 
 if(c.grade){
-
-set.add(
-c.grade
-);
-
+set.add(c.grade);
 }
 
 });
@@ -1942,50 +1702,35 @@ c.grade
 });
 
 
-gradeList=
-[...set];
+list=[...set];
 
 }
 
 
-sortGrades(
-gradeList
-);
+sortGrades(list);
 
 
-gradeList.forEach(
-grade=>{
+list.forEach(grade=>{
 
 const option=
 document.createElement(
 "option"
 );
 
-option.value=
-grade;
+option.value=grade;
+option.textContent=grade;
 
-option.textContent=
-grade;
-
-select.appendChild(
-option
-);
+select.appendChild(option);
 
 });
 
 }
 
 
-/* =========================================
-   GRADE CHANGED
-========================================= */
-
 async function gradeChanged(){
 
 selectedGrade=
-document.getElementById(
-"gradeSelect"
-).value;
+el("gradeSelect").value;
 
 
 selectedSection="";
@@ -1996,8 +1741,8 @@ await fillSections();
 
 
 clearSelect(
-document.getElementById("testSelect"),
-"-- اختر الاختبار --"
+el("testSelect"),
+"اختر الاختبار"
 );
 
 
@@ -2006,21 +1751,19 @@ clearAnalysis();
 }
 
 
-/* =========================================
+/* =====================================================
    SECTIONS
-========================================= */
+===================================================== */
 
 async function fillSections(){
 
 const select=
-document.getElementById(
-"sectionSelect"
-);
+el("sectionSelect");
 
 
 clearSelect(
 select,
-"-- اختر الشعبة --"
+"اختر الشعبة"
 );
 
 
@@ -2028,9 +1771,7 @@ if(
 !selectedSubjectId ||
 !selectedGrade
 ){
-
 return;
-
 }
 
 
@@ -2052,9 +1793,7 @@ a.grade===
 selectedGrade
 
 )
-.map(
-a=>a.section
-)
+.map(a=>a.section)
 
 );
 
@@ -2063,7 +1802,6 @@ a=>a.section
 else{
 
 const snap=
-
 await db
 .collection("tests")
 .where(
@@ -2113,54 +1851,37 @@ c.section
 });
 
 
-list=
-[...set];
+list=[...set];
 
 }
 
 
-sortSections(
-list
-);
+sortSections(list);
 
 
-list.forEach(
-section=>{
+list.forEach(section=>{
 
 const option=
 document.createElement(
 "option"
 );
 
-option.value=
-section;
+option.value=section;
+option.textContent=section;
 
-option.textContent=
-section;
-
-select.appendChild(
-option
-);
+select.appendChild(option);
 
 });
 
 }
 
 
-/* =========================================
-   SECTION CHANGED
-========================================= */
-
 async function sectionChanged(){
 
 selectedSection=
-document.getElementById(
-"sectionSelect"
-).value;
-
+el("sectionSelect").value;
 
 selectedTest=null;
-
 
 clearAnalysis();
 
@@ -2178,8 +1899,8 @@ await loadTests();
 else{
 
 clearSelect(
-document.getElementById("testSelect"),
-"-- اختر الاختبار --"
+el("testSelect"),
+"اختر الاختبار"
 );
 
 }
@@ -2187,26 +1908,23 @@ document.getElementById("testSelect"),
 }
 
 
-/* =========================================
+/* =====================================================
    TESTS
-========================================= */
+===================================================== */
 
 async function loadTests(){
 
 const select=
-document.getElementById(
-"testSelect"
-);
+el("testSelect");
 
 
 clearSelect(
 select,
-"-- اختر الاختبار --"
+"اختر الاختبار"
 );
 
 
 const snap=
-
 await db
 .collection("tests")
 .where(
@@ -2227,36 +1945,27 @@ doc.data()||{};
 
 
 const classes=
-Array.isArray(
-data.classes
-)
+Array.isArray(data.classes)
 ?
 data.classes
 :
 [];
 
 
-const validClass=
+const matches=
 classes.some(c=>
 
-c.grade===
-selectedGrade &&
-
-c.section===
-selectedSection
+c.grade===selectedGrade &&
+c.section===selectedSection
 
 );
 
 
-if(validClass){
+if(matches){
 
 tests.push({
-
-id:
-doc.id,
-
+id:doc.id,
 ...data
-
 });
 
 }
@@ -2287,8 +1996,7 @@ return;
 }
 
 
-tests.forEach(
-test=>{
+tests.forEach(test=>{
 
 const option=
 document.createElement(
@@ -2311,25 +2019,17 @@ test.date
 );
 
 
-select.appendChild(
-option
-);
+select.appendChild(option);
 
 });
 
 }
 
 
-/* =========================================
-   TEST CHANGED
-========================================= */
-
 async function testChanged(){
 
 const id=
-document.getElementById(
-"testSelect"
-).value;
+el("testSelect").value;
 
 
 selectedTest=
@@ -2347,36 +2047,29 @@ return;
 }
 
 
-showSelectedTest();
-
+showSelectedInfo();
 
 await loadResults();
 
 }
 
 
-/* =========================================
-   LOAD STUDENTS + RESULTS
-========================================= */
+/* =====================================================
+   LOAD RESULTS
+===================================================== */
 
 async function loadResults(){
 
-const area=
-document.getElementById(
-"analysisArea"
-);
-
-
-area.innerHTML=`
+el("analysisArea").innerHTML=`
 
 <div class="empty">
-
 جاري تحليل النتائج...
-
 </div>
 
 `;
 
+
+/* students */
 
 const studentSnap=
 
@@ -2430,7 +2123,9 @@ String(b.name||""),
 );
 
 
-const gradesSnap=
+/* grade records */
+
+const gradeSnap=
 
 await db
 .collection("grades")
@@ -2445,27 +2140,20 @@ selectedTest.id
 gradeRecords=[];
 
 
-gradesSnap.forEach(doc=>{
+gradeSnap.forEach(doc=>{
 
 const data=
 doc.data()||{};
 
 
 if(
-data.grade===
-selectedGrade &&
-
-data.section===
-selectedSection
+data.grade===selectedGrade &&
+data.section===selectedSection
 ){
 
 gradeRecords.push({
-
-id:
-doc.id,
-
+id:doc.id,
 ...data
-
 });
 
 }
@@ -2478,38 +2166,33 @@ reanalyze();
 }
 
 
-/* =========================================
-   LEVEL SETTINGS
-========================================= */
+/* =====================================================
+   LEVELS
+===================================================== */
 
 function getLevelSettings(){
 
 let high=
 Number(
-document.getElementById("highMin").value
+el("highMin").value
 );
 
 
 let medium=
 Number(
-document.getElementById("mediumMin").value
+el("mediumMin").value
 );
 
 
 let care=
 Number(
-document.getElementById("careMin").value
+el("careMin").value
 );
 
 
-if(Number.isNaN(high))
-high=85;
-
-if(Number.isNaN(medium))
-medium=70;
-
-if(Number.isNaN(care))
-care=50;
+if(Number.isNaN(high)) high=85;
+if(Number.isNaN(medium)) medium=70;
+if(Number.isNaN(care)) care=50;
 
 
 high=
@@ -2533,9 +2216,7 @@ Math.min(100,care)
 );
 
 
-if(
-medium>=high
-){
+if(medium>=high){
 
 medium=
 Math.max(
@@ -2543,16 +2224,13 @@ Math.max(
 high-1
 );
 
-document.getElementById(
-"mediumMin"
-).value=medium;
+el("mediumMin").value=
+medium;
 
 }
 
 
-if(
-care>=medium
-){
+if(care>=medium){
 
 care=
 Math.max(
@@ -2560,21 +2238,14 @@ Math.max(
 medium-1
 );
 
-document.getElementById(
-"careMin"
-).value=care;
+el("careMin").value=
+care;
 
 }
 
 
-document.getElementById(
-"highMin"
-).value=high;
-
-
-document.getElementById(
-"caseMax"
-).value=care;
+el("highMin").value=
+high;
 
 
 return{
@@ -2586,47 +2257,18 @@ care
 }
 
 
-function resetLevels(){
-
-document.getElementById(
-"highMin"
-).value=85;
-
-
-document.getElementById(
-"mediumMin"
-).value=70;
-
-
-document.getElementById(
-"careMin"
-).value=50;
-
-
-document.getElementById(
-"caseMax"
-).value=50;
-
-
-reanalyze();
-
-}
-
-
-/* =========================================
-   REANALYZE
-========================================= */
+/* =====================================================
+   ANALYZE
+===================================================== */
 
 function reanalyze(){
 
 if(!selectedTest){
-
 return;
-
 }
 
 
-const levels=
+const limits=
 getLevelSettings();
 
 
@@ -2646,10 +2288,10 @@ if(!record){
 return{
 
 student,
-attendance:"not-recorded",
+attendance:"unrecorded",
 mark:null,
 percentage:null,
-level:"not-recorded"
+level:"unrecorded"
 
 };
 
@@ -2676,9 +2318,7 @@ level:"absent"
 
 
 const mark=
-Number(
-record.mark
-);
+Number(record.mark);
 
 
 const fullMark=
@@ -2701,7 +2341,7 @@ let level="case";
 
 
 if(
-percentage>=levels.high
+percentage>=limits.high
 ){
 
 level="high";
@@ -2709,7 +2349,7 @@ level="high";
 }
 
 else if(
-percentage>=levels.medium
+percentage>=limits.medium
 ){
 
 level="medium";
@@ -2717,7 +2357,7 @@ level="medium";
 }
 
 else if(
-percentage>=levels.care
+percentage>=limits.care
 ){
 
 level="care";
@@ -2745,13 +2385,13 @@ renderAnalysis();
 }
 
 
-/* =========================================
+/* =====================================================
    RENDER ANALYSIS
-========================================= */
+===================================================== */
 
 function renderAnalysis(){
 
-const totalStudents=
+const total=
 analyzedStudents.length;
 
 
@@ -2767,9 +2407,9 @@ x=>x.attendance==="absent"
 );
 
 
-const notRecorded=
+const unrecorded=
 analyzedStudents.filter(
-x=>x.attendance==="not-recorded"
+x=>x.attendance==="unrecorded"
 );
 
 
@@ -2837,6 +2477,7 @@ x=>x.percentage>=50
 
 
 const successRate=
+
 present.length
 ?
 (passed/present.length)*100
@@ -2844,214 +2485,87 @@ present.length
 0;
 
 
-const attendanceRate=
-totalStudents
-?
-(present.length/totalStudents)*100
-:
-0;
-
-
-const fullMark=
-Number(
-selectedTest.fullMark
-);
-
-
-const averagePercent=
-present.length && fullMark>0
-?
-(average/fullMark)*100
-:
-0;
-
-
-const levels=
+const limits=
 getLevelSettings();
 
 
-const area=
-document.getElementById(
-"analysisArea"
-);
+el("analysisArea").innerHTML=`
+
+<!-- =================================================
+     REPORT HEADER
+================================================= -->
+
+<div class="report-header">
+
+<img
+src="logo.jpeg"
+class="report-logo"
+>
+
+<h2>
+مدارس الفلاح الأهلية
+</h2>
+
+<h3>
+تحليل نتائج الاختبار
+</h3>
 
 
-area.innerHTML=`
+<div class="meta">
 
-<!-- =====================================
-     المؤشرات العامة
-===================================== -->
+<div class="meta-item">
 
-<div class="box">
-
-<div class="box-title">
-📈 المؤشرات العامة
+<div class="meta-title">
+المادة
 </div>
 
-<div class="box-body">
-
-
-<div class="stats">
-
-<div class="stat">
-
-<div class="stat-number">
-${totalStudents}
-</div>
-
-<div class="stat-label">
-إجمالي الطلاب
-</div>
-
-</div>
-
-
-<div class="stat green">
-
-<div class="stat-number">
-${present.length}
-</div>
-
-<div class="stat-label">
-الحاضرون
+<div class="meta-value">
+${escapeHtml(selectedSubjectName)}
 </div>
 
 </div>
 
 
-<div class="stat red">
+<div class="meta-item">
 
-<div class="stat-number">
-${absent.length}
+<div class="meta-title">
+الصف / الشعبة
 </div>
 
-<div class="stat-label">
-الغائبون
-</div>
+<div class="meta-value">
 
-</div>
-
-
-<div class="stat purple">
-
-<div class="stat-number">
-${notRecorded.length}
-</div>
-
-<div class="stat-label">
-لم يتم الرصد
-</div>
+${escapeHtml(
+selectedGrade+
+" / "+
+selectedSection
+)}
 
 </div>
 
 </div>
 
 
-<div class="stats">
+<div class="meta-item">
 
-<div class="stat">
-
-<div class="stat-number">
-${formatNumber(average)}
+<div class="meta-title">
+الاختبار
 </div>
 
-<div class="stat-label">
-متوسط الدرجات
-</div>
-
-</div>
-
-
-<div class="stat gold">
-
-<div class="stat-number">
-${formatNumber(highest)}
-</div>
-
-<div class="stat-label">
-أعلى درجة
+<div class="meta-value">
+${escapeHtml(selectedTest.name)}
 </div>
 
 </div>
 
 
-<div class="stat red">
+<div class="meta-item">
 
-<div class="stat-number">
-${formatNumber(lowest)}
+<div class="meta-title">
+تاريخ الاختبار
 </div>
 
-<div class="stat-label">
-أقل درجة
-</div>
-
-</div>
-
-
-<div class="stat green">
-
-<div class="stat-number">
-${successRate.toFixed(1)}%
-</div>
-
-<div class="stat-label">
-نسبة النجاح
-</div>
-
-</div>
-
-</div>
-
-
-<div class="stats">
-
-<div class="stat">
-
-<div class="stat-number">
-${formatNumber(fullMark)}
-</div>
-
-<div class="stat-label">
-الدرجة النهائية
-</div>
-
-</div>
-
-
-<div class="stat green">
-
-<div class="stat-number">
-${attendanceRate.toFixed(1)}%
-</div>
-
-<div class="stat-label">
-نسبة الحضور
-</div>
-
-</div>
-
-
-<div class="stat">
-
-<div class="stat-number">
-${averagePercent.toFixed(1)}%
-</div>
-
-<div class="stat-label">
-متوسط الفصل %
-</div>
-
-</div>
-
-
-<div class="stat gold">
-
-<div class="stat-number">
-${passed}
-</div>
-
-<div class="stat-label">
-الناجحون
+<div class="meta-value">
+${escapeHtml(selectedTest.date||"-")}
 </div>
 
 </div>
@@ -3059,166 +2573,267 @@ ${passed}
 </div>
 
 </div>
+
+
+<!-- =================================================
+     KPIs
+================================================= -->
+
+<div class="kpi-grid">
+
+${kpi(
+"إجمالي الطلاب",
+total,
+""
+)}
+
+${kpi(
+"حاضر",
+present.length,
+"green"
+)}
+
+${kpi(
+"غائب",
+absent.length,
+"red"
+)}
+
+${kpi(
+"لم يتم الرصد",
+unrecorded.length,
+"purple"
+)}
+
+${kpi(
+"المتوسط",
+formatNumber(average),
+""
+)}
+
+${kpi(
+"أعلى درجة",
+formatNumber(highest),
+""
+)}
+
+${kpi(
+"أقل درجة",
+formatNumber(lowest),
+"red"
+)}
+
+${kpi(
+"نسبة النجاح",
+successRate.toFixed(1)+"%",
+"green"
+)}
+
 </div>
 
 
-<!-- =====================================
-     المستويات
-===================================== -->
+<!-- =================================================
+     LEVEL STRIP
+================================================= -->
 
-<div class="box">
+<div class="level-section">
 
-<div class="box-title">
-🎯 توزيع مستويات الطلاب
+<div class="small-heading">
+توزيع المستويات (من الطلاب الحاضرين)
 </div>
 
-<div class="box-body">
 
-<div class="levels">
+<div class="level-strip">
 
-${levelCard(
-"مستوى مرتفع",
+${levelSegment(
 high.length,
 present.length,
-"high",
-levels.high+"% فأعلى"
+"level-high"
 )}
 
-${levelCard(
-"مستوى متوسط",
+${levelSegment(
 medium.length,
 present.length,
-"medium",
-levels.medium+"% إلى أقل من "+levels.high+"%"
+"level-medium"
 )}
 
-${levelCard(
-"أولى بالرعاية",
+${levelSegment(
 care.length,
 present.length,
-"care",
-levels.care+"% إلى أقل من "+levels.medium+"%"
+"level-care"
 )}
 
-${levelCard(
-"دراسة حالة",
+${levelSegment(
 cases.length,
 present.length,
-"case",
-"أقل من "+levels.care+"%"
+"level-case"
 )}
 
 </div>
 
-</div>
-</div>
 
+<div class="level-labels">
 
-<!-- =====================================
-     الرسم البياني
-===================================== -->
+<div class="level-label">
 
-<div class="box">
+<strong>مستوى مرتفع</strong>
 
-<div class="box-title">
-📊 الرسم البياني للمستويات
+${limits.high}% فأعلى
+
 </div>
 
-<div class="box-body">
+
+<div class="level-label">
+
+<strong>مستوى متوسط</strong>
+
+${limits.medium}% - ${limits.high-0.01}%
+
+</div>
+
+
+<div class="level-label">
+
+<strong>أولى بالرعاية</strong>
+
+${limits.care}% - ${limits.medium-0.01}%
+
+</div>
+
+
+<div class="level-label">
+
+<strong>دراسة حالة</strong>
+
+أقل من ${limits.care}%
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =================================================
+     CHART
+================================================= -->
 
 ${buildChart(
 high.length,
 medium.length,
 care.length,
-cases.length
+cases.length,
+present.length
 )}
 
-</div>
-</div>
 
+<!-- =================================================
+     DETAILS
+================================================= -->
 
-<!-- =====================================
-     الطلاب حسب المستوى
-===================================== -->
+<div class="details-box">
 
-<div class="box">
-
-<div class="box-title">
-👥 الطلاب حسب المستوى
+<div class="details-title">
+تفاصيل درجات الطلاب
 </div>
 
-<div class="box-body">
-
-<div class="lists">
-
-${buildStudentList(
-"مستوى مرتفع",
-high,
-"high"
-)}
-
-${buildStudentList(
-"مستوى متوسط",
-medium,
-"medium"
-)}
-
-${buildStudentList(
-"أولى بالرعاية",
-care,
-"care"
-)}
-
-${buildStudentList(
-"دراسة حالة",
-cases,
-"case"
-)}
+${buildTable()}
 
 </div>
 
-</div>
-</div>
 
+<!-- =================================================
+     LEGEND
+================================================= -->
 
-<!-- =====================================
-     التفاصيل
-===================================== -->
+<div class="legend">
 
-<div class="box">
-
-<div class="box-title">
-📋 التفاصيل الكاملة
+<div class="legend-item">
+<span class="dot green"></span>
+مرتفع
 </div>
 
-<div class="box-body">
+<div class="legend-item">
+<span class="dot blue"></span>
+متوسط
+</div>
 
-${buildDetailsTable()}
+<div class="legend-item">
+<span class="dot yellow"></span>
+أولى بالرعاية
+</div>
+
+<div class="legend-item">
+<span class="dot red"></span>
+دراسة حالة
+</div>
+
+<div class="legend-item">
+<span class="dot gray"></span>
+غائب / لم يتم الرصد
+</div>
 
 </div>
+
+
+<div class="report-footer">
+
+<div>
+نظام راصد - مدارس الفلاح الأهلية
+</div>
+
+<div>
+تصميم محمد عامر أحمد - 2026
+</div>
+
 </div>
 
 `;
 
+}
 
-updatePrintData();
+
+/* =====================================================
+   KPI
+===================================================== */
+
+function kpi(
+label,
+value,
+type
+){
+
+return`
+
+<div class="kpi ${type}">
+
+<div class="kpi-label">
+${label}
+</div>
+
+<div class="kpi-value">
+${value}
+</div>
+
+</div>
+
+`;
 
 }
 
 
-/* =========================================
-   LEVEL CARD
-========================================= */
+/* =====================================================
+   LEVEL SEGMENT
+===================================================== */
 
-function levelCard(
-title,
+function levelSegment(
 count,
 total,
-type,
-range
+className
 ){
 
 const percent=
+
 total
 ?
 (count/total)*100
@@ -3228,27 +2843,15 @@ total
 
 return`
 
-<div class="level-card level-${type}">
+<div class="level-segment ${className}">
 
-<div class="level-title">
-${title}
-</div>
-
-<div class="level-number">
+<span class="count">
 ${count}
-</div>
+</span>
 
-<div class="level-percent">
+<span class="percent">
 ${percent.toFixed(1)}%
-</div>
-
-<div
-class="level-percent"
-style="margin-top:4px">
-
-${range}
-
-</div>
+</span>
 
 </div>
 
@@ -3257,15 +2860,16 @@ ${range}
 }
 
 
-/* =========================================
+/* =====================================================
    CHART
-========================================= */
+===================================================== */
 
 function buildChart(
 high,
 medium,
 care,
-cases
+cases,
+totalPresent
 ){
 
 const values=[
@@ -3276,97 +2880,126 @@ cases
 ];
 
 
-const max=
+const maxValue=
 Math.max(
 ...values,
 1
 );
 
 
+/*
+نجعل أعلى قيمة في الرسم تصل تقريبًا إلى
+85% من مساحة الرسم.
+*/
+
 function height(value){
 
+if(value===0){
+return 2;
+}
+
 return Math.max(
-2,
-(value/max)*190
+4,
+(value/maxValue)*82
 );
 
 }
 
 
+const axisMax=
+Math.max(
+maxValue,
+4
+);
+
+
+const axisValues=[
+axisMax,
+Math.round(axisMax*.75),
+Math.round(axisMax*.5),
+Math.round(axisMax*.25),
+0
+];
+
+
 return`
 
-<div class="chart-container">
+<div class="chart-box">
 
-<div class="chart">
+<div class="chart-header">
 
-<div class="bar-wrap">
-
-<div class="bar-value">
-${high}
+<div class="chart-title">
+الرسم البياني لتوزيع المستويات
 </div>
 
-<div
-class="bar high"
-style="height:${height(high)}px">
-</div>
-
-<div class="bar-label">
-مستوى مرتفع
+<div class="chart-caption">
+عدد الطلاب
 </div>
 
 </div>
 
 
-<div class="bar-wrap">
+<div class="chart-area">
 
-<div class="bar-value">
-${medium}
-</div>
+<div class="y-axis">
 
-<div
-class="bar medium"
-style="height:${height(medium)}px">
-</div>
+${axisValues.map(
+(value,index)=>{
 
-<div class="bar-label">
-مستوى متوسط
-</div>
-
-</div>
+const bottom=
+(index/(axisValues.length-1))*100;
 
 
-<div class="bar-wrap">
+return`
 
-<div class="bar-value">
-${care}
-</div>
+<span
+class="y-label"
+style="bottom:${bottom}%"
+>
+${value}
+</span>
 
-<div
-class="bar care"
-style="height:${height(care)}px">
-</div>
+`;
 
-<div class="bar-label">
-أولى بالرعاية
-</div>
+}
+).join("")}
 
 </div>
 
 
-<div class="bar-wrap">
+<div class="plot">
 
-<div class="bar-value">
-${cases}
-</div>
+${chartBar(
+high,
+totalPresent,
+height(high),
+"green",
+"مرتفع"
+)}
 
-<div
-class="bar case"
-style="height:${height(cases)}px">
-</div>
+${chartBar(
+medium,
+totalPresent,
+height(medium),
+"blue",
+"متوسط"
+)}
 
-<div class="bar-label">
-دراسة حالة
-</div>
+${chartBar(
+care,
+totalPresent,
+height(care),
+"yellow",
+"أولى بالرعاية"
+)}
+
+${chartBar(
+cases,
+totalPresent,
+height(cases),
+"red",
+"دراسة حالة"
+)}
 
 </div>
 
@@ -3379,94 +3012,43 @@ style="height:${height(cases)}px">
 }
 
 
-/* =========================================
-   STUDENT LIST
-========================================= */
-
-function buildStudentList(
-title,
-list,
-type
+function chartBar(
+value,
+total,
+heightPercent,
+color,
+name
 ){
 
-let content="";
-
-
-if(!list.length){
-
-content=`
-
-<div
-style="
-padding:15px;
-text-align:center;
-color:#94a3b8;
-font-size:11px
-">
-
-لا يوجد طلاب
-
-</div>
-
-`;
-
-}
-
-else{
-
-content=
-[...list]
-.sort(
-(a,b)=>
-b.percentage-
-a.percentage
-)
-.map(item=>`
-
-<div class="student-chip">
-
-<span>
-
-${escapeHtml(
-item.student.name
-)}
-
-</span>
-
-<span class="student-score">
-
-${formatNumber(
-item.mark
-)}
-/
-${formatNumber(
-item.fullMark
-)}
-
-&nbsp;
-
-(${item.percentage.toFixed(1)}%)
-
-</span>
-
-</div>
-
-`)
-.join("");
-
-}
+const percent=
+total
+?
+(value/total)*100
+:
+0;
 
 
 return`
 
-<div class="list-card">
+<div class="bar-group">
 
-<div class="list-title ${type}">
-${title}
+<div class="bar-value">
+
+${value}
+&nbsp;
+<span style="font-size:.75em">
+(${percent.toFixed(1)}%)
+</span>
+
 </div>
 
-<div class="student-list">
-${content}
+<div
+class="bar ${color}"
+style="height:${heightPercent}%">
+</div>
+
+<div class="bar-name">
+${name}
 </div>
 
 </div>
@@ -3476,18 +3058,18 @@ ${content}
 }
 
 
-/* =========================================
-   DETAILS TABLE
-========================================= */
+/* =====================================================
+   TABLE
+===================================================== */
 
-function buildDetailsTable(){
+function buildTable(){
 
 if(!analyzedStudents.length){
 
 return`
 
 <div class="empty">
-لا يوجد طلاب.
+لا يوجد طلاب في هذا الفصل.
 </div>
 
 `;
@@ -3501,71 +3083,60 @@ let rows="";
 analyzedStudents.forEach(
 (item,index)=>{
 
-let attendanceText="";
-let markText="-";
-let percentText="-";
-let levelText="";
-let badgeClass="";
+let rowClass="";
+let attendance="";
+let mark="-";
+let percentage="-";
+let percentClass="";
 
 
 if(
 item.attendance==="absent"
 ){
 
-attendanceText="غائب";
+rowClass=
+"row-absent";
 
-levelText="غائب";
-
-badgeClass=
-"badge-absent";
+attendance=
+"غائب";
 
 }
 
 else if(
-item.attendance===
-"not-recorded"
+item.attendance==="unrecorded"
 ){
 
-attendanceText=
-"لم يتم الرصد";
+rowClass=
+"row-unrecorded";
 
-levelText=
+attendance=
 "لم يتم الرصد";
-
-badgeClass=
-"badge-absent";
 
 }
 
 else{
 
-attendanceText="حاضر";
+attendance=
+"حاضر";
 
-markText=
-formatNumber(
-item.mark
-)+
+
+mark=
+
+formatNumber(item.mark)+
 " / "+
-formatNumber(
-item.fullMark
-);
+formatNumber(item.fullMark);
 
 
-percentText=
-item.percentage
-.toFixed(1)+
-"%";
+percentage=
+item.percentage.toFixed(1)+"%";
 
 
-if(
-item.level==="high"
-){
+if(item.level==="high"){
 
-levelText=
-"مستوى مرتفع";
+rowClass="row-high";
 
-badgeClass=
-"badge-high";
+percentClass=
+"percent-high";
 
 }
 
@@ -3573,11 +3144,11 @@ else if(
 item.level==="medium"
 ){
 
-levelText=
-"مستوى متوسط";
+rowClass=
+"row-medium";
 
-badgeClass=
-"badge-medium";
+percentClass=
+"percent-medium";
 
 }
 
@@ -3585,21 +3156,21 @@ else if(
 item.level==="care"
 ){
 
-levelText=
-"أولى بالرعاية";
+rowClass=
+"row-care";
 
-badgeClass=
-"badge-care";
+percentClass=
+"percent-care";
 
 }
 
 else{
 
-levelText=
-"دراسة حالة";
+rowClass=
+"row-case";
 
-badgeClass=
-"badge-case";
+percentClass=
+"percent-case";
 
 }
 
@@ -3608,7 +3179,7 @@ badgeClass=
 
 rows+=`
 
-<tr>
+<tr class="${rowClass}">
 
 <td>
 ${index+1}
@@ -3621,31 +3192,23 @@ item.student.code
 </td>
 
 <td class="student-name">
+
 ${escapeHtml(
 item.student.name
 )}
+
 </td>
 
 <td>
-${attendanceText}
+${attendance}
 </td>
 
 <td>
-${markText}
+${mark}
 </td>
 
-<td>
-${percentText}
-</td>
-
-<td>
-
-<span class="badge ${badgeClass}">
-
-${levelText}
-
-</span>
-
+<td class="${percentClass}">
+${percentage}
 </td>
 
 </tr>
@@ -3671,7 +3234,6 @@ return`
 <th>الحضور</th>
 <th>الدرجة</th>
 <th>النسبة</th>
-<th>التصنيف</th>
 
 </tr>
 
@@ -3692,16 +3254,14 @@ ${rows}
 }
 
 
-/* =========================================
-   SELECTED TEST INFO
-========================================= */
+/* =====================================================
+   SELECTED INFO
+===================================================== */
 
-function showSelectedTest(){
+function showSelectedInfo(){
 
 const box=
-document.getElementById(
-"selectedTestInfo"
-);
+el("selectedInfo");
 
 
 if(!selectedTest){
@@ -3718,43 +3278,21 @@ box.style.display=
 "block";
 
 
-box.innerHTML=
+box.textContent=
 
-"📚 "+
-escapeHtml(
-selectedSubjectName
-)+
-
-" &nbsp; | &nbsp; "+
-
-"🏫 "+
-escapeHtml(
+selectedSubjectName+
+" | "+
 selectedGrade+
 " / "+
-selectedSection
-)+
-
-" &nbsp; | &nbsp; "+
-
-"📝 "+
-escapeHtml(
-selectedTest.name
-)+
-
-" &nbsp; | &nbsp; "+
-
-"الدرجة النهائية: "+
-escapeHtml(
-selectedTest.fullMark
-)+
-
+selectedSection+
+" | "+
+selectedTest.name+
+" | الدرجة النهائية: "+
+selectedTest.fullMark+
 (
 selectedTest.date
 ?
-" &nbsp; | &nbsp; التاريخ: "+
-escapeHtml(
-selectedTest.date
-)
+" | "+selectedTest.date
 :
 ""
 );
@@ -3762,56 +3300,9 @@ selectedTest.date
 }
 
 
-/* =========================================
-   PRINT DATA
-========================================= */
-
-function updatePrintData(){
-
-document
-.getElementById(
-"printSubject"
-)
-.textContent=
-
-selectedSubjectName||"-";
-
-
-document
-.getElementById(
-"printClass"
-)
-.textContent=
-
-selectedGrade+
-" / "+
-selectedSection;
-
-
-document
-.getElementById(
-"printTest"
-)
-.textContent=
-
-selectedTest?.name||"-";
-
-
-document
-.getElementById(
-"printDate"
-)
-.textContent=
-
-selectedTest?.date||
-todayArabic();
-
-}
-
-
-/* =========================================
-   CLEAR ANALYSIS
-========================================= */
+/* =====================================================
+   CLEAR
+===================================================== */
 
 function clearAnalysis(){
 
@@ -3820,23 +3311,15 @@ gradeRecords=[];
 analyzedStudents=[];
 
 
-document
-.getElementById(
-"selectedTestInfo"
-)
-.style.display=
+el("selectedInfo").style.display=
 "none";
 
 
-document
-.getElementById(
-"analysisArea"
-)
-.innerHTML=`
+el("analysisArea").innerHTML=`
 
 <div class="empty">
 
-اختر المادة والفصل والاختبار لعرض تحليل النتائج.
+اختر المادة والصف والشعبة والاختبار لعرض التحليل.
 
 </div>
 
@@ -3845,16 +3328,16 @@ document
 }
 
 
-/* =========================================
+/* =====================================================
    PRINT
-========================================= */
+===================================================== */
 
 function printAnalysis(){
 
 if(!selectedTest){
 
 alert(
-"اختر الاختبار أولًا"
+"اختر الاختبار أولًا."
 );
 
 return;
@@ -3865,7 +3348,7 @@ return;
 if(!students.length){
 
 alert(
-"لا توجد بيانات للطباعة"
+"لا توجد بيانات للطباعة."
 );
 
 return;
@@ -3873,16 +3356,14 @@ return;
 }
 
 
-updatePrintData();
-
 window.print();
 
 }
 
 
-/* =========================================
+/* =====================================================
    BACK
-========================================= */
+===================================================== */
 
 function goBack(){
 
@@ -3903,20 +3384,20 @@ location.href=
 }
 
 
-/* =========================================
-   APPLY INCOMING SELECTION
-========================================= */
+/* =====================================================
+   INCOMING TEACHER SELECTION
+===================================================== */
 
-async function applyIncomingSelection(){
+async function applyIncoming(){
 
-if(
-!incoming.subjectId
-){
-
+if(!incoming.subjectId){
 return;
-
 }
 
+
+/*
+لو معلم نتأكد أن الفصل مسند إليه.
+*/
 
 if(isTeacher){
 
@@ -3936,35 +3417,31 @@ incoming.section
 
 
 if(!allowed){
-
 return;
-
 }
 
 }
+
+
+const subjectSelect=
+el("subjectSelect");
 
 
 const subjectExists=
-[...document.getElementById(
-"subjectSelect"
-).options]
+[...subjectSelect.options]
 .some(
-option=>
-option.value===
+o=>
+o.value===
 incoming.subjectId
 );
 
 
 if(!subjectExists){
-
 return;
-
 }
 
 
-document.getElementById(
-"subjectSelect"
-).value=
+subjectSelect.value=
 incoming.subjectId;
 
 
@@ -3988,16 +3465,14 @@ await fillGrades();
 if(incoming.grade){
 
 const gradeSelect=
-document.getElementById(
-"gradeSelect"
-);
+el("gradeSelect");
 
 
 const exists=
 [...gradeSelect.options]
 .some(
-o=>o.value===
-incoming.grade
+o=>
+o.value===incoming.grade
 );
 
 
@@ -4008,7 +3483,6 @@ incoming.grade;
 
 selectedGrade=
 incoming.grade;
-
 
 await fillSections();
 
@@ -4023,15 +3497,14 @@ selectedGrade
 ){
 
 const sectionSelect=
-document.getElementById(
-"sectionSelect"
-);
+el("sectionSelect");
 
 
 const exists=
 [...sectionSelect.options]
 .some(
-o=>o.value===
+o=>
+o.value===
 incoming.section
 );
 
@@ -4043,7 +3516,6 @@ incoming.section;
 
 selectedSection=
 incoming.section;
-
 
 await loadTests();
 
@@ -4059,27 +3531,24 @@ selectedSection
 
 const exists=
 tests.some(
-t=>t.id===
-incoming.testId
+t=>
+t.id===incoming.testId
 );
 
 
 if(exists){
 
-document.getElementById(
-"testSelect"
-).value=
+el("testSelect").value=
 incoming.testId;
 
 
 selectedTest=
 tests.find(
-t=>t.id===
-incoming.testId
+t=>t.id===incoming.testId
 );
 
 
-showSelectedTest();
+showSelectedInfo();
 
 await loadResults();
 
@@ -4090,47 +3559,39 @@ await loadResults();
 }
 
 
-/* =========================================
-   MODE NOTE
-========================================= */
+/* =====================================================
+   MODE
+===================================================== */
 
-function renderModeNote(){
-
-const note=
-document.getElementById(
-"modeNote"
-);
-
+function renderMode(){
 
 if(isAdmin){
 
-note.innerHTML=
+el("modeNote").innerHTML=
 
-"👑 <strong>وضع الإدارة:</strong> يمكنك تحليل نتائج أي مادة وأي فصل وأي اختبار في المدرسة.";
+"👑 <strong>الإدارة:</strong> يمكنك تحليل أي مادة وأي فصل وأي اختبار في المدرسة.";
 
 }
 
 else{
 
-note.innerHTML=
+el("modeNote").innerHTML=
 
-"👨‍🏫 <strong>وضع المعلم:</strong> تظهر لك فقط المواد والفصول المسندة إليك.";
-
-}
+"👨‍🏫 <strong>المعلم:</strong> يمكنك تحليل المواد والفصول المسندة إليك فقط.";
 
 }
 
+}
 
-/* =========================================
+
+/* =====================================================
    START
-========================================= */
+===================================================== */
 
 async function start(){
 
 if(!protectPage()){
-
 return;
-
 }
 
 
@@ -4140,22 +3601,20 @@ await loadTeacher();
 
 await loadSubjects();
 
-renderModeNote();
+renderMode();
 
-await applyIncomingSelection();
+await applyIncoming();
 
 }
 
 catch(error){
 
-console.error(
-error
-);
+console.error(error);
 
 
 alert(
 
-"حدث خطأ أثناء تحميل صفحة التحليل:\n"+
+"حدث خطأ أثناء تحميل التحليل:\n"+
 error.message
 
 );
