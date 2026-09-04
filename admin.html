@@ -2,9 +2,9 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 
-<title>راصد - لوحة الإدارة</title>
+<title>نظام راصد - لوحة الإدارة</title>
 
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
@@ -14,151 +14,150 @@
 *{box-sizing:border-box}
 
 body{
-    margin:0;
-    font-family:Tahoma,Arial,sans-serif;
-    background:#f4f7fb;
-    color:#1f2937;
+margin:0;
+font-family:Tahoma,Arial,sans-serif;
+background:#f4f7fb;
+color:#1f2937
 }
 
 .header{
-    position:relative;
-    background:linear-gradient(135deg,#0f2747,#174f7c);
-    color:#fff;
-    padding:22px 15px;
-    text-align:center;
-    box-shadow:0 4px 15px rgba(0,0,0,.15);
+position:relative;
+background:linear-gradient(135deg,#0c2745,#174f7c);
+color:#fff;
+text-align:center;
+padding:22px 15px;
+box-shadow:0 4px 15px rgba(0,0,0,.15)
 }
 
 .logo{
-    width:90px;
-    height:90px;
-    object-fit:contain;
-    background:#fff;
-    border-radius:50%;
-    padding:5px;
+width:88px;
+height:88px;
+object-fit:contain;
+background:#fff;
+border-radius:50%;
+padding:5px
 }
 
 .header h1{
-    margin:8px 0 3px;
-    font-size:26px;
+margin:8px 0 3px;
+font-size:27px
 }
 
 .header p{
-    margin:0;
-    color:#f5d77a;
-    font-weight:bold;
+margin:0;
+color:#f4d77b;
+font-weight:bold
 }
 
 .logout{
-    position:absolute;
-    left:15px;
-    top:15px;
+position:absolute;
+left:15px;
+top:15px
 }
 
 .container{
-    max-width:1250px;
-    margin:20px auto;
-    padding:0 12px 40px;
+max-width:1300px;
+margin:20px auto;
+padding:0 12px 40px
 }
 
 .stats{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-    gap:12px;
-    margin-bottom:18px;
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:12px;
+margin-bottom:18px
 }
 
 .stat{
-    background:#fff;
-    border-radius:14px;
-    padding:18px;
-    text-align:center;
-    box-shadow:0 3px 12px rgba(0,0,0,.08);
+background:#fff;
+border-radius:14px;
+padding:17px;
+text-align:center;
+box-shadow:0 3px 12px rgba(0,0,0,.08)
 }
 
-.stat .number{
-    font-size:30px;
-    font-weight:bold;
-    color:#174f7c;
+.stat-number{
+font-size:29px;
+font-weight:bold;
+color:#174f7c
 }
 
-.stat .label{
-    margin-top:5px;
-    color:#6b7280;
+.stat-label{
+margin-top:5px;
+color:#6b7280
 }
 
 .box{
-    background:#fff;
-    border-radius:15px;
-    margin-bottom:18px;
-    box-shadow:0 3px 14px rgba(0,0,0,.08);
-    overflow:hidden;
+background:#fff;
+border-radius:15px;
+margin-bottom:18px;
+box-shadow:0 3px 14px rgba(0,0,0,.08);
+overflow:hidden
 }
 
 .box-title{
-    background:#eef4fa;
-    border-bottom:1px solid #dbe5ef;
-    padding:14px 18px;
-    color:#123c63;
-    font-size:19px;
-    font-weight:bold;
+background:#eef4fa;
+border-bottom:1px solid #dbe5ef;
+padding:14px 18px;
+color:#123c63;
+font-size:19px;
+font-weight:bold
 }
 
 .box-body{
-    padding:18px;
+padding:18px
 }
 
 .row{
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
+display:flex;
+flex-wrap:wrap;
+gap:12px
 }
 
 .col{
-    flex:1 1 200px;
+flex:1 1 190px
 }
 
 label{
-    display:block;
-    margin-bottom:5px;
-    font-size:13px;
-    font-weight:bold;
+display:block;
+margin-bottom:6px;
+font-size:13px;
+font-weight:bold
 }
 
-input,
-select{
-    width:100%;
-    padding:11px;
-    border:1px solid #cbd5e1;
-    border-radius:8px;
-    font-size:14px;
-    background:#fff;
-    color:#111827 !important;
+input,select{
+width:100%;
+padding:11px;
+border:1px solid #cbd5e1;
+border-radius:8px;
+font-size:14px;
+background:#fff !important;
+color:#111 !important
 }
 
 select option{
-    background:#fff !important;
-    color:#111827 !important;
-    font-size:15px;
+background:#fff !important;
+color:#111 !important
 }
 
-input:focus,
-select:focus{
-    outline:none;
-    border-color:#174f7c;
-    box-shadow:0 0 0 2px rgba(23,79,124,.12);
+input:focus,select:focus{
+outline:none;
+border-color:#174f7c;
+box-shadow:0 0 0 2px rgba(23,79,124,.12)
 }
 
 button{
-    border:0;
-    border-radius:8px;
-    padding:10px 16px;
-    cursor:pointer;
-    font-weight:bold;
-    font-size:14px;
+border:0;
+border-radius:8px;
+padding:10px 16px;
+font-size:14px;
+font-weight:bold;
+cursor:pointer
 }
 
-button:hover{opacity:.9}
+button:hover{
+opacity:.9
+}
 
 .btn-primary{background:#174f7c;color:#fff}
 .btn-success{background:#198754;color:#fff}
@@ -169,160 +168,225 @@ button:hover{opacity:.9}
 .btn-dark{background:#343a40;color:#fff}
 
 .actions{
-    display:flex;
-    flex-wrap:wrap;
-    gap:8px;
-    margin-top:12px;
-}
-
-.danger-zone{
-    margin-top:15px;
-    padding-top:15px;
-    border-top:1px dashed #dc3545;
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:12px
 }
 
 .table-wrap{
-    overflow:auto;
-    margin-top:15px;
-    max-height:450px;
-    border:1px solid #e1e7ee;
-    border-radius:10px;
+overflow:auto;
+margin-top:15px;
+max-height:470px;
+border:1px solid #e1e7ee;
+border-radius:10px
 }
 
 table{
-    width:100%;
-    border-collapse:collapse;
-    min-width:700px;
+width:100%;
+border-collapse:collapse;
+min-width:700px
 }
 
 th{
-    position:sticky;
-    top:0;
-    background:#174f7c;
-    color:#fff;
-    z-index:1;
+position:sticky;
+top:0;
+z-index:2;
+background:#174f7c;
+color:#fff
 }
 
 th,td{
-    padding:9px 8px;
-    border-bottom:1px solid #e5e7eb;
-    text-align:center;
-    font-size:13px;
+padding:9px 8px;
+border-bottom:1px solid #e5e7eb;
+text-align:center;
+font-size:13px
 }
 
 tr:nth-child(even){
-    background:#f8fafc;
+background:#f8fafc
 }
 
 .small-btn{
-    padding:5px 8px;
-    font-size:11px;
-    margin:2px;
+padding:5px 8px;
+font-size:11px;
+margin:2px
 }
 
 .note{
-    padding:11px;
-    margin-top:12px;
-    border-radius:8px;
-    background:#fff8db;
-    color:#715d00;
-    line-height:1.8;
-    font-size:13px;
+background:#fff8db;
+color:#715d00;
+padding:11px;
+border-radius:8px;
+margin-top:12px;
+font-size:13px;
+line-height:1.8
+}
+
+.info-box{
+background:#e7f1ff;
+color:#084298;
+padding:12px;
+border-radius:9px;
+margin:12px 0;
+font-weight:bold
+}
+
+.danger-zone{
+margin-top:18px;
+padding-top:15px;
+border-top:1px dashed #dc3545
+}
+
+/* بطاقات المعلمين */
+
+.teacher-cards{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+gap:10px;
+margin:12px 0 18px
+}
+
+.teacher-card{
+background:#fff;
+border:2px solid #d6dee8;
+border-radius:12px;
+padding:14px 10px;
+text-align:center;
+cursor:pointer;
+transition:.2s
+}
+
+.teacher-card:hover{
+border-color:#174f7c;
+background:#f3f8fc
+}
+
+.teacher-card.active{
+background:#174f7c;
+border-color:#174f7c;
+color:#fff
+}
+
+.teacher-card-name{
+font-size:16px;
+font-weight:bold
+}
+
+.teacher-card-user{
+font-size:11px;
+margin-top:5px;
+direction:ltr;
+opacity:.7
+}
+
+.teacher-card.active .teacher-card-user{
+color:#f4d77b;
+opacity:1
+}
+
+/* شبكة الفصول */
+
+.class-grid{
+overflow:auto;
+margin-top:12px
+}
+
+.class-table{
+min-width:650px
+}
+
+.class-table th{
+position:static
+}
+
+.class-check{
+width:22px;
+height:22px;
+cursor:pointer
+}
+
+.grade-title{
+font-weight:bold;
+color:#174f7c
+}
+
+.assignment-summary{
+margin-top:20px;
+padding:15px;
+border:1px solid #dbe5ef;
+border-radius:12px;
+background:#fafcff
+}
+
+.assignment-group{
+border-bottom:1px solid #e5e7eb;
+padding:10px 0
+}
+
+.assignment-group:last-child{
+border-bottom:0
+}
+
+.subject-name{
+font-weight:bold;
+color:#174f7c;
+margin-bottom:7px
+}
+
+.tag{
+display:inline-block;
+background:#e8f1f8;
+color:#123c63;
+border-radius:20px;
+padding:6px 10px;
+margin:3px;
+font-size:12px
 }
 
 .status{
-    display:none;
-    padding:12px;
-    margin-top:12px;
-    border-radius:8px;
+display:none;
+padding:12px;
+margin-top:12px;
+border-radius:8px
 }
 
 .status.info{
-    display:block;
-    background:#e7f1ff;
-    color:#084298;
+display:block;
+background:#e7f1ff;
+color:#084298
 }
 
 .status.success{
-    display:block;
-    background:#d1e7dd;
-    color:#0f5132;
+display:block;
+background:#d1e7dd;
+color:#0f5132
 }
 
 .status.error{
-    display:block;
-    background:#f8d7da;
-    color:#842029;
-}
-
-.assign-header{
-    display:flex;
-    gap:10px;
-    flex-wrap:wrap;
-    align-items:end;
-    margin-bottom:15px;
-}
-
-.teacher-select-wrap{
-    flex:1;
-    min-width:300px;
-}
-
-#assignTeacher{
-    height:48px;
-    font-size:16px;
-    font-weight:bold;
-    color:#111 !important;
-    background:#fff !important;
-    border:2px solid #174f7c;
-}
-
-#assignTeacher option{
-    color:#111 !important;
-    background:#fff !important;
-    font-weight:normal;
-}
-
-.assign-grid{
-    overflow:auto;
-}
-
-.assign-table{
-    min-width:650px;
-}
-
-.assign-table th{
-    position:static;
-}
-
-.assign-check{
-    width:22px;
-    height:22px;
-    cursor:pointer;
-}
-
-.assign-row-title{
-    font-weight:bold;
-    color:#123c63;
+display:block;
+background:#f8d7da;
+color:#842029
 }
 
 .footer{
-    text-align:center;
-    color:#64748b;
-    font-size:12px;
-    padding:15px;
+text-align:center;
+padding:16px;
+color:#64748b;
+font-size:12px
 }
 
-@media(max-width:800px){
-    .stats{grid-template-columns:repeat(2,1fr)}
-    .header h1{font-size:21px}
-    .logout{position:static;margin-top:10px}
+@media(max-width:900px){
+.stats{grid-template-columns:repeat(2,1fr)}
 }
 
-@media(max-width:480px){
-    .stats{grid-template-columns:1fr 1fr}
-    .stat{padding:12px}
-    .stat .number{font-size:24px}
+@media(max-width:700px){
+.logout{position:static;margin-top:10px}
+.header h1{font-size:22px}
+}
+
+@media(max-width:450px){
+.stats{grid-template-columns:1fr 1fr}
 }
 </style>
 </head>
@@ -331,16 +395,18 @@ tr:nth-child(even){
 
 <header class="header">
 
-    <img src="logo.jpeg" class="logo" alt="شعار المدرسة">
+<img src="logo.jpeg" class="logo" alt="شعار المدرسة">
 
-    <h1>مدارس الفلاح الأهلية</h1>
-    <p>نظام راصد - لوحة الإدارة</p>
+<h1>مدارس الفلاح الأهلية</h1>
 
-    <button class="btn-danger logout" onclick="logout()">
-        تسجيل الخروج
-    </button>
+<p>نظام راصد - لوحة الإدارة</p>
+
+<button class="btn-danger logout" onclick="logout()">
+تسجيل الخروج
+</button>
 
 </header>
+
 
 <div class="container">
 
@@ -348,35 +414,42 @@ tr:nth-child(even){
 
 <div class="stats">
 
-    <div class="stat">
-        <div class="number" id="statStudents">0</div>
-        <div class="label">الطلاب</div>
-    </div>
+<div class="stat">
+<div class="stat-number" id="statStudents">0</div>
+<div class="stat-label">الطلاب</div>
+</div>
 
-    <div class="stat">
-        <div class="number" id="statTeachers">0</div>
-        <div class="label">المعلمون</div>
-    </div>
+<div class="stat">
+<div class="stat-number" id="statTeachers">0</div>
+<div class="stat-label">المعلمون</div>
+</div>
 
-    <div class="stat">
-        <div class="number" id="statTests">0</div>
-        <div class="label">الاختبارات</div>
-    </div>
+<div class="stat">
+<div class="stat-number" id="statSubjects">0</div>
+<div class="stat-label">المواد</div>
+</div>
 
-    <div class="stat">
-        <div class="number" id="statClasses">0</div>
-        <div class="label">الفصول</div>
-    </div>
+<div class="stat">
+<div class="stat-number" id="statTests">0</div>
+<div class="stat-label">الاختبارات</div>
+</div>
+
+<div class="stat">
+<div class="stat-number" id="statClasses">0</div>
+<div class="stat-label">الفصول</div>
+</div>
 
 </div>
 
 
+<!-- ================================================= -->
 <!-- الطلاب -->
+<!-- ================================================= -->
 
 <div class="box">
 
 <div class="box-title">
-    👨‍🎓 إدارة الطلاب
+👨‍🎓 إدارة الطلاب
 </div>
 
 <div class="box-body">
@@ -385,69 +458,78 @@ tr:nth-child(even){
 
 <div class="row">
 
-    <div class="col">
-        <label>كود الطالب</label>
-        <input id="studentCode">
-    </div>
+<div class="col">
+<label>كود الطالب</label>
+<input id="studentCode">
+</div>
 
-    <div class="col">
-        <label>اسم الطالب</label>
-        <input id="studentName">
-    </div>
+<div class="col">
+<label>اسم الطالب</label>
+<input id="studentName">
+</div>
 
-    <div class="col">
-        <label>الصف</label>
-        <select id="studentGrade"></select>
-    </div>
+<div class="col">
+<label>الصف</label>
+<select id="studentGrade"></select>
+</div>
 
-    <div class="col">
-        <label>الشعبة</label>
-        <select id="studentSection"></select>
-    </div>
+<div class="col">
+<label>الشعبة</label>
+<select id="studentSection"></select>
+</div>
 
-    <div class="col">
-        <label>جوال ولي الأمر</label>
-        <input id="guardianPhone" placeholder="05xxxxxxxx">
-    </div>
+<div class="col">
+<label>جوال ولي الأمر</label>
+<input id="guardianPhone" placeholder="05xxxxxxxx">
+</div>
 
 </div>
 
 <div class="actions">
 
-    <button class="btn-primary" onclick="saveStudent()">
-        💾 حفظ الطالب
-    </button>
+<button class="btn-primary" onclick="saveStudent()">
+💾 حفظ الطالب
+</button>
 
-    <button class="btn-light" onclick="clearStudentForm()">
-        جديد
-    </button>
+<button class="btn-light" onclick="clearStudentForm()">
+جديد
+</button>
 
 </div>
 
 
 <div class="row" style="margin-top:20px">
 
-    <div class="col">
-        <label>بحث</label>
-        <input
-            id="studentSearch"
-            placeholder="ابحث باسم الطالب أو الكود"
-            oninput="renderStudents()">
-    </div>
+<div class="col">
+<label>بحث</label>
+<input
+id="studentSearch"
+placeholder="اسم الطالب أو الكود"
+oninput="renderStudents()">
+</div>
 
-    <div class="col">
-        <label>الصف</label>
-        <select id="studentFilterGrade" onchange="renderStudents()">
-            <option value="">كل الصفوف</option>
-        </select>
-    </div>
+<div class="col">
+<label>الصف</label>
+<select
+id="studentFilterGrade"
+onchange="renderStudents()">
 
-    <div class="col">
-        <label>الشعبة</label>
-        <select id="studentFilterSection" onchange="renderStudents()">
-            <option value="">كل الشعب</option>
-        </select>
-    </div>
+<option value="">كل الصفوف</option>
+
+</select>
+</div>
+
+<div class="col">
+<label>الشعبة</label>
+
+<select
+id="studentFilterSection"
+onchange="renderStudents()">
+
+<option value="">كل الشعب</option>
+
+</select>
+</div>
 
 </div>
 
@@ -458,12 +540,12 @@ tr:nth-child(even){
 
 <thead>
 <tr>
-    <th>الكود</th>
-    <th>الطالب</th>
-    <th>الصف</th>
-    <th>الشعبة</th>
-    <th>جوال ولي الأمر</th>
-    <th>الإجراءات</th>
+<th>الكود</th>
+<th>الطالب</th>
+<th>الصف</th>
+<th>الشعبة</th>
+<th>جوال ولي الأمر</th>
+<th>الإجراءات</th>
 </tr>
 </thead>
 
@@ -477,7 +559,7 @@ tr:nth-child(even){
 <div class="danger-zone">
 
 <button class="btn-danger" onclick="deleteAllStudents()">
-    🗑️ حذف جميع الطلاب
+🗑️ حذف جميع الطلاب
 </button>
 
 </div>
@@ -486,42 +568,44 @@ tr:nth-child(even){
 </div>
 
 
+<!-- ================================================= -->
 <!-- Excel -->
+<!-- ================================================= -->
 
 <div class="box">
 
 <div class="box-title">
-    📊 استيراد الطلاب من Excel
+📊 استيراد الطلاب من Excel
 </div>
 
 <div class="box-body">
 
-<div class="row">
-
-    <div class="col">
-        <label>ملف Excel</label>
-        <input type="file" id="excelFile" accept=".xlsx,.xls">
-    </div>
-
-</div>
+<input type="file" id="excelFile" accept=".xlsx,.xls">
 
 <div class="actions">
 
-    <button class="btn-success" onclick="importExcel()">
-        ⬆️ استيراد الطلاب
-    </button>
+<button class="btn-success" onclick="importExcel()">
+⬆️ استيراد الطلاب
+</button>
 
-    <button class="btn-primary" onclick="downloadExcelTemplate()">
-        ⬇️ نموذج Excel
-    </button>
+<button class="btn-primary" onclick="downloadExcelTemplate()">
+⬇️ تحميل نموذج Excel
+</button>
 
 </div>
 
 <div class="note">
-    يمكنك استخدام الملف الجديد بالأعمدة:
-    <strong>code - name - grade - section - phone</strong>
-    <br>
-    إذا كان الطالب موجودًا بنفس الكود سيتم تحديث بياناته ورقم الجوال بدون تكراره.
+
+الأعمدة المطلوبة:
+
+<strong>
+code - name - grade - section - phone
+</strong>
+
+<br>
+
+يمكنك استيراد ملف الـ487 طالب الجديد مباشرة.
+
 </div>
 
 <div id="importStatus" class="status"></div>
@@ -530,46 +614,44 @@ tr:nth-child(even){
 </div>
 
 
-<!-- المعلمين -->
+<!-- ================================================= -->
+<!-- المواد -->
+<!-- ================================================= -->
 
 <div class="box">
 
 <div class="box-title">
-    👨‍🏫 إدارة المعلمين
+📚 إدارة المواد الدراسية
 </div>
 
 <div class="box-body">
 
-<input type="hidden" id="teacherOriginalUsername">
+<input type="hidden" id="subjectEditId">
 
 <div class="row">
 
-    <div class="col">
-        <label>اسم المعلم</label>
-        <input id="teacherName">
-    </div>
+<div class="col">
 
-    <div class="col">
-        <label>اسم المستخدم</label>
-        <input id="teacherUsername">
-    </div>
+<label>اسم المادة</label>
 
-    <div class="col">
-        <label>كلمة المرور</label>
-        <input id="teacherPassword">
-    </div>
+<input
+id="subjectName"
+placeholder="مثال: اللغة الإنجليزية">
 
 </div>
 
+</div>
+
+
 <div class="actions">
 
-    <button class="btn-primary" onclick="saveTeacher()">
-        💾 حفظ المعلم
-    </button>
+<button class="btn-primary" onclick="saveSubject()">
+💾 حفظ المادة
+</button>
 
-    <button class="btn-light" onclick="clearTeacherForm()">
-        جديد
-    </button>
+<button class="btn-light" onclick="clearSubjectForm()">
+مادة جديدة
+</button>
 
 </div>
 
@@ -580,10 +662,87 @@ tr:nth-child(even){
 
 <thead>
 <tr>
-    <th>اسم المعلم</th>
-    <th>اسم المستخدم</th>
-    <th>عدد الفصول</th>
-    <th>الإجراءات</th>
+<th>اسم المادة</th>
+<th>الإجراءات</th>
+</tr>
+</thead>
+
+<tbody id="subjectsBody"></tbody>
+
+</table>
+
+</div>
+
+
+<div class="danger-zone">
+
+<button class="btn-danger" onclick="deleteAllSubjects()">
+🗑️ حذف جميع المواد
+</button>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- ================================================= -->
+<!-- المعلمين -->
+<!-- ================================================= -->
+
+<div class="box">
+
+<div class="box-title">
+👨‍🏫 إدارة المعلمين
+</div>
+
+<div class="box-body">
+
+<input type="hidden" id="teacherOriginalUsername">
+
+<div class="row">
+
+<div class="col">
+<label>اسم المعلم</label>
+<input id="teacherName">
+</div>
+
+<div class="col">
+<label>اسم المستخدم</label>
+<input id="teacherUsername">
+</div>
+
+<div class="col">
+<label>كلمة المرور</label>
+<input id="teacherPassword">
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button class="btn-primary" onclick="saveTeacher()">
+💾 حفظ المعلم
+</button>
+
+<button class="btn-light" onclick="clearTeacherForm()">
+معلم جديد
+</button>
+
+</div>
+
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+<tr>
+<th>اسم المعلم</th>
+<th>اسم المستخدم</th>
+<th>عدد الإسنادات</th>
+<th>الإجراءات</th>
 </tr>
 </thead>
 
@@ -597,7 +756,7 @@ tr:nth-child(even){
 <div class="danger-zone">
 
 <button class="btn-danger" onclick="deleteAllTeachers()">
-    🗑️ حذف جميع المعلمين
+🗑️ حذف جميع المعلمين
 </button>
 
 </div>
@@ -606,12 +765,139 @@ tr:nth-child(even){
 </div>
 
 
-<!-- الاختبارات -->
+<!-- ================================================= -->
+<!-- الإسناد -->
+<!-- ================================================= -->
 
 <div class="box">
 
 <div class="box-title">
-    📝 إدارة الاختبارات
+🔗 إسناد المواد والفصول للمعلمين
+</div>
+
+<div class="box-body">
+
+<div class="note">
+1- اضغط على اسم المعلم.
+2- اختر المادة.
+3- حدد الفصول.
+4- اضغط حفظ إسناد المادة.
+</div>
+
+
+<label style="font-size:16px;margin-top:15px">
+اختر المعلم:
+</label>
+
+<div id="teacherCards" class="teacher-cards"></div>
+
+<input type="hidden" id="assignTeacher">
+
+
+<div id="selectedTeacherInfo" class="info-box" style="display:none"></div>
+
+
+<div class="row">
+
+<div class="col">
+
+<label>المادة المراد إسنادها</label>
+
+<select id="assignmentSubject" onchange="loadAssignmentChecks()">
+
+<option value="">
+-- اختر المادة --
+</option>
+
+</select>
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button class="btn-success" onclick="selectAllAssignments()">
+✓ تحديد كل الفصول
+</button>
+
+<button class="btn-light" onclick="clearAllAssignments()">
+إلغاء التحديد
+</button>
+
+</div>
+
+
+<div class="class-grid">
+
+<table class="class-table">
+
+<thead>
+
+<tr>
+<th>الصف</th>
+<th>أ</th>
+<th>ب</th>
+<th>ج</th>
+<th>د</th>
+</tr>
+
+</thead>
+
+<tbody id="assignmentGrid"></tbody>
+
+</table>
+
+</div>
+
+
+<div class="actions" style="justify-content:center;margin-top:18px">
+
+<button
+class="btn-purple"
+style="font-size:17px;padding:14px 35px"
+onclick="saveAssignments()">
+
+💾 حفظ إسناد المادة للمعلم
+
+</button>
+
+</div>
+
+
+<div class="assignment-summary">
+
+<div style="font-weight:bold;font-size:16px;color:#123c63">
+إسنادات المعلم الحالي
+</div>
+
+<div id="assignmentSummary" style="margin-top:10px">
+اختر معلمًا لعرض إسناداته.
+</div>
+
+<div class="actions">
+
+<button class="btn-danger" onclick="clearCurrentTeacherAssignments()">
+🗑️ حذف جميع إسنادات هذا المعلم
+</button>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- ================================================= -->
+<!-- الاختبارات -->
+<!-- ================================================= -->
+
+<div class="box">
+
+<div class="box-title">
+📝 إدارة الاختبارات
 </div>
 
 <div class="box-body">
@@ -620,32 +906,94 @@ tr:nth-child(even){
 
 <div class="row">
 
-    <div class="col">
-        <label>اسم الاختبار</label>
-        <input id="testName">
-    </div>
+<div class="col">
+<label>اسم الاختبار</label>
+<input
+id="testName"
+placeholder="مثال: الاختبار الدوري الأول">
+</div>
 
-    <div class="col">
-        <label>الدرجة النهائية</label>
-        <input id="testFullMark" type="number" min="1">
-    </div>
+<div class="col">
 
-    <div class="col">
-        <label>تاريخ الاختبار</label>
-        <input id="testDate" type="date">
-    </div>
+<label>المادة</label>
+
+<select id="testSubject">
+
+<option value="">
+-- اختر المادة --
+</option>
+
+</select>
 
 </div>
 
+<div class="col">
+<label>الدرجة النهائية</label>
+<input
+id="testFullMark"
+type="number"
+min="1"
+step="0.01">
+</div>
+
+<div class="col">
+<label>تاريخ الاختبار</label>
+<input id="testDate" type="date">
+</div>
+
+</div>
+
+
+<div class="info-box">
+حدد الفصول التي يخصها الاختبار. المعلم لا يتم اختياره هنا؛ راصد سيعرف المعلم تلقائيًا من إسناد المادة والفصل.
+</div>
+
+
 <div class="actions">
 
-    <button class="btn-primary" onclick="saveTest()">
-        💾 حفظ الاختبار
-    </button>
+<button class="btn-success" onclick="selectAllTestClasses()">
+✓ تحديد كل الفصول
+</button>
 
-    <button class="btn-light" onclick="clearTestForm()">
-        جديد
-    </button>
+<button class="btn-light" onclick="clearAllTestClasses()">
+إلغاء التحديد
+</button>
+
+</div>
+
+
+<div class="class-grid">
+
+<table class="class-table">
+
+<thead>
+
+<tr>
+<th>الصف</th>
+<th>أ</th>
+<th>ب</th>
+<th>ج</th>
+<th>د</th>
+</tr>
+
+</thead>
+
+<tbody id="testClassGrid"></tbody>
+
+</table>
+
+</div>
+
+
+<div class="actions">
+
+<button class="btn-primary" onclick="saveTest()">
+💾 حفظ الاختبار
+</button>
+
+<button class="btn-light" onclick="clearTestForm()">
+اختبار جديد
+</button>
 
 </div>
 
@@ -655,12 +1003,16 @@ tr:nth-child(even){
 <table>
 
 <thead>
+
 <tr>
-    <th>الاختبار</th>
-    <th>الدرجة النهائية</th>
-    <th>التاريخ</th>
-    <th>الإجراءات</th>
+<th>الاختبار</th>
+<th>المادة</th>
+<th>الدرجة</th>
+<th>التاريخ</th>
+<th>الفصول</th>
+<th>الإجراءات</th>
 </tr>
+
 </thead>
 
 <tbody id="testsBody"></tbody>
@@ -673,7 +1025,7 @@ tr:nth-child(even){
 <div class="danger-zone">
 
 <button class="btn-danger" onclick="deleteAllTests()">
-    🗑️ حذف جميع الاختبارات
+🗑️ حذف جميع الاختبارات
 </button>
 
 </div>
@@ -682,109 +1034,43 @@ tr:nth-child(even){
 </div>
 
 
-<!-- الإسناد -->
+<!-- ================================================= -->
+<!-- تنظيف البيانات -->
+<!-- ================================================= -->
 
 <div class="box">
 
 <div class="box-title">
-    🔗 إسناد الفصول للمعلمين
-</div>
-
-<div class="box-body">
-
-<div class="assign-header">
-
-    <div class="teacher-select-wrap">
-
-        <label>اختر المعلم</label>
-
-        <select id="assignTeacher" onchange="loadTeacherAssignments()">
-            <option value="">-- اختر المعلم --</option>
-        </select>
-
-    </div>
-
-    <button class="btn-success" onclick="selectAllAssignments()">
-        ✓ تحديد الكل
-    </button>
-
-    <button class="btn-light" onclick="clearAllAssignments()">
-        إلغاء الكل
-    </button>
-
-</div>
-
-
-<div class="assign-grid">
-
-<table class="assign-table">
-
-<thead>
-<tr>
-    <th>الصف</th>
-    <th>أ</th>
-    <th>ب</th>
-    <th>ج</th>
-    <th>د</th>
-</tr>
-</thead>
-
-<tbody id="assignmentGrid"></tbody>
-
-</table>
-
-</div>
-
-
-<div class="actions" style="justify-content:center;margin-top:20px">
-
-<button
-    class="btn-purple"
-    style="font-size:17px;padding:14px 35px"
-    onclick="saveAssignments()">
-
-    💾 حفظ إسنادات المعلم
-
-</button>
-
-</div>
-
-</div>
-</div>
-
-
-<!-- تنظيف النظام -->
-
-<div class="box">
-
-<div class="box-title">
-    ⚠️ تنظيف البيانات
+⚠️ تنظيف بيانات راصد
 </div>
 
 <div class="box-body">
 
 <div class="note">
-    استخدم الأزرار التالية فقط إذا أردت بدء البيانات من جديد.
-    حساب الإدارة نفسه لن يتم حذفه عند حذف المعلمين.
+الحذف من هنا نهائي. حساب الإدارة لا يتم حذفه عند حذف جميع المعلمين.
 </div>
 
 <div class="actions">
 
-    <button class="btn-danger" onclick="deleteAllStudents()">
-        حذف جميع الطلاب
-    </button>
+<button class="btn-danger" onclick="deleteAllStudents()">
+حذف جميع الطلاب
+</button>
 
-    <button class="btn-danger" onclick="deleteAllTeachers()">
-        حذف جميع المعلمين
-    </button>
+<button class="btn-danger" onclick="deleteAllSubjects()">
+حذف جميع المواد
+</button>
 
-    <button class="btn-danger" onclick="deleteAllTests()">
-        حذف جميع الاختبارات
-    </button>
+<button class="btn-danger" onclick="deleteAllTeachers()">
+حذف جميع المعلمين
+</button>
 
-    <button class="btn-dark" onclick="deleteAllGrades()">
-        حذف جميع النتائج والدرجات
-    </button>
+<button class="btn-danger" onclick="deleteAllTests()">
+حذف جميع الاختبارات
+</button>
+
+<button class="btn-dark" onclick="deleteAllGrades()">
+حذف جميع النتائج والدرجات
+</button>
 
 </div>
 
@@ -793,7 +1079,7 @@ tr:nth-child(even){
 
 
 <div class="footer">
-    تصميم محمد عامر أحمد - نظام راصد 2026
+تصميم محمد عامر أحمد - نظام راصد 2026
 </div>
 
 </div>
@@ -801,1900 +1087,3357 @@ tr:nth-child(even){
 
 <script>
 
-/* =========================
+/* =====================================================
    FIREBASE
-========================= */
+===================================================== */
 
-const firebaseConfig = {
-    apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
-    authDomain:"results2026-7c0dd.firebaseapp.com",
-    projectId:"results2026-7c0dd",
-    storageBucket:"results2026-7c0dd.firebasestorage.app",
-    messagingSenderId:"241421115694",
-    appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
+const firebaseConfig={
+
+apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+
+authDomain:
+"results2026-7c0dd.firebaseapp.com",
+
+projectId:
+"results2026-7c0dd",
+
+storageBucket:
+"results2026-7c0dd.firebasestorage.app",
+
+messagingSenderId:
+"241421115694",
+
+appId:
+"1:241421115694:web:96f55fd9fd1d5b18b31abf"
+
 };
 
 firebase.initializeApp(firebaseConfig);
 
-const db = firebase.firestore();
+const db=firebase.firestore();
 
 
-/* =========================
-   البيانات الأساسية
-========================= */
+/* =====================================================
+   البيانات
+===================================================== */
 
-const grades = [
-    "1 ابتدائي",
-    "2 ابتدائي",
-    "3 ابتدائي",
-    "4 ابتدائي",
-    "5 ابتدائي",
-    "6 ابتدائي",
-    "1 متوسط",
-    "2 متوسط",
-    "3 متوسط",
-    "1 ثانوي",
-    "2 ثانوي",
-    "3 ثانوي"
+const grades=[
+
+"1 ابتدائي",
+"2 ابتدائي",
+"3 ابتدائي",
+"4 ابتدائي",
+"5 ابتدائي",
+"6 ابتدائي",
+
+"1 متوسط",
+"2 متوسط",
+"3 متوسط",
+
+"1 ثانوي",
+"2 ثانوي",
+"3 ثانوي"
+
 ];
 
-const sections = ["أ","ب","ج","د"];
-
-let students = [];
-let teachers = [];
-let tests = [];
+const sections=["أ","ب","ج","د"];
 
 
-/* =========================
+let students=[];
+let teachers=[];
+let subjects=[];
+let tests=[];
+
+
+/* =====================================================
    الحماية
-========================= */
+===================================================== */
 
 function protectAdmin(){
 
-    const role =
-        localStorage.getItem("currentUserRole") || "";
+const role=
+localStorage.getItem("currentUserRole")||"";
 
-    if(
-        role !== "superadmin" &&
-        role !== "admin"
-    ){
-        alert("هذه الصفحة للإدارة فقط");
-        location.href="index.html";
-    }
+if(
+role!=="superadmin" &&
+role!=="admin"
+){
+
+alert("هذه الصفحة للإدارة فقط");
+
+location.href="index.html";
+
+}
 
 }
 
 
-/* =========================
-   تجهيز القوائم
-========================= */
-
-function fillSelectors(){
-
-    const studentGrade =
-        document.getElementById("studentGrade");
-
-    const filterGrade =
-        document.getElementById("studentFilterGrade");
-
-    grades.forEach(grade=>{
-
-        const o1=document.createElement("option");
-        o1.value=grade;
-        o1.textContent=grade;
-        studentGrade.appendChild(o1);
-
-        const o2=document.createElement("option");
-        o2.value=grade;
-        o2.textContent=grade;
-        filterGrade.appendChild(o2);
-
-    });
-
-
-    const studentSection =
-        document.getElementById("studentSection");
-
-    const filterSection =
-        document.getElementById("studentFilterSection");
-
-    sections.forEach(section=>{
-
-        const o1=document.createElement("option");
-        o1.value=section;
-        o1.textContent=section;
-        studentSection.appendChild(o1);
-
-        const o2=document.createElement("option");
-        o2.value=section;
-        o2.textContent=section;
-        filterSection.appendChild(o2);
-
-    });
-
-}
-
+/* =====================================================
+   أدوات
+===================================================== */
 
 function escapeHtml(value){
 
-    return String(value ?? "")
-        .replace(/&/g,"&amp;")
-        .replace(/</g,"&lt;")
-        .replace(/>/g,"&gt;")
-        .replace(/"/g,"&quot;")
-        .replace(/'/g,"&#039;");
+return String(value??"")
+
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
 
 }
 
 
-/* =========================
+function classKey(grade,section){
+
+return grade+"|||"+section;
+
+}
+
+
+function classLabel(c){
+
+return c.grade+" / "+c.section;
+
+}
+
+
+function sortClasses(classes){
+
+return classes.sort((a,b)=>{
+
+const ga=grades.indexOf(a.grade);
+const gb=grades.indexOf(b.grade);
+
+if(ga!==gb)return ga-gb;
+
+return sections.indexOf(a.section)-
+sections.indexOf(b.section);
+
+});
+
+}
+
+
+/* =====================================================
+   القوائم
+===================================================== */
+
+function fillSelectors(){
+
+grades.forEach(grade=>{
+
+let o1=document.createElement("option");
+
+o1.value=grade;
+o1.textContent=grade;
+
+studentGrade.appendChild(o1);
+
+
+let o2=document.createElement("option");
+
+o2.value=grade;
+o2.textContent=grade;
+
+studentFilterGrade.appendChild(o2);
+
+});
+
+
+sections.forEach(section=>{
+
+let o1=document.createElement("option");
+
+o1.value=section;
+o1.textContent=section;
+
+studentSection.appendChild(o1);
+
+
+let o2=document.createElement("option");
+
+o2.value=section;
+o2.textContent=section;
+
+studentFilterSection.appendChild(o2);
+
+});
+
+}
+
+
+/* =====================================================
+   شبكة الفصول
+===================================================== */
+
+function buildClassGrid(
+elementId,
+checkClass
+){
+
+const body=
+document.getElementById(elementId);
+
+body.innerHTML="";
+
+
+grades.forEach(grade=>{
+
+const tr=document.createElement("tr");
+
+let html=`
+
+<td class="grade-title">
+${escapeHtml(grade)}
+</td>
+
+`;
+
+
+sections.forEach(section=>{
+
+html+=`
+
+<td>
+
+<input
+type="checkbox"
+class="class-check ${checkClass}"
+data-grade="${escapeHtml(grade)}"
+data-section="${escapeHtml(section)}">
+
+</td>
+
+`;
+
+});
+
+
+tr.innerHTML=html;
+
+body.appendChild(tr);
+
+});
+
+}
+
+
+function buildAllClassGrids(){
+
+buildClassGrid(
+"assignmentGrid",
+"assign-check"
+);
+
+buildClassGrid(
+"testClassGrid",
+"test-class-check"
+);
+
+}
+
+
+/* =====================================================
    الطلاب
-========================= */
+===================================================== */
 
 async function loadStudents(){
 
-    const snap =
-        await db.collection("students").get();
+const snap=
+await db.collection("students").get();
 
-    students=[];
-
-    snap.forEach(doc=>{
-
-        const data=doc.data() || {};
-
-        students.push({
-            ...data,
-            code:data.code || doc.id
-        });
-
-    });
+students=[];
 
 
-    students.sort((a,b)=>{
+snap.forEach(doc=>{
 
-        const ga=grades.indexOf(a.grade);
-        const gb=grades.indexOf(b.grade);
+const data=doc.data()||{};
 
-        if(ga!==gb)
-            return ga-gb;
+students.push({
 
-        if((a.section||"") !== (b.section||""))
-            return (a.section||"")
-                .localeCompare(b.section||"","ar");
+...data,
 
-        return (a.name||"")
-            .localeCompare(b.name||"","ar");
+code:
+data.code||doc.id
 
-    });
+});
+
+});
 
 
-    document.getElementById("statStudents")
-        .textContent=students.length;
+students.sort((a,b)=>{
 
-    renderStudents();
-    updateClassCount();
+const ga=
+grades.indexOf(a.grade);
+
+const gb=
+grades.indexOf(b.grade);
+
+
+if(ga!==gb)
+return ga-gb;
+
+
+if(
+(a.section||"")!==
+(b.section||"")
+){
+
+return String(a.section||"")
+.localeCompare(
+String(b.section||""),
+"ar"
+);
+
+}
+
+
+return String(a.name||"")
+.localeCompare(
+String(b.name||""),
+"ar"
+);
+
+});
+
+
+statStudents.textContent=
+students.length;
+
+
+renderStudents();
+
+updateClassCount();
 
 }
 
 
 function renderStudents(){
 
-    const body=
-        document.getElementById("studentsBody");
-
-    const search=
-        document.getElementById("studentSearch")
-        .value.trim().toLowerCase();
-
-    const grade=
-        document.getElementById("studentFilterGrade")
-        .value;
-
-    const section=
-        document.getElementById("studentFilterSection")
-        .value;
+const search=
+studentSearch.value
+.trim()
+.toLowerCase();
 
 
-    const filtered=students.filter(s=>{
-
-        const name=
-            String(s.name||"").toLowerCase();
-
-        const code=
-            String(s.code||"").toLowerCase();
-
-        if(
-            search &&
-            !name.includes(search) &&
-            !code.includes(search)
-        ){
-            return false;
-        }
-
-        if(grade && s.grade!==grade)
-            return false;
-
-        if(section && s.section!==section)
-            return false;
-
-        return true;
-
-    });
+const grade=
+studentFilterGrade.value;
 
 
-    body.innerHTML="";
+const section=
+studentFilterSection.value;
 
 
-    if(!filtered.length){
+const filtered=
+students.filter(student=>{
 
-        body.innerHTML=
-            "<tr><td colspan='6'>لا يوجد طلاب</td></tr>";
+const name=
+String(student.name||"")
+.toLowerCase();
 
-        return;
+const code=
+String(student.code||"")
+.toLowerCase();
 
-    }
+
+if(
+search &&
+!name.includes(search) &&
+!code.includes(search)
+){
+
+return false;
+
+}
 
 
-    filtered.forEach(student=>{
+if(
+grade &&
+student.grade!==grade
+){
 
-        const tr=document.createElement("tr");
+return false;
 
-        const phone=
-            student.guardianPhone ||
-            student.phone ||
-            "";
+}
 
-        tr.innerHTML=`
-            <td>${escapeHtml(student.code)}</td>
-            <td>${escapeHtml(student.name)}</td>
-            <td>${escapeHtml(student.grade)}</td>
-            <td>${escapeHtml(student.section)}</td>
-            <td>${escapeHtml(phone)}</td>
 
-            <td>
-                <button
-                    class="small-btn btn-warning"
-                    onclick='editStudent(${JSON.stringify(student.code)})'>
-                    تعديل
-                </button>
+if(
+section &&
+student.section!==section
+){
 
-                <button
-                    class="small-btn btn-danger"
-                    onclick='deleteStudent(${JSON.stringify(student.code)})'>
-                    حذف
-                </button>
-            </td>
-        `;
+return false;
 
-        body.appendChild(tr);
+}
 
-    });
+
+return true;
+
+});
+
+
+studentsBody.innerHTML="";
+
+
+if(!filtered.length){
+
+studentsBody.innerHTML=
+
+"<tr><td colspan='6'>لا يوجد طلاب</td></tr>";
+
+return;
+
+}
+
+
+filtered.forEach(student=>{
+
+const phone=
+student.guardianPhone ||
+student.phone ||
+"";
+
+
+const tr=
+document.createElement("tr");
+
+
+tr.innerHTML=`
+
+<td>
+${escapeHtml(student.code)}
+</td>
+
+<td>
+${escapeHtml(student.name)}
+</td>
+
+<td>
+${escapeHtml(student.grade)}
+</td>
+
+<td>
+${escapeHtml(student.section)}
+</td>
+
+<td>
+${escapeHtml(phone)}
+</td>
+
+<td>
+
+<button
+class="small-btn btn-warning"
+onclick='editStudent(${JSON.stringify(student.code)})'>
+
+تعديل
+
+</button>
+
+
+<button
+class="small-btn btn-danger"
+onclick='deleteStudent(${JSON.stringify(student.code)})'>
+
+حذف
+
+</button>
+
+</td>
+
+`;
+
+
+studentsBody.appendChild(tr);
+
+});
 
 }
 
 
 async function saveStudent(){
 
-    const original=
-        document.getElementById("studentOriginalCode")
-        .value.trim();
+const original=
+studentOriginalCode.value.trim();
 
-    const code=
-        document.getElementById("studentCode")
-        .value.trim();
+const code=
+studentCode.value.trim();
 
-    const name=
-        document.getElementById("studentName")
-        .value.trim();
+const name=
+studentName.value.trim();
 
-    const grade=
-        document.getElementById("studentGrade")
-        .value;
+const grade=
+studentGrade.value;
 
-    const section=
-        document.getElementById("studentSection")
-        .value;
+const section=
+studentSection.value;
 
-    const guardianPhone=
-        document.getElementById("guardianPhone")
-        .value.trim();
+const phone=
+guardianPhone.value.trim();
 
 
-    if(!code || !name){
+if(!code||!name){
 
-        alert("أدخل كود الطالب واسم الطالب");
-        return;
+alert(
+"أدخل كود الطالب واسم الطالب"
+);
 
-    }
+return;
 
-
-    let previousData={};
-
-
-    if(original){
-
-        const oldDoc=
-            await db.collection("students")
-            .doc(original)
-            .get();
-
-        if(oldDoc.exists)
-            previousData=oldDoc.data() || {};
-
-    }
+}
 
 
-    await db.collection("students")
-        .doc(code)
-        .set({
-
-            ...previousData,
-
-            code,
-            name,
-            grade,
-            section,
-            guardianPhone
-
-        },{merge:true});
+let oldData={};
 
 
-    if(original && original!==code){
+if(original){
 
-        await db.collection("students")
-            .doc(original)
-            .delete();
+const oldDoc=
 
-    }
+await db
+.collection("students")
+.doc(original)
+.get();
 
 
-    alert("تم حفظ الطالب ✅");
+if(oldDoc.exists){
 
-    clearStudentForm();
+oldData=
+oldDoc.data()||{};
 
-    await loadStudents();
+}
+
+}
+
+
+await db
+.collection("students")
+.doc(code)
+.set({
+
+...oldData,
+
+code,
+name,
+grade,
+section,
+
+guardianPhone:phone,
+phone:phone
+
+},{merge:true});
+
+
+if(
+original &&
+original!==code
+){
+
+await db
+.collection("students")
+.doc(original)
+.delete();
+
+}
+
+
+alert("تم حفظ الطالب ✅");
+
+
+clearStudentForm();
+
+await loadStudents();
 
 }
 
 
 function editStudent(code){
 
-    const student=
-        students.find(
-            s=>String(s.code)===String(code)
-        );
-
-    if(!student)
-        return;
+const student=
+students.find(
+s=>String(s.code)===String(code)
+);
 
 
-    document.getElementById("studentOriginalCode").value=
-        student.code || "";
-
-    document.getElementById("studentCode").value=
-        student.code || "";
-
-    document.getElementById("studentName").value=
-        student.name || "";
-
-    document.getElementById("studentGrade").value=
-        student.grade || "";
-
-    document.getElementById("studentSection").value=
-        student.section || "";
-
-    document.getElementById("guardianPhone").value=
-        student.guardianPhone ||
-        student.phone ||
-        "";
+if(!student)return;
 
 
-    window.scrollTo({
-        top:0,
-        behavior:"smooth"
-    });
+studentOriginalCode.value=
+student.code||"";
+
+studentCode.value=
+student.code||"";
+
+studentName.value=
+student.name||"";
+
+studentGrade.value=
+student.grade||"";
+
+studentSection.value=
+student.section||"";
+
+guardianPhone.value=
+student.guardianPhone ||
+student.phone ||
+"";
+
+
+window.scrollTo({
+top:0,
+behavior:"smooth"
+});
 
 }
 
 
 function clearStudentForm(){
 
-    document.getElementById("studentOriginalCode").value="";
-    document.getElementById("studentCode").value="";
-    document.getElementById("studentName").value="";
-    document.getElementById("guardianPhone").value="";
+studentOriginalCode.value="";
+studentCode.value="";
+studentName.value="";
+guardianPhone.value="";
 
 }
 
 
 async function deleteStudent(code){
 
-    if(!confirm("هل تريد حذف الطالب؟"))
-        return;
-
-    await db.collection("students")
-        .doc(String(code))
-        .delete();
-
-    await loadStudents();
-
-}
+if(
+!confirm(
+"هل تريد حذف هذا الطالب؟"
+)
+)return;
 
 
-/* =========================
-   حذف مجموعة Collection
-========================= */
+await db
+.collection("students")
+.doc(String(code))
+.delete();
 
-async function deleteCollection(collectionName){
 
-    while(true){
-
-        const snap=
-            await db.collection(collectionName)
-            .limit(400)
-            .get();
-
-        if(snap.empty)
-            break;
-
-        const batch=db.batch();
-
-        snap.docs.forEach(doc=>{
-            batch.delete(doc.ref);
-        });
-
-        await batch.commit();
-
-    }
+await loadStudents();
 
 }
 
 
-/* =========================
-   حذف جميع الطلاب
-========================= */
-
-async function deleteAllStudents(){
-
-    if(!students.length){
-
-        alert("لا يوجد طلاب للحذف");
-        return;
-
-    }
-
-    const answer=prompt(
-        "⚠️ سيتم حذف جميع الطلاب وعددهم "+
-        students.length+
-        ".\n\nاكتب كلمة حذف للتأكيد:"
-    );
-
-    if(answer!=="حذف"){
-
-        alert("تم إلغاء العملية");
-        return;
-
-    }
-
-
-    try{
-
-        await deleteCollection("students");
-
-        students=[];
-
-        alert("تم حذف جميع الطلاب ✅");
-
-        await loadStudents();
-
-    }catch(error){
-
-        console.error(error);
-        alert("حدث خطأ أثناء الحذف");
-
-    }
-
-}
-
-
-/* =========================
+/* =====================================================
    EXCEL
-========================= */
+===================================================== */
 
 function normalizeHeader(value){
 
-    return String(value||"")
-        .trim()
-        .toLowerCase()
-        .replace(/\uFEFF/g,"")
-        .replace(/[\u064B-\u065F\u0670]/g,"")
-        .replace(/[أإآ]/g,"ا")
-        .replace(/ة/g,"ه")
-        .replace(/ى/g,"ي")
-        .replace(/[\s_\-\/\\().]+/g,"");
+return String(value||"")
+
+.trim()
+.toLowerCase()
+
+.replace(/\uFEFF/g,"")
+
+.replace(
+/[\u064B-\u065F\u0670]/g,
+""
+)
+
+.replace(/[أإآ]/g,"ا")
+.replace(/ة/g,"ه")
+.replace(/ى/g,"ي")
+
+.replace(
+/[\s_\-\/\\().]+/g,
+""
+);
 
 }
 
 
-function excelValue(row,aliases){
+function excelValue(
+row,
+aliases
+){
 
-    for(const key of Object.keys(row)){
+for(
+const key of Object.keys(row)
+){
 
-        const nk=normalizeHeader(key);
+const normalized=
+normalizeHeader(key);
 
-        for(const alias of aliases){
 
-            if(nk===normalizeHeader(alias))
-                return row[key];
+for(
+const alias of aliases
+){
 
-        }
+if(
+normalized===
+normalizeHeader(alias)
+){
 
-    }
+return row[key];
 
-    return "";
+}
+
+}
+
+}
+
+
+return "";
 
 }
 
 
 function cleanValue(value){
 
-    if(value===undefined || value===null)
-        return "";
+if(
+value===undefined ||
+value===null
+){
 
-    return String(value).trim();
+return "";
+
+}
+
+return String(value).trim();
 
 }
 
 
 function normalizeSection(value){
 
-    let section=cleanValue(value);
+let section=
+cleanValue(value);
 
-    const map={
-        "A":"أ",
-        "a":"أ",
-        "ا":"أ",
-        "B":"ب",
-        "b":"ب",
-        "C":"ج",
-        "c":"ج",
-        "D":"د",
-        "d":"د"
-    };
 
-    return map[section] || section;
+const map={
+
+"A":"أ",
+"a":"أ",
+"ا":"أ",
+
+"B":"ب",
+"b":"ب",
+
+"C":"ج",
+"c":"ج",
+
+"D":"د",
+"d":"د"
+
+};
+
+
+return map[section]||section;
 
 }
 
 
 function normalizeGrade(value){
 
-    let grade=cleanValue(value);
+let grade=
+cleanValue(value);
 
-    const map={
 
-        "أول ابتدائي":"1 ابتدائي",
-        "اول ابتدائي":"1 ابتدائي",
+const map={
 
-        "ثاني ابتدائي":"2 ابتدائي",
-        "ثان ابتدائي":"2 ابتدائي",
+"أول ابتدائي":"1 ابتدائي",
+"اول ابتدائي":"1 ابتدائي",
 
-        "ثالث ابتدائي":"3 ابتدائي",
-        "رابع ابتدائي":"4 ابتدائي",
-        "خامس ابتدائي":"5 ابتدائي",
-        "سادس ابتدائي":"6 ابتدائي",
+"ثاني ابتدائي":"2 ابتدائي",
+"ثان ابتدائي":"2 ابتدائي",
 
-        "أول متوسط":"1 متوسط",
-        "اول متوسط":"1 متوسط",
+"ثالث ابتدائي":"3 ابتدائي",
 
-        "ثاني متوسط":"2 متوسط",
-        "ثان متوسط":"2 متوسط",
+"رابع ابتدائي":"4 ابتدائي",
 
-        "ثالث متوسط":"3 متوسط",
+"خامس ابتدائي":"5 ابتدائي",
 
-        "أول ثانوي":"1 ثانوي",
-        "اول ثانوي":"1 ثانوي",
+"سادس ابتدائي":"6 ابتدائي",
 
-        "ثاني ثانوي":"2 ثانوي",
-        "ثان ثانوي":"2 ثانوي",
 
-        "ثالث ثانوي":"3 ثانوي"
+"أول متوسط":"1 متوسط",
+"اول متوسط":"1 متوسط",
 
-    };
+"ثاني متوسط":"2 متوسط",
+"ثان متوسط":"2 متوسط",
 
-    return map[grade] || grade;
+"ثالث متوسط":"3 متوسط",
+
+
+"أول ثانوي":"1 ثانوي",
+"اول ثانوي":"1 ثانوي",
+
+"ثاني ثانوي":"2 ثانوي",
+"ثان ثانوي":"2 ثانوي",
+
+"ثالث ثانوي":"3 ثانوي"
+
+};
+
+
+return map[grade]||grade;
 
 }
 
 
-function setImportStatus(text,type){
+function setImportStatus(
+text,
+type
+){
 
-    const box=document.getElementById("importStatus");
+importStatus.className=
+"status "+type;
 
-    box.className="status "+type;
-    box.innerHTML=text;
+importStatus.innerHTML=text;
 
 }
 
 
 async function importExcel(){
 
-    const input=document.getElementById("excelFile");
+if(
+!excelFile.files.length
+){
 
-    if(!input.files.length){
+alert("اختر ملف Excel");
 
-        alert("اختر ملف Excel");
-        return;
+return;
 
-    }
+}
 
 
-    const reader=new FileReader();
+const reader=
+new FileReader();
 
-    setImportStatus(
-        "جاري قراءة الملف...",
-        "info"
-    );
 
+setImportStatus(
+"جاري قراءة الملف...",
+"info"
+);
 
-    reader.onload=async event=>{
 
-        try{
+reader.onload=
+async event=>{
 
-            const workbook=XLSX.read(
-                new Uint8Array(event.target.result),
-                {type:"array"}
-            );
+try{
 
-            const sheet=
-                workbook.Sheets[
-                    workbook.SheetNames[0]
-                ];
+const workbook=
+XLSX.read(
 
-            const rows=
-                XLSX.utils.sheet_to_json(
-                    sheet,
-                    {
-                        defval:"",
-                        raw:false
-                    }
-                );
+new Uint8Array(
+event.target.result
+),
 
+{type:"array"}
 
-            if(!rows.length){
+);
 
-                setImportStatus(
-                    "الملف فارغ",
-                    "error"
-                );
 
-                return;
+const sheet=
+workbook.Sheets[
+workbook.SheetNames[0]
+];
 
-            }
 
+const rows=
+XLSX.utils.sheet_to_json(
+sheet,
+{
+defval:"",
+raw:false
+}
+);
 
-            const imported=[];
-            const usedCodes=new Set();
 
+const imported=[];
 
-            rows.forEach(row=>{
+const usedCodes=
+new Set();
 
-                let code=cleanValue(
-                    excelValue(row,[
-                        "code",
-                        "id",
-                        "studentcode",
-                        "كود",
-                        "كود الطالب",
-                        "الهوية",
-                        "رقم الهوية",
-                        "السجل المدني"
-                    ])
-                ).replace(/\.0$/,"");
 
+rows.forEach(row=>{
 
-                const name=cleanValue(
-                    excelValue(row,[
-                        "name",
-                        "studentname",
-                        "اسم",
-                        "الاسم",
-                        "اسم الطالب"
-                    ])
-                );
+let code=
+cleanValue(
 
+excelValue(
+row,
+[
+"code",
+"id",
+"studentcode",
+"كود",
+"كود الطالب",
+"الهوية",
+"رقم الهوية",
+"السجل المدني"
+]
+)
 
-                const grade=normalizeGrade(
-                    excelValue(row,[
-                        "grade",
-                        "الصف",
-                        "صف",
-                        "الصف الدراسي"
-                    ])
-                );
+).replace(/\.0$/,"");
 
 
-                const section=normalizeSection(
-                    excelValue(row,[
-                        "section",
-                        "الشعبة",
-                        "الفصل",
-                        "شعبة"
-                    ])
-                );
+const name=
+cleanValue(
 
+excelValue(
+row,
+[
+"name",
+"studentname",
+"اسم",
+"الاسم",
+"اسم الطالب"
+]
+)
 
-                const phone=cleanValue(
-                    excelValue(row,[
-                        "phone",
-                        "mobile",
-                        "guardianphone",
-                        "parentphone",
-                        "الجوال",
-                        "جوال",
-                        "رقم الجوال",
-                        "جوال ولي الامر",
-                        "جوال ولي الأمر",
-                        "رقم ولي الامر",
-                        "رقم ولي الأمر"
-                    ])
-                ).replace(/\.0$/,"");
+);
 
 
-                if(
-                    !code ||
-                    !name ||
-                    usedCodes.has(code)
-                ){
-                    return;
-                }
+const grade=
+normalizeGrade(
 
+excelValue(
+row,
+[
+"grade",
+"الصف",
+"صف",
+"الصف الدراسي"
+]
+)
 
-                usedCodes.add(code);
+);
 
 
-                imported.push({
-                    code,
-                    name,
-                    grade,
-                    section,
-                    guardianPhone:phone,
-                    phone:phone
-                });
+const section=
+normalizeSection(
 
-            });
+excelValue(
+row,
+[
+"section",
+"الشعبة",
+"الفصل",
+"شعبة"
+]
+)
 
+);
 
-            if(!imported.length){
 
-                setImportStatus(
-                    "لم يتم العثور على بيانات صالحة.",
-                    "error"
-                );
+const phone=
+cleanValue(
 
-                return;
+excelValue(
+row,
+[
+"phone",
+"mobile",
+"guardianphone",
+"parentphone",
+"الجوال",
+"جوال",
+"رقم الجوال",
+"جوال ولي الامر",
+"جوال ولي الأمر",
+"رقم ولي الامر",
+"رقم ولي الأمر"
+]
+)
 
-            }
+).replace(/\.0$/,"");
 
 
-            if(
-                !confirm(
-                    "سيتم استيراد / تحديث "+
-                    imported.length+
-                    " طالب.\nمتابعة؟"
-                )
-            ){
-                return;
-            }
+if(
+!code ||
+!name ||
+usedCodes.has(code)
+){
 
+return;
 
-            for(let i=0;i<imported.length;i+=400){
+}
 
-                const batch=db.batch();
 
-                imported
-                    .slice(i,i+400)
-                    .forEach(student=>{
+usedCodes.add(code);
 
-                        const ref=
-                            db.collection("students")
-                            .doc(student.code);
 
-                        batch.set(
-                            ref,
-                            student,
-                            {merge:true}
-                        );
+imported.push({
 
-                    });
+code,
+name,
+grade,
+section,
 
-                await batch.commit();
+guardianPhone:phone,
+phone:phone
 
-            }
+});
 
+});
 
-            setImportStatus(
-                "تم استيراد / تحديث "+
-                imported.length+
-                " طالب بنجاح ✅",
-                "success"
-            );
 
+if(!imported.length){
 
-            input.value="";
+setImportStatus(
+"لم يتم العثور على طلاب صالحين.",
+"error"
+);
 
-            await loadStudents();
+return;
 
-        }catch(error){
+}
 
-            console.error(error);
 
-            setImportStatus(
-                "خطأ: "+escapeHtml(error.message),
-                "error"
-            );
+if(
+!confirm(
+"سيتم استيراد / تحديث "+
+imported.length+
+" طالب.\nمتابعة؟"
+)
+){
 
-        }
+return;
 
-    };
+}
 
 
-    reader.readAsArrayBuffer(input.files[0]);
+for(
+let i=0;
+i<imported.length;
+i+=400
+){
+
+const batch=
+db.batch();
+
+
+imported
+.slice(i,i+400)
+.forEach(student=>{
+
+batch.set(
+
+db
+.collection("students")
+.doc(student.code),
+
+student,
+
+{merge:true}
+
+);
+
+});
+
+
+await batch.commit();
+
+}
+
+
+setImportStatus(
+
+"تم استيراد / تحديث "+
+imported.length+
+" طالب بنجاح ✅",
+
+"success"
+
+);
+
+
+excelFile.value="";
+
+
+await loadStudents();
+
+}
+
+catch(error){
+
+console.error(error);
+
+setImportStatus(
+"حدث خطأ: "+
+escapeHtml(error.message),
+"error"
+);
+
+}
+
+};
+
+
+reader.readAsArrayBuffer(
+excelFile.files[0]
+);
 
 }
 
 
 function downloadExcelTemplate(){
 
-    const rows=[
+const data=[
 
-        ["code","name","grade","section","phone"],
+[
+"code",
+"name",
+"grade",
+"section",
+"phone"
+],
 
-        [
-            "1001",
-            "اسم الطالب",
-            "1 ابتدائي",
-            "أ",
-            "0500000000"
-        ]
+[
+"1001",
+"اسم الطالب",
+"1 ابتدائي",
+"أ",
+"0500000000"
+]
 
-    ];
+];
 
-    const ws=XLSX.utils.aoa_to_sheet(rows);
-    const wb=XLSX.utils.book_new();
 
-    XLSX.utils.book_append_sheet(
-        wb,
-        ws,
-        "students"
-    );
+const ws=
+XLSX.utils.aoa_to_sheet(data);
 
-    XLSX.writeFile(
-        wb,
-        "Rased_Students_Template.xlsx"
-    );
+
+const wb=
+XLSX.utils.book_new();
+
+
+XLSX.utils.book_append_sheet(
+wb,
+ws,
+"students"
+);
+
+
+XLSX.writeFile(
+wb,
+"Rased_Students_Template.xlsx"
+);
 
 }
 
 
-/* =========================
+/* =====================================================
+   المواد
+===================================================== */
+
+async function loadSubjects(){
+
+const snap=
+await db
+.collection("subjects")
+.get();
+
+
+subjects=[];
+
+
+snap.forEach(doc=>{
+
+subjects.push({
+
+id:doc.id,
+
+...doc.data()
+
+});
+
+});
+
+
+subjects.sort(
+(a,b)=>
+String(a.name||"")
+.localeCompare(
+String(b.name||""),
+"ar"
+)
+);
+
+
+statSubjects.textContent=
+subjects.length;
+
+
+renderSubjects();
+
+fillSubjectSelectors();
+
+}
+
+
+function renderSubjects(){
+
+subjectsBody.innerHTML="";
+
+
+if(!subjects.length){
+
+subjectsBody.innerHTML=
+
+"<tr><td colspan='2'>لا توجد مواد</td></tr>";
+
+return;
+
+}
+
+
+subjects.forEach(subject=>{
+
+const tr=
+document.createElement("tr");
+
+
+tr.innerHTML=`
+
+<td>
+${escapeHtml(subject.name)}
+</td>
+
+<td>
+
+<button
+class="small-btn btn-warning"
+onclick='editSubject(${JSON.stringify(subject.id)})'>
+
+تعديل
+
+</button>
+
+
+<button
+class="small-btn btn-danger"
+onclick='deleteSubject(${JSON.stringify(subject.id)})'>
+
+حذف
+
+</button>
+
+</td>
+
+`;
+
+
+subjectsBody.appendChild(tr);
+
+});
+
+}
+
+
+function fillSubjectSelectors(){
+
+const selects=[
+
+assignmentSubject,
+testSubject
+
+];
+
+
+selects.forEach(select=>{
+
+const current=
+select.value;
+
+
+select.innerHTML=
+
+'<option value="">-- اختر المادة --</option>';
+
+
+subjects.forEach(subject=>{
+
+const option=
+document.createElement("option");
+
+option.value=
+subject.id;
+
+option.textContent=
+subject.name;
+
+select.appendChild(option);
+
+});
+
+
+if(
+subjects.some(
+s=>s.id===current
+)
+){
+
+select.value=current;
+
+}
+
+});
+
+}
+
+
+async function saveSubject(){
+
+const id=
+subjectEditId.value;
+
+
+const name=
+subjectName.value.trim();
+
+
+if(!name){
+
+alert("أدخل اسم المادة");
+
+return;
+
+}
+
+
+const duplicate=
+subjects.find(subject=>
+
+subject.name.trim()===
+name &&
+subject.id!==id
+
+);
+
+
+if(duplicate){
+
+alert("هذه المادة موجودة بالفعل");
+
+return;
+
+}
+
+
+if(id){
+
+await db
+.collection("subjects")
+.doc(id)
+.set({
+
+name
+
+},{merge:true});
+
+}
+
+else{
+
+await db
+.collection("subjects")
+.add({
+
+name,
+
+createdAt:
+firebase.firestore
+.FieldValue
+.serverTimestamp()
+
+});
+
+}
+
+
+alert("تم حفظ المادة ✅");
+
+
+clearSubjectForm();
+
+await loadSubjects();
+
+}
+
+
+function editSubject(id){
+
+const subject=
+subjects.find(
+s=>s.id===id
+);
+
+
+if(!subject)return;
+
+
+subjectEditId.value=
+subject.id;
+
+subjectName.value=
+subject.name||"";
+
+}
+
+
+function clearSubjectForm(){
+
+subjectEditId.value="";
+subjectName.value="";
+
+}
+
+
+async function deleteSubject(id){
+
+const subject=
+subjects.find(
+s=>s.id===id
+);
+
+
+if(!subject)return;
+
+
+if(
+!confirm(
+"هل تريد حذف مادة:\n"+
+subject.name+
+" ؟"
+)
+){
+
+return;
+
+}
+
+
+await db
+.collection("subjects")
+.doc(id)
+.delete();
+
+
+/*
+نزيل المادة من إسنادات المعلمين
+بدون حذف باقي الإسنادات.
+*/
+
+for(
+const teacher of teachers
+){
+
+const assignments=
+getAssignments(teacher);
+
+
+const filtered=
+assignments.filter(
+a=>a.subjectId!==id
+);
+
+
+if(
+filtered.length!==
+assignments.length
+){
+
+await db
+.collection("teachers")
+.doc(teacher.email)
+.set({
+
+assignments:filtered
+
+},{merge:true});
+
+}
+
+}
+
+
+await loadSubjects();
+
+await loadTeachers();
+
+}
+
+
+/* =====================================================
    المعلمين
-========================= */
+===================================================== */
 
 async function loadTeachers(){
 
-    const snap=
-        await db.collection("teachers").get();
-
-    teachers=[];
-
-
-    snap.forEach(doc=>{
-
-        const data=doc.data() || {};
-
-        teachers.push({
-            ...data,
-            email:data.email || doc.id
-        });
-
-    });
+const snap=
+await db
+.collection("teachers")
+.get();
 
 
-    teachers.sort(
-        (a,b)=>
-        String(a.name||"")
-        .localeCompare(
-            String(b.name||""),
-            "ar"
-        )
-    );
+teachers=[];
 
 
-    document.getElementById("statTeachers")
-        .textContent=teachers.length;
+snap.forEach(doc=>{
+
+const data=
+doc.data()||{};
 
 
-    renderTeachers();
-    fillTeacherSelector();
+teachers.push({
+
+...data,
+
+email:
+data.email||doc.id
+
+});
+
+});
+
+
+teachers.sort(
+(a,b)=>
+
+String(a.name||"")
+.localeCompare(
+String(b.name||""),
+"ar"
+)
+
+);
+
+
+statTeachers.textContent=
+teachers.length;
+
+
+renderTeachers();
+
+renderTeacherCards();
 
 }
 
 
-function getTeacherAssignments(teacher){
+function getAssignments(teacher){
 
-    /*
-    يدعم النظام الجديد والقديم معًا
-    */
+if(
+Array.isArray(
+teacher.assignments
+)
+){
 
-    if(
-        Array.isArray(teacher.classes) &&
-        teacher.classes.length
-    ){
-        return teacher.classes;
-    }
+return teacher.assignments;
 
-    if(Array.isArray(teacher.assignments)){
-        return teacher.assignments;
-    }
+}
 
-    return [];
+
+return [];
 
 }
 
 
 function renderTeachers(){
 
-    const body=
-        document.getElementById("teachersBody");
-
-    body.innerHTML="";
+teachersBody.innerHTML="";
 
 
-    if(!teachers.length){
+if(!teachers.length){
 
-        body.innerHTML=
-            "<tr><td colspan='4'>لا يوجد معلمون</td></tr>";
+teachersBody.innerHTML=
 
-        return;
+"<tr><td colspan='4'>لا يوجد معلمون</td></tr>";
 
-    }
+return;
 
-
-    teachers.forEach(teacher=>{
-
-        const assignments=
-            getTeacherAssignments(teacher);
-
-        const unique=new Set();
-
-        assignments.forEach(a=>{
-
-            if(a.grade && a.section)
-                unique.add(a.grade+"|||"+a.section);
-
-        });
+}
 
 
-        const tr=document.createElement("tr");
+teachers.forEach(teacher=>{
 
-        tr.innerHTML=`
-            <td>${escapeHtml(teacher.name)}</td>
+const assignments=
+getAssignments(teacher);
 
-            <td>${escapeHtml(teacher.email)}</td>
 
-            <td>${unique.size}</td>
+const tr=
+document.createElement("tr");
 
-            <td>
 
-                <button
-                    class="small-btn btn-warning"
-                    onclick='editTeacher(${JSON.stringify(teacher.email)})'>
-                    تعديل
-                </button>
+tr.innerHTML=`
 
-                <button
-                    class="small-btn btn-danger"
-                    onclick='deleteTeacher(${JSON.stringify(teacher.email)})'>
-                    حذف
-                </button>
+<td>
+${escapeHtml(teacher.name)}
+</td>
 
-            </td>
-        `;
+<td>
+${escapeHtml(teacher.email)}
+</td>
 
-        body.appendChild(tr);
+<td>
+${assignments.length}
+</td>
 
-    });
+<td>
+
+<button
+class="small-btn btn-warning"
+onclick='editTeacher(${JSON.stringify(teacher.email)})'>
+
+تعديل
+
+</button>
+
+
+<button
+class="small-btn btn-danger"
+onclick='deleteTeacher(${JSON.stringify(teacher.email)})'>
+
+حذف
+
+</button>
+
+</td>
+
+`;
+
+
+teachersBody.appendChild(tr);
+
+});
 
 }
 
 
 async function saveTeacher(){
 
-    const original=
-        document.getElementById("teacherOriginalUsername")
-        .value.trim();
-
-    const name=
-        document.getElementById("teacherName")
-        .value.trim();
-
-    const username=
-        document.getElementById("teacherUsername")
-        .value.trim().toLowerCase();
-
-    const password=
-        document.getElementById("teacherPassword")
-        .value.trim();
+const original=
+teacherOriginalUsername
+.value
+.trim();
 
 
-    if(!name || !username || !password){
-
-        alert(
-            "أدخل اسم المعلم واسم المستخدم وكلمة المرور"
-        );
-
-        return;
-
-    }
+const name=
+teacherName
+.value
+.trim();
 
 
-    let oldTeacherData={};
+const username=
+teacherUsername
+.value
+.trim()
+.toLowerCase();
 
 
-    if(original){
-
-        const oldDoc=
-            await db.collection("teachers")
-            .doc(original)
-            .get();
-
-        if(oldDoc.exists)
-            oldTeacherData=oldDoc.data() || {};
-
-    }
+const password=
+teacherPassword
+.value
+.trim();
 
 
-    if(original && original!==username){
+if(
+!name ||
+!username ||
+!password
+){
 
-        await db.collection("teachers")
-            .doc(original)
-            .delete();
+alert(
+"أدخل اسم المعلم واسم المستخدم وكلمة المرور"
+);
 
-        await db.collection("users")
-            .doc(original)
-            .delete();
+return;
 
-    }
-
-
-    await db.collection("teachers")
-        .doc(username)
-        .set({
-
-            ...oldTeacherData,
-
-            name,
-            email:username
-
-        },{merge:true});
+}
 
 
-    await db.collection("users")
-        .doc(username)
-        .set({
-
-            name,
-            role:"teacher",
-            password
-
-        },{merge:true});
+let oldData={};
 
 
-    alert("تم حفظ المعلم ✅");
+if(original){
 
-    clearTeacherForm();
+const oldDoc=
 
-    await loadTeachers();
+await db
+.collection("teachers")
+.doc(original)
+.get();
+
+
+if(oldDoc.exists){
+
+oldData=
+oldDoc.data()||{};
+
+}
+
+}
+
+
+if(
+original &&
+original!==username
+){
+
+await db
+.collection("teachers")
+.doc(original)
+.delete();
+
+
+const oldUser=
+
+await db
+.collection("users")
+.doc(original)
+.get();
+
+
+if(
+oldUser.exists &&
+oldUser.data().role==="teacher"
+){
+
+await db
+.collection("users")
+.doc(original)
+.delete();
+
+}
+
+}
+
+
+await db
+.collection("teachers")
+.doc(username)
+.set({
+
+...oldData,
+
+name,
+email:username
+
+},{merge:true});
+
+
+await db
+.collection("users")
+.doc(username)
+.set({
+
+name,
+role:"teacher",
+password
+
+},{merge:true});
+
+
+alert("تم حفظ المعلم ✅");
+
+
+clearTeacherForm();
+
+await loadTeachers();
 
 }
 
 
 async function editTeacher(username){
 
-    const teacher=
-        teachers.find(
-            t=>t.email===username
-        );
-
-    if(!teacher)
-        return;
+const teacher=
+teachers.find(
+t=>t.email===username
+);
 
 
-    document.getElementById("teacherOriginalUsername")
-        .value=teacher.email;
-
-    document.getElementById("teacherName")
-        .value=teacher.name || "";
-
-    document.getElementById("teacherUsername")
-        .value=teacher.email || "";
+if(!teacher)return;
 
 
-    const userDoc=
-        await db.collection("users")
-        .doc(username)
-        .get();
+teacherOriginalUsername.value=
+teacher.email;
 
 
-    document.getElementById("teacherPassword")
-        .value=
-        userDoc.exists
-        ? (userDoc.data().password || "")
-        : "";
+teacherName.value=
+teacher.name||"";
+
+
+teacherUsername.value=
+teacher.email||"";
+
+
+const userDoc=
+
+await db
+.collection("users")
+.doc(username)
+.get();
+
+
+teacherPassword.value=
+
+userDoc.exists
+?
+(userDoc.data().password||"")
+:
+"";
 
 }
 
 
 function clearTeacherForm(){
 
-    document.getElementById("teacherOriginalUsername").value="";
-    document.getElementById("teacherName").value="";
-    document.getElementById("teacherUsername").value="";
-    document.getElementById("teacherPassword").value="";
+teacherOriginalUsername.value="";
+teacherName.value="";
+teacherUsername.value="";
+teacherPassword.value="";
 
 }
 
 
 async function deleteTeacher(username){
 
-    if(
-        !confirm(
-            "سيتم حذف المعلم وحساب دخوله.\nمتابعة؟"
-        )
-    ){
-        return;
-    }
+if(
+!confirm(
+"سيتم حذف المعلم وحساب دخوله.\nمتابعة؟"
+)
+){
 
-
-    await db.collection("teachers")
-        .doc(username)
-        .delete();
-
-
-    const userDoc=
-        await db.collection("users")
-        .doc(username)
-        .get();
-
-
-    if(
-        userDoc.exists &&
-        userDoc.data().role==="teacher"
-    ){
-
-        await db.collection("users")
-            .doc(username)
-            .delete();
-
-    }
-
-
-    await loadTeachers();
+return;
 
 }
 
 
-/* =========================
-   حذف جميع المعلمين
-========================= */
-
-async function deleteAllTeachers(){
-
-    if(!teachers.length){
-
-        alert("لا يوجد معلمون للحذف");
-        return;
-
-    }
+await db
+.collection("teachers")
+.doc(username)
+.delete();
 
 
-    const answer=prompt(
-        "⚠️ سيتم حذف جميع المعلمين وحسابات دخولهم.\n\n"+
-        "لن يتم حذف حساب الإدارة.\n\n"+
-        "اكتب كلمة حذف للتأكيد:"
-    );
+const userDoc=
+
+await db
+.collection("users")
+.doc(username)
+.get();
 
 
-    if(answer!=="حذف"){
+if(
+userDoc.exists &&
+userDoc.data().role==="teacher"
+){
 
-        alert("تم إلغاء العملية");
-        return;
-
-    }
-
-
-    try{
-
-        /*
-        حذف حسابات المعلمين فقط من users
-        حتى لا نحذف الأدمن.
-        */
-
-        const usersSnap=
-            await db.collection("users").get();
-
-
-        const teacherUsers=
-            usersSnap.docs.filter(doc=>{
-
-                const data=doc.data() || {};
-
-                return data.role==="teacher";
-
-            });
-
-
-        for(let i=0;i<teacherUsers.length;i+=400){
-
-            const batch=db.batch();
-
-            teacherUsers
-                .slice(i,i+400)
-                .forEach(doc=>{
-                    batch.delete(doc.ref);
-                });
-
-            await batch.commit();
-
-        }
-
-
-        await deleteCollection("teachers");
-
-
-        alert("تم حذف جميع المعلمين ✅");
-
-        await loadTeachers();
-
-    }catch(error){
-
-        console.error(error);
-
-        alert("حدث خطأ أثناء حذف المعلمين");
-
-    }
+await db
+.collection("users")
+.doc(username)
+.delete();
 
 }
 
 
-/* =========================
-   الاختبارات
-========================= */
+if(
+assignTeacher.value===username
+){
 
-async function loadTests(){
+assignTeacher.value="";
 
-    const snap=
-        await db.collection("tests").get();
+selectedTeacherInfo.style.display="none";
 
-    tests=[];
+assignmentSummary.innerHTML=
+"اختر معلمًا لعرض إسناداته.";
 
-
-    snap.forEach(doc=>{
-
-        tests.push({
-            id:doc.id,
-            ...doc.data()
-        });
-
-    });
-
-
-    tests.sort(
-        (a,b)=>
-        String(a.date||"")
-        .localeCompare(
-            String(b.date||"")
-        )
-    );
-
-
-    document.getElementById("statTests")
-        .textContent=tests.length;
-
-    renderTests();
+clearAllAssignments();
 
 }
 
 
-function renderTests(){
-
-    const body=
-        document.getElementById("testsBody");
-
-    body.innerHTML="";
-
-
-    if(!tests.length){
-
-        body.innerHTML=
-            "<tr><td colspan='4'>لا توجد اختبارات</td></tr>";
-
-        return;
-
-    }
-
-
-    tests.forEach(test=>{
-
-        const tr=document.createElement("tr");
-
-        tr.innerHTML=`
-            <td>${escapeHtml(test.name)}</td>
-            <td>${escapeHtml(test.fullMark)}</td>
-            <td>${escapeHtml(test.date)}</td>
-
-            <td>
-
-                <button
-                    class="small-btn btn-warning"
-                    onclick='editTest(${JSON.stringify(test.id)})'>
-                    تعديل
-                </button>
-
-                <button
-                    class="small-btn btn-danger"
-                    onclick='deleteTest(${JSON.stringify(test.id)})'>
-                    حذف
-                </button>
-
-            </td>
-        `;
-
-        body.appendChild(tr);
-
-    });
+await loadTeachers();
 
 }
 
 
-async function saveTest(){
+/* =====================================================
+   بطاقات المعلمين - حل مشكلة القائمة نهائياً
+===================================================== */
 
-    const id=
-        document.getElementById("testEditId")
-        .value;
+function renderTeacherCards(){
 
-    const name=
-        document.getElementById("testName")
-        .value.trim();
-
-    const fullMark=
-        Number(
-            document.getElementById("testFullMark")
-            .value
-        );
-
-    const date=
-        document.getElementById("testDate")
-        .value;
+const container=
+document.getElementById(
+"teacherCards"
+);
 
 
-    if(!name || !fullMark || !date){
-
-        alert(
-            "أدخل اسم الاختبار والدرجة النهائية والتاريخ"
-        );
-
-        return;
-
-    }
+const selected=
+assignTeacher.value;
 
 
-    if(id){
-
-        await db.collection("tests")
-            .doc(id)
-            .set({
-                name,
-                fullMark,
-                date
-            },{merge:true});
-
-    }else{
-
-        await db.collection("tests")
-            .add({
-
-                name,
-                fullMark,
-                date,
-
-                createdAt:
-                    firebase.firestore
-                    .FieldValue
-                    .serverTimestamp()
-
-            });
-
-    }
+container.innerHTML="";
 
 
-    alert("تم حفظ الاختبار ✅");
+if(!teachers.length){
 
-    clearTestForm();
+container.innerHTML=`
 
-    await loadTests();
+<div class="note"
+style="grid-column:1/-1">
+
+لا يوجد معلمون مسجلون.
+
+</div>
+
+`;
+
+return;
 
 }
 
 
-function editTest(id){
+teachers.forEach(teacher=>{
 
-    const test=
-        tests.find(t=>t.id===id);
-
-    if(!test)
-        return;
+const card=
+document.createElement("div");
 
 
-    document.getElementById("testEditId").value=
-        test.id;
+card.className=
+"teacher-card";
 
-    document.getElementById("testName").value=
-        test.name || "";
 
-    document.getElementById("testFullMark").value=
-        test.fullMark || "";
+if(
+teacher.email===selected
+){
 
-    document.getElementById("testDate").value=
-        test.date || "";
+card.classList.add(
+"active"
+);
 
 }
 
 
-function clearTestForm(){
+card.innerHTML=`
 
-    document.getElementById("testEditId").value="";
-    document.getElementById("testName").value="";
-    document.getElementById("testFullMark").value="";
-    document.getElementById("testDate").value="";
+<div class="teacher-card-name">
 
-}
+${escapeHtml(
+teacher.name||"بدون اسم"
+)}
 
+</div>
 
-async function deleteTest(id){
+<div class="teacher-card-user">
 
-    if(!confirm("هل تريد حذف الاختبار؟"))
-        return;
+${escapeHtml(
+teacher.email
+)}
 
-    await db.collection("tests")
-        .doc(id)
-        .delete();
+</div>
 
-    await loadTests();
-
-}
+`;
 
 
-/* =========================
-   حذف جميع الاختبارات
-========================= */
+card.onclick=()=>{
 
-async function deleteAllTests(){
+selectTeacher(
+teacher.email
+);
 
-    if(!tests.length){
-
-        alert("لا توجد اختبارات للحذف");
-        return;
-
-    }
+};
 
 
-    const answer=prompt(
-        "⚠️ سيتم حذف جميع الاختبارات.\n\n"+
-        "اكتب كلمة حذف للتأكيد:"
-    );
+container.appendChild(card);
 
-
-    if(answer!=="حذف"){
-
-        alert("تم إلغاء العملية");
-        return;
-
-    }
-
-
-    try{
-
-        await deleteCollection("tests");
-
-        alert("تم حذف جميع الاختبارات ✅");
-
-        await loadTests();
-
-    }catch(error){
-
-        console.error(error);
-
-        alert("حدث خطأ أثناء الحذف");
-
-    }
+});
 
 }
 
 
-/* =========================
-   حذف جميع الدرجات
-========================= */
+function selectTeacher(username){
 
-async function deleteAllGrades(){
-
-    const answer=prompt(
-        "⚠️ سيتم حذف جميع النتائج والدرجات المحفوظة في النظام الجديد.\n\n"+
-        "اكتب حذف الدرجات للتأكيد:"
-    );
+assignTeacher.value=
+username;
 
 
-    if(answer!=="حذف الدرجات"){
-
-        alert("تم إلغاء العملية");
-        return;
-
-    }
+renderTeacherCards();
 
 
-    try{
+const teacher=
+teachers.find(
+t=>t.email===username
+);
 
-        await deleteCollection("grades");
 
-        alert("تم حذف جميع الدرجات والنتائج ✅");
+if(!teacher)return;
 
-    }catch(error){
 
-        console.error(error);
+selectedTeacherInfo.style.display=
+"block";
 
-        alert("حدث خطأ أثناء حذف النتائج");
 
-    }
+selectedTeacherInfo.innerHTML=
+
+"المعلم المختار: "+
+escapeHtml(
+teacher.name
+);
+
+
+assignmentSubject.value="";
+
+
+clearAllAssignments();
+
+
+renderAssignmentSummary();
 
 }
 
 
-/* =========================
+/* =====================================================
    الإسناد
-========================= */
+===================================================== */
 
-function renderAssignmentGrid(){
+function loadAssignmentChecks(){
 
-    const body=
-        document.getElementById("assignmentGrid");
-
-    body.innerHTML="";
+clearAllAssignments();
 
 
-    grades.forEach(grade=>{
-
-        const tr=document.createElement("tr");
-
-        let html=`
-            <td class="assign-row-title">
-                ${escapeHtml(grade)}
-            </td>
-        `;
+const username=
+assignTeacher.value;
 
 
-        sections.forEach(section=>{
-
-            html+=`
-                <td>
-                    <input
-                        type="checkbox"
-                        class="assign-check"
-                        data-grade="${escapeHtml(grade)}"
-                        data-section="${escapeHtml(section)}">
-                </td>
-            `;
-
-        });
+const subjectId=
+assignmentSubject.value;
 
 
-        tr.innerHTML=html;
+if(
+!username ||
+!subjectId
+){
 
-        body.appendChild(tr);
-
-    });
+return;
 
 }
 
 
-/*
-مهم:
-ننشئ القائمة من جديد بطريقة صريحة،
-ونجبر النص على الظهور.
-*/
-
-function fillTeacherSelector(){
-
-    const select=
-        document.getElementById("assignTeacher");
-
-    const previous=
-        select.value;
+const teacher=
+teachers.find(
+t=>t.email===username
+);
 
 
-    select.innerHTML="";
+if(!teacher)return;
 
 
-    const first=
-        document.createElement("option");
-
-    first.value="";
-    first.textContent="-- اختر المعلم --";
-
-    select.appendChild(first);
+const assignments=
+getAssignments(teacher);
 
 
-    teachers.forEach(teacher=>{
+document
+.querySelectorAll(
+".assign-check"
+)
+.forEach(box=>{
 
-        const option=
-            document.createElement("option");
+box.checked=
+assignments.some(a=>
 
-        option.value=
-            String(teacher.email || "");
+a.subjectId===subjectId &&
 
-        /*
-        الاسم + اسم المستخدم
-        عشان يظهر بوضوح
-        */
+a.grade===
+box.dataset.grade &&
 
-        option.textContent=
-            (teacher.name || "بدون اسم")+
-            "  —  "+
-            (teacher.email || "");
+a.section===
+box.dataset.section
 
-        option.style.color="#111";
-        option.style.backgroundColor="#fff";
+);
 
-        select.appendChild(option);
-
-    });
-
-
-    if(
-        previous &&
-        teachers.some(
-            t=>t.email===previous
-        )
-    ){
-        select.value=previous;
-    }
-
-}
-
-
-function loadTeacherAssignments(){
-
-    clearAllAssignments();
-
-
-    const username=
-        document.getElementById("assignTeacher")
-        .value;
-
-
-    if(!username)
-        return;
-
-
-    const teacher=
-        teachers.find(
-            t=>t.email===username
-        );
-
-
-    if(!teacher)
-        return;
-
-
-    const assignments=
-        getTeacherAssignments(teacher);
-
-
-    document
-        .querySelectorAll(".assign-check")
-        .forEach(box=>{
-
-            box.checked=
-                assignments.some(a=>
-
-                    a.grade===box.dataset.grade &&
-                    a.section===box.dataset.section
-
-                );
-
-        });
+});
 
 }
 
 
 function selectAllAssignments(){
 
-    document
-        .querySelectorAll(".assign-check")
-        .forEach(box=>{
-            box.checked=true;
-        });
+document
+.querySelectorAll(
+".assign-check"
+)
+.forEach(box=>{
+
+box.checked=true;
+
+});
 
 }
 
 
 function clearAllAssignments(){
 
-    document
-        .querySelectorAll(".assign-check")
-        .forEach(box=>{
-            box.checked=false;
-        });
+document
+.querySelectorAll(
+".assign-check"
+)
+.forEach(box=>{
+
+box.checked=false;
+
+});
 
 }
 
 
 async function saveAssignments(){
 
-    const username=
-        document.getElementById("assignTeacher")
-        .value;
+const username=
+assignTeacher.value;
 
 
-    if(!username){
-
-        alert("اختر المعلم أولًا");
-        return;
-
-    }
+const subjectId=
+assignmentSubject.value;
 
 
-    const classes=[];
+if(!username){
 
+alert("اختر المعلم أولًا");
 
-    document
-        .querySelectorAll(".assign-check:checked")
-        .forEach(box=>{
-
-            classes.push({
-
-                grade:box.dataset.grade,
-                section:box.dataset.section
-
-            });
-
-        });
-
-
-    /*
-    classes = الشكل الجديد البسيط
-
-    assignments = نحتفظ به أيضًا
-    مؤقتًا للتوافق مع teacher القديمة.
-    */
-
-    const legacyAssignments=
-        classes.map(c=>({
-
-            grade:c.grade,
-            section:c.section,
-            subject:"English"
-
-        }));
-
-
-    await db.collection("teachers")
-        .doc(username)
-        .set({
-
-            classes:classes,
-            assignments:legacyAssignments
-
-        },{merge:true});
-
-
-    alert(
-        "تم حفظ الإسناد بنجاح ✅\n\n"+
-        "عدد الفصول المسندة: "+
-        classes.length
-    );
-
-
-    await loadTeachers();
-
-
-    document.getElementById("assignTeacher")
-        .value=username;
-
-    loadTeacherAssignments();
+return;
 
 }
 
 
-/* =========================
+if(!subjectId){
+
+alert("اختر المادة أولًا");
+
+return;
+
+}
+
+
+const subject=
+subjects.find(
+s=>s.id===subjectId
+);
+
+
+if(!subject){
+
+alert("المادة غير موجودة");
+
+return;
+
+}
+
+
+const teacher=
+teachers.find(
+t=>t.email===username
+);
+
+
+if(!teacher){
+
+alert("المعلم غير موجود");
+
+return;
+
+}
+
+
+/*
+نحتفظ بإسنادات المواد الأخرى.
+ونستبدل فقط إسناد المادة الحالية.
+*/
+
+let assignments=
+getAssignments(teacher)
+.filter(
+a=>a.subjectId!==subjectId
+);
+
+
+document
+.querySelectorAll(
+".assign-check:checked"
+)
+.forEach(box=>{
+
+assignments.push({
+
+subjectId:
+subject.id,
+
+subjectName:
+subject.name,
+
+grade:
+box.dataset.grade,
+
+section:
+box.dataset.section
+
+});
+
+});
+
+
+await db
+.collection("teachers")
+.doc(username)
+.set({
+
+assignments
+
+},{merge:true});
+
+
+alert(
+"تم حفظ إسناد مادة "+
+subject.name+
+" للمعلم بنجاح ✅"
+);
+
+
+await loadTeachers();
+
+
+assignTeacher.value=
+username;
+
+
+renderTeacherCards();
+
+
+selectedTeacherInfo.style.display=
+"block";
+
+
+const freshTeacher=
+teachers.find(
+t=>t.email===username
+);
+
+
+selectedTeacherInfo.innerHTML=
+
+"المعلم المختار: "+
+escapeHtml(
+freshTeacher?.name||username
+);
+
+
+loadAssignmentChecks();
+
+renderAssignmentSummary();
+
+}
+
+
+function renderAssignmentSummary(){
+
+const username=
+assignTeacher.value;
+
+
+if(!username){
+
+assignmentSummary.innerHTML=
+"اختر معلمًا لعرض إسناداته.";
+
+return;
+
+}
+
+
+const teacher=
+teachers.find(
+t=>t.email===username
+);
+
+
+if(!teacher)return;
+
+
+const assignments=
+getAssignments(teacher);
+
+
+if(!assignments.length){
+
+assignmentSummary.innerHTML=
+
+"<div class='note'>لا توجد إسنادات لهذا المعلم.</div>";
+
+return;
+
+}
+
+
+/*
+تجميع حسب المادة
+*/
+
+const grouped={};
+
+
+assignments.forEach(a=>{
+
+const key=
+a.subjectId ||
+a.subjectName ||
+"old";
+
+
+if(!grouped[key]){
+
+grouped[key]={
+
+name:
+a.subjectName ||
+a.subject ||
+"مادة غير محددة",
+
+classes:[]
+
+};
+
+}
+
+
+grouped[key].classes.push({
+
+grade:a.grade,
+section:a.section
+
+});
+
+});
+
+
+let html="";
+
+
+Object.values(grouped)
+.forEach(group=>{
+
+sortClasses(group.classes);
+
+
+html+=`
+
+<div class="assignment-group">
+
+<div class="subject-name">
+
+📚 ${escapeHtml(group.name)}
+
+</div>
+
+<div>
+
+${group.classes.map(c=>
+
+`<span class="tag">
+${escapeHtml(classLabel(c))}
+</span>`
+
+).join("")}
+
+</div>
+
+</div>
+
+`;
+
+});
+
+
+assignmentSummary.innerHTML=html;
+
+}
+
+
+async function clearCurrentTeacherAssignments(){
+
+const username=
+assignTeacher.value;
+
+
+if(!username){
+
+alert("اختر المعلم أولًا");
+
+return;
+
+}
+
+
+const teacher=
+teachers.find(
+t=>t.email===username
+);
+
+
+if(!teacher)return;
+
+
+if(
+!confirm(
+"هل تريد حذف جميع إسنادات المعلم:\n"+
+teacher.name+
+" ؟"
+)
+){
+
+return;
+
+}
+
+
+await db
+.collection("teachers")
+.doc(username)
+.set({
+
+assignments:[]
+
+},{merge:true});
+
+
+alert(
+"تم حذف جميع إسنادات المعلم"
+);
+
+
+await loadTeachers();
+
+
+assignTeacher.value=
+username;
+
+
+renderTeacherCards();
+
+renderAssignmentSummary();
+
+clearAllAssignments();
+
+}
+
+
+/* =====================================================
+   الاختبارات
+===================================================== */
+
+async function loadTests(){
+
+const snap=
+await db
+.collection("tests")
+.get();
+
+
+tests=[];
+
+
+snap.forEach(doc=>{
+
+tests.push({
+
+id:doc.id,
+
+...doc.data()
+
+});
+
+});
+
+
+tests.sort((a,b)=>
+
+String(a.date||"")
+.localeCompare(
+String(b.date||"")
+)
+
+);
+
+
+statTests.textContent=
+tests.length;
+
+
+renderTests();
+
+}
+
+
+function renderTests(){
+
+testsBody.innerHTML="";
+
+
+if(!tests.length){
+
+testsBody.innerHTML=
+
+"<tr><td colspan='6'>لا توجد اختبارات</td></tr>";
+
+return;
+
+}
+
+
+tests.forEach(test=>{
+
+const classes=
+Array.isArray(test.classes)
+?
+test.classes
+:
+[];
+
+
+const classesText=
+
+classes
+.map(c=>classLabel(c))
+.join(" - ");
+
+
+const tr=
+document.createElement("tr");
+
+
+tr.innerHTML=`
+
+<td>
+${escapeHtml(test.name)}
+</td>
+
+<td>
+${escapeHtml(test.subjectName)}
+</td>
+
+<td>
+${escapeHtml(test.fullMark)}
+</td>
+
+<td>
+${escapeHtml(test.date)}
+</td>
+
+<td>
+${escapeHtml(classesText)}
+</td>
+
+<td>
+
+<button
+class="small-btn btn-warning"
+onclick='editTest(${JSON.stringify(test.id)})'>
+
+تعديل
+
+</button>
+
+
+<button
+class="small-btn btn-danger"
+onclick='deleteTest(${JSON.stringify(test.id)})'>
+
+حذف
+
+</button>
+
+</td>
+
+`;
+
+
+testsBody.appendChild(tr);
+
+});
+
+}
+
+
+function getCheckedTestClasses(){
+
+const classes=[];
+
+
+document
+.querySelectorAll(
+".test-class-check:checked"
+)
+.forEach(box=>{
+
+classes.push({
+
+grade:
+box.dataset.grade,
+
+section:
+box.dataset.section
+
+});
+
+});
+
+
+return sortClasses(classes);
+
+}
+
+
+function selectAllTestClasses(){
+
+document
+.querySelectorAll(
+".test-class-check"
+)
+.forEach(box=>{
+
+box.checked=true;
+
+});
+
+}
+
+
+function clearAllTestClasses(){
+
+document
+.querySelectorAll(
+".test-class-check"
+)
+.forEach(box=>{
+
+box.checked=false;
+
+});
+
+}
+
+
+async function saveTest(){
+
+const id=
+testEditId.value;
+
+
+const name=
+testName.value.trim();
+
+
+const subjectId=
+testSubject.value;
+
+
+const fullMark=
+Number(
+testFullMark.value
+);
+
+
+const date=
+testDate.value;
+
+
+const classes=
+getCheckedTestClasses();
+
+
+if(!name){
+
+alert("أدخل اسم الاختبار");
+
+return;
+
+}
+
+
+if(!subjectId){
+
+alert("اختر المادة");
+
+return;
+
+}
+
+
+if(
+!fullMark ||
+fullMark<=0
+){
+
+alert("أدخل الدرجة النهائية");
+
+return;
+
+}
+
+
+if(!date){
+
+alert("حدد تاريخ الاختبار");
+
+return;
+
+}
+
+
+if(!classes.length){
+
+alert(
+"حدد فصلًا واحدًا على الأقل للاختبار"
+);
+
+return;
+
+}
+
+
+const subject=
+subjects.find(
+s=>s.id===subjectId
+);
+
+
+if(!subject){
+
+alert("المادة غير موجودة");
+
+return;
+
+}
+
+
+const data={
+
+name,
+
+subjectId:
+subject.id,
+
+subjectName:
+subject.name,
+
+fullMark,
+
+date,
+
+classes
+
+};
+
+
+if(id){
+
+await db
+.collection("tests")
+.doc(id)
+.set(
+data,
+{merge:true}
+);
+
+}
+
+else{
+
+await db
+.collection("tests")
+.add({
+
+...data,
+
+createdAt:
+firebase.firestore
+.FieldValue
+.serverTimestamp()
+
+});
+
+}
+
+
+alert("تم حفظ الاختبار بنجاح ✅");
+
+
+clearTestForm();
+
+await loadTests();
+
+}
+
+
+function editTest(id){
+
+const test=
+tests.find(
+t=>t.id===id
+);
+
+
+if(!test)return;
+
+
+testEditId.value=
+test.id;
+
+
+testName.value=
+test.name||"";
+
+
+testSubject.value=
+test.subjectId||"";
+
+
+testFullMark.value=
+test.fullMark||"";
+
+
+testDate.value=
+test.date||"";
+
+
+clearAllTestClasses();
+
+
+const classes=
+Array.isArray(test.classes)
+?
+test.classes
+:
+[];
+
+
+document
+.querySelectorAll(
+".test-class-check"
+)
+.forEach(box=>{
+
+box.checked=
+classes.some(c=>
+
+c.grade===
+box.dataset.grade &&
+
+c.section===
+box.dataset.section
+
+);
+
+});
+
+
+document
+.getElementById("testName")
+.scrollIntoView({
+behavior:"smooth",
+block:"center"
+});
+
+}
+
+
+function clearTestForm(){
+
+testEditId.value="";
+testName.value="";
+testSubject.value="";
+testFullMark.value="";
+testDate.value="";
+
+clearAllTestClasses();
+
+}
+
+
+async function deleteTest(id){
+
+const test=
+tests.find(
+t=>t.id===id
+);
+
+
+if(!test)return;
+
+
+if(
+!confirm(
+"هل تريد حذف الاختبار:\n"+
+test.name+
+" ؟"
+)
+){
+
+return;
+
+}
+
+
+await db
+.collection("tests")
+.doc(id)
+.delete();
+
+
+await loadTests();
+
+}
+
+
+/* =====================================================
    عدد الفصول
-========================= */
+===================================================== */
 
 function updateClassCount(){
 
-    const set=new Set();
-
-    students.forEach(student=>{
-
-        if(student.grade && student.section){
-
-            set.add(
-                student.grade+
-                "|||"+
-                student.section
-            );
-
-        }
-
-    });
+const unique=
+new Set();
 
 
-    document.getElementById("statClasses")
-        .textContent=set.size;
+students.forEach(student=>{
+
+if(
+student.grade &&
+student.section
+){
+
+unique.add(
+
+classKey(
+student.grade,
+student.section
+)
+
+);
+
+}
+
+});
+
+
+statClasses.textContent=
+unique.size;
 
 }
 
 
-/* =========================
+/* =====================================================
+   حذف Collection على دفعات
+===================================================== */
+
+async function deleteCollection(name){
+
+while(true){
+
+const snap=
+
+await db
+.collection(name)
+.limit(400)
+.get();
+
+
+if(snap.empty){
+
+break;
+
+}
+
+
+const batch=
+db.batch();
+
+
+snap.docs.forEach(doc=>{
+
+batch.delete(doc.ref);
+
+});
+
+
+await batch.commit();
+
+}
+
+}
+
+
+/* =====================================================
+   حذف الجميع
+===================================================== */
+
+async function deleteAllStudents(){
+
+if(!students.length){
+
+alert("لا يوجد طلاب");
+
+return;
+
+}
+
+
+const answer=
+prompt(
+
+"⚠️ سيتم حذف جميع الطلاب وعددهم "+
+students.length+
+".\n\nاكتب كلمة حذف للتأكيد:"
+
+);
+
+
+if(answer!=="حذف"){
+
+alert("تم إلغاء العملية");
+
+return;
+
+}
+
+
+await deleteCollection(
+"students"
+);
+
+
+alert("تم حذف جميع الطلاب ✅");
+
+
+await loadStudents();
+
+}
+
+
+async function deleteAllSubjects(){
+
+if(!subjects.length){
+
+alert("لا توجد مواد");
+
+return;
+
+}
+
+
+const answer=
+prompt(
+
+"⚠️ سيتم حذف جميع المواد.\n"+
+"وسيتم مسح الإسنادات الحالية أيضًا.\n\n"+
+"اكتب حذف المواد للتأكيد:"
+
+);
+
+
+if(
+answer!=="حذف المواد"
+){
+
+alert("تم إلغاء العملية");
+
+return;
+
+}
+
+
+/*
+مسح المواد
+*/
+
+await deleteCollection(
+"subjects"
+);
+
+
+/*
+مسح الإسنادات من المعلمين
+*/
+
+for(
+const teacher of teachers
+){
+
+await db
+.collection("teachers")
+.doc(teacher.email)
+.set({
+
+assignments:[]
+
+},{merge:true});
+
+}
+
+
+alert(
+"تم حذف جميع المواد والإسنادات المرتبطة بها ✅"
+);
+
+
+await loadSubjects();
+
+await loadTeachers();
+
+}
+
+
+async function deleteAllTeachers(){
+
+if(!teachers.length){
+
+alert("لا يوجد معلمون");
+
+return;
+
+}
+
+
+const answer=
+prompt(
+
+"⚠️ سيتم حذف جميع المعلمين وحسابات دخولهم.\n"+
+"حساب الإدارة لن يتم حذفه.\n\n"+
+"اكتب حذف المعلمين للتأكيد:"
+
+);
+
+
+if(
+answer!=="حذف المعلمين"
+){
+
+alert("تم إلغاء العملية");
+
+return;
+
+}
+
+
+/*
+حذف حسابات teacher فقط
+*/
+
+const usersSnap=
+await db
+.collection("users")
+.get();
+
+
+const teacherUsers=
+usersSnap.docs.filter(doc=>{
+
+const data=
+doc.data()||{};
+
+return data.role==="teacher";
+
+});
+
+
+for(
+let i=0;
+i<teacherUsers.length;
+i+=400
+){
+
+const batch=
+db.batch();
+
+
+teacherUsers
+.slice(i,i+400)
+.forEach(doc=>{
+
+batch.delete(doc.ref);
+
+});
+
+
+await batch.commit();
+
+}
+
+
+await deleteCollection(
+"teachers"
+);
+
+
+assignTeacher.value="";
+
+selectedTeacherInfo.style.display=
+"none";
+
+
+assignmentSummary.innerHTML=
+"اختر معلمًا لعرض إسناداته.";
+
+
+alert("تم حذف جميع المعلمين ✅");
+
+
+await loadTeachers();
+
+}
+
+
+async function deleteAllTests(){
+
+if(!tests.length){
+
+alert("لا توجد اختبارات");
+
+return;
+
+}
+
+
+const answer=
+prompt(
+
+"⚠️ سيتم حذف جميع الاختبارات.\n\n"+
+"اكتب حذف الاختبارات للتأكيد:"
+
+);
+
+
+if(
+answer!=="حذف الاختبارات"
+){
+
+alert("تم إلغاء العملية");
+
+return;
+
+}
+
+
+await deleteCollection(
+"tests"
+);
+
+
+alert(
+"تم حذف جميع الاختبارات ✅"
+);
+
+
+await loadTests();
+
+}
+
+
+async function deleteAllGrades(){
+
+const answer=
+prompt(
+
+"⚠️ سيتم حذف جميع النتائج والدرجات المسجلة.\n\n"+
+"اكتب حذف الدرجات للتأكيد:"
+
+);
+
+
+if(
+answer!=="حذف الدرجات"
+){
+
+alert("تم إلغاء العملية");
+
+return;
+
+}
+
+
+await deleteCollection(
+"grades"
+);
+
+
+alert(
+"تم حذف جميع النتائج والدرجات ✅"
+);
+
+}
+
+
+/* =====================================================
    تسجيل الخروج
-========================= */
+===================================================== */
 
 function logout(){
 
-    [
-        "currentUserRole",
-        "currentUser",
-        "currentUserName",
-        "currentUserEmail"
-    ].forEach(key=>
-        localStorage.removeItem(key)
-    );
+[
+"currentUserRole",
+"currentUser",
+"currentUserName",
+"currentUserEmail"
+]
+.forEach(key=>{
 
-    location.href="index.html";
+localStorage.removeItem(key);
+
+});
+
+
+location.href=
+"index.html";
 
 }
 
 
-/* =========================
-   تشغيل
-========================= */
+/* =====================================================
+   تشغيل الصفحة
+===================================================== */
 
 async function start(){
 
-    protectAdmin();
+protectAdmin();
 
-    fillSelectors();
+fillSelectors();
 
-    renderAssignmentGrid();
+buildAllClassGrids();
 
 
-    try{
+try{
 
-        await Promise.all([
-            loadStudents(),
-            loadTeachers(),
-            loadTests()
-        ]);
+await Promise.all([
 
-    }catch(error){
+loadStudents(),
 
-        console.error(error);
+loadSubjects(),
 
-        alert(
-            "حدث خطأ أثناء تحميل بيانات راصد"
-        );
+loadTeachers(),
 
-    }
+loadTests()
+
+]);
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+"حدث خطأ أثناء تحميل بيانات راصد:\n"+
+error.message
+);
+
+}
 
 }
 
