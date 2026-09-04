@@ -10,9 +10,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
-*{
-    box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 :root{
     --navy:#074875;
@@ -38,10 +36,8 @@
     --purple-light:#eee7ff;
 
     --gold:#d8ad2e;
-
     --gray:#9da5ac;
     --gray-light:#e7eaed;
-
     --border:#b9c8d3;
     --text:#15344c;
 }
@@ -225,7 +221,7 @@ select,input{
 }
 
 /* =========================================================
-   REPORT HEADER
+   REPORT
 ========================================================= */
 
 .report{
@@ -321,56 +317,26 @@ select,input{
     font-weight:900;
 }
 
-.kpi.total{
-    background:#e7f1f8;
-}
+.kpi.total{background:#e7f1f8}
+.kpi.total .kpi-value{color:var(--navy)}
 
-.kpi.total .kpi-value{
-    color:var(--navy);
-}
+.kpi.green{background:var(--green-light)}
+.kpi.green .kpi-value{color:var(--green-dark)}
 
-.kpi.green{
-    background:var(--green-light);
-}
+.kpi.red{background:var(--red-light)}
+.kpi.red .kpi-value{color:var(--red-dark)}
 
-.kpi.green .kpi-value{
-    color:var(--green-dark);
-}
+.kpi.blue{background:var(--blue-light)}
+.kpi.blue .kpi-value{color:var(--blue-dark)}
 
-.kpi.red{
-    background:var(--red-light);
-}
+.kpi.yellow{background:#fff3c4}
+.kpi.yellow .kpi-value{color:#735800}
 
-.kpi.red .kpi-value{
-    color:var(--red-dark);
-}
-
-.kpi.blue{
-    background:var(--blue-light);
-}
-
-.kpi.blue .kpi-value{
-    color:var(--blue-dark);
-}
-
-.kpi.yellow{
-    background:#fff3c4;
-}
-
-.kpi.yellow .kpi-value{
-    color:#735800;
-}
-
-.kpi.purple{
-    background:var(--purple-light);
-}
-
-.kpi.purple .kpi-value{
-    color:#6042aa;
-}
+.kpi.purple{background:var(--purple-light)}
+.kpi.purple .kpi-value{color:#6042aa}
 
 /* =========================================================
-   LEVEL STRIP
+   LEVELS
 ========================================================= */
 
 .level-box{
@@ -597,42 +563,28 @@ td{
 }
 
 th:nth-child(1),
-td:nth-child(1){
-    width:5%;
-}
+td:nth-child(1){width:5%}
 
 th:nth-child(2),
-td:nth-child(2){
-    width:16%;
-}
+td:nth-child(2){width:16%}
 
 th:nth-child(3),
-td:nth-child(3){
-    width:39%;
-}
+td:nth-child(3){width:39%}
 
 th:nth-child(4),
-td:nth-child(4){
-    width:12%;
-}
+td:nth-child(4){width:12%}
 
 th:nth-child(5),
-td:nth-child(5){
-    width:15%;
-}
+td:nth-child(5){width:15%}
 
 th:nth-child(6),
-td:nth-child(6){
-    width:13%;
-}
+td:nth-child(6){width:13%}
 
 .student-name{
     text-align:right;
     padding-right:8px;
     font-weight:900;
 }
-
-/* HIGH */
 
 .row-high td{
     background:#d8f3df !important;
@@ -642,8 +594,6 @@ td:nth-child(6){
     color:#126b34 !important;
 }
 
-/* MEDIUM */
-
 .row-medium td{
     background:#dceeff !important;
 }
@@ -651,8 +601,6 @@ td:nth-child(6){
 .row-medium .student-name{
     color:#125c9d !important;
 }
-
-/* CARE */
 
 .row-care td{
     background:#fff1aa !important;
@@ -662,8 +610,6 @@ td:nth-child(6){
     color:#735800 !important;
 }
 
-/* CASE */
-
 .row-case td{
     background:#ffd1d4 !important;
 }
@@ -671,8 +617,6 @@ td:nth-child(6){
 .row-case .student-name{
     color:#aa1f28 !important;
 }
-
-/* ABSENT */
 
 .row-absent td,
 .row-unrecorded td{
@@ -709,67 +653,11 @@ td:nth-child(6){
     border-radius:50%;
 }
 
-.dot.green{background:#35b765 !important;}
-.dot.blue{background:#3488d8 !important;}
-.dot.yellow{background:#ffd44d !important;}
-.dot.red{background:#ef404a !important;}
-.dot.gray{background:#9da5ac !important;}
-
-/* =========================================================
-   RESPONSIBILITY TABLE
-========================================================= */
-
-.responsibility-box{
-    margin-top:6px;
-    border:1px solid #8e9ba4;
-    background:#fff;
-}
-
-.responsibility-title{
-    text-align:center;
-    font-size:10px;
-    font-weight:900;
-    padding:4px;
-    background:#dceaf5;
-    color:var(--navy);
-    border-bottom:1px solid #8e9ba4;
-}
-
-.responsibility-grid{
-    display:grid;
-    grid-template-columns:repeat(4,1fr);
-}
-
-.responsibility-item{
-    text-align:center;
-    min-height:53px;
-    border-left:1px solid #8e9ba4;
-}
-
-.responsibility-item:last-child{
-    border-left:0;
-}
-
-.responsibility-label{
-    padding:4px 2px;
-    background:#f1f5f7;
-    color:#52636f;
-    font-size:8px;
-    font-weight:bold;
-    border-bottom:1px solid #b4bec5;
-}
-
-.responsibility-name{
-    min-height:31px;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    padding:5px 3px;
-    color:#0a3d63;
-    font-size:9px;
-    font-weight:900;
-    line-height:1.4;
-}
+.dot.green{background:#35b765 !important}
+.dot.blue{background:#3488d8 !important}
+.dot.yellow{background:#ffd44d !important}
+.dot.red{background:#ef404a !important}
+.dot.gray{background:#9da5ac !important}
 
 /* =========================================================
    FOOTER
@@ -816,14 +704,10 @@ td:nth-child(6){
     .kpis{
         grid-template-columns:repeat(4,1fr);
     }
-
-    .responsibility-grid{
-        grid-template-columns:repeat(2,1fr);
-    }
 }
 
 /* =========================================================
-   PRINT - A4 PORTRAIT
+   PRINT
 ========================================================= */
 
 @media print{
@@ -871,9 +755,7 @@ td:nth-child(6){
         width:100% !important;
     }
 
-    /* =========================
-       HEADER
-    ========================= */
+    /* HEADER */
 
     .report-header{
         margin:0 0 2.5mm !important;
@@ -907,9 +789,7 @@ td:nth-child(6){
         font-size:7.2pt;
     }
 
-    /* =========================
-       KPI
-    ========================= */
+    /* KPI */
 
     .kpis{
         gap:1mm;
@@ -956,9 +836,7 @@ td:nth-child(6){
         background:#eee7ff !important;
     }
 
-    /* =========================
-       LEVEL STRIP
-    ========================= */
+    /* LEVELS */
 
     .level-box{
         margin-bottom:2mm;
@@ -1004,9 +882,7 @@ td:nth-child(6){
         color:#fff !important;
     }
 
-    /* =========================
-       CHART
-    ========================= */
+    /* CHART */
 
     .chart-box{
         margin-bottom:2mm;
@@ -1035,7 +911,6 @@ td:nth-child(6){
 
     .plot{
         height:20mm;
-
         background:
             repeating-linear-gradient(
                 to top,
@@ -1085,9 +960,7 @@ td:nth-child(6){
         font-size:5.3pt;
     }
 
-    /* =========================
-       STUDENT TABLE
-    ========================= */
+    /* TABLE */
 
     .students-box{
         border-radius:0;
@@ -1134,10 +1007,7 @@ td:nth-child(6){
         padding-right:1.5mm;
     }
 
-    /*
-       لو الفصل أقل من أو يساوي 22 طالب
-       نكبر الصفوف تلقائيًا
-    */
+    /* حتى 22 طالب */
 
     body.print-small-class td{
         font-size:7.5pt;
@@ -1154,10 +1024,7 @@ td:nth-child(6){
         height:6.4mm;
     }
 
-    /*
-       من 23 إلى 30 طالب
-       يظل الخط واضحًا ويستوعب الصفحة
-    */
+    /* من 23 إلى 30 طالب */
 
     body.print-large-class td{
         font-size:6.5pt;
@@ -1173,8 +1040,6 @@ td:nth-child(6){
         font-size:6.4pt;
         height:5.5mm;
     }
-
-    /* ألوان الطلاب */
 
     .row-high td{
         background:#d8f3df !important;
@@ -1224,9 +1089,7 @@ td:nth-child(6){
         page-break-inside:avoid !important;
     }
 
-    /* =========================
-       LEGEND
-    ========================= */
+    /* LEGEND */
 
     .legend{
         margin-top:1.5mm;
@@ -1241,45 +1104,13 @@ td:nth-child(6){
         height:2mm;
     }
 
-    .dot.green{background:#35b765 !important;}
-    .dot.blue{background:#3488d8 !important;}
-    .dot.yellow{background:#ffd44d !important;}
-    .dot.red{background:#ef404a !important;}
-    .dot.gray{background:#9da5ac !important;}
+    .dot.green{background:#35b765 !important}
+    .dot.blue{background:#3488d8 !important}
+    .dot.yellow{background:#ffd44d !important}
+    .dot.red{background:#ef404a !important}
+    .dot.gray{background:#9da5ac !important}
 
-    /* =========================
-       RESPONSIBILITY
-    ========================= */
-
-    .responsibility-box{
-        margin-top:2mm;
-    }
-
-    .responsibility-title{
-        padding:1mm;
-        font-size:6.5pt;
-        background:#dceaf5 !important;
-    }
-
-    .responsibility-item{
-        min-height:13mm;
-    }
-
-    .responsibility-label{
-        padding:1mm;
-        font-size:5.8pt;
-        background:#f1f5f7 !important;
-    }
-
-    .responsibility-name{
-        min-height:8mm;
-        padding:1.2mm;
-        font-size:6.7pt;
-    }
-
-    /* =========================
-       FOOTER
-    ========================= */
+    /* FOOTER */
 
     .report-footer{
         margin-top:1.5mm;
@@ -1288,7 +1119,6 @@ td:nth-child(6){
         border-top:1px solid #074875;
     }
 }
-
 </style>
 </head>
 
@@ -1319,10 +1149,6 @@ td:nth-child(6){
 
 <div class="container">
 
-    <!-- =====================================================
-         FILTERS
-    ====================================================== -->
-
     <div class="card selection-card">
 
         <div class="card-title">
@@ -1338,43 +1164,35 @@ td:nth-child(6){
             <div class="filters">
 
                 <div class="field">
-
                     <label>المادة</label>
 
                     <select id="subjectSelect" onchange="subjectChanged()">
                         <option value="">اختر المادة</option>
                     </select>
-
                 </div>
 
                 <div class="field">
-
                     <label>الصف</label>
 
                     <select id="gradeSelect" onchange="gradeChanged()">
                         <option value="">اختر الصف</option>
                     </select>
-
                 </div>
 
                 <div class="field">
-
                     <label>الشعبة</label>
 
                     <select id="sectionSelect" onchange="sectionChanged()">
                         <option value="">اختر الشعبة</option>
                     </select>
-
                 </div>
 
                 <div class="field">
-
                     <label>الاختبار</label>
 
                     <select id="testSelect" onchange="testChanged()">
                         <option value="">اختر الاختبار</option>
                     </select>
-
                 </div>
 
             </div>
@@ -1386,13 +1204,8 @@ td:nth-child(6){
             </div>
 
         </div>
-
     </div>
 
-
-    <!-- =====================================================
-         LEVEL SETTINGS
-    ====================================================== -->
 
     <div class="card settings-card">
 
@@ -1405,7 +1218,6 @@ td:nth-child(6){
             <div class="settings">
 
                 <div class="setting">
-
                     <label>المستوى المرتفع يبدأ من %</label>
 
                     <input
@@ -1414,11 +1226,9 @@ td:nth-child(6){
                         value="85"
                         min="0"
                         max="100">
-
                 </div>
 
                 <div class="setting">
-
                     <label>المستوى المتوسط يبدأ من %</label>
 
                     <input
@@ -1427,11 +1237,9 @@ td:nth-child(6){
                         value="70"
                         min="0"
                         max="100">
-
                 </div>
 
                 <div class="setting">
-
                     <label>أولى بالرعاية تبدأ من %</label>
 
                     <input
@@ -1440,7 +1248,6 @@ td:nth-child(6){
                         value="50"
                         min="0"
                         max="100">
-
                 </div>
 
                 <button
@@ -1454,13 +1261,8 @@ td:nth-child(6){
             </div>
 
         </div>
-
     </div>
 
-
-    <!-- =====================================================
-         ANALYSIS
-    ====================================================== -->
 
     <div id="analysisArea">
 
@@ -1485,19 +1287,12 @@ td:nth-child(6){
 ========================================================= */
 
 const firebaseConfig={
-
     apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
-
     authDomain:"results2026-7c0dd.firebaseapp.com",
-
     projectId:"results2026-7c0dd",
-
     storageBucket:"results2026-7c0dd.firebasestorage.app",
-
     messagingSenderId:"241421115694",
-
     appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
-
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -1510,22 +1305,18 @@ const db=firebase.firestore();
 ========================================================= */
 
 const gradeOrder=[
-
     "1 ابتدائي",
     "2 ابتدائي",
     "3 ابتدائي",
     "4 ابتدائي",
     "5 ابتدائي",
     "6 ابتدائي",
-
     "1 متوسط",
     "2 متوسط",
     "3 متوسط",
-
     "1 ثانوي",
     "2 ثانوي",
     "3 ثانوي"
-
 ];
 
 const sectionOrder=[
@@ -1548,8 +1339,6 @@ let assignments=[];
 let subjects=[];
 let tests=[];
 
-let allTeachers=[];
-
 let selectedSubjectId="";
 let selectedSubjectName="";
 let selectedGrade="";
@@ -1560,32 +1349,19 @@ let students=[];
 let gradeRecords=[];
 let analyzedStudents=[];
 
-let subjectTeacherNames=[];
-
 
 /* =========================================================
    URL PARAMETERS
 ========================================================= */
 
 const urlParams=
-    new URLSearchParams(
-        window.location.search
-    );
+    new URLSearchParams(window.location.search);
 
 const incoming={
-
-    subjectId:
-        urlParams.get("subjectId")||"",
-
-    grade:
-        urlParams.get("grade")||"",
-
-    section:
-        urlParams.get("section")||"",
-
-    testId:
-        urlParams.get("testId")||""
-
+    subjectId:urlParams.get("subjectId")||"",
+    grade:urlParams.get("grade")||"",
+    section:urlParams.get("section")||"",
+    testId:urlParams.get("testId")||""
 };
 
 
@@ -1597,7 +1373,6 @@ function el(id){
     return document.getElementById(id);
 }
 
-
 function escapeHtml(value){
 
     return String(value??"")
@@ -1608,25 +1383,21 @@ function escapeHtml(value){
         .replace(/'/g,"&#039;");
 }
 
-
 function unique(values){
     return [...new Set(values)];
 }
-
 
 function clearSelect(select,text){
 
     select.innerHTML="";
 
-    const option=
-        document.createElement("option");
+    const option=document.createElement("option");
 
     option.value="";
     option.textContent=text;
 
     select.appendChild(option);
 }
-
 
 function formatNumber(value){
 
@@ -1645,7 +1416,6 @@ function formatNumber(value){
         : n.toFixed(2);
 }
 
-
 function sortGrades(list){
 
     return list.sort(
@@ -1654,7 +1424,6 @@ function sortGrades(list){
             gradeOrder.indexOf(b)
     );
 }
-
 
 function sortSections(list){
 
@@ -1673,31 +1442,20 @@ function sortSections(list){
 function protectPage(){
 
     role=
-        localStorage.getItem(
-            "currentUserRole"
-        )||"";
-
+        localStorage.getItem("currentUserRole")||"";
 
     isAdmin=
         role==="admin" ||
         role==="superadmin";
 
-
     isTeacher=
         role==="teacher";
 
+    if(!isAdmin && !isTeacher){
 
-    if(
-        !isAdmin &&
-        !isTeacher
-    ){
+        alert("يجب تسجيل الدخول أولًا.");
 
-        alert(
-            "يجب تسجيل الدخول أولًا."
-        );
-
-        location.href=
-            "index.html";
+        location.href="index.html";
 
         return false;
     }
@@ -1715,7 +1473,6 @@ async function loadCurrentTeacher(){
     if(!isTeacher){
         return;
     }
-
 
     currentUsername=(
 
@@ -1758,9 +1515,7 @@ async function loadCurrentTeacher(){
 
 
     assignments=
-        Array.isArray(
-            currentTeacher.assignments
-        )
+        Array.isArray(currentTeacher.assignments)
         ?
         currentTeacher.assignments.filter(
             a=>
@@ -1770,88 +1525,6 @@ async function loadCurrentTeacher(){
         )
         :
         [];
-}
-
-
-/* =========================================================
-   LOAD ALL TEACHERS
-========================================================= */
-
-async function loadAllTeachers(){
-
-    const snap=
-        await db
-            .collection("teachers")
-            .get();
-
-
-    allTeachers=[];
-
-
-    snap.forEach(doc=>{
-
-        const data=doc.data()||{};
-
-        allTeachers.push({
-
-            id:doc.id,
-
-            ...data,
-
-            assignments:
-                Array.isArray(data.assignments)
-                ?
-                data.assignments
-                :
-                []
-
-        });
-
-    });
-}
-
-
-/* =========================================================
-   FIND SUBJECT TEACHER
-========================================================= */
-
-function findSubjectTeachers(){
-
-    subjectTeacherNames=[];
-
-
-    allTeachers.forEach(teacher=>{
-
-        const matches=
-            teacher.assignments.some(a=>
-
-                a.subjectId===
-                    selectedSubjectId &&
-
-                a.grade===
-                    selectedGrade &&
-
-                a.section===
-                    selectedSection
-
-            );
-
-
-        if(
-            matches &&
-            teacher.name
-        ){
-
-            subjectTeacherNames.push(
-                teacher.name
-            );
-        }
-
-    });
-
-
-    subjectTeacherNames=
-        unique(subjectTeacherNames);
 }
 
 
@@ -1866,9 +1539,7 @@ async function loadSubjects(){
             .collection("subjects")
             .get();
 
-
     subjects=[];
-
 
     snap.forEach(doc=>{
 
@@ -1879,7 +1550,6 @@ async function loadSubjects(){
 
     });
 
-
     subjects.sort(
         (a,b)=>
             String(a.name||"")
@@ -1889,25 +1559,20 @@ async function loadSubjects(){
                 )
     );
 
-
     renderSubjects();
 }
 
 
 function renderSubjects(){
 
-    const select=
-        el("subjectSelect");
-
+    const select=el("subjectSelect");
 
     clearSelect(
         select,
         "اختر المادة"
     );
 
-
     let list=[];
-
 
     if(isAdmin){
 
@@ -1922,29 +1587,20 @@ function renderSubjects(){
                 )
             );
 
-
         list=
             subjects.filter(
                 subject=>
-                    allowedIds.has(
-                        subject.id
-                    )
+                    allowedIds.has(subject.id)
             );
     }
-
 
     list.forEach(subject=>{
 
         const option=
-            document.createElement(
-                "option"
-            );
+            document.createElement("option");
 
-        option.value=
-            subject.id;
-
-        option.textContent=
-            subject.name;
+        option.value=subject.id;
+        option.textContent=subject.name;
 
         select.appendChild(option);
 
@@ -1961,38 +1617,29 @@ async function subjectChanged(){
     selectedSubjectId=
         el("subjectSelect").value;
 
-
     const subject=
         subjects.find(
-            s=>
-                s.id===
-                selectedSubjectId
+            s=>s.id===selectedSubjectId
         );
-
 
     selectedSubjectName=
         subject?.name||"";
-
 
     selectedGrade="";
     selectedSection="";
     selectedTest=null;
 
-
     await fillGrades();
-
 
     clearSelect(
         el("sectionSelect"),
         "اختر الشعبة"
     );
 
-
     clearSelect(
         el("testSelect"),
         "اختر الاختبار"
     );
-
 
     clearAnalysis();
 }
@@ -2004,29 +1651,23 @@ async function subjectChanged(){
 
 async function fillGrades(){
 
-    const select=
-        el("gradeSelect");
-
+    const select=el("gradeSelect");
 
     clearSelect(
         select,
         "اختر الصف"
     );
 
-
     if(!selectedSubjectId){
         return;
     }
 
-
     let list=[];
-
 
     if(isTeacher){
 
         list=
             unique(
-
                 assignments
                     .filter(
                         a=>
@@ -2036,7 +1677,6 @@ async function fillGrades(){
                     .map(
                         a=>a.grade
                     )
-
             );
 
     }else{
@@ -2051,26 +1691,18 @@ async function fillGrades(){
                 )
                 .get();
 
-
-        const set=
-            new Set();
-
+        const set=new Set();
 
         snap.forEach(doc=>{
 
-            const data=
-                doc.data()||{};
-
+            const data=doc.data()||{};
 
             const classes=
-                Array.isArray(
-                    data.classes
-                )
+                Array.isArray(data.classes)
                 ?
                 data.classes
                 :
                 [];
-
 
             classes.forEach(c=>{
 
@@ -2082,20 +1714,15 @@ async function fillGrades(){
 
         });
 
-
         list=[...set];
     }
 
-
     sortGrades(list);
-
 
     list.forEach(grade=>{
 
         const option=
-            document.createElement(
-                "option"
-            );
+            document.createElement("option");
 
         option.value=grade;
         option.textContent=grade;
@@ -2111,19 +1738,15 @@ async function gradeChanged(){
     selectedGrade=
         el("gradeSelect").value;
 
-
     selectedSection="";
     selectedTest=null;
 
-
     await fillSections();
-
 
     clearSelect(
         el("testSelect"),
         "اختر الاختبار"
     );
-
 
     clearAnalysis();
 }
@@ -2138,12 +1761,10 @@ async function fillSections(){
     const select=
         el("sectionSelect");
 
-
     clearSelect(
         select,
         "اختر الشعبة"
     );
-
 
     if(
         !selectedSubjectId ||
@@ -2152,15 +1773,12 @@ async function fillSections(){
         return;
     }
 
-
     let list=[];
-
 
     if(isTeacher){
 
         list=
             unique(
-
                 assignments
                     .filter(a=>
 
@@ -2169,12 +1787,10 @@ async function fillSections(){
 
                         a.grade===
                             selectedGrade
-
                     )
                     .map(
                         a=>a.section
                     )
-
             );
 
     }else{
@@ -2189,58 +1805,41 @@ async function fillSections(){
                 )
                 .get();
 
-
-        const set=
-            new Set();
-
+        const set=new Set();
 
         snap.forEach(doc=>{
 
-            const data=
-                doc.data()||{};
-
+            const data=doc.data()||{};
 
             const classes=
-                Array.isArray(
-                    data.classes
-                )
+                Array.isArray(data.classes)
                 ?
                 data.classes
                 :
                 [];
 
-
             classes.forEach(c=>{
 
                 if(
-                    c.grade===
-                        selectedGrade &&
+                    c.grade===selectedGrade &&
                     c.section
                 ){
-
-                    set.add(
-                        c.section
-                    );
+                    set.add(c.section);
                 }
 
             });
 
         });
 
-
         list=[...set];
     }
 
-
     sortSections(list);
-
 
     list.forEach(section=>{
 
         const option=
-            document.createElement(
-                "option"
-            );
+            document.createElement("option");
 
         option.value=section;
         option.textContent=section;
@@ -2256,11 +1855,9 @@ async function sectionChanged(){
     selectedSection=
         el("sectionSelect").value;
 
-
     selectedTest=null;
 
     clearAnalysis();
-
 
     if(
         selectedSubjectId &&
@@ -2289,12 +1886,10 @@ async function loadTests(){
     const select=
         el("testSelect");
 
-
     clearSelect(
         select,
         "اختر الاختبار"
     );
-
 
     const snap=
         await db
@@ -2306,37 +1901,26 @@ async function loadTests(){
             )
             .get();
 
-
     tests=[];
-
 
     snap.forEach(doc=>{
 
-        const data=
-            doc.data()||{};
-
+        const data=doc.data()||{};
 
         const classes=
-            Array.isArray(
-                data.classes
-            )
+            Array.isArray(data.classes)
             ?
             data.classes
             :
             [];
 
-
         const matches=
             classes.some(c=>
 
-                c.grade===
-                    selectedGrade &&
-
-                c.section===
-                    selectedSection
+                c.grade===selectedGrade &&
+                c.section===selectedSection
 
             );
-
 
         if(matches){
 
@@ -2349,7 +1933,6 @@ async function loadTests(){
 
     });
 
-
     tests.sort(
         (a,b)=>
             String(a.date||"")
@@ -2357,7 +1940,6 @@ async function loadTests(){
                     String(b.date||"")
                 )
     );
-
 
     if(!tests.length){
 
@@ -2369,17 +1951,12 @@ async function loadTests(){
         return;
     }
 
-
     tests.forEach(test=>{
 
         const option=
-            document.createElement(
-                "option"
-            );
+            document.createElement("option");
 
-        option.value=
-            test.id;
-
+        option.value=test.id;
 
         option.textContent=
             test.name+
@@ -2390,7 +1967,6 @@ async function loadTests(){
                 :
                 ""
             );
-
 
         select.appendChild(option);
 
@@ -2403,21 +1979,16 @@ async function testChanged(){
     const id=
         el("testSelect").value;
 
-
     selectedTest=
         tests.find(
             t=>t.id===id
         )||null;
-
 
     if(!selectedTest){
 
         clearAnalysis();
         return;
     }
-
-
-    findSubjectTeachers();
 
     showSelectedInfo();
 
@@ -2439,12 +2010,6 @@ async function loadResults(){
 
     `;
 
-
-    /*
-       تحميل الطلاب
-       نستعمل استعلامًا بسيطًا ثم نفلتر الشعبة محليًا
-    */
-
     const studentSnap=
         await db
             .collection("students")
@@ -2455,15 +2020,11 @@ async function loadResults(){
             )
             .get();
 
-
     students=[];
-
 
     studentSnap.forEach(doc=>{
 
-        const data=
-            doc.data()||{};
-
+        const data=doc.data()||{};
 
         if(
             data.section===
@@ -2471,19 +2032,13 @@ async function loadResults(){
         ){
 
             students.push({
-
                 ...data,
-
-                code:
-                    data.code||
-                    doc.id
-
+                code:data.code||doc.id
             });
 
         }
 
     });
-
 
     students.sort(
         (a,b)=>
@@ -2495,10 +2050,6 @@ async function loadResults(){
     );
 
 
-    /*
-       تحميل درجات الاختبار
-    */
-
     const gradeSnap=
         await db
             .collection("grades")
@@ -2509,21 +2060,15 @@ async function loadResults(){
             )
             .get();
 
-
     gradeRecords=[];
-
 
     gradeSnap.forEach(doc=>{
 
-        const data=
-            doc.data()||{};
-
+        const data=doc.data()||{};
 
         if(
-            data.grade===
-                selectedGrade &&
-            data.section===
-                selectedSection
+            data.grade===selectedGrade &&
+            data.section===selectedSection
         ){
 
             gradeRecords.push({
@@ -2534,7 +2079,6 @@ async function loadResults(){
         }
 
     });
-
 
     reanalyze();
 }
@@ -2547,22 +2091,13 @@ async function loadResults(){
 function getLevelSettings(){
 
     let high=
-        Number(
-            el("highMin").value
-        );
-
+        Number(el("highMin").value);
 
     let medium=
-        Number(
-            el("mediumMin").value
-        );
-
+        Number(el("mediumMin").value);
 
     let care=
-        Number(
-            el("careMin").value
-        );
-
+        Number(el("careMin").value);
 
     if(Number.isNaN(high)){
         high=85;
@@ -2576,36 +2111,23 @@ function getLevelSettings(){
         care=50;
     }
 
-
     high=
         Math.max(
             0,
-            Math.min(
-                100,
-                high
-            )
+            Math.min(100,high)
         );
-
 
     medium=
         Math.max(
             0,
-            Math.min(
-                100,
-                medium
-            )
+            Math.min(100,medium)
         );
-
 
     care=
         Math.max(
             0,
-            Math.min(
-                100,
-                care
-            )
+            Math.min(100,care)
         );
-
 
     if(medium>=high){
 
@@ -2619,7 +2141,6 @@ function getLevelSettings(){
             medium;
     }
 
-
     if(care>=medium){
 
         care=
@@ -2632,10 +2153,7 @@ function getLevelSettings(){
             care;
     }
 
-
-    el("highMin").value=
-        high;
-
+    el("highMin").value=high;
 
     return{
         high,
@@ -2655,10 +2173,8 @@ function reanalyze(){
         return;
     }
 
-
     const limits=
         getLevelSettings();
-
 
     analyzedStudents=
         students.map(student=>{
@@ -2666,40 +2182,21 @@ function reanalyze(){
             const record=
                 gradeRecords.find(
                     r=>
-                        String(
-                            r.studentCode
-                        )===
-                        String(
-                            student.code
-                        )
+                        String(r.studentCode)===
+                        String(student.code)
                 );
-
-
-            /*
-               لم يتم رصد الطالب
-            */
 
             if(!record){
 
                 return{
-
                     student,
                     attendance:"unrecorded",
                     mark:null,
-                    fullMark:
-                        Number(
-                            selectedTest.fullMark
-                        ),
+                    fullMark:Number(selectedTest.fullMark),
                     percentage:null,
                     level:"unrecorded"
-
                 };
             }
-
-
-            /*
-               غائب
-            */
 
             if(
                 record.attendance===
@@ -2707,7 +2204,6 @@ function reanalyze(){
             ){
 
                 return{
-
                     student,
                     record,
                     attendance:"absent",
@@ -2719,16 +2215,11 @@ function reanalyze(){
                         ),
                     percentage:null,
                     level:"absent"
-
                 };
             }
 
-
             const mark=
-                Number(
-                    record.mark
-                );
-
+                Number(record.mark);
 
             const fullMark=
                 Number(
@@ -2736,46 +2227,35 @@ function reanalyze(){
                     selectedTest.fullMark
                 );
 
-
             const percentage=
                 fullMark>0
                 ?
-                (
-                    mark/
-                    fullMark
-                )*100
+                (mark/fullMark)*100
                 :
                 0;
 
-
             let level="case";
 
-
             if(
-                percentage>=
-                limits.high
+                percentage>=limits.high
             ){
 
                 level="high";
 
             }else if(
-                percentage>=
-                limits.medium
+                percentage>=limits.medium
             ){
 
                 level="medium";
 
             }else if(
-                percentage>=
-                limits.care
+                percentage>=limits.care
             ){
 
                 level="care";
             }
 
-
             return{
-
                 student,
                 record,
                 attendance:"present",
@@ -2783,18 +2263,16 @@ function reanalyze(){
                 fullMark,
                 percentage,
                 level
-
             };
 
         });
-
 
     renderAnalysis();
 }
 
 
 /* =========================================================
-   RENDER ANALYSIS
+   RENDER
 ========================================================= */
 
 function renderAnalysis(){
@@ -2802,54 +2280,40 @@ function renderAnalysis(){
     const total=
         analyzedStudents.length;
 
-
     const present=
         analyzedStudents.filter(
-            x=>
-                x.attendance===
-                "present"
+            x=>x.attendance==="present"
         );
-
 
     const absent=
         analyzedStudents.filter(
-            x=>
-                x.attendance===
-                "absent"
+            x=>x.attendance==="absent"
         );
-
 
     const unrecorded=
         analyzedStudents.filter(
-            x=>
-                x.attendance===
-                "unrecorded"
+            x=>x.attendance==="unrecorded"
         );
-
 
     const high=
         present.filter(
             x=>x.level==="high"
         );
 
-
     const medium=
         present.filter(
             x=>x.level==="medium"
         );
-
 
     const care=
         present.filter(
             x=>x.level==="care"
         );
 
-
     const cases=
         present.filter(
             x=>x.level==="case"
         );
-
 
     const marks=
         present
@@ -2861,7 +2325,6 @@ function renderAnalysis(){
                     )
             );
 
-
     const average=
         marks.length
         ?
@@ -2872,14 +2335,12 @@ function renderAnalysis(){
         :
         null;
 
-
     const highest=
         marks.length
         ?
         Math.max(...marks)
         :
         null;
-
 
     const lowest=
         marks.length
@@ -2888,44 +2349,25 @@ function renderAnalysis(){
         :
         null;
 
-
     const passed=
         present.filter(
-            x=>
-                x.percentage>=50
+            x=>x.percentage>=50
         ).length;
-
 
     const successRate=
         present.length
         ?
-        (
-            passed/
-            present.length
-        )*100
+        (passed/present.length)*100
         :
         0;
-
 
     const limits=
         getLevelSettings();
 
 
-    const teacherName=
-        subjectTeacherNames.length
-        ?
-        subjectTeacherNames.join(" - ")
-        :
-        "—";
-
-
     el("analysisArea").innerHTML=`
 
         <div class="report">
-
-            <!-- =========================================
-                 REPORT HEADER
-            ========================================== -->
 
             <div class="report-header">
 
@@ -2952,9 +2394,7 @@ function renderAnalysis(){
                         </div>
 
                         <div class="meta-value">
-                            ${escapeHtml(
-                                selectedSubjectName
-                            )}
+                            ${escapeHtml(selectedSubjectName)}
                         </div>
 
                     </div>
@@ -2967,13 +2407,11 @@ function renderAnalysis(){
                         </div>
 
                         <div class="meta-value">
-
                             ${escapeHtml(
                                 selectedGrade+
                                 " / "+
                                 selectedSection
                             )}
-
                         </div>
 
                     </div>
@@ -3013,10 +2451,6 @@ function renderAnalysis(){
             </div>
 
 
-            <!-- =========================================
-                 KPI
-            ========================================== -->
-
             <div class="kpis">
 
                 ${buildKpi(
@@ -3045,25 +2479,19 @@ function renderAnalysis(){
 
                 ${buildKpi(
                     "متوسط الدرجات",
-                    formatNumber(
-                        average
-                    ),
+                    formatNumber(average),
                     "blue"
                 )}
 
                 ${buildKpi(
                     "أعلى درجة",
-                    formatNumber(
-                        highest
-                    ),
+                    formatNumber(highest),
                     "green"
                 )}
 
                 ${buildKpi(
                     "أقل درجة",
-                    formatNumber(
-                        lowest
-                    ),
+                    formatNumber(lowest),
                     "red"
                 )}
 
@@ -3076,16 +2504,11 @@ function renderAnalysis(){
             </div>
 
 
-            <!-- =========================================
-                 LEVELS
-            ========================================== -->
-
             <div class="level-box">
 
                 <div class="small-title">
                     توزيع مستويات الطلاب
                 </div>
-
 
                 <div class="level-strip">
 
@@ -3122,10 +2545,6 @@ function renderAnalysis(){
             </div>
 
 
-            <!-- =========================================
-                 CHART
-            ========================================== -->
-
             ${buildChart(
                 high.length,
                 medium.length,
@@ -3134,10 +2553,6 @@ function renderAnalysis(){
                 present.length
             )}
 
-
-            <!-- =========================================
-                 STUDENTS
-            ========================================== -->
 
             <div class="students-box">
 
@@ -3149,10 +2564,6 @@ function renderAnalysis(){
 
             </div>
 
-
-            <!-- =========================================
-                 LEGEND
-            ========================================== -->
 
             <div class="legend">
 
@@ -3184,80 +2595,6 @@ function renderAnalysis(){
             </div>
 
 
-            <!-- =========================================
-                 RESPONSIBILITY
-            ========================================== -->
-
-            <div class="responsibility-box">
-
-                <div class="responsibility-title">
-                    بيانات المتابعة والإشراف
-                </div>
-
-                <div class="responsibility-grid">
-
-                    <div class="responsibility-item">
-
-                        <div class="responsibility-label">
-                            معلم المادة
-                        </div>
-
-                        <div class="responsibility-name">
-                            ${escapeHtml(
-                                teacherName
-                            )}
-                        </div>
-
-                    </div>
-
-
-                    <div class="responsibility-item">
-
-                        <div class="responsibility-label">
-                            مشرف المادة
-                        </div>
-
-                        <div class="responsibility-name">
-                            &nbsp;
-                        </div>
-
-                    </div>
-
-
-                    <div class="responsibility-item">
-
-                        <div class="responsibility-label">
-                            المشرف العام
-                        </div>
-
-                        <div class="responsibility-name">
-                            أحمد سمير
-                        </div>
-
-                    </div>
-
-
-                    <div class="responsibility-item">
-
-                        <div class="responsibility-label">
-                            مدير المدرسة
-                        </div>
-
-                        <div class="responsibility-name">
-                            عبد العزيز بن إبراهيم القحطاني
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <!-- =========================================
-                 FOOTER
-            ========================================== -->
-
             <div class="report-footer">
 
                 <span>
@@ -3274,20 +2611,15 @@ function renderAnalysis(){
 
     `;
 
-
     setPrintDensity();
 }
 
 
 /* =========================================================
-   KPI BUILDER
+   KPI
 ========================================================= */
 
-function buildKpi(
-    label,
-    value,
-    type
-){
+function buildKpi(label,value,type){
 
     return`
 
@@ -3308,7 +2640,7 @@ function buildKpi(
 
 
 /* =========================================================
-   LEVEL BUILDER
+   LEVEL
 ========================================================= */
 
 function buildLevel(
@@ -3321,13 +2653,9 @@ function buildLevel(
     const percent=
         total
         ?
-        (
-            count/
-            total
-        )*100
+        (count/total)*100
         :
         0;
-
 
     return`
 
@@ -3368,13 +2696,11 @@ function buildChart(
         cases
     ];
 
-
     const maxValue=
         Math.max(
             ...values,
             1
         );
-
 
     function barHeight(value){
 
@@ -3384,13 +2710,9 @@ function buildChart(
 
         return Math.max(
             7,
-            (
-                value/
-                maxValue
-            )*82
+            (value/maxValue)*82
         );
     }
-
 
     const axisMax=
         Math.max(
@@ -3398,27 +2720,13 @@ function buildChart(
             4
         );
 
-
     const axisValues=[
-
         axisMax,
-
-        Math.round(
-            axisMax*.75
-        ),
-
-        Math.round(
-            axisMax*.5
-        ),
-
-        Math.round(
-            axisMax*.25
-        ),
-
+        Math.round(axisMax*.75),
+        Math.round(axisMax*.5),
+        Math.round(axisMax*.25),
         0
-
     ];
-
 
     return`
 
@@ -3427,7 +2735,6 @@ function buildChart(
             <div class="chart-title">
                 الرسم البياني لتوزيع المستويات
             </div>
-
 
             <div class="chart-area">
 
@@ -3443,7 +2750,6 @@ function buildChart(
                                         axisValues.length-1
                                     )
                                 )*100;
-
 
                             return`
 
@@ -3518,13 +2824,9 @@ function buildBar(
     const percent=
         total
         ?
-        (
-            value/
-            total
-        )*100
+        (value/total)*100
         :
         0;
-
 
     return`
 
@@ -3540,12 +2842,10 @@ function buildBar(
 
             </div>
 
-
             <div
                 class="bar ${color}"
                 style="height:${height}% !important;">
             </div>
-
 
             <div class="bar-label">
                 ${label}
@@ -3574,9 +2874,7 @@ function buildStudentsTable(){
         `;
     }
 
-
     let rows="";
-
 
     analyzedStudents.forEach(
         (item,index)=>{
@@ -3586,80 +2884,57 @@ function buildStudentsTable(){
             let mark="—";
             let percentage="—";
 
-
             if(
                 item.attendance===
                 "absent"
             ){
 
-                rowClass=
-                    "row-absent";
-
-                attendance=
-                    "غائب";
+                rowClass="row-absent";
+                attendance="غائب";
 
             }else if(
                 item.attendance===
                 "unrecorded"
             ){
 
-                rowClass=
-                    "row-unrecorded";
-
-                attendance=
-                    "لم يتم الرصد";
+                rowClass="row-unrecorded";
+                attendance="لم يتم الرصد";
 
             }else{
 
-                attendance=
-                    "حاضر";
-
+                attendance="حاضر";
 
                 mark=
-                    formatNumber(
-                        item.mark
-                    )+
+                    formatNumber(item.mark)+
                     " / "+
-                    formatNumber(
-                        item.fullMark
-                    );
-
+                    formatNumber(item.fullMark);
 
                 percentage=
                     item.percentage
                         .toFixed(1)+
                     "%";
 
+                if(item.level==="high"){
 
-                if(
-                    item.level==="high"
-                ){
-
-                    rowClass=
-                        "row-high";
+                    rowClass="row-high";
 
                 }else if(
                     item.level==="medium"
                 ){
 
-                    rowClass=
-                        "row-medium";
+                    rowClass="row-medium";
 
                 }else if(
                     item.level==="care"
                 ){
 
-                    rowClass=
-                        "row-care";
+                    rowClass="row-care";
 
                 }else{
 
-                    rowClass=
-                        "row-case";
+                    rowClass="row-case";
                 }
-
             }
-
 
             rows+=`
 
@@ -3701,7 +2976,6 @@ function buildStudentsTable(){
 
         }
     );
-
 
     return`
 
@@ -3753,15 +3027,6 @@ function buildStudentsTable(){
 
 /* =========================================================
    PRINT DENSITY
-
-   حتى 22 طالب:
-   خط أكبر.
-
-   من 23 إلى 30:
-   حجم متوسط وواضح.
-
-   أكثر من 30:
-   الحجم الافتراضي.
 ========================================================= */
 
 function setPrintDensity(){
@@ -3770,7 +3035,6 @@ function setPrintDensity(){
         "print-small-class",
         "print-large-class"
     );
-
 
     if(
         analyzedStudents.length<=22
@@ -3800,19 +3064,14 @@ function showSelectedInfo(){
     const box=
         el("selectedInfo");
 
-
     if(!selectedTest){
 
-        box.style.display=
-            "none";
+        box.style.display="none";
 
         return;
     }
 
-
-    box.style.display=
-        "block";
-
+    box.style.display="block";
 
     box.textContent=
 
@@ -3844,18 +3103,14 @@ function clearAnalysis(){
     students=[];
     gradeRecords=[];
     analyzedStudents=[];
-    subjectTeacherNames=[];
-
 
     document.body.classList.remove(
         "print-small-class",
         "print-large-class"
     );
 
-
     el("selectedInfo").style.display=
         "none";
-
 
     el("analysisArea").innerHTML=`
 
@@ -3885,7 +3140,6 @@ function printAnalysis(){
         return;
     }
 
-
     if(!students.length){
 
         alert(
@@ -3894,7 +3148,6 @@ function printAnalysis(){
 
         return;
     }
-
 
     setPrintDensity();
 
@@ -3910,13 +3163,11 @@ function goBack(){
 
     if(isTeacher){
 
-        location.href=
-            "teacher.html";
+        location.href="teacher.html";
 
     }else{
 
-        location.href=
-            "admin.html";
+        location.href="admin.html";
     }
 }
 
@@ -3943,21 +3194,14 @@ function renderMode(){
 
 
 /* =========================================================
-   APPLY URL PARAMETERS
+   URL PARAMETERS
 ========================================================= */
 
 async function applyIncoming(){
 
-    if(
-        !incoming.subjectId
-    ){
+    if(!incoming.subjectId){
         return;
     }
-
-
-    /*
-       التحقق من صلاحية المعلم
-    */
 
     if(isTeacher){
 
@@ -3975,16 +3219,13 @@ async function applyIncoming(){
 
             );
 
-
         if(!allowed){
             return;
         }
     }
 
-
     const subjectSelect=
         el("subjectSelect");
-
 
     const subjectExists=
         [...subjectSelect.options]
@@ -3994,44 +3235,31 @@ async function applyIncoming(){
                     incoming.subjectId
             );
 
-
     if(!subjectExists){
         return;
     }
 
-
     subjectSelect.value=
         incoming.subjectId;
-
 
     selectedSubjectId=
         incoming.subjectId;
 
-
     const subject=
         subjects.find(
-            s=>
-                s.id===
-                selectedSubjectId
+            s=>s.id===selectedSubjectId
         );
-
 
     selectedSubjectName=
         subject?.name||"";
 
-
     await fillGrades();
 
-
-    /*
-       الصف
-    */
 
     if(incoming.grade){
 
         const gradeSelect=
             el("gradeSelect");
-
 
         const gradeExists=
             [...gradeSelect.options]
@@ -4041,25 +3269,18 @@ async function applyIncoming(){
                         incoming.grade
                 );
 
-
         if(gradeExists){
 
             gradeSelect.value=
                 incoming.grade;
 
-
             selectedGrade=
                 incoming.grade;
-
 
             await fillSections();
         }
     }
 
-
-    /*
-       الشعبة
-    */
 
     if(
         incoming.section &&
@@ -4069,7 +3290,6 @@ async function applyIncoming(){
         const sectionSelect=
             el("sectionSelect");
 
-
         const sectionExists=
             [...sectionSelect.options]
                 .some(
@@ -4078,25 +3298,18 @@ async function applyIncoming(){
                         incoming.section
                 );
 
-
         if(sectionExists){
 
             sectionSelect.value=
                 incoming.section;
 
-
             selectedSection=
                 incoming.section;
-
 
             await loadTests();
         }
     }
 
-
-    /*
-       الاختبار
-    */
 
     if(
         incoming.testId &&
@@ -4105,27 +3318,18 @@ async function applyIncoming(){
 
         const testExists=
             tests.some(
-                t=>
-                    t.id===
-                    incoming.testId
+                t=>t.id===incoming.testId
             );
-
 
         if(testExists){
 
             el("testSelect").value=
                 incoming.testId;
 
-
             selectedTest=
                 tests.find(
-                    t=>
-                        t.id===
-                        incoming.testId
+                    t=>t.id===incoming.testId
                 );
-
-
-            findSubjectTeachers();
 
             showSelectedInfo();
 
@@ -4145,12 +3349,9 @@ async function start(){
         return;
     }
 
-
     try{
 
         await loadCurrentTeacher();
-
-        await loadAllTeachers();
 
         await loadSubjects();
 
@@ -4162,16 +3363,12 @@ async function start(){
 
         console.error(error);
 
-
         alert(
-
             "حدث خطأ أثناء تحميل صفحة التحليل:\n"+
             error.message
-
         );
     }
 }
-
 
 start();
 
