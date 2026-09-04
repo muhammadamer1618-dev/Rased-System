@@ -2,7 +2,7 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>راصد - صفحة المعلم</title>
 
@@ -10,526 +10,694 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
-*{box-sizing:border-box}
 
-body{
-margin:0;
-font-family:Tahoma,Arial,sans-serif;
-background:#f4f7fb;
-color:#1f2937
+*{
+    box-sizing:border-box;
 }
 
+:root{
+    --navy:#073b68;
+    --navy2:#0d558c;
+    --blue:#1671bd;
+    --gold:#d6a821;
+    --green:#198754;
+    --red:#dc3545;
+    --light:#f4f7fb;
+    --border:#d7e0e8;
+    --text:#172b3f;
+}
+
+body{
+    margin:0;
+    font-family:Tahoma,Arial,sans-serif;
+    background:#f3f6f9;
+    color:var(--text);
+}
+
+/* ======================================================
+   HEADER
+====================================================== */
+
 .header{
-position:relative;
-background:linear-gradient(135deg,#0c2745,#174f7c);
-color:white;
-text-align:center;
-padding:18px 15px;
-box-shadow:0 4px 15px rgba(0,0,0,.15)
+    min-height:112px;
+    background:linear-gradient(135deg,#06365f,#0a558b);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    position:relative;
+    padding:14px 170px;
+    box-shadow:0 3px 12px rgba(0,0,0,.18);
+}
+
+.header-center{
+    display:flex;
+    align-items:center;
+    gap:17px;
 }
 
 .logo{
-width:78px;
-height:78px;
-object-fit:contain;
-background:white;
-border-radius:50%;
-padding:5px
+    width:78px;
+    height:78px;
+    object-fit:contain;
+    background:#fff;
+    border-radius:50%;
+    padding:4px;
+    border:2px solid rgba(255,255,255,.8);
 }
 
-.header h1{
-margin:6px 0 3px;
-font-size:25px
+.header-title{
+    text-align:center;
 }
 
-.header p{
-margin:0;
-color:#f4d77b;
-font-weight:bold
+.header-title h1{
+    margin:0;
+    font-size:27px;
+}
+
+.header-title p{
+    margin:7px 0 0;
+    color:#f2c94c;
+    font-size:15px;
+    font-weight:bold;
+}
+
+.user-card{
+    position:absolute;
+    right:25px;
+    top:27px;
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:rgba(255,255,255,.10);
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:10px;
+    padding:10px 13px;
+    font-size:12px;
+}
+
+.user-icon{
+    font-size:25px;
+}
+
+.user-name{
+    font-weight:bold;
 }
 
 .logout{
-position:absolute;
-left:15px;
-top:15px
+    position:absolute;
+    left:25px;
+    top:34px;
+    background:#fff;
+    color:#163a5b;
+    border:0;
+    border-radius:8px;
+    padding:12px 17px;
+    font-weight:bold;
+    cursor:pointer;
 }
+
+/* ======================================================
+   CONTAINER
+====================================================== */
 
 .container{
-max-width:1250px;
-margin:20px auto;
-padding:0 12px 40px
+    width:min(1180px,96%);
+    margin:20px auto 45px;
 }
 
-.welcome{
-background:white;
-border-radius:14px;
-padding:16px 18px;
-margin-bottom:16px;
-box-shadow:0 3px 12px rgba(0,0,0,.08);
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:10px;
-flex-wrap:wrap
+.card{
+    background:#fff;
+    border:1px solid #e0e6ec;
+    border-radius:12px;
+    box-shadow:0 3px 14px rgba(0,0,0,.06);
+    margin-bottom:17px;
+    overflow:hidden;
 }
 
-.teacher-name{
-font-size:19px;
-font-weight:bold;
-color:#174f7c
+.card-title{
+    padding:16px 20px 13px;
+    font-size:18px;
+    font-weight:bold;
+    color:#0a4779;
+    border-bottom:1px solid #e5e9ed;
 }
 
-.box{
-background:white;
-border-radius:15px;
-margin-bottom:18px;
-box-shadow:0 3px 14px rgba(0,0,0,.08);
-overflow:hidden
+.card-body{
+    padding:18px 20px;
 }
 
-.box-title{
-background:#eef4fa;
-border-bottom:1px solid #dbe5ef;
-padding:13px 18px;
-color:#123c63;
-font-size:18px;
-font-weight:bold
+/* ======================================================
+   SELECTORS
+====================================================== */
+
+.filters{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:15px;
 }
 
-.box-body{
-padding:18px
-}
-
-.row{
-display:flex;
-flex-wrap:wrap;
-gap:12px
-}
-
-.col{
-flex:1 1 220px
-}
-
-label{
-display:block;
-font-size:13px;
-font-weight:bold;
-margin-bottom:6px
-}
-
-select,input{
-display:block;
-width:100%;
-height:44px;
-padding:8px 12px;
-border:1px solid #b9c5d1;
-border-radius:8px;
-background:#fff;
-color:#111;
-font-family:Tahoma,Arial,sans-serif;
-font-size:14px
+.field label{
+    display:block;
+    text-align:center;
+    font-size:13px;
+    font-weight:bold;
+    margin-bottom:7px;
+    color:#26394b;
 }
 
 select{
-direction:rtl;
-text-align:right;
-text-align-last:right
+    width:100%;
+    height:46px;
+    border:1px solid #bfcbd6;
+    background:#fff;
+    border-radius:7px;
+    padding:7px 12px;
+    font-family:Tahoma,Arial,sans-serif;
+    font-size:13px;
+    color:#111;
+    direction:rtl;
+    text-align:right;
 }
 
-select option{
-background:white;
-color:#111;
-direction:rtl
+select:focus{
+    outline:none;
+    border-color:#1671bd;
+    box-shadow:0 0 0 3px rgba(22,113,189,.10);
 }
 
-select:focus,input:focus{
-outline:none;
-border-color:#174f7c;
-box-shadow:0 0 0 2px rgba(23,79,124,.12)
+/* ======================================================
+   TEST INFO
+====================================================== */
+
+.test-info{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:14px;
+    margin-top:17px;
+}
+
+.info-box{
+    background:#f7f9fb;
+    border:1px solid #dfe5eb;
+    border-radius:8px;
+    text-align:center;
+    padding:12px;
+}
+
+.info-box-title{
+    font-size:12px;
+    font-weight:bold;
+    margin-bottom:7px;
+}
+
+.info-box-value{
+    font-size:20px;
+    font-weight:bold;
+    color:#0a4779;
+}
+
+/* ======================================================
+   BUTTONS
+====================================================== */
+
+.actions{
+    display:grid;
+    grid-template-columns:1fr 1fr 1.6fr 1fr;
+    gap:12px;
+    margin-top:18px;
 }
 
 button{
-border:0;
-border-radius:8px;
-padding:10px 15px;
-font-family:Tahoma,Arial,sans-serif;
-font-size:13px;
-font-weight:bold;
-cursor:pointer
+    font-family:Tahoma,Arial,sans-serif;
 }
 
-button:hover{opacity:.9}
-
-.btn-primary{background:#174f7c;color:white}
-.btn-success{background:#198754;color:white}
-.btn-danger{background:#dc3545;color:white}
-.btn-warning{background:#f0ad4e;color:#222}
-.btn-light{background:#e9eef4;color:#263747}
-.btn-purple{background:#6f42c1;color:white}
-.btn-whatsapp{background:#198754;color:white}
-.btn-gold{background:#c69a2b;color:white}
-
-.actions{
-display:flex;
-flex-wrap:wrap;
-gap:8px;
-margin-top:12px
+.action-btn{
+    min-height:52px;
+    border:0;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:13px;
+    font-weight:bold;
+    transition:.15s;
 }
 
-/* الإسنادات */
-
-.assignment-cards{
-display:flex;
-flex-wrap:wrap;
-gap:7px;
-margin-top:10px
+.action-btn:hover{
+    transform:translateY(-1px);
+    opacity:.94;
 }
 
-.assignment-card{
-border:1px solid #cbd5e1;
-background:white;
-border-radius:7px;
-padding:8px 12px;
-font-size:12px;
-cursor:pointer;
-font-weight:bold;
-color:#173a5e;
-transition:.15s
+.save-btn{
+    background:#06477a;
+    color:#fff;
 }
 
-.assignment-card:hover{
-background:#eef5fb;
-border-color:#174f7c
+.clear-btn{
+    background:#e8edf2;
+    color:#21364a;
 }
 
-.assignment-card.active{
-background:#174f7c;
-border-color:#174f7c;
-color:white
+.delete-btn{
+    background:#dc3545;
+    color:#fff;
+    border:3px solid #ff8c95;
+    box-shadow:0 0 0 2px #dc3545;
 }
 
-.selected-info{
-margin-top:12px;
-background:#e7f1ff;
-color:#084298;
-border-radius:8px;
-padding:10px 12px;
-font-size:13px;
-font-weight:bold
+.print-btn{
+    background:#1671bd;
+    color:#fff;
 }
 
-.test-info{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:10px;
-margin-top:15px
+.analysis-btn{
+    background:#6f42c1;
+    color:#fff;
 }
 
-.info-card{
-background:#f8fafc;
-border:1px solid #e2e8f0;
-border-radius:9px;
-padding:10px;
-text-align:center
+/* ======================================================
+   WARNING
+====================================================== */
+
+.delete-warning{
+    margin-top:18px;
+    padding:13px 15px;
+    text-align:center;
+    background:#fff8df;
+    border:1px solid #f3d36c;
+    border-radius:8px;
+    color:#755500;
+    font-size:12px;
+    line-height:1.8;
 }
 
-.info-card strong{
-display:block;
-color:#174f7c;
-margin-bottom:5px
+/* ======================================================
+   SUMMARY
+====================================================== */
+
+.summary{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:8px;
+    margin:16px 0;
 }
+
+.summary-box{
+    border:1px solid #dde4ea;
+    border-radius:7px;
+    padding:8px;
+    text-align:center;
+    background:#fafcfd;
+}
+
+.summary-box strong{
+    display:block;
+    font-size:18px;
+    color:#0a4779;
+}
+
+.summary-box span{
+    display:block;
+    margin-top:3px;
+    font-size:10px;
+    color:#68798a;
+}
+
+/* ======================================================
+   TABLE
+====================================================== */
 
 .table-wrap{
-overflow:auto;
-margin-top:15px;
-border:1px solid #e1e7ee;
-border-radius:10px
+    overflow:auto;
+    border:1px solid #d8dfe6;
+    border-radius:7px;
 }
 
 table{
-width:100%;
-border-collapse:collapse;
-min-width:850px
+    width:100%;
+    border-collapse:collapse;
+    min-width:820px;
 }
 
 th{
-background:#174f7c;
-color:white;
-position:sticky;
-top:0;
-z-index:2
+    background:#edf2f6;
+    color:#172c40;
+    font-size:12px;
+    padding:10px 7px;
+    border-left:1px solid #d8dfe6;
+    border-bottom:1px solid #c9d2db;
 }
 
-th,td{
-padding:9px 7px;
-border-bottom:1px solid #e5e7eb;
-text-align:center;
-font-size:13px
+td{
+    text-align:center;
+    padding:7px;
+    font-size:12px;
+    border-left:1px solid #e1e6eb;
+    border-bottom:1px solid #e1e6eb;
 }
 
 tbody tr:nth-child(even){
-background:#f8fafc
+    background:#f9fbfc;
 }
 
 .student-name{
-font-weight:bold;
-text-align:right
-}
-
-.attendance-select{
-min-width:95px;
-height:38px
+    font-weight:bold;
+    text-align:right;
 }
 
 .mark-input{
-width:90px;
-height:38px;
-margin:auto;
-text-align:center;
-font-weight:bold
+    width:75px;
+    height:35px;
+    text-align:center;
+    border:1px solid #bdc8d2;
+    border-radius:5px;
+    font-weight:bold;
 }
 
-.saved{
-color:#198754;
-font-weight:bold
-}
-
-.not-saved{
-color:#9ca3af
+.attendance-select{
+    width:100px;
+    height:35px;
+    padding:3px 7px;
 }
 
 .absent-row{
-background:#fff2f2 !important
+    background:#eeeeee !important;
 }
 
-.absent-text{
-color:#dc3545;
-font-weight:bold
+.status-saved{
+    color:#198754;
+    font-weight:bold;
 }
 
-.summary{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:10px;
-margin:15px 0
+.status-unsaved{
+    color:#8b98a5;
 }
 
-.summary-card{
-background:white;
-border:1px solid #e2e8f0;
-border-radius:10px;
-padding:12px;
-text-align:center
+.whatsapp{
+    border:0;
+    background:#198754;
+    color:#fff;
+    border-radius:5px;
+    padding:7px 10px;
+    cursor:pointer;
+    font-size:11px;
 }
 
-.summary-number{
-font-size:22px;
-font-weight:bold;
-color:#174f7c
-}
-
-.summary-label{
-font-size:11px;
-color:#64748b;
-margin-top:4px
-}
+/* ======================================================
+   EMPTY
+====================================================== */
 
 .empty{
-padding:30px 15px;
-text-align:center;
-color:#64748b;
-background:#fafafa;
-border-radius:10px
+    padding:45px 15px;
+    text-align:center;
+    color:#82909e;
+    background:#fafbfc;
+    border-radius:8px;
 }
 
-.note{
-background:#fff8db;
-color:#715d00;
-padding:10px;
-border-radius:8px;
-font-size:12px;
-line-height:1.7
+/* ======================================================
+   FOOTER
+====================================================== */
+
+.footer-note{
+    margin-top:20px;
+    background:#e8f3ff;
+    border:1px solid #bdd9f5;
+    border-radius:7px;
+    color:#174f7c;
+    text-align:center;
+    padding:12px;
+    font-size:11px;
+    line-height:1.7;
 }
 
 .footer{
-text-align:center;
-padding:15px;
-font-size:12px;
-color:#64748b
+    text-align:center;
+    font-size:11px;
+    color:#778899;
+    padding:20px 10px;
 }
 
+/* ======================================================
+   PRINT HEADER
+====================================================== */
+
 .print-header{
-display:none
+    display:none;
 }
+
+/* ======================================================
+   RESPONSIVE
+====================================================== */
 
 @media(max-width:850px){
 
-.test-info{
-grid-template-columns:repeat(2,1fr)
+    .header{
+        padding:15px;
+        flex-direction:column;
+    }
+
+    .header-center{
+        flex-direction:column;
+        gap:6px;
+    }
+
+    .user-card,
+    .logout{
+        position:static;
+        margin-top:8px;
+    }
+
+    .filters{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .actions{
+        grid-template-columns:repeat(2,1fr);
+    }
+
+    .summary{
+        grid-template-columns:repeat(2,1fr);
+    }
+
 }
 
-.summary{
-grid-template-columns:repeat(2,1fr)
-}
+@media(max-width:520px){
+
+    .filters{
+        grid-template-columns:1fr;
+    }
+
+    .test-info{
+        grid-template-columns:1fr;
+    }
 
 }
 
-@media(max-width:600px){
-
-.logout{
-position:static;
-margin-top:10px
-}
-
-.header h1{
-font-size:21px
-}
-
-.assignment-card{
-font-size:11px;
-padding:7px 9px
-}
-
-}
-
-
-/* ==========================
-   الطباعة
-========================== */
+/* ======================================================
+   PRINT - A4 PORTRAIT / ONE PAGE TARGET
+====================================================== */
 
 @media print{
 
-@page{
-size:A4 landscape;
-margin:8mm
+    @page{
+        size:A4 portrait;
+        margin:6mm;
+    }
+
+    html,
+    body{
+        margin:0;
+        padding:0;
+        background:#fff;
+    }
+
+    .header,
+    .selector-card,
+    .actions,
+    .delete-warning,
+    .footer-note,
+    .footer,
+    .whatsapp-col,
+    .summary{
+        display:none !important;
+    }
+
+    .container{
+        width:100%;
+        margin:0;
+        padding:0;
+    }
+
+    .card{
+        margin:0;
+        border:0;
+        border-radius:0;
+        box-shadow:none;
+    }
+
+    .card-title{
+        display:none;
+    }
+
+    .card-body{
+        padding:0;
+    }
+
+    .print-header{
+        display:block;
+        text-align:center;
+        margin-bottom:5px;
+    }
+
+    .print-logo{
+        width:48px;
+        height:48px;
+        object-fit:contain;
+    }
+
+    .print-header h2{
+        margin:0;
+        font-size:15px;
+    }
+
+    .print-header h3{
+        margin:2px 0 4px;
+        font-size:11px;
+    }
+
+    .print-meta{
+        display:grid;
+        grid-template-columns:repeat(2,1fr);
+        gap:2px;
+        margin-bottom:5px;
+    }
+
+    .print-meta div{
+        border:1px solid #777;
+        padding:3px;
+        font-size:7.5px;
+    }
+
+    .table-wrap{
+        overflow:visible;
+        border:0;
+        border-radius:0;
+    }
+
+    table{
+        min-width:0;
+        width:100%;
+        table-layout:fixed;
+    }
+
+    th,
+    td{
+        border:1px solid #777;
+        padding:3px 2px;
+        font-size:7px;
+    }
+
+    th{
+        background:#eee !important;
+        color:#000 !important;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1){
+        width:5%;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2){
+        width:16%;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3){
+        width:36%;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4){
+        width:18%;
+    }
+
+    th:nth-child(5),
+    td:nth-child(5){
+        width:13%;
+    }
+
+    th:nth-child(6),
+    td:nth-child(6){
+        width:12%;
+    }
+
+    .mark-input,
+    .attendance-select{
+        width:100%;
+        height:auto;
+        padding:0;
+        border:0;
+        background:transparent;
+        font-size:7px;
+        appearance:none;
+        -webkit-appearance:none;
+    }
+
+    tr{
+        break-inside:avoid;
+        page-break-inside:avoid;
+    }
+
+    .print-footer{
+        margin-top:5px;
+        display:flex !important;
+        justify-content:space-between;
+        font-size:7px;
+        border-top:1px solid #777;
+        padding-top:3px;
+    }
+
 }
 
-body{
-background:white;
-font-family:Tahoma,Arial,sans-serif
-}
-
-.header,
-.welcome,
-.selection-box,
-.screen-actions,
-.footer,
-.whatsapp-col{
-display:none !important
-}
-
-.container{
-max-width:none;
-margin:0;
-padding:0
-}
-
-.box{
-box-shadow:none;
-border:0;
-margin:0
-}
-
-.box-title{
-display:none
-}
-
-.box-body{
-padding:0
-}
-
-.print-header{
-display:block;
-text-align:center;
-margin-bottom:12px
-}
-
-.print-logo{
-width:65px;
-height:65px;
-object-fit:contain
-}
-
-.print-header h2{
-margin:3px 0;
-font-size:19px
-}
-
-.print-header h3{
-margin:3px 0;
-font-size:15px
-}
-
-.test-info{
-grid-template-columns:repeat(4,1fr);
-margin:8px 0
-}
-
-.info-card{
-padding:6px;
-font-size:11px
-}
-
-.summary{
-grid-template-columns:repeat(5,1fr);
-margin:8px 0
-}
-
-.summary-card{
-padding:6px
-}
-
-.summary-number{
-font-size:16px
-}
-
-table{
-min-width:0;
-font-size:10px
-}
-
-th,td{
-padding:5px;
-font-size:10px;
-border:1px solid #777
-}
-
-th{
-background:#eee !important;
-color:#000 !important
-}
-
-.mark-input,
-.attendance-select{
-border:0;
-background:transparent;
-appearance:none;
--webkit-appearance:none;
-height:auto;
-padding:0;
-font-size:10px
-}
-
-.screen-only{
-display:none !important
-}
-
-}
 </style>
 </head>
 
 <body>
 
+<!-- =====================================================
+     HEADER
+===================================================== -->
+
 <header class="header">
 
+<div class="user-card">
+
+<div class="user-icon">👤</div>
+
+<div>
+<div>أهلًا بالمعلم</div>
+<div class="user-name" id="headerTeacherName">...</div>
+</div>
+
+</div>
+
+<div class="header-center">
+
 <img src="logo.jpeg" class="logo">
+
+<div class="header-title">
 
 <h1>مدارس الفلاح الأهلية</h1>
 
 <p>نظام راصد - صفحة المعلم</p>
 
-<button class="btn-danger logout" onclick="logout()">
-تسجيل الخروج
+</div>
+
+</div>
+
+<button class="logout" onclick="logout()">
+خروج ←
 </button>
 
 </header>
@@ -537,107 +705,150 @@ display:none !important
 
 <div class="container">
 
-<div class="welcome">
+<!-- =====================================================
+     SELECT TEST
+===================================================== -->
 
-<div>
-<div>مرحبًا بك</div>
-<div class="teacher-name" id="teacherName">
-جاري تحميل البيانات...
-</div>
-</div>
+<div class="card selector-card">
 
-<div class="actions" style="margin:0">
-
-<button class="btn-purple" onclick="openAnalysis()">
-📊 تحليل النتائج
-</button>
-
-<button class="btn-gold" onclick="printReport()">
-🖨️ طباعة / PDF
-</button>
-
+<div class="card-title">
+📖 تسجيل درجات الاختبار
 </div>
 
-</div>
+<div class="card-body">
 
+<div class="filters">
 
-<!-- اختيار المادة والفصل والاختبار -->
-
-<div class="box selection-box">
-
-<div class="box-title">
-📚 اختر المادة والفصل والاختبار
-</div>
-
-<div class="box-body">
-
-<div class="note">
-ستظهر هنا فقط المواد والفصول المسندة لك من الإدارة.
-</div>
-
-<div id="assignmentCards" class="assignment-cards"></div>
-
-<div id="selectedAssignmentInfo" class="selected-info" style="display:none"></div>
-
-<div class="row" style="margin-top:15px">
-
-<div class="col">
+<div class="field">
 
 <label>المادة</label>
 
 <select id="subjectSelect" onchange="subjectChanged()">
-<option value="">-- اختر المادة --</option>
+<option value="">اختر المادة</option>
 </select>
 
 </div>
 
-<div class="col">
+
+<div class="field">
 
 <label>الصف</label>
 
 <select id="gradeSelect" onchange="gradeChanged()">
-<option value="">-- اختر الصف --</option>
+<option value="">اختر الصف</option>
 </select>
 
 </div>
 
-<div class="col">
+
+<div class="field">
 
 <label>الشعبة</label>
 
-<select id="sectionSelect" onchange="classChanged()">
-<option value="">-- اختر الشعبة --</option>
+<select id="sectionSelect" onchange="sectionChanged()">
+<option value="">اختر الشعبة</option>
 </select>
 
 </div>
 
-<div class="col">
+
+<div class="field">
 
 <label>الاختبار</label>
 
 <select id="testSelect" onchange="testChanged()">
-<option value="">-- اختر الاختبار --</option>
+<option value="">اختر الاختبار</option>
 </select>
 
 </div>
 
 </div>
 
-</div>
-</div>
 
+<div class="test-info">
 
-<!-- الطلاب -->
+<div class="info-box">
 
-<div class="box">
-
-<div class="box-title">
-📝 رصد الحضور والدرجات
+<div class="info-box-title">
+تاريخ الاختبار
 </div>
 
-<div class="box-body">
+<div class="info-box-value" id="testDate">
+-
+</div>
 
-<!-- للطباعة -->
+</div>
+
+
+<div class="info-box">
+
+<div class="info-box-title">
+الدرجة النهائية
+</div>
+
+<div class="info-box-value" id="fullMark">
+-
+</div>
+
+</div>
+
+</div>
+
+
+<div class="actions">
+
+<button class="action-btn save-btn" onclick="saveAllGrades()">
+💾 حفظ الدرجات
+</button>
+
+<button class="action-btn clear-btn" onclick="clearInputs()">
+🧹 مسح الكل
+</button>
+
+<button class="action-btn delete-btn" onclick="deleteAllClassGrades()">
+🗑️ حذف جميع درجات هذا الفصل
+</button>
+
+<button class="action-btn print-btn" onclick="printReport()">
+🖨️ طباعة
+</button>
+
+</div>
+
+
+<div class="actions" style="grid-template-columns:1fr;margin-top:10px">
+
+<button class="action-btn analysis-btn" onclick="openAnalysis()">
+📊 تحليل نتائج هذا الفصل
+</button>
+
+</div>
+
+
+<div class="delete-warning">
+
+⚠️ سيتم حذف جميع درجات الطلاب في
+<strong>هذا الاختبار لهذا الصف والشعبة فقط</strong>.
+لا يؤثر الحذف على درجات الاختبارات الأخرى.
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- =====================================================
+     GRADES
+===================================================== -->
+
+<div class="card">
+
+<div class="card-title">
+👨‍🎓 الطلاب والحضور والدرجات
+</div>
+
+<div class="card-body">
 
 <div class="print-header">
 
@@ -645,115 +856,70 @@ display:none !important
 
 <h2>مدارس الفلاح الأهلية</h2>
 
-<h3>متابعة درجات الطلاب</h3>
+<h3>كشف درجات الطلاب</h3>
 
+<div class="print-meta">
+
+<div>
+<strong>المعلم:</strong>
+<span id="printTeacher">-</span>
 </div>
 
-
-<div id="testDetails" style="display:none">
-
-<div class="test-info">
-
-<div class="info-card">
-<strong>المعلم</strong>
-<span id="detailTeacher">-</span>
+<div>
+<strong>المادة:</strong>
+<span id="printSubject">-</span>
 </div>
 
-<div class="info-card">
-<strong>المادة</strong>
-<span id="detailSubject">-</span>
+<div>
+<strong>الفصل:</strong>
+<span id="printClass">-</span>
 </div>
 
-<div class="info-card">
-<strong>الفصل</strong>
-<span id="detailClass">-</span>
+<div>
+<strong>الاختبار:</strong>
+<span id="printTest">-</span>
 </div>
 
-<div class="info-card">
-<strong>الاختبار</strong>
-<span id="detailTest">-</span>
+<div>
+<strong>تاريخ الاختبار:</strong>
+<span id="printTestDate">-</span>
 </div>
 
+<div>
+<strong>الدرجة النهائية:</strong>
+<span id="printFullMark">-</span>
 </div>
 
-
-<div class="test-info">
-
-<div class="info-card">
-<strong>تاريخ الاختبار</strong>
-<span id="detailDate">-</span>
-</div>
-
-<div class="info-card">
-<strong>الدرجة النهائية</strong>
-<span id="detailFullMark">-</span>
-</div>
-
-<div class="info-card">
-<strong>عدد الطلاب</strong>
-<span id="detailStudents">0</span>
-</div>
-
-<div class="info-card">
-<strong>تاريخ الطباعة</strong>
-<span id="detailPrintDate">-</span>
 </div>
 
 </div>
 
 
-<div class="summary">
+<div id="summaryArea" class="summary" style="display:none">
 
-<div class="summary-card">
-<div class="summary-number" id="sumStudents">0</div>
-<div class="summary-label">الطلاب</div>
+<div class="summary-box">
+<strong id="summaryTotal">0</strong>
+<span>عدد الطلاب</span>
 </div>
 
-<div class="summary-card">
-<div class="summary-number" id="sumPresent">0</div>
-<div class="summary-label">حاضر</div>
+<div class="summary-box">
+<strong id="summaryPresent">0</strong>
+<span>حاضر</span>
 </div>
 
-<div class="summary-card">
-<div class="summary-number" id="sumAbsent">0</div>
-<div class="summary-label">غائب</div>
+<div class="summary-box">
+<strong id="summaryAbsent">0</strong>
+<span>غائب</span>
 </div>
 
-<div class="summary-card">
-<div class="summary-number" id="sumEntered">0</div>
-<div class="summary-label">تم رصد الدرجة</div>
+<div class="summary-box">
+<strong id="summaryEntered">0</strong>
+<span>تم الرصد</span>
 </div>
 
-<div class="summary-card">
-<div class="summary-number" id="sumAverage">-</div>
-<div class="summary-label">متوسط الدرجات</div>
-</div>
-
-</div>
-
-
-<div class="actions screen-actions">
-
-<button class="btn-success" onclick="setAllAttendance('present')">
-✓ الجميع حاضر
-</button>
-
-<button class="btn-danger" onclick="setAllAttendance('absent')">
-✕ الجميع غائب
-</button>
-
-<button class="btn-primary" onclick="saveAllGrades()">
-💾 حفظ الجميع
-</button>
-
-<button class="btn-purple" onclick="openAnalysis()">
-📊 تحليل النتائج
-</button>
-
-<button class="btn-gold" onclick="printReport()">
-🖨️ طباعة / PDF
-</button>
-
+<div class="summary-box">
+<strong id="summaryAverage">-</strong>
+<span>المتوسط</span>
 </div>
 
 </div>
@@ -762,12 +928,31 @@ display:none !important
 <div id="studentsArea">
 
 <div class="empty">
-اختر المادة والفصل والاختبار لعرض الطلاب.
+اختر المادة والصف والشعبة والاختبار لعرض الطلاب.
 </div>
 
 </div>
 
+
+<div class="footer-note">
+
+<strong>ملاحظة:</strong>
+حذف جميع الدرجات يؤثر على درجات هذا الاختبار وهذا الفصل فقط،
+ولا يؤثر على درجات أي اختبار آخر.
+
 </div>
+
+
+<div class="print-footer" style="display:none">
+
+<span id="printFooterTeacher"></span>
+
+<span>نظام راصد - مدارس الفلاح الأهلية</span>
+
+</div>
+
+</div>
+
 </div>
 
 
@@ -780,17 +965,24 @@ display:none !important
 
 <script>
 
-/* ==============================
-   Firebase
-============================== */
+/* ======================================================
+   FIREBASE
+====================================================== */
 
 const firebaseConfig={
+
 apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+
 authDomain:"results2026-7c0dd.firebaseapp.com",
+
 projectId:"results2026-7c0dd",
+
 storageBucket:"results2026-7c0dd.firebasestorage.app",
+
 messagingSenderId:"241421115694",
+
 appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
+
 };
 
 firebase.initializeApp(firebaseConfig);
@@ -798,9 +990,9 @@ firebase.initializeApp(firebaseConfig);
 const db=firebase.firestore();
 
 
-/* ==============================
-   Variables
-============================== */
+/* ======================================================
+   CONSTANTS
+====================================================== */
 
 const gradeOrder=[
 "1 ابتدائي",
@@ -817,15 +1009,20 @@ const gradeOrder=[
 "3 ثانوي"
 ];
 
-const sectionOrder=["أ","ب","ج","د"];
+const sectionOrder=[
+"أ","ب","ج","د"
+];
+
+
+/* ======================================================
+   VARIABLES
+====================================================== */
 
 let currentUsername="";
 let currentTeacher=null;
 
 let assignments=[];
-let tests=[];
-let currentStudents=[];
-let savedGrades={};
+let allTests=[];
 
 let selectedSubjectId="";
 let selectedSubjectName="";
@@ -833,10 +1030,17 @@ let selectedGrade="";
 let selectedSection="";
 let selectedTest=null;
 
+let currentStudents=[];
+let savedGrades={};
 
-/* ==============================
-   Helpers
-============================== */
+
+/* ======================================================
+   HELPERS
+====================================================== */
+
+function el(id){
+return document.getElementById(id);
+}
 
 function escapeHtml(value){
 
@@ -849,55 +1053,63 @@ return String(value??"")
 
 }
 
+function unique(values){
+return [...new Set(values)];
+}
 
-function unique(array){
+function clearSelect(select,text){
 
-return [...new Set(array)];
+select.innerHTML="";
+
+const option=document.createElement("option");
+
+option.value="";
+option.textContent=text;
+
+select.appendChild(option);
+
+}
+
+function normalizeSaudiPhone(phone){
+
+let p=String(phone||"")
+.replace(/\D/g,"");
+
+if(!p) return "";
+
+if(p.startsWith("00966")){
+p=p.substring(2);
+}
+
+if(p.startsWith("966")){
+return p;
+}
+
+if(p.startsWith("05") && p.length===10){
+return "966"+p.substring(1);
+}
+
+if(p.startsWith("5") && p.length===9){
+return "966"+p;
+}
+
+return p;
 
 }
 
 
-function getTeacherAssignments(teacher){
+/* ======================================================
+   LOGIN PROTECTION
+====================================================== */
 
-if(
-teacher &&
-Array.isArray(teacher.assignments)
-){
-
-return teacher.assignments.filter(a=>
-a.subjectId &&
-a.grade &&
-a.section
-);
-
-}
-
-return [];
-
-}
-
-
-function todayArabic(){
-
-return new Date().toLocaleDateString(
-"ar-SA"
-);
-
-}
-
-
-/* ==============================
-   حماية الصفحة
-============================== */
-
-function protectTeacher(){
+function protectPage(){
 
 const role=
 localStorage.getItem("currentUserRole")||"";
 
 if(role!=="teacher"){
 
-alert("هذه الصفحة مخصصة للمعلمين");
+alert("هذه الصفحة مخصصة للمعلمين.");
 
 location.href="index.html";
 
@@ -910,49 +1122,39 @@ return true;
 }
 
 
-/* ==============================
-   تحميل المعلم
-============================== */
+/* ======================================================
+   LOAD TEACHER
+====================================================== */
 
 async function loadTeacher(){
 
-currentUsername=
+currentUsername=(
 
-(
 localStorage.getItem("currentUserEmail") ||
+
 localStorage.getItem("currentUser") ||
+
 ""
-)
-.trim()
-.toLowerCase();
+
+).trim().toLowerCase();
 
 
 if(!currentUsername){
 
-alert("لم يتم العثور على بيانات تسجيل الدخول");
-
-logout();
-
-return;
+throw new Error("لم يتم العثور على حساب المعلم.");
 
 }
 
 
 const doc=
-
-await db
-.collection("teachers")
+await db.collection("teachers")
 .doc(currentUsername)
 .get();
 
 
 if(!doc.exists){
 
-alert(
-"لم يتم العثور على بيانات المعلم.\nراجع الإدارة."
-);
-
-return;
+throw new Error("لم يتم العثور على بيانات المعلم.");
 
 }
 
@@ -963,250 +1165,64 @@ email:doc.id,
 };
 
 
-document.getElementById(
-"teacherName"
-).textContent=
+assignments=
+Array.isArray(currentTeacher.assignments)
+?
+currentTeacher.assignments.filter(a=>
+a.subjectId &&
+a.grade &&
+a.section
+)
+:
+[];
 
+
+const name=
 currentTeacher.name ||
 localStorage.getItem("currentUserName") ||
 currentUsername;
 
 
-assignments=
-getTeacherAssignments(
-currentTeacher
-);
+el("headerTeacherName").textContent=name;
 
+el("printTeacher").textContent=name;
 
-renderAssignmentCards();
+el("printFooterTeacher").textContent=
+"المعلم: "+name;
+
 
 fillSubjects();
 
 }
 
 
-/* ==============================
-   بطاقات الإسنادات
-============================== */
-
-function renderAssignmentCards(){
-
-const container=
-document.getElementById(
-"assignmentCards"
-);
-
-container.innerHTML="";
-
-
-if(!assignments.length){
-
-container.innerHTML=`
-
-<div class="empty" style="width:100%">
-
-لم يتم إسناد أي مادة أو فصل لك حتى الآن.
-<br>
-راجع إدارة المدرسة.
-
-</div>
-
-`;
-
-return;
-
-}
-
-
-/*
-تجميع المادة والفصل حتى لا نكررها
-*/
-
-const seen=new Set();
-
-
-const sorted=[...assignments].sort(
-(a,b)=>{
-
-const subjectCompare=
-String(a.subjectName||"")
-.localeCompare(
-String(b.subjectName||""),
-"ar"
-);
-
-if(subjectCompare!==0)
-return subjectCompare;
-
-
-const ga=
-gradeOrder.indexOf(a.grade);
-
-const gb=
-gradeOrder.indexOf(b.grade);
-
-if(ga!==gb)
-return ga-gb;
-
-
-return sectionOrder.indexOf(a.section)-
-sectionOrder.indexOf(b.section);
-
-});
-
-
-sorted.forEach(a=>{
-
-const key=
-a.subjectId+"|||"+
-a.grade+"|||"+
-a.section;
-
-
-if(seen.has(key))
-return;
-
-seen.add(key);
-
-
-const card=
-document.createElement("div");
-
-card.className=
-"assignment-card";
-
-card.dataset.subject=
-a.subjectId;
-
-card.dataset.grade=
-a.grade;
-
-card.dataset.section=
-a.section;
-
-
-card.innerHTML=
-
-escapeHtml(
-a.subjectName||"المادة"
-)+
-" - "+
-escapeHtml(a.grade)+
-" / "+
-escapeHtml(a.section);
-
-
-card.onclick=()=>{
-
-selectAssignment(
-a.subjectId,
-a.subjectName,
-a.grade,
-a.section,
-card
-);
-
-};
-
-
-container.appendChild(card);
-
-});
-
-}
-
-
-/* ==============================
-   اختيار سريع من البطاقة
-============================== */
-
-async function selectAssignment(
-subjectId,
-subjectName,
-grade,
-section,
-card
-){
-
-document
-.querySelectorAll(
-".assignment-card"
-)
-.forEach(c=>
-c.classList.remove("active")
-);
-
-
-if(card)
-card.classList.add("active");
-
-
-selectedSubjectId=
-subjectId;
-
-selectedSubjectName=
-subjectName;
-
-selectedGrade=
-grade;
-
-selectedSection=
-section;
-
-
-subjectSelect.value=
-subjectId;
-
-
-fillGrades();
-
-gradeSelect.value=
-grade;
-
-
-fillSections();
-
-sectionSelect.value=
-section;
-
-
-showSelectedAssignment();
-
-
-await loadTestsForClass();
-
-}
-
-
-/* ==============================
-   المواد
-============================== */
+/* ======================================================
+   SUBJECTS
+====================================================== */
 
 function fillSubjects(){
 
-const select=
-document.getElementById(
-"subjectSelect"
+const select=el("subjectSelect");
+
+clearSelect(
+select,
+"اختر المادة"
 );
 
-select.innerHTML=
 
-'<option value="">-- اختر المادة --</option>';
-
-
-const map=new Map();
+const subjects=new Map();
 
 
 assignments.forEach(a=>{
 
 if(
 a.subjectId &&
-!map.has(a.subjectId)
+!subjects.has(a.subjectId)
 ){
 
-map.set(
+subjects.set(
 a.subjectId,
-a.subjectName||"مادة"
+a.subjectName||"المادة"
 );
 
 }
@@ -1214,7 +1230,7 @@ a.subjectName||"مادة"
 });
 
 
-[...map.entries()]
+[...subjects.entries()]
 .sort(
 (a,b)=>
 String(a[1]).localeCompare(
@@ -1240,17 +1256,17 @@ select.appendChild(option);
 function subjectChanged(){
 
 selectedSubjectId=
-subjectSelect.value;
+el("subjectSelect").value;
 
 
-const match=
+const assignment=
 assignments.find(
 a=>a.subjectId===selectedSubjectId
 );
 
 
 selectedSubjectName=
-match?.subjectName||"";
+assignment?.subjectName||"";
 
 
 selectedGrade="";
@@ -1260,61 +1276,69 @@ selectedTest=null;
 
 fillGrades();
 
-fillSections();
 
-clearTests();
+clearSelect(
+el("sectionSelect"),
+"اختر الشعبة"
+);
 
-clearStudentsArea();
 
-showSelectedAssignment();
+clearSelect(
+el("testSelect"),
+"اختر الاختبار"
+);
+
+
+resetTestInfo();
+
+clearStudents();
 
 }
 
 
-/* ==============================
-   الصفوف
-============================== */
+/* ======================================================
+   GRADES
+====================================================== */
 
 function fillGrades(){
 
 const select=
-document.getElementById(
-"gradeSelect"
+el("gradeSelect");
+
+
+clearSelect(
+select,
+"اختر الصف"
 );
 
 
-select.innerHTML=
-
-'<option value="">-- اختر الصف --</option>';
-
-
 if(!selectedSubjectId){
-
 return;
-
 }
 
 
-const list=
+const grades=
 unique(
 
 assignments
 .filter(
-a=>a.subjectId===selectedSubjectId
+a=>
+a.subjectId===
+selectedSubjectId
 )
 .map(a=>a.grade)
 
 );
 
 
-list.sort(
+grades.sort(
 (a,b)=>
 gradeOrder.indexOf(a)-
 gradeOrder.indexOf(b)
 );
 
 
-list.forEach(grade=>{
+grades.forEach(grade=>{
 
 const option=
 document.createElement("option");
@@ -1332,7 +1356,8 @@ select.appendChild(option);
 function gradeChanged(){
 
 selectedGrade=
-gradeSelect.value;
+el("gradeSelect").value;
+
 
 selectedSection="";
 selectedTest=null;
@@ -1340,43 +1365,45 @@ selectedTest=null;
 
 fillSections();
 
-clearTests();
 
-clearStudentsArea();
+clearSelect(
+el("testSelect"),
+"اختر الاختبار"
+);
 
-showSelectedAssignment();
+
+resetTestInfo();
+
+clearStudents();
 
 }
 
 
-/* ==============================
-   الشعب
-============================== */
+/* ======================================================
+   SECTIONS
+====================================================== */
 
 function fillSections(){
 
 const select=
-document.getElementById(
-"sectionSelect"
+el("sectionSelect");
+
+
+clearSelect(
+select,
+"اختر الشعبة"
 );
-
-
-select.innerHTML=
-
-'<option value="">-- اختر الشعبة --</option>';
 
 
 if(
 !selectedSubjectId ||
 !selectedGrade
 ){
-
 return;
-
 }
 
 
-const list=
+const sections=
 unique(
 
 assignments
@@ -1394,14 +1421,14 @@ selectedGrade
 );
 
 
-list.sort(
+sections.sort(
 (a,b)=>
 sectionOrder.indexOf(a)-
 sectionOrder.indexOf(b)
 );
 
 
-list.forEach(section=>{
+sections.forEach(section=>{
 
 const option=
 document.createElement("option");
@@ -1416,16 +1443,16 @@ select.appendChild(option);
 }
 
 
-async function classChanged(){
+async function sectionChanged(){
 
 selectedSection=
-sectionSelect.value;
+el("sectionSelect").value;
 
 selectedTest=null;
 
-clearStudentsArea();
+resetTestInfo();
 
-showSelectedAssignment();
+clearStudents();
 
 
 if(
@@ -1434,41 +1461,39 @@ selectedGrade &&
 selectedSection
 ){
 
-await loadTestsForClass();
+await loadTests();
 
 }
 
 else{
 
-clearTests();
+clearSelect(
+el("testSelect"),
+"اختر الاختبار"
+);
 
 }
 
 }
 
 
-/* ==============================
-   الاختبارات المطابقة
-============================== */
+/* ======================================================
+   TESTS
+====================================================== */
 
-async function loadTestsForClass(){
+async function loadTests(){
 
-clearTests();
+const select=
+el("testSelect");
 
 
-if(
-!selectedSubjectId ||
-!selectedGrade ||
-!selectedSection
-){
-
-return;
-
-}
+clearSelect(
+select,
+"اختر الاختبار"
+);
 
 
 const snap=
-
 await db
 .collection("tests")
 .where(
@@ -1479,7 +1504,7 @@ selectedSubjectId
 .get();
 
 
-tests=[];
+allTests=[];
 
 
 snap.forEach(doc=>{
@@ -1494,7 +1519,7 @@ data.classes
 [];
 
 
-const belongs=
+const match=
 classes.some(c=>
 
 c.grade===selectedGrade &&
@@ -1503,9 +1528,9 @@ c.section===selectedSection
 );
 
 
-if(belongs){
+if(match){
 
-tests.push({
+allTests.push({
 id:doc.id,
 ...data
 });
@@ -1515,40 +1540,28 @@ id:doc.id,
 });
 
 
-tests.sort(
+allTests.sort(
 (a,b)=>
-
 String(a.date||"")
 .localeCompare(
 String(b.date||"")
 )
-
 );
 
 
-const select=
-document.getElementById(
-"testSelect"
+if(!allTests.length){
+
+clearSelect(
+select,
+"لا توجد اختبارات"
 );
-
-
-if(!tests.length){
-
-select.innerHTML=
-
-'<option value="">لا توجد اختبارات لهذا الفصل</option>';
 
 return;
 
 }
 
 
-select.innerHTML=
-
-'<option value="">-- اختر الاختبار --</option>';
-
-
-tests.forEach(test=>{
+allTests.forEach(test=>{
 
 const option=
 document.createElement("option");
@@ -1556,7 +1569,6 @@ document.createElement("option");
 option.value=test.id;
 
 option.textContent=
-
 test.name+
 (
 test.date
@@ -1573,61 +1585,61 @@ select.appendChild(option);
 }
 
 
-/* ==============================
-   الاختبار
-============================== */
-
 async function testChanged(){
 
-const testId=
-testSelect.value;
+const id=
+el("testSelect").value;
 
 
 selectedTest=
-tests.find(
-t=>t.id===testId
+allTests.find(
+test=>test.id===id
 )||null;
 
 
 if(!selectedTest){
 
-clearStudentsArea();
+resetTestInfo();
+
+clearStudents();
 
 return;
 
 }
 
 
-showTestDetails();
+el("testDate").textContent=
+selectedTest.date||"-";
 
-await loadClassStudents();
+
+el("fullMark").textContent=
+selectedTest.fullMark??"-";
+
+
+updatePrintMeta();
+
+
+await loadStudents();
 
 }
 
 
-/* ==============================
-   الطلاب
-============================== */
+/* ======================================================
+   STUDENTS
+====================================================== */
 
-async function loadClassStudents(){
+async function loadStudents(){
 
-const area=
-document.getElementById(
-"studentsArea"
-);
-
-
-area.innerHTML=`
+el("studentsArea").innerHTML=`
 
 <div class="empty">
-جاري تحميل الطلاب والدرجات...
+جاري تحميل الطلاب...
 </div>
 
 `;
 
 
 const snap=
-
 await db
 .collection("students")
 .where(
@@ -1679,80 +1691,66 @@ String(b.name||""),
 
 await loadSavedGrades();
 
-renderStudentsTable();
-
-showTestDetails();
+renderStudents();
 
 }
 
 
-/* ==============================
-   تحميل الدرجات المحفوظة
-============================== */
+/* ======================================================
+   SAVED GRADES
+====================================================== */
 
 async function loadSavedGrades(){
 
 savedGrades={};
 
 
-if(!selectedTest)
+if(!selectedTest){
 return;
+}
 
 
-const promises=
-currentStudents.map(
-async student=>{
-
-const id=
-
-selectedTest.id+
-"_"+
-student.code;
-
-
-const doc=
-
+const snap=
 await db
 .collection("grades")
-.doc(id)
+.where(
+"testId",
+"==",
+selectedTest.id
+)
 .get();
 
 
-if(doc.exists){
+snap.forEach(doc=>{
+
+const data=doc.data()||{};
+
+
+if(
+data.grade===selectedGrade &&
+data.section===selectedSection
+){
 
 savedGrades[
-student.code
-]=
-doc.data();
+String(data.studentCode)
+]=data;
 
 }
 
-}
-);
-
-
-await Promise.all(
-promises
-);
+});
 
 }
 
 
-/* ==============================
-   جدول الطلاب
-============================== */
+/* ======================================================
+   RENDER STUDENTS
+====================================================== */
 
-function renderStudentsTable(){
-
-const area=
-document.getElementById(
-"studentsArea"
-);
-
+function renderStudents(){
 
 if(!currentStudents.length){
 
-area.innerHTML=`
+el("studentsArea").innerHTML=`
 
 <div class="empty">
 لا يوجد طلاب في هذا الفصل.
@@ -1760,14 +1758,136 @@ area.innerHTML=`
 
 `;
 
-updateSummary();
+el("summaryArea").style.display=
+"none";
 
 return;
 
 }
 
 
-let html=`
+let rows="";
+
+
+currentStudents.forEach(
+(student,index)=>{
+
+const saved=
+savedGrades[
+String(student.code)
+]||{};
+
+
+const attendance=
+saved.attendance||
+"present";
+
+
+const mark=
+saved.mark!==null &&
+saved.mark!==undefined
+?
+saved.mark
+:
+"";
+
+
+const absent=
+attendance==="absent";
+
+
+rows+=`
+
+<tr
+id="row_${escapeHtml(student.code)}"
+class="${absent?"absent-row":""}"
+>
+
+<td>
+${index+1}
+</td>
+
+<td>
+${escapeHtml(student.code)}
+</td>
+
+<td class="student-name">
+${escapeHtml(student.name)}
+</td>
+
+<td>
+
+<select
+class="attendance-select"
+id="attendance_${escapeHtml(student.code)}"
+onchange='attendanceChanged(${JSON.stringify(String(student.code))})'
+>
+
+<option
+value="present"
+${attendance==="present"?"selected":""}
+>
+حاضر
+</option>
+
+<option
+value="absent"
+${attendance==="absent"?"selected":""}
+>
+غائب
+</option>
+
+</select>
+
+</td>
+
+<td>
+
+<input
+type="number"
+class="mark-input"
+id="mark_${escapeHtml(student.code)}"
+min="0"
+max="${escapeHtml(selectedTest.fullMark)}"
+step="0.01"
+value="${escapeHtml(mark)}"
+${absent?"disabled":""}
+oninput='markChanged(${JSON.stringify(String(student.code))})'
+>
+
+</td>
+
+<td id="status_${escapeHtml(student.code)}">
+
+${
+savedGrades[String(student.code)]
+?
+'<span class="status-saved">محفوظ ✓</span>'
+:
+'<span class="status-unsaved">غير محفوظ</span>'
+}
+
+</td>
+
+<td class="whatsapp-col">
+
+<button
+class="whatsapp"
+onclick='sendWhatsApp(${JSON.stringify(String(student.code))})'
+>
+واتساب
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+
+el("studentsArea").innerHTML=`
 
 <div class="table-wrap">
 
@@ -1791,139 +1911,25 @@ let html=`
 
 <tbody>
 
-`;
-
-
-currentStudents.forEach(
-(student,index)=>{
-
-const saved=
-savedGrades[
-student.code
-]||{};
-
-
-const attendance=
-saved.attendance||
-"present";
-
-
-const mark=
-saved.mark!==null &&
-saved.mark!==undefined
-?
-saved.mark
-:
-"";
-
-
-const isAbsent=
-attendance==="absent";
-
-
-html+=`
-
-<tr
-id="row_${escapeHtml(student.code)}"
-class="${isAbsent?'absent-row':''}">
-
-<td>
-${index+1}
-</td>
-
-<td>
-${escapeHtml(student.code)}
-</td>
-
-<td class="student-name">
-${escapeHtml(student.name)}
-</td>
-
-<td>
-
-<select
-class="attendance-select"
-id="attendance_${escapeHtml(student.code)}"
-onchange='attendanceChanged(${JSON.stringify(student.code)})'>
-
-<option
-value="present"
-${attendance==="present"?"selected":""}>
-حاضر
-</option>
-
-<option
-value="absent"
-${attendance==="absent"?"selected":""}>
-غائب
-</option>
-
-</select>
-
-</td>
-
-<td>
-
-<input
-class="mark-input"
-id="mark_${escapeHtml(student.code)}"
-type="number"
-min="0"
-max="${escapeHtml(selectedTest.fullMark)}"
-step="0.01"
-value="${escapeHtml(mark)}"
-${isAbsent?"disabled":""}
-oninput='markChanged(${JSON.stringify(student.code)})'>
-
-</td>
-
-<td id="status_${escapeHtml(student.code)}">
-
-${saved.updatedAt
-?
-'<span class="saved">محفوظ ✓</span>'
-:
-'<span class="not-saved">غير محفوظ</span>'
-}
-
-</td>
-
-<td class="whatsapp-col">
-
-<button
-class="small-btn btn-whatsapp"
-onclick='sendWhatsApp(${JSON.stringify(student.code)})'>
-
-واتساب
-
-</button>
-
-</td>
-
-</tr>
-
-`;
-
-});
-
-
-html+=`
+${rows}
 
 </tbody>
+
 </table>
+
 </div>
 
 `;
 
 
-area.innerHTML=html;
+el("summaryArea").style.display=
+"grid";
 
 
-currentStudents.forEach(
-student=>{
+currentStudents.forEach(student=>{
 
 attendanceChanged(
-student.code,
+String(student.code),
 false
 );
 
@@ -1935,37 +1941,31 @@ updateSummary();
 }
 
 
-/* ==============================
-   حضور
-============================== */
+/* ======================================================
+   ATTENDANCE
+====================================================== */
 
 function attendanceChanged(
 code,
-markDirty=true
+dirty=true
 ){
 
 const attendance=
-document.getElementById(
-"attendance_"+code
-);
-
+el("attendance_"+code);
 
 const mark=
-document.getElementById(
-"mark_"+code
-);
-
+el("mark_"+code);
 
 const row=
-document.getElementById(
-"row_"+code
-);
+el("row_"+code);
 
 
 if(
 !attendance ||
 !mark
-)return;
+){
+return;
+}
 
 
 if(
@@ -1975,10 +1975,9 @@ attendance.value==="absent"
 mark.value="";
 mark.disabled=true;
 
-if(row)
-row.classList.add(
-"absent-row"
-);
+if(row){
+row.classList.add("absent-row");
+}
 
 }
 
@@ -1986,26 +1985,22 @@ else{
 
 mark.disabled=false;
 
-if(row)
-row.classList.remove(
-"absent-row"
-);
+if(row){
+row.classList.remove("absent-row");
+}
 
 }
 
 
-if(markDirty){
+if(dirty){
 
 const status=
-document.getElementById(
-"status_"+code
-);
+el("status_"+code);
 
 if(status){
 
 status.innerHTML=
-
-'<span class="not-saved">غير محفوظ</span>';
+'<span class="status-unsaved">غير محفوظ</span>';
 
 }
 
@@ -2020,23 +2015,24 @@ updateSummary();
 function markChanged(code){
 
 const input=
-document.getElementById(
-"mark_"+code
-);
+el("mark_"+code);
 
 
-if(!input)
+if(!input){
 return;
+}
+
+
+const max=
+Number(selectedTest.fullMark);
 
 
 if(
 input.value!=="" &&
-Number(input.value)>
-Number(selectedTest.fullMark)
+Number(input.value)>max
 ){
 
-input.value=
-selectedTest.fullMark;
+input.value=max;
 
 }
 
@@ -2052,16 +2048,13 @@ input.value=0;
 
 
 const status=
-document.getElementById(
-"status_"+code
-);
+el("status_"+code);
 
 
 if(status){
 
 status.innerHTML=
-
-'<span class="not-saved">غير محفوظ</span>';
+'<span class="status-unsaved">غير محفوظ</span>';
 
 }
 
@@ -2071,48 +2064,94 @@ updateSummary();
 }
 
 
-/* ==============================
-   الجميع حاضر / غائب
-============================== */
+/* ======================================================
+   SUMMARY
+====================================================== */
 
-function setAllAttendance(
-value
+function updateSummary(){
+
+let present=0;
+let absent=0;
+let entered=0;
+let totalMarks=0;
+
+
+currentStudents.forEach(student=>{
+
+const code=
+String(student.code);
+
+const attendance=
+el("attendance_"+code);
+
+const mark=
+el("mark_"+code);
+
+
+if(
+!attendance ||
+!mark
 ){
-
-if(!currentStudents.length){
-
 return;
-
 }
 
 
-currentStudents.forEach(
-student=>{
+if(
+attendance.value==="absent"
+){
 
-const select=
-document.getElementById(
-"attendance_"+student.code
-);
+absent++;
+
+}
+
+else{
+
+present++;
 
 
-if(select){
+if(mark.value!==""){
 
-select.value=value;
+entered++;
 
-attendanceChanged(
-student.code
-);
+totalMarks+=
+Number(mark.value)||0;
+
+}
 
 }
 
 });
 
+
+el("summaryTotal").textContent=
+currentStudents.length;
+
+
+el("summaryPresent").textContent=
+present;
+
+
+el("summaryAbsent").textContent=
+absent;
+
+
+el("summaryEntered").textContent=
+entered;
+
+
+el("summaryAverage").textContent=
+entered
+?
+(totalMarks/entered).toFixed(2)
+:
+"-";
+
 }
 
 
-/* ==============================
-   الحفظ
-============================== */
+/* ======================================================
+   SAVE
+====================================================== */
 
 async function saveAllGrades(){
 
@@ -2122,7 +2161,7 @@ if(
 ){
 
 alert(
-"اختر الاختبار أولًا"
+"اختر الاختبار والفصل أولًا."
 );
 
 return;
@@ -2137,41 +2176,31 @@ for(
 const student of currentStudents
 ){
 
-const attendanceEl=
-document.getElementById(
-"attendance_"+student.code
-);
-
-
-const markEl=
-document.getElementById(
-"mark_"+student.code
-);
+const code=
+String(student.code);
 
 
 const attendance=
-attendanceEl.value;
+el("attendance_"+code).value;
+
+
+const markInput=
+el("mark_"+code);
 
 
 let mark=null;
 
 
-if(
-attendance==="present"
-){
+if(attendance==="present"){
 
-if(
-markEl.value===""
-){
+if(markInput.value===""){
 
 alert(
-
-"لم يتم إدخال درجة الطالب:\n"+
+"أدخل درجة الطالب:\n"+
 student.name
-
 );
 
-markEl.focus();
+markInput.focus();
 
 return;
 
@@ -2179,28 +2208,22 @@ return;
 
 
 mark=
-Number(
-markEl.value
-);
+Number(markInput.value);
 
 
 if(
 Number.isNaN(mark) ||
 mark<0 ||
-mark>
-Number(selectedTest.fullMark)
+mark>Number(selectedTest.fullMark)
 ){
 
 alert(
-
-"درجة الطالب "+
-student.name+
+"درجة الطالب "+student.name+
 " يجب أن تكون من 0 إلى "+
 selectedTest.fullMark
-
 );
 
-markEl.focus();
+markInput.focus();
 
 return;
 
@@ -2221,9 +2244,9 @@ mark
 try{
 
 for(
-let i=0;
-i<records.length;
-i+=400
+let start=0;
+start<records.length;
+start+=400
 ){
 
 const batch=
@@ -2231,7 +2254,7 @@ db.batch();
 
 
 records
-.slice(i,i+400)
+.slice(start,start+400)
 .forEach(item=>{
 
 const docId=
@@ -2242,9 +2265,7 @@ item.student.code;
 
 
 const ref=
-
-db
-.collection("grades")
+db.collection("grades")
 .doc(docId);
 
 
@@ -2252,13 +2273,10 @@ batch.set(
 ref,
 {
 
-testId:
-selectedTest.id,
+testId:selectedTest.id,
 
 studentCode:
-String(
-item.student.code
-),
+String(item.student.code),
 
 studentName:
 item.student.name||"",
@@ -2298,9 +2316,7 @@ testDate:
 selectedTest.date||"",
 
 fullMark:
-Number(
-selectedTest.fullMark
-),
+Number(selectedTest.fullMark),
 
 updatedAt:
 firebase.firestore
@@ -2322,13 +2338,13 @@ await batch.commit();
 
 
 alert(
-"تم حفظ الحضور والدرجات بنجاح ✅"
+"تم حفظ الدرجات بنجاح ✅"
 );
 
 
 await loadSavedGrades();
 
-renderStudentsTable();
+renderStudents();
 
 }
 
@@ -2337,10 +2353,8 @@ catch(error){
 console.error(error);
 
 alert(
-
 "حدث خطأ أثناء الحفظ:\n"+
 error.message
-
 );
 
 }
@@ -2348,370 +2362,237 @@ error.message
 }
 
 
-/* ==============================
-   الإحصائيات السريعة
-============================== */
+/* ======================================================
+   CLEAR INPUTS ONLY
+====================================================== */
 
-function updateSummary(){
+function clearInputs(){
 
-const total=
-currentStudents.length;
-
-
-let present=0;
-let absent=0;
-let entered=0;
-
-let totalMarks=0;
-
-
-currentStudents.forEach(
-student=>{
-
-const attendance=
-document.getElementById(
-"attendance_"+student.code
-);
-
-
-const mark=
-document.getElementById(
-"mark_"+student.code
-);
+if(!currentStudents.length){
+return;
+}
 
 
 if(
-!attendance ||
-!mark
-)return;
-
-
-if(
-attendance.value==="absent"
+!confirm(
+"مسح الدرجات الظاهرة من الشاشة؟\n\nلن يتم حذف البيانات المحفوظة إلا إذا ضغطت حفظ بعد ذلك."
+)
 ){
 
-absent++;
+return;
 
 }
 
-else{
 
-present++;
+currentStudents.forEach(student=>{
+
+const code=
+String(student.code);
 
 
-if(mark.value!==""){
+const attendance=
+el("attendance_"+code);
 
-entered++;
+const mark=
+el("mark_"+code);
 
-totalMarks+=
-Number(mark.value)||0;
+
+if(attendance){
+attendance.value="present";
+}
+
+
+if(mark){
+
+mark.disabled=false;
+mark.value="";
 
 }
+
+
+const row=
+el("row_"+code);
+
+
+if(row){
+row.classList.remove("absent-row");
+}
+
+
+const status=
+el("status_"+code);
+
+
+if(status){
+
+status.innerHTML=
+'<span class="status-unsaved">غير محفوظ</span>';
 
 }
 
 });
 
 
-document.getElementById(
-"sumStudents"
-).textContent=
-total;
-
-
-document.getElementById(
-"sumPresent"
-).textContent=
-present;
-
-
-document.getElementById(
-"sumAbsent"
-).textContent=
-absent;
-
-
-document.getElementById(
-"sumEntered"
-).textContent=
-entered;
-
-
-document.getElementById(
-"sumAverage"
-).textContent=
-
-entered
-?
-(
-totalMarks/entered
-).toFixed(2)
-:
-"-";
-
-
-document.getElementById(
-"detailStudents"
-).textContent=
-total;
+updateSummary();
 
 }
 
 
-/* ==============================
-   تفاصيل الاختبار
-============================== */
+/* ======================================================
+   DELETE ALL GRADES FOR CURRENT TEST + CLASS
+====================================================== */
 
-function showSelectedAssignment(){
-
-const box=
-document.getElementById(
-"selectedAssignmentInfo"
-);
-
+async function deleteAllClassGrades(){
 
 if(
-!selectedSubjectId &&
-!selectedGrade &&
+!selectedTest ||
+!selectedGrade ||
 !selectedSection
 ){
 
-box.style.display=
-"none";
+alert(
+"اختر المادة والصف والشعبة والاختبار أولًا."
+);
 
 return;
 
 }
 
 
-box.style.display=
-"block";
+const confirm1=
+confirm(
 
+"⚠️ حذف جميع درجات هذا الفصل\n\n"+
+"المادة: "+selectedSubjectName+"\n"+
+"الفصل: "+selectedGrade+" / "+selectedSection+"\n"+
+"الاختبار: "+selectedTest.name+"\n\n"+
+"سيتم حذف جميع درجات الطلاب في هذا الاختبار لهذا الفصل فقط.\n"+
+"هل تريد المتابعة؟"
 
-let text=[];
-
-
-if(selectedSubjectName)
-text.push(
-selectedSubjectName
 );
 
 
-if(selectedGrade)
-text.push(
-selectedGrade
-);
-
-
-if(selectedSection)
-text.push(
-"الشعبة "+selectedSection
-);
-
-
-box.textContent=
-text.join(" - ");
-
-}
-
-
-function showTestDetails(){
-
-if(!selectedTest){
-
-document.getElementById(
-"testDetails"
-).style.display=
-"none";
-
+if(!confirm1){
 return;
-
 }
 
 
-document.getElementById(
-"testDetails"
-).style.display=
-"block";
+const confirm2=
+confirm(
 
+"تأكيد أخير:\n\n"+
+"لا يمكن التراجع عن حذف الدرجات بعد التنفيذ.\n"+
+"هل أنت متأكد؟"
 
-document.getElementById(
-"detailTeacher"
-).textContent=
-
-currentTeacher.name||"";
-
-
-document.getElementById(
-"detailSubject"
-).textContent=
-
-selectedSubjectName||"";
-
-
-document.getElementById(
-"detailClass"
-).textContent=
-
-selectedGrade+
-" / "+
-selectedSection;
-
-
-document.getElementById(
-"detailTest"
-).textContent=
-
-selectedTest.name||"";
-
-
-document.getElementById(
-"detailDate"
-).textContent=
-
-selectedTest.date||"-";
-
-
-document.getElementById(
-"detailFullMark"
-).textContent=
-
-selectedTest.fullMark;
-
-
-document.getElementById(
-"detailPrintDate"
-).textContent=
-
-todayArabic();
-
-}
-
-
-/* ==============================
-   تنظيف الاختيارات
-============================== */
-
-function clearTests(){
-
-selectedTest=null;
-
-const select=
-document.getElementById(
-"testSelect"
 );
 
 
-select.innerHTML=
-
-'<option value="">-- اختر الاختبار --</option>';
-
-
-clearStudentsArea();
-
+if(!confirm2){
+return;
 }
 
 
-function clearStudentsArea(){
+try{
 
-currentStudents=[];
-savedGrades={};
-
-
-document.getElementById(
-"testDetails"
-).style.display=
-"none";
-
-
-document.getElementById(
-"studentsArea"
-).innerHTML=`
-
-<div class="empty">
-
-اختر المادة والفصل والاختبار لعرض الطلاب.
-
-</div>
-
-`;
-
-}
+const snap=
+await db
+.collection("grades")
+.where(
+"testId",
+"==",
+selectedTest.id
+)
+.get();
 
 
-/* ==============================
-   WhatsApp
-============================== */
-
-function normalizeSaudiPhone(
-phone
-){
-
-let p=
-String(phone||"")
-.replace(/\D/g,"");
+const docs=[];
 
 
-if(!p)
-return "";
+snap.forEach(doc=>{
+
+const data=doc.data()||{};
 
 
 if(
-p.startsWith("00966")
+data.grade===selectedGrade &&
+data.section===selectedSection
 ){
 
-p=p.substring(2);
+docs.push(doc.ref);
 
 }
 
-
-if(
-p.startsWith("966")
-){
-
-return p;
-
-}
+});
 
 
-if(
-p.startsWith("05") &&
-p.length===10
-){
-
-return "966"+
-p.substring(1);
-
-}
-
-
-if(
-p.startsWith("5") &&
-p.length===9
-){
-
-return "966"+p;
-
-}
-
-
-return p;
-
-}
-
-
-function sendWhatsApp(
-code
-){
-
-if(!selectedTest){
+if(!docs.length){
 
 alert(
-"اختر الاختبار أولًا"
+"لا توجد درجات محفوظة لهذا الفصل في هذا الاختبار."
 );
 
 return;
 
+}
+
+
+for(
+let start=0;
+start<docs.length;
+start+=400
+){
+
+const batch=
+db.batch();
+
+
+docs
+.slice(start,start+400)
+.forEach(ref=>{
+
+batch.delete(ref);
+
+});
+
+
+await batch.commit();
+
+}
+
+
+alert(
+"تم حذف جميع درجات هذا الفصل من الاختبار بنجاح."
+);
+
+
+await loadSavedGrades();
+
+renderStudents();
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+"حدث خطأ أثناء حذف الدرجات:\n"+
+error.message
+);
+
+}
+
+}
+
+
+/* ======================================================
+   WHATSAPP
+====================================================== */
+
+function sendWhatsApp(code){
+
+if(!selectedTest){
+return;
 }
 
 
@@ -2723,8 +2604,9 @@ String(code)
 );
 
 
-if(!student)
+if(!student){
 return;
+}
 
 
 const phone=
@@ -2740,10 +2622,8 @@ student.phone ||
 if(!phone){
 
 alert(
-
 "لا يوجد رقم جوال مسجل لولي أمر الطالب:\n"+
 student.name
-
 );
 
 return;
@@ -2752,23 +2632,17 @@ return;
 
 
 const attendance=
-document.getElementById(
-"attendance_"+code
-).value;
+el("attendance_"+code).value;
 
 
 const mark=
-document.getElementById(
-"mark_"+code
-).value;
+el("mark_"+code).value;
 
 
 let message="";
 
 
-if(
-attendance==="absent"
-){
+if(attendance==="absent"){
 
 message=
 
@@ -2793,7 +2667,7 @@ else{
 if(mark===""){
 
 alert(
-"أدخل درجة الطالب أولًا"
+"أدخل درجة الطالب أولًا."
 );
 
 return;
@@ -2835,27 +2709,22 @@ encodeURIComponent(message),
 }
 
 
-/* ==============================
-   تحليل النتائج
-============================== */
+/* ======================================================
+   ANALYSIS
+====================================================== */
 
 function openAnalysis(){
 
 if(!selectedTest){
 
 alert(
-"اختر المادة والفصل والاختبار أولًا"
+"اختر المادة والصف والشعبة والاختبار أولًا."
 );
 
 return;
 
 }
 
-
-/*
-نرسل الاختيارات للصفحة
-عن طريق URL
-*/
 
 const params=
 new URLSearchParams({
@@ -2885,16 +2754,47 @@ params.toString();
 }
 
 
-/* ==============================
-   الطباعة
-============================== */
+/* ======================================================
+   PRINT
+====================================================== */
+
+function updatePrintMeta(){
+
+el("printTeacher").textContent=
+currentTeacher?.name||"-";
+
+
+el("printSubject").textContent=
+selectedSubjectName||"-";
+
+
+el("printClass").textContent=
+
+selectedGrade+
+" / "+
+selectedSection;
+
+
+el("printTest").textContent=
+selectedTest?.name||"-";
+
+
+el("printTestDate").textContent=
+selectedTest?.date||"-";
+
+
+el("printFullMark").textContent=
+selectedTest?.fullMark??"-";
+
+}
+
 
 function printReport(){
 
 if(!selectedTest){
 
 alert(
-"اختر الاختبار أولًا"
+"اختر الاختبار أولًا."
 );
 
 return;
@@ -2905,7 +2805,7 @@ return;
 if(!currentStudents.length){
 
 alert(
-"لا يوجد طلاب للطباعة"
+"لا يوجد طلاب للطباعة."
 );
 
 return;
@@ -2913,20 +2813,52 @@ return;
 }
 
 
-document.getElementById(
-"detailPrintDate"
-).textContent=
-todayArabic();
-
+updatePrintMeta();
 
 window.print();
 
 }
 
 
-/* ==============================
-   خروج
-============================== */
+/* ======================================================
+   RESET
+====================================================== */
+
+function resetTestInfo(){
+
+el("testDate").textContent="-";
+
+el("fullMark").textContent="-";
+
+}
+
+
+function clearStudents(){
+
+currentStudents=[];
+savedGrades={};
+
+
+el("summaryArea").style.display=
+"none";
+
+
+el("studentsArea").innerHTML=`
+
+<div class="empty">
+
+اختر المادة والصف والشعبة والاختبار لعرض الطلاب.
+
+</div>
+
+`;
+
+}
+
+
+/* ======================================================
+   LOGOUT
+====================================================== */
 
 function logout(){
 
@@ -2937,9 +2869,7 @@ function logout(){
 "currentUserEmail"
 ]
 .forEach(key=>
-
 localStorage.removeItem(key)
-
 );
 
 
@@ -2949,14 +2879,15 @@ location.href=
 }
 
 
-/* ==============================
-   تشغيل
-============================== */
+/* ======================================================
+   START
+====================================================== */
 
 async function start(){
 
-if(!protectTeacher())
+if(!protectPage()){
 return;
+}
 
 
 try{
@@ -2970,10 +2901,8 @@ catch(error){
 console.error(error);
 
 alert(
-
 "حدث خطأ أثناء تحميل صفحة المعلم:\n"+
 error.message
-
 );
 
 }
