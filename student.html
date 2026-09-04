@@ -1065,7 +1065,7 @@ async function loadStudentResults(studentCode){
     currentResults=[];
 
 
-    const snap=
+    const gradesSnap=
         await db
             .collection("grades")
             .where(
@@ -1076,14 +1076,79 @@ async function loadStudentResults(studentCode){
             .get();
 
 
-    snap.forEach(doc=>{
+    const allResults=[];
 
-        currentResults.push({
+
+    gradesSnap.forEach(doc=>{
+
+        allResults.push({
             id:doc.id,
             ...doc.data()
         });
 
     });
+
+
+    /*
+      ولي الأمر لا يرى أي نتيجة لمجرد أنها محفوظة.
+      يجب أن يكون الاختبار نفسه مفعلاً من الإدارة:
+      visibleToParent === true
+    */
+
+    const testIds=[
+        ...new Set(
+            allResults
+                .map(result=>
+                    String(result.testId||"")
+                )
+                .filter(Boolean)
+        )
+    ];
+
+
+    if(!testIds.length){
+
+        currentResults=[];
+        return;
+    }
+
+
+    const testDocs=
+        await Promise.all(
+            testIds.map(testId=>
+                db
+                    .collection("tests")
+                    .doc(testId)
+                    .get()
+            )
+        );
+
+
+    const visibleTestIds=
+        new Set(
+            testDocs
+                .filter(testDoc=>
+                    testDoc.exists &&
+                    testDoc.data() &&
+                    testDoc.data().visibleToParent===true
+                )
+                .map(testDoc=>testDoc.id)
+        );
+
+
+    /*
+      الاختبار المخفي يظل محفوظاً في tests،
+      ودرجاته تظل محفوظة في grades،
+      لكنه لا يدخل إطلاقاً في بيانات ولي الأمر
+      أو الملخص أو الطباعة.
+    */
+
+    currentResults=
+        allResults.filter(result=>
+            visibleTestIds.has(
+                String(result.testId||"")
+            )
+        );
 
 
     /*
@@ -1106,7 +1171,6 @@ async function loadStudentResults(studentCode){
 
     });
 }
-
 
 /* =========================
    RENDER
@@ -1331,7 +1395,7 @@ function renderResults(){
             <div class="results-footer">
 
                 <span>
-                    جميع النتائج المسجلة للطالب
+                    النتائج المتاحة لولي الأمر
                 </span>
 
                 <span>
@@ -1388,8 +1452,7 @@ function buildResultsTable(){
 
             <div class="no-results">
 
-                لا توجد نتائج اختبارات
-                مسجلة للطالب حتى الآن.
+                لا توجد نتائج متاحة للعرض حاليًا.
 
             </div>
 
