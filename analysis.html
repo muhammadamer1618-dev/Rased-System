@@ -23,7 +23,7 @@ color:#1f2937
 }
 
 /* ================================
-   Header
+   HEADER
 ================================ */
 
 .header{
@@ -64,7 +64,7 @@ gap:7px
 }
 
 /* ================================
-   General
+   GENERAL
 ================================ */
 
 .container{
@@ -214,7 +214,7 @@ border-radius:10px
 }
 
 /* ================================
-   Selected test
+   SELECTED TEST
 ================================ */
 
 .selected-test{
@@ -229,7 +229,7 @@ font-size:13px
 }
 
 /* ================================
-   Main Statistics
+   MAIN STATISTICS
 ================================ */
 
 .stats{
@@ -276,7 +276,7 @@ color:#6f42c1
 }
 
 /* ================================
-   Level settings
+   LEVEL SETTINGS
 ================================ */
 
 .level-settings{
@@ -311,7 +311,7 @@ text-align:center
 }
 
 /* ================================
-   Levels
+   LEVEL CARDS
 ================================ */
 
 .levels{
@@ -378,7 +378,7 @@ color:#dc3545
 }
 
 /* ================================
-   Chart
+   CHART
 ================================ */
 
 .chart-container{
@@ -443,7 +443,7 @@ text-align:center
 }
 
 /* ================================
-   Student level lists
+   STUDENT LISTS
 ================================ */
 
 .lists{
@@ -508,7 +508,7 @@ white-space:nowrap
 }
 
 /* ================================
-   Table
+   TABLE
 ================================ */
 
 .table-wrap{
@@ -578,7 +578,7 @@ color:#374151
 }
 
 /* ================================
-   Print
+   PRINT HEADER / FOOTER
 ================================ */
 
 .print-header{
@@ -595,6 +595,10 @@ padding:15px;
 font-size:12px;
 color:#64748b
 }
+
+/* ================================
+   RESPONSIVE
+================================ */
 
 @media(max-width:900px){
 
@@ -641,19 +645,23 @@ width:40px
 }
 
 
-/* ================================
-   PRINT
-================================ */
+/* =========================================================
+   الطباعة A4 طولي
+========================================================= */
 
 @media print{
 
 @page{
-size:A4 landscape;
-margin:7mm
+size:A4 portrait;
+margin:8mm
 }
 
+html,
 body{
-background:white;
+width:100%;
+margin:0;
+padding:0;
+background:#fff;
 font-family:Tahoma,Arial,sans-serif
 }
 
@@ -666,108 +674,136 @@ display:none !important
 }
 
 .container{
+width:100%;
 max-width:none;
 margin:0;
 padding:0
 }
 
+/* رأس التقرير */
+
 .print-header{
 display:block;
 text-align:center;
-margin-bottom:8px
+margin:0 0 7px 0
 }
 
 .print-logo{
-width:58px;
-height:58px;
+width:52px;
+height:52px;
 object-fit:contain
 }
 
 .print-header h2{
-margin:2px 0;
-font-size:18px
+margin:1px 0;
+font-size:17px
 }
 
 .print-header h3{
-margin:2px 0;
-font-size:14px
+margin:2px 0 5px;
+font-size:13px
 }
 
 .print-meta{
 display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:4px;
-margin-top:7px
+grid-template-columns:repeat(2,1fr);
+gap:3px;
+margin-top:6px
 }
 
 .print-meta div{
-border:1px solid #999;
-padding:4px;
-font-size:9px
+border:1px solid #777;
+padding:4px 5px;
+font-size:8.5px;
+text-align:right
 }
 
+/* الأقسام */
+
 .box{
+width:100%;
 box-shadow:none;
 border:0;
-margin-bottom:7px
+border-radius:0;
+margin:0 0 7px 0;
+overflow:visible
 }
 
 .box-title{
-font-size:11px;
-padding:5px;
+font-size:10px;
+padding:5px 7px;
 background:#eee !important;
 color:#000 !important;
-border:1px solid #aaa
+border:1px solid #888;
+border-bottom:0;
+border-radius:0
 }
 
 .box-body{
-padding:5px 0
+padding:4px 0
 }
 
+/* المؤشرات */
+
 .stats{
-grid-template-columns:repeat(8,1fr);
+display:grid;
+grid-template-columns:repeat(4,1fr);
 gap:3px;
-margin-bottom:5px
+margin:0 0 4px 0
 }
 
 .stat{
 padding:4px 2px;
-border-radius:0
+border:1px solid #888;
+border-radius:0;
+min-height:42px
 }
 
-.stat-number{
+.stat-number,
+.stat.gold .stat-number,
+.stat.green .stat-number,
+.stat.red .stat-number,
+.stat.purple .stat-number{
 font-size:13px !important;
 color:#000 !important
 }
 
 .stat-label{
-font-size:7px
+font-size:7px;
+color:#000
 }
 
+/* المستويات */
+
 .levels{
-grid-template-columns:repeat(4,1fr);
+display:grid;
+grid-template-columns:repeat(2,1fr);
 gap:4px;
-margin-top:4px
+margin-top:3px
 }
 
 .level-card{
-padding:4px;
+padding:5px 3px;
 border-radius:0;
-border:1px solid #777
+border:1px solid #777 !important
 }
 
 .level-title{
-font-size:8px
+font-size:8.5px
 }
 
 .level-number{
 font-size:15px !important;
-margin:2px
+margin:2px 0;
+color:#000 !important
 }
 
 .level-percent{
-font-size:7px
+font-size:7px;
+color:#000
 }
+
+/* الرسم البياني */
 
 .chart-container{
 padding:0
@@ -775,30 +811,61 @@ padding:0
 
 .chart{
 height:125px;
-padding:5px 10px 0;
-gap:25px
+gap:18px;
+padding:5px 5px 0;
+border-bottom:1px solid #777
 }
 
 .bar-wrap{
-width:75px
+width:60px
 }
 
 .bar{
-width:35px
+width:30px
 }
 
-.bar-label,
 .bar-value{
-font-size:7px
+font-size:7px;
+margin-bottom:2px
 }
+
+.bar-label{
+font-size:6.5px;
+height:22px
+}
+
+/*
+نحافظ على الألوان في الرسم
+حتى عند اختيار Background graphics
+*/
+
+.bar.high{
+background:#198754 !important
+}
+
+.bar.medium{
+background:#174f7c !important
+}
+
+.bar.care{
+background:#f0ad4e !important
+}
+
+.bar.case{
+background:#dc3545 !important
+}
+
+/* قوائم الطلاب */
 
 .lists{
-grid-template-columns:repeat(4,1fr);
+display:grid;
+grid-template-columns:repeat(2,1fr);
 gap:4px
 }
 
 .list-card{
-border-radius:0
+border-radius:0;
+border:1px solid #777
 }
 
 .list-title{
@@ -814,17 +881,36 @@ padding:2px
 
 .student-chip{
 padding:2px 4px;
-font-size:7px
+font-size:7px;
+gap:3px
+}
+
+.student-score{
+font-size:6.5px
+}
+
+/* الجدول */
+
+.table-wrap{
+overflow:visible;
+border-radius:0;
+border:0
 }
 
 table{
-min-width:0
+width:100%;
+min-width:0 !important;
+table-layout:fixed;
+border-collapse:collapse
 }
 
-th,td{
-padding:3px;
-font-size:7px;
-border:1px solid #777
+th,
+td{
+padding:3px 2px;
+font-size:6.8px;
+border:1px solid #777;
+word-break:normal;
+overflow-wrap:anywhere
 }
 
 th{
@@ -832,24 +918,84 @@ background:#eee !important;
 color:#000 !important
 }
 
+/* ترتيب عرض الأعمدة في الورقة الطولية */
+
+th:nth-child(1),
+td:nth-child(1){
+width:5%
+}
+
+th:nth-child(2),
+td:nth-child(2){
+width:13%
+}
+
+th:nth-child(3),
+td:nth-child(3){
+width:30%
+}
+
+th:nth-child(4),
+td:nth-child(4){
+width:11%
+}
+
+th:nth-child(5),
+td:nth-child(5){
+width:14%
+}
+
+th:nth-child(6),
+td:nth-child(6){
+width:11%
+}
+
+th:nth-child(7),
+td:nth-child(7){
+width:16%
+}
+
+.student-name{
+text-align:right
+}
+
 .badge{
 background:transparent !important;
 color:#000 !important;
 padding:0;
-font-size:7px
+font-size:6.5px;
+white-space:normal
 }
+
+/* منع قطع الكروت بشكل سيئ */
+
+.stat,
+.level-card,
+.list-card,
+.student-chip,
+tr{
+break-inside:avoid;
+page-break-inside:avoid
+}
+
+/* الفوتر */
 
 .print-footer{
 display:flex;
 justify-content:space-between;
-margin-top:8px;
-font-size:8px;
+align-items:center;
+margin-top:7px;
+padding-top:4px;
+border-top:1px solid #777;
+font-size:7.5px;
 font-weight:bold
 }
 
 }
+
 </style>
 </head>
+
 
 <body>
 
@@ -878,9 +1024,9 @@ font-weight:bold
 
 <div class="container">
 
-<!-- ===============================
-     PRINT HEADER
-================================ -->
+<!-- =========================================
+     رأس الطباعة
+========================================= -->
 
 <div class="print-header">
 
@@ -908,7 +1054,7 @@ font-weight:bold
 </div>
 
 <div>
-<strong>التاريخ:</strong>
+<strong>تاريخ الاختبار:</strong>
 <span id="printDate">-</span>
 </div>
 
@@ -917,9 +1063,9 @@ font-weight:bold
 </div>
 
 
-<!-- ===============================
-     SELECTION
-================================ -->
+<!-- =========================================
+     الاختيار
+========================================= -->
 
 <div class="box selection-box">
 
@@ -1003,9 +1149,9 @@ font-weight:bold
 </div>
 
 
-<!-- ===============================
-     LEVEL SETTINGS
-================================ -->
+<!-- =========================================
+     إعداد مستويات التحليل
+========================================= -->
 
 <div class="box level-control-box">
 
@@ -1130,9 +1276,9 @@ onclick="resetLevels()">
 </div>
 
 
-<!-- ===============================
-     ANALYSIS AREA
-================================ -->
+<!-- =========================================
+     منطقة التحليل
+========================================= -->
 
 <div id="analysisArea">
 
@@ -1449,7 +1595,7 @@ return true;
 
 
 /* =========================================
-   LOAD TEACHER IF NEEDED
+   LOAD TEACHER
 ========================================= */
 
 async function loadTeacher(){
@@ -1628,13 +1774,6 @@ allowedIds.has(subject.id)
 }
 
 
-/*
-في حالة وجود إسناد قديم واسم المادة موجود
-لكن المادة لم تعد موجودة في subjects
-نتجاهله.
-*/
-
-
 allowedSubjects.forEach(
 subject=>{
 
@@ -1687,16 +1826,17 @@ selectedSection="";
 selectedTest=null;
 
 
-fillGrades();
+await fillGrades();
+
 
 clearSelect(
-sectionSelect,
+document.getElementById("sectionSelect"),
 "-- اختر الشعبة --"
 );
 
 
 clearSelect(
-testSelect,
+document.getElementById("testSelect"),
 "-- اختر الاختبار --"
 );
 
@@ -1754,11 +1894,6 @@ a=>a.grade
 }
 
 else{
-
-/*
-للإدارة نحدد الصفوف التي توجد لها اختبارات
-لهذه المادة.
-*/
 
 const snap=
 
@@ -1848,7 +1983,9 @@ option
 async function gradeChanged(){
 
 selectedGrade=
-gradeSelect.value;
+document.getElementById(
+"gradeSelect"
+).value;
 
 
 selectedSection="";
@@ -1859,7 +1996,7 @@ await fillSections();
 
 
 clearSelect(
-testSelect,
+document.getElementById("testSelect"),
 "-- اختر الاختبار --"
 );
 
@@ -2017,7 +2154,10 @@ option
 async function sectionChanged(){
 
 selectedSection=
-sectionSelect.value;
+document.getElementById(
+"sectionSelect"
+).value;
+
 
 selectedTest=null;
 
@@ -2038,7 +2178,7 @@ await loadTests();
 else{
 
 clearSelect(
-testSelect,
+document.getElementById("testSelect"),
 "-- اختر الاختبار --"
 );
 
@@ -2187,7 +2327,9 @@ option
 async function testChanged(){
 
 const id=
-testSelect.value;
+document.getElementById(
+"testSelect"
+).value;
 
 
 selectedTest=
@@ -2235,10 +2377,6 @@ area.innerHTML=`
 
 `;
 
-
-/*
-تحميل طلاب الفصل
-*/
 
 const studentSnap=
 
@@ -2291,10 +2429,6 @@ String(b.name||""),
 
 );
 
-
-/*
-تحميل درجات الاختبار
-*/
 
 const gradesSnap=
 
@@ -2352,37 +2486,29 @@ function getLevelSettings(){
 
 let high=
 Number(
-highMin.value
+document.getElementById("highMin").value
 );
 
 
 let medium=
 Number(
-mediumMin.value
+document.getElementById("mediumMin").value
 );
 
 
 let care=
 Number(
-careMin.value
+document.getElementById("careMin").value
 );
 
 
-if(
-Number.isNaN(high)
-)
+if(Number.isNaN(high))
 high=85;
 
-
-if(
-Number.isNaN(medium)
-)
+if(Number.isNaN(medium))
 medium=70;
 
-
-if(
-Number.isNaN(care)
-)
+if(Number.isNaN(care))
 care=50;
 
 
@@ -2407,10 +2533,6 @@ Math.min(100,care)
 );
 
 
-/*
-منع تداخل المستويات
-*/
-
 if(
 medium>=high
 ){
@@ -2421,8 +2543,9 @@ Math.max(
 high-1
 );
 
-mediumMin.value=
-medium;
+document.getElementById(
+"mediumMin"
+).value=medium;
 
 }
 
@@ -2437,23 +2560,21 @@ Math.max(
 medium-1
 );
 
-careMin.value=
-care;
+document.getElementById(
+"careMin"
+).value=care;
 
 }
 
 
-highMin.value=
-high;
+document.getElementById(
+"highMin"
+).value=high;
 
-mediumMin.value=
-medium;
 
-careMin.value=
-care;
-
-caseMax.value=
-care;
+document.getElementById(
+"caseMax"
+).value=care;
 
 
 return{
@@ -2467,10 +2588,24 @@ care
 
 function resetLevels(){
 
-highMin.value=85;
-mediumMin.value=70;
-careMin.value=50;
-caseMax.value=50;
+document.getElementById(
+"highMin"
+).value=85;
+
+
+document.getElementById(
+"mediumMin"
+).value=70;
+
+
+document.getElementById(
+"careMin"
+).value=50;
+
+
+document.getElementById(
+"caseMax"
+).value=50;
 
 
 reanalyze();
@@ -2695,11 +2830,6 @@ Math.min(...marks)
 null;
 
 
-/*
-نسبة النجاح = 50% فأعلى
-بغض النظر عن حدود التصنيف.
-*/
-
 const passed=
 present.filter(
 x=>x.percentage>=50
@@ -2728,13 +2858,29 @@ selectedTest.fullMark
 );
 
 
+const averagePercent=
+present.length && fullMark>0
+?
+(average/fullMark)*100
+:
+0;
+
+
 const levels=
 getLevelSettings();
 
 
-const html=`
+const area=
+document.getElementById(
+"analysisArea"
+);
 
-<!-- إحصائيات عامة -->
+
+area.innerHTML=`
+
+<!-- =====================================
+     المؤشرات العامة
+===================================== -->
 
 <div class="box">
 
@@ -2743,6 +2889,7 @@ const html=`
 </div>
 
 <div class="box-body">
+
 
 <div class="stats">
 
@@ -2797,6 +2944,10 @@ ${notRecorded.length}
 
 </div>
 
+</div>
+
+
+<div class="stats">
 
 <div class="stat">
 
@@ -2852,12 +3003,12 @@ ${successRate.toFixed(1)}%
 </div>
 
 
-<div class="stats" style="margin-top:10px">
+<div class="stats">
 
 <div class="stat">
 
 <div class="stat-number">
-${fullMark}
+${formatNumber(fullMark)}
 </div>
 
 <div class="stat-label">
@@ -2883,7 +3034,7 @@ ${attendanceRate.toFixed(1)}%
 <div class="stat">
 
 <div class="stat-number">
-${present.length ? ((average/fullMark)*100).toFixed(1) : "0.0"}%
+${averagePercent.toFixed(1)}%
 </div>
 
 <div class="stat-label">
@@ -2911,7 +3062,9 @@ ${passed}
 </div>
 
 
-<!-- المستويات -->
+<!-- =====================================
+     المستويات
+===================================== -->
 
 <div class="box">
 
@@ -2961,7 +3114,9 @@ present.length,
 </div>
 
 
-<!-- الرسم البياني -->
+<!-- =====================================
+     الرسم البياني
+===================================== -->
 
 <div class="box">
 
@@ -2982,7 +3137,9 @@ cases.length
 </div>
 
 
-<!-- أسماء الطلاب -->
+<!-- =====================================
+     الطلاب حسب المستوى
+===================================== -->
 
 <div class="box">
 
@@ -3024,7 +3181,9 @@ cases,
 </div>
 
 
-<!-- الجدول التفصيلي -->
+<!-- =====================================
+     التفاصيل
+===================================== -->
 
 <div class="box">
 
@@ -3040,10 +3199,6 @@ ${buildDetailsTable()}
 </div>
 
 `;
-
-
-analysisArea.innerHTML=
-html;
 
 
 updatePrintData();
@@ -3087,8 +3242,12 @@ ${count}
 ${percent.toFixed(1)}%
 </div>
 
-<div class="level-percent" style="margin-top:4px">
+<div
+class="level-percent"
+style="margin-top:4px">
+
 ${range}
+
 </div>
 
 </div>
@@ -3256,7 +3415,7 @@ font-size:11px
 else{
 
 content=
-list
+[...list]
 .sort(
 (a,b)=>
 b.percentage-
@@ -3267,9 +3426,11 @@ a.percentage
 <div class="student-chip">
 
 <span>
+
 ${escapeHtml(
 item.student.name
 )}
+
 </span>
 
 <span class="student-score">
@@ -3337,8 +3498,7 @@ return`
 let rows="";
 
 
-analyzedStudents
-.forEach(
+analyzedStudents.forEach(
 (item,index)=>{
 
 let attendanceText="";
@@ -3732,6 +3892,7 @@ location.href=
 "teacher.html";
 
 }
+
 else{
 
 location.href=
@@ -3756,10 +3917,6 @@ return;
 
 }
 
-
-/*
-المعلم يجب أن يكون الإسناد ضمن صلاحياته
-*/
 
 if(isTeacher){
 
@@ -3788,7 +3945,9 @@ return;
 
 
 const subjectExists=
-[...subjectSelect.options]
+[...document.getElementById(
+"subjectSelect"
+).options]
 .some(
 option=>
 option.value===
@@ -3803,7 +3962,9 @@ return;
 }
 
 
-subjectSelect.value=
+document.getElementById(
+"subjectSelect"
+).value=
 incoming.subjectId;
 
 
@@ -3825,6 +3986,12 @@ await fillGrades();
 
 
 if(incoming.grade){
+
+const gradeSelect=
+document.getElementById(
+"gradeSelect"
+);
+
 
 const exists=
 [...gradeSelect.options]
@@ -3854,6 +4021,12 @@ if(
 incoming.section &&
 selectedGrade
 ){
+
+const sectionSelect=
+document.getElementById(
+"sectionSelect"
+);
+
 
 const exists=
 [...sectionSelect.options]
@@ -3893,7 +4066,9 @@ incoming.testId
 
 if(exists){
 
-testSelect.value=
+document.getElementById(
+"testSelect"
+).value=
 incoming.testId;
 
 
