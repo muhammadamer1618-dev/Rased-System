@@ -2,315 +2,2987 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<title>لوحة المعلم - مدارس الفلاح الأهلية</title>
-<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
-<button class="btn-secondary" onclick="location='change_password.html'">
-  تغيير كلمة المرور
-</button>
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+
+<title>راصد - صفحة المعلم</title>
+
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 
 <style>
-body{font-family:Calibri;background:#eef2f7;margin:0}
-.header{
-  background:#1976d2;color:#fff;text-align:center;padding:15px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.2)
-}
-.header h1{margin:0;font-size:26px;font-weight:bold}
-.header h2{margin:5px 0 0;font-size:18px;color:#ffeb3b}
+*{box-sizing:border-box}
 
-.container{max-width:1050px;margin:25px auto;padding:10px}
+body{
+margin:0;
+font-family:Tahoma,Arial,sans-serif;
+background:#f4f7fb;
+color:#1f2937
+}
+
+.header{
+position:relative;
+background:linear-gradient(135deg,#0c2745,#174f7c);
+color:white;
+text-align:center;
+padding:18px 15px;
+box-shadow:0 4px 15px rgba(0,0,0,.15)
+}
+
+.logo{
+width:78px;
+height:78px;
+object-fit:contain;
+background:white;
+border-radius:50%;
+padding:5px
+}
+
+.header h1{
+margin:6px 0 3px;
+font-size:25px
+}
+
+.header p{
+margin:0;
+color:#f4d77b;
+font-weight:bold
+}
+
+.logout{
+position:absolute;
+left:15px;
+top:15px
+}
+
+.container{
+max-width:1250px;
+margin:20px auto;
+padding:0 12px 40px
+}
+
+.welcome{
+background:white;
+border-radius:14px;
+padding:16px 18px;
+margin-bottom:16px;
+box-shadow:0 3px 12px rgba(0,0,0,.08);
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:10px;
+flex-wrap:wrap
+}
+
+.teacher-name{
+font-size:19px;
+font-weight:bold;
+color:#174f7c
+}
 
 .box{
-  background:#fff;border-radius:14px;padding:20px;margin-bottom:18px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.12)
+background:white;
+border-radius:15px;
+margin-bottom:18px;
+box-shadow:0 3px 14px rgba(0,0,0,.08);
+overflow:hidden
 }
 
-h3{
-  margin-top:0;color:#1976d2;font-size:20px;font-weight:bold;
-  border-right:4px solid #1976d2;padding-right:8px
+.box-title{
+background:#eef4fa;
+border-bottom:1px solid #dbe5ef;
+padding:13px 18px;
+color:#123c63;
+font-size:18px;
+font-weight:bold
 }
 
-.label-title{
-  font-weight:bold;font-size:15px;margin-bottom:4px;color:#444
+.box-body{
+padding:18px
 }
 
-.info-row{display:flex;gap:15px;flex-wrap:wrap}
-.info-item{
-  flex:1;
-  background:#fff;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #c7d6f5;
-  box-shadow:0 1px 4px rgba(0,0,0,0.08);
+.row{
+display:flex;
+flex-wrap:wrap;
+gap:12px
 }
-.info-item span{font-weight:bold;color:#1976d2}
+
+.col{
+flex:1 1 220px
+}
+
+label{
+display:block;
+font-size:13px;
+font-weight:bold;
+margin-bottom:6px
+}
 
 select,input{
-  width:100%;
-  padding:9px;
-  border-radius:7px;
-  border:1px solid #999;
-  font-size:15px;
-  margin-top:6px
+display:block;
+width:100%;
+height:44px;
+padding:8px 12px;
+border:1px solid #b9c5d1;
+border-radius:8px;
+background:#fff;
+color:#111;
+font-family:Tahoma,Arial,sans-serif;
+font-size:14px
+}
+
+select{
+direction:rtl;
+text-align:right;
+text-align-last:right
+}
+
+select option{
+background:white;
+color:#111;
+direction:rtl
+}
+
+select:focus,input:focus{
+outline:none;
+border-color:#174f7c;
+box-shadow:0 0 0 2px rgba(23,79,124,.12)
 }
 
 button{
-  padding:10px 15px;border:none;border-radius:8px;font-size:15px;
-  cursor:pointer;font-weight:bold
+border:0;
+border-radius:8px;
+padding:10px 15px;
+font-family:Tahoma,Arial,sans-serif;
+font-size:13px;
+font-weight:bold;
+cursor:pointer
 }
-.btn-primary{background:#1976d2;color:#fff}
-.btn-secondary{background:#757575;color:#fff}
 
-table{width:100%;border-collapse:collapse;margin-top:12px;font-size:14px}
-th,td{border:1px solid #ccc;text-align:center;padding:6px}
-th{background:#1976d2;color:#fff;font-size:15px}
-tr:nth-child(even){background:#f9f9f9}
+button:hover{opacity:.9}
+
+.btn-primary{background:#174f7c;color:white}
+.btn-success{background:#198754;color:white}
+.btn-danger{background:#dc3545;color:white}
+.btn-warning{background:#f0ad4e;color:#222}
+.btn-light{background:#e9eef4;color:#263747}
+.btn-purple{background:#6f42c1;color:white}
+.btn-whatsapp{background:#198754;color:white}
+.btn-gold{background:#c69a2b;color:white}
+
+.actions{
+display:flex;
+flex-wrap:wrap;
+gap:8px;
+margin-top:12px
+}
+
+/* الإسنادات */
+
+.assignment-cards{
+display:flex;
+flex-wrap:wrap;
+gap:7px;
+margin-top:10px
+}
+
+.assignment-card{
+border:1px solid #cbd5e1;
+background:white;
+border-radius:7px;
+padding:8px 12px;
+font-size:12px;
+cursor:pointer;
+font-weight:bold;
+color:#173a5e;
+transition:.15s
+}
+
+.assignment-card:hover{
+background:#eef5fb;
+border-color:#174f7c
+}
+
+.assignment-card.active{
+background:#174f7c;
+border-color:#174f7c;
+color:white
+}
+
+.selected-info{
+margin-top:12px;
+background:#e7f1ff;
+color:#084298;
+border-radius:8px;
+padding:10px 12px;
+font-size:13px;
+font-weight:bold
+}
+
+.test-info{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:10px;
+margin-top:15px
+}
+
+.info-card{
+background:#f8fafc;
+border:1px solid #e2e8f0;
+border-radius:9px;
+padding:10px;
+text-align:center
+}
+
+.info-card strong{
+display:block;
+color:#174f7c;
+margin-bottom:5px
+}
+
+.table-wrap{
+overflow:auto;
+margin-top:15px;
+border:1px solid #e1e7ee;
+border-radius:10px
+}
+
+table{
+width:100%;
+border-collapse:collapse;
+min-width:850px
+}
+
+th{
+background:#174f7c;
+color:white;
+position:sticky;
+top:0;
+z-index:2
+}
+
+th,td{
+padding:9px 7px;
+border-bottom:1px solid #e5e7eb;
+text-align:center;
+font-size:13px
+}
+
+tbody tr:nth-child(even){
+background:#f8fafc
+}
+
+.student-name{
+font-weight:bold;
+text-align:right
+}
+
+.attendance-select{
+min-width:95px;
+height:38px
+}
+
+.mark-input{
+width:90px;
+height:38px;
+margin:auto;
+text-align:center;
+font-weight:bold
+}
+
+.saved{
+color:#198754;
+font-weight:bold
+}
+
+.not-saved{
+color:#9ca3af
+}
+
+.absent-row{
+background:#fff2f2 !important
+}
+
+.absent-text{
+color:#dc3545;
+font-weight:bold
+}
+
+.summary{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:10px;
+margin:15px 0
+}
+
+.summary-card{
+background:white;
+border:1px solid #e2e8f0;
+border-radius:10px;
+padding:12px;
+text-align:center
+}
+
+.summary-number{
+font-size:22px;
+font-weight:bold;
+color:#174f7c
+}
+
+.summary-label{
+font-size:11px;
+color:#64748b;
+margin-top:4px
+}
+
+.empty{
+padding:30px 15px;
+text-align:center;
+color:#64748b;
+background:#fafafa;
+border-radius:10px
+}
+
+.note{
+background:#fff8db;
+color:#715d00;
+padding:10px;
+border-radius:8px;
+font-size:12px;
+line-height:1.7
+}
+
+.footer{
+text-align:center;
+padding:15px;
+font-size:12px;
+color:#64748b
+}
+
+.print-header{
+display:none
+}
+
+@media(max-width:850px){
+
+.test-info{
+grid-template-columns:repeat(2,1fr)
+}
+
+.summary{
+grid-template-columns:repeat(2,1fr)
+}
+
+}
+
+@media(max-width:600px){
+
+.logout{
+position:static;
+margin-top:10px
+}
+
+.header h1{
+font-size:21px
+}
+
+.assignment-card{
+font-size:11px;
+padding:7px 9px
+}
+
+}
+
+
+/* ==========================
+   الطباعة
+========================== */
+
+@media print{
+
+@page{
+size:A4 landscape;
+margin:8mm
+}
+
+body{
+background:white;
+font-family:Tahoma,Arial,sans-serif
+}
+
+.header,
+.welcome,
+.selection-box,
+.screen-actions,
+.footer,
+.whatsapp-col{
+display:none !important
+}
+
+.container{
+max-width:none;
+margin:0;
+padding:0
+}
+
+.box{
+box-shadow:none;
+border:0;
+margin:0
+}
+
+.box-title{
+display:none
+}
+
+.box-body{
+padding:0
+}
+
+.print-header{
+display:block;
+text-align:center;
+margin-bottom:12px
+}
+
+.print-logo{
+width:65px;
+height:65px;
+object-fit:contain
+}
+
+.print-header h2{
+margin:3px 0;
+font-size:19px
+}
+
+.print-header h3{
+margin:3px 0;
+font-size:15px
+}
+
+.test-info{
+grid-template-columns:repeat(4,1fr);
+margin:8px 0
+}
+
+.info-card{
+padding:6px;
+font-size:11px
+}
+
+.summary{
+grid-template-columns:repeat(5,1fr);
+margin:8px 0
+}
+
+.summary-card{
+padding:6px
+}
+
+.summary-number{
+font-size:16px
+}
+
+table{
+min-width:0;
+font-size:10px
+}
+
+th,td{
+padding:5px;
+font-size:10px;
+border:1px solid #777
+}
+
+th{
+background:#eee !important;
+color:#000 !important
+}
+
+.mark-input,
+.attendance-select{
+border:0;
+background:transparent;
+appearance:none;
+-webkit-appearance:none;
+height:auto;
+padding:0;
+font-size:10px
+}
+
+.screen-only{
+display:none !important
+}
+
+}
 </style>
 </head>
 
 <body>
 
-<div class="header">
-  <h1>مدارس الفلاح الأهلية</h1>
-  <h2>لوحة المعلم</h2>
-</div>
+<header class="header">
+
+<img src="logo.jpeg" class="logo">
+
+<h1>مدارس الفلاح الأهلية</h1>
+
+<p>نظام راصد - صفحة المعلم</p>
+
+<button class="btn-danger logout" onclick="logout()">
+تسجيل الخروج
+</button>
+
+</header>
+
 
 <div class="container">
 
-  <!-- بيانات المعلم -->
-  <div class="box">
-    <h3>بيانات المعلم والإسناد</h3>
+<div class="welcome">
 
-    <div class="info-row">
-      <div class="info-item">
-        <div class="label-title">اسم المعلم</div>
-        <span id="t_name">—</span>
-      </div>
+<div>
+<div>مرحبًا بك</div>
+<div class="teacher-name" id="teacherName">
+جاري تحميل البيانات...
+</div>
+</div>
 
-      <div class="info-item">
-        <div class="label-title">اسم المستخدم</div>
-        <span id="t_email">—</span>
-      </div>
+<div class="actions" style="margin:0">
 
-      <div class="info-item">
-        <div class="label-title">عدد الفصول المسندة</div>
-        <span id="t_assign_count">—</span>
-      </div>
-    </div>
-  </div>
+<button class="btn-purple" onclick="openAnalysis()">
+📊 تحليل النتائج
+</button>
 
-  <!-- اختيار الصف والشعبة والمادة -->
-  <div class="box">
-    <h3>اختيار الصف والشعبة والمادة</h3>
+<button class="btn-gold" onclick="printReport()">
+🖨️ طباعة / PDF
+</button>
 
-    <div class="info-row">
-      <div class="info-item">
-        <div class="label-title">الصف</div>
-        <select id="sel_grade"></select>
-      </div>
-
-      <div class="info-item">
-        <div class="label-title">الشعبة</div>
-        <select id="sel_section"></select>
-      </div>
-
-      <div class="info-item">
-        <div class="label-title">المادة</div>
-        <select id="sel_subject"></select>
-      </div>
-
-      <div class="info-item" style="display:flex;align-items:flex-end">
-        <button class="btn-primary" style="width:100%" onclick="loadStudentsForTeacher()">تحميل الطلاب</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- رصد الدرجات -->
-  <div class="box">
-    <h3>رصد درجات المادة المختارة</h3>
-
-    <button class="btn-secondary" onclick="window.print()">طباعة / PDF</button>
-
-    <table id="marks_table" style="display:none">
-      <thead>
-        <tr>
-          <th>الكود</th>
-          <th>اسم الطالب</th>
-          <th>الدرجة</th>
-        </tr>
-      </thead>
-      <tbody id="marks_body"></tbody>
-    </table>
-
-    <button id="save_btn" class="btn-primary" style="margin-top:12px;display:none" onclick="saveTeacherMarks()">حفظ الدرجات</button>
-  </div>
-
-  <div class="box">
-    <button class="btn-secondary" onclick="location='index.html'">تسجيل الخروج</button>
-  </div>
+</div>
 
 </div>
 
 
+<!-- اختيار المادة والفصل والاختبار -->
+
+<div class="box selection-box">
+
+<div class="box-title">
+📚 اختر المادة والفصل والاختبار
+</div>
+
+<div class="box-body">
+
+<div class="note">
+ستظهر هنا فقط المواد والفصول المسندة لك من الإدارة.
+</div>
+
+<div id="assignmentCards" class="assignment-cards"></div>
+
+<div id="selectedAssignmentInfo" class="selected-info" style="display:none"></div>
+
+<div class="row" style="margin-top:15px">
+
+<div class="col">
+
+<label>المادة</label>
+
+<select id="subjectSelect" onchange="subjectChanged()">
+<option value="">-- اختر المادة --</option>
+</select>
+
+</div>
+
+<div class="col">
+
+<label>الصف</label>
+
+<select id="gradeSelect" onchange="gradeChanged()">
+<option value="">-- اختر الصف --</option>
+</select>
+
+</div>
+
+<div class="col">
+
+<label>الشعبة</label>
+
+<select id="sectionSelect" onchange="classChanged()">
+<option value="">-- اختر الشعبة --</option>
+</select>
+
+</div>
+
+<div class="col">
+
+<label>الاختبار</label>
+
+<select id="testSelect" onchange="testChanged()">
+<option value="">-- اختر الاختبار --</option>
+</select>
+
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<!-- الطلاب -->
+
+<div class="box">
+
+<div class="box-title">
+📝 رصد الحضور والدرجات
+</div>
+
+<div class="box-body">
+
+<!-- للطباعة -->
+
+<div class="print-header">
+
+<img src="logo.jpeg" class="print-logo">
+
+<h2>مدارس الفلاح الأهلية</h2>
+
+<h3>متابعة درجات الطلاب</h3>
+
+</div>
+
+
+<div id="testDetails" style="display:none">
+
+<div class="test-info">
+
+<div class="info-card">
+<strong>المعلم</strong>
+<span id="detailTeacher">-</span>
+</div>
+
+<div class="info-card">
+<strong>المادة</strong>
+<span id="detailSubject">-</span>
+</div>
+
+<div class="info-card">
+<strong>الفصل</strong>
+<span id="detailClass">-</span>
+</div>
+
+<div class="info-card">
+<strong>الاختبار</strong>
+<span id="detailTest">-</span>
+</div>
+
+</div>
+
+
+<div class="test-info">
+
+<div class="info-card">
+<strong>تاريخ الاختبار</strong>
+<span id="detailDate">-</span>
+</div>
+
+<div class="info-card">
+<strong>الدرجة النهائية</strong>
+<span id="detailFullMark">-</span>
+</div>
+
+<div class="info-card">
+<strong>عدد الطلاب</strong>
+<span id="detailStudents">0</span>
+</div>
+
+<div class="info-card">
+<strong>تاريخ الطباعة</strong>
+<span id="detailPrintDate">-</span>
+</div>
+
+</div>
+
+
+<div class="summary">
+
+<div class="summary-card">
+<div class="summary-number" id="sumStudents">0</div>
+<div class="summary-label">الطلاب</div>
+</div>
+
+<div class="summary-card">
+<div class="summary-number" id="sumPresent">0</div>
+<div class="summary-label">حاضر</div>
+</div>
+
+<div class="summary-card">
+<div class="summary-number" id="sumAbsent">0</div>
+<div class="summary-label">غائب</div>
+</div>
+
+<div class="summary-card">
+<div class="summary-number" id="sumEntered">0</div>
+<div class="summary-label">تم رصد الدرجة</div>
+</div>
+
+<div class="summary-card">
+<div class="summary-number" id="sumAverage">-</div>
+<div class="summary-label">متوسط الدرجات</div>
+</div>
+
+</div>
+
+
+<div class="actions screen-actions">
+
+<button class="btn-success" onclick="setAllAttendance('present')">
+✓ الجميع حاضر
+</button>
+
+<button class="btn-danger" onclick="setAllAttendance('absent')">
+✕ الجميع غائب
+</button>
+
+<button class="btn-primary" onclick="saveAllGrades()">
+💾 حفظ الجميع
+</button>
+
+<button class="btn-purple" onclick="openAnalysis()">
+📊 تحليل النتائج
+</button>
+
+<button class="btn-gold" onclick="printReport()">
+🖨️ طباعة / PDF
+</button>
+
+</div>
+
+</div>
+
+
+<div id="studentsArea">
+
+<div class="empty">
+اختر المادة والفصل والاختبار لعرض الطلاب.
+</div>
+
+</div>
+
+</div>
+</div>
+
+
+<div class="footer">
+تصميم محمد عامر أحمد - نظام راصد 2026
+</div>
+
+</div>
+
 
 <script>
-var firebaseConfig={
-  apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
-  authDomain:"results2026-7c0dd.firebaseapp.com",
-  projectId:"results2026-7c0dd",
-  storageBucket:"results2026-7c0dd.firebasestorage.app",
-  messagingSenderId:"241421115694",
-  appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
+
+/* ==============================
+   Firebase
+============================== */
+
+const firebaseConfig={
+apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+authDomain:"results2026-7c0dd.firebaseapp.com",
+projectId:"results2026-7c0dd",
+storageBucket:"results2026-7c0dd.firebasestorage.app",
+messagingSenderId:"241421115694",
+appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
 };
+
 firebase.initializeApp(firebaseConfig);
-var db=firebase.firestore();
 
-let currentEmail="";
+const db=firebase.firestore();
+
+
+/* ==============================
+   Variables
+============================== */
+
+const gradeOrder=[
+"1 ابتدائي",
+"2 ابتدائي",
+"3 ابتدائي",
+"4 ابتدائي",
+"5 ابتدائي",
+"6 ابتدائي",
+"1 متوسط",
+"2 متوسط",
+"3 متوسط",
+"1 ثانوي",
+"2 ثانوي",
+"3 ثانوي"
+];
+
+const sectionOrder=["أ","ب","ج","د"];
+
+let currentUsername="";
+let currentTeacher=null;
+
 let assignments=[];
+let tests=[];
+let currentStudents=[];
+let savedGrades={};
 
-function ensureTeacherGuard(){
-  let r=localStorage.getItem("currentUserRole")||"";
-  if(r!=="teacher"){
-    alert("هذه الصفحة للمعلمين فقط");
-    location="index.html";
-  }
-  currentEmail=localStorage.getItem("currentUserEmail")||"";
+let selectedSubjectId="";
+let selectedSubjectName="";
+let selectedGrade="";
+let selectedSection="";
+let selectedTest=null;
+
+
+/* ==============================
+   Helpers
+============================== */
+
+function escapeHtml(value){
+
+return String(value??"")
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
 }
 
-async function loadTeacherData(){
-  let doc=await db.collection("teachers").doc(currentEmail).get();
-  let t=doc.data()||{assignments:[]};
 
-  assignments=t.assignments||[];
+function unique(array){
 
-  document.getElementById("t_name").innerText=t.name||"—";
-  document.getElementById("t_email").innerText=t.email||"—";
-  document.getElementById("t_assign_count").innerText=assignments.length;
+return [...new Set(array)];
 
-  fillAssignmentSelectors();
 }
 
-function fillAssignmentSelectors(){
-  let gSel=document.getElementById("sel_grade");
-  let sSel=document.getElementById("sel_section");
-  let subSel=document.getElementById("sel_subject");
 
-  gSel.innerHTML="";
-  sSel.innerHTML="";
-  subSel.innerHTML="";
+function getTeacherAssignments(teacher){
 
-  [...new Set(assignments.map(a=>a.grade))].forEach(g=>{
-    let o=document.createElement("option");
-    o.value=g;o.textContent=g;
-    gSel.appendChild(o);
-  });
+if(
+teacher &&
+Array.isArray(teacher.assignments)
+){
 
-  [...new Set(assignments.map(a=>a.section))].forEach(s=>{
-    let o=document.createElement("option");
-    o.value=s;o.textContent=s;
-    sSel.appendChild(o);
-  });
+return teacher.assignments.filter(a=>
+a.subjectId &&
+a.grade &&
+a.section
+);
 
-  [...new Set(assignments.map(a=>a.subject))].forEach(sub=>{
-    let o=document.createElement("option");
-    o.value=sub;o.textContent=sub;
-    subSel.appendChild(o);
-  });
 }
 
-function calcRating(m,f){
-  let p=(m/f)*100;
-  if(p>=90)return"ممتاز";
-  if(p>=80)return"جيد جدًا";
-  if(p>=70)return"جيد";
-  if(p>=60)return"مقبول";
-  return"ضعيف";
+return [];
+
 }
 
-async function loadStudentsForTeacher(){
-  let grade=sel_grade.value;
-  let section=sel_section.value;
-  let subject=sel_subject.value;
 
-  let ok=assignments.find(a=>a.grade===grade && a.section===section && a.subject===subject);
-  if(!ok){ alert("هذه المادة غير مسندة لك"); return; }
+function todayArabic(){
 
-  let table=document.getElementById("marks_table");
-  let body=document.getElementById("marks_body");
-  let save=document.getElementById("save_btn");
+return new Date().toLocaleDateString(
+"ar-SA"
+);
 
-  body.innerHTML="";
-  table.style.display="none";
-  save.style.display="none";
-
-  let snap=await db.collection("students")
-    .where("grade","==",grade)
-    .where("section","==",section).get();
-
-  let students=[];
-  snap.forEach(d=>students.push(d.data()));
-  students.sort((a,b)=>a.name.localeCompare(b.name,"ar"));
-
-  let tmp=await db.collection("settings").doc("subjects_"+grade).get();
-  let fullMark=100;
-  if(tmp.exists){
-    let arr=tmp.data().subjects||[];
-    let x=arr.find(s=>s.name===subject);
-    if(x)fullMark=x.fullMark||100;
-  }
-
-  students.forEach(st=>{
-    let ex=st.subjects && st.subjects[subject];
-    let val=ex?ex.mark:"";
-
-    let tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>${st.code}</td>
-      <td>${st.name}</td>
-      <td>
-        <input type="number" class="t-mark"
-          data-code="${st.code}"
-          data-subject="${subject}"
-          data-full="${fullMark}"
-          style="width:80px" value="${val}">
-      </td>
-    `;
-    body.appendChild(tr);
-  });
-
-  table.style.display="table";
-  save.style.display="inline-block";
 }
 
-async function saveTeacherMarks(){
-  let inputs=document.querySelectorAll(".t-mark");
-  if(!inputs.length){ alert("لا توجد درجات"); return; }
 
-  let pack={};
+/* ==============================
+   حماية الصفحة
+============================== */
 
-  inputs.forEach(inp=>{
-    let code=inp.dataset.code;
-    let subject=inp.dataset.subject;
-    let full=+inp.dataset.full;
-    let mark=inp.value===""?0:+inp.value;
+function protectTeacher(){
 
-    if(!pack[code])pack[code]={};
-    pack[code][subject]={fullMark:full,mark:mark,rating:calcRating(mark,full)};
-  });
+const role=
+localStorage.getItem("currentUserRole")||"";
 
-  let batch=db.batch();
-  Object.keys(pack).forEach(code=>{
-    let ref=db.collection("students").doc(code);
-    batch.set(ref,{subjects:pack[code]},{merge:true});
-  });
+if(role!=="teacher"){
 
-  await batch.commit();
-  alert("تم حفظ الدرجات");
+alert("هذه الصفحة مخصصة للمعلمين");
+
+location.href="index.html";
+
+return false;
+
 }
 
-ensureTeacherGuard();
-loadTeacherData();
+return true;
+
+}
+
+
+/* ==============================
+   تحميل المعلم
+============================== */
+
+async function loadTeacher(){
+
+currentUsername=
+
+(
+localStorage.getItem("currentUserEmail") ||
+localStorage.getItem("currentUser") ||
+""
+)
+.trim()
+.toLowerCase();
+
+
+if(!currentUsername){
+
+alert("لم يتم العثور على بيانات تسجيل الدخول");
+
+logout();
+
+return;
+
+}
+
+
+const doc=
+
+await db
+.collection("teachers")
+.doc(currentUsername)
+.get();
+
+
+if(!doc.exists){
+
+alert(
+"لم يتم العثور على بيانات المعلم.\nراجع الإدارة."
+);
+
+return;
+
+}
+
+
+currentTeacher={
+email:doc.id,
+...doc.data()
+};
+
+
+document.getElementById(
+"teacherName"
+).textContent=
+
+currentTeacher.name ||
+localStorage.getItem("currentUserName") ||
+currentUsername;
+
+
+assignments=
+getTeacherAssignments(
+currentTeacher
+);
+
+
+renderAssignmentCards();
+
+fillSubjects();
+
+}
+
+
+/* ==============================
+   بطاقات الإسنادات
+============================== */
+
+function renderAssignmentCards(){
+
+const container=
+document.getElementById(
+"assignmentCards"
+);
+
+container.innerHTML="";
+
+
+if(!assignments.length){
+
+container.innerHTML=`
+
+<div class="empty" style="width:100%">
+
+لم يتم إسناد أي مادة أو فصل لك حتى الآن.
+<br>
+راجع إدارة المدرسة.
+
+</div>
+
+`;
+
+return;
+
+}
+
+
+/*
+تجميع المادة والفصل حتى لا نكررها
+*/
+
+const seen=new Set();
+
+
+const sorted=[...assignments].sort(
+(a,b)=>{
+
+const subjectCompare=
+String(a.subjectName||"")
+.localeCompare(
+String(b.subjectName||""),
+"ar"
+);
+
+if(subjectCompare!==0)
+return subjectCompare;
+
+
+const ga=
+gradeOrder.indexOf(a.grade);
+
+const gb=
+gradeOrder.indexOf(b.grade);
+
+if(ga!==gb)
+return ga-gb;
+
+
+return sectionOrder.indexOf(a.section)-
+sectionOrder.indexOf(b.section);
+
+});
+
+
+sorted.forEach(a=>{
+
+const key=
+a.subjectId+"|||"+
+a.grade+"|||"+
+a.section;
+
+
+if(seen.has(key))
+return;
+
+seen.add(key);
+
+
+const card=
+document.createElement("div");
+
+card.className=
+"assignment-card";
+
+card.dataset.subject=
+a.subjectId;
+
+card.dataset.grade=
+a.grade;
+
+card.dataset.section=
+a.section;
+
+
+card.innerHTML=
+
+escapeHtml(
+a.subjectName||"المادة"
+)+
+" - "+
+escapeHtml(a.grade)+
+" / "+
+escapeHtml(a.section);
+
+
+card.onclick=()=>{
+
+selectAssignment(
+a.subjectId,
+a.subjectName,
+a.grade,
+a.section,
+card
+);
+
+};
+
+
+container.appendChild(card);
+
+});
+
+}
+
+
+/* ==============================
+   اختيار سريع من البطاقة
+============================== */
+
+async function selectAssignment(
+subjectId,
+subjectName,
+grade,
+section,
+card
+){
+
+document
+.querySelectorAll(
+".assignment-card"
+)
+.forEach(c=>
+c.classList.remove("active")
+);
+
+
+if(card)
+card.classList.add("active");
+
+
+selectedSubjectId=
+subjectId;
+
+selectedSubjectName=
+subjectName;
+
+selectedGrade=
+grade;
+
+selectedSection=
+section;
+
+
+subjectSelect.value=
+subjectId;
+
+
+fillGrades();
+
+gradeSelect.value=
+grade;
+
+
+fillSections();
+
+sectionSelect.value=
+section;
+
+
+showSelectedAssignment();
+
+
+await loadTestsForClass();
+
+}
+
+
+/* ==============================
+   المواد
+============================== */
+
+function fillSubjects(){
+
+const select=
+document.getElementById(
+"subjectSelect"
+);
+
+select.innerHTML=
+
+'<option value="">-- اختر المادة --</option>';
+
+
+const map=new Map();
+
+
+assignments.forEach(a=>{
+
+if(
+a.subjectId &&
+!map.has(a.subjectId)
+){
+
+map.set(
+a.subjectId,
+a.subjectName||"مادة"
+);
+
+}
+
+});
+
+
+[...map.entries()]
+.sort(
+(a,b)=>
+String(a[1]).localeCompare(
+String(b[1]),
+"ar"
+)
+)
+.forEach(([id,name])=>{
+
+const option=
+document.createElement("option");
+
+option.value=id;
+option.textContent=name;
+
+select.appendChild(option);
+
+});
+
+}
+
+
+function subjectChanged(){
+
+selectedSubjectId=
+subjectSelect.value;
+
+
+const match=
+assignments.find(
+a=>a.subjectId===selectedSubjectId
+);
+
+
+selectedSubjectName=
+match?.subjectName||"";
+
+
+selectedGrade="";
+selectedSection="";
+selectedTest=null;
+
+
+fillGrades();
+
+fillSections();
+
+clearTests();
+
+clearStudentsArea();
+
+showSelectedAssignment();
+
+}
+
+
+/* ==============================
+   الصفوف
+============================== */
+
+function fillGrades(){
+
+const select=
+document.getElementById(
+"gradeSelect"
+);
+
+
+select.innerHTML=
+
+'<option value="">-- اختر الصف --</option>';
+
+
+if(!selectedSubjectId){
+
+return;
+
+}
+
+
+const list=
+unique(
+
+assignments
+.filter(
+a=>a.subjectId===selectedSubjectId
+)
+.map(a=>a.grade)
+
+);
+
+
+list.sort(
+(a,b)=>
+gradeOrder.indexOf(a)-
+gradeOrder.indexOf(b)
+);
+
+
+list.forEach(grade=>{
+
+const option=
+document.createElement("option");
+
+option.value=grade;
+option.textContent=grade;
+
+select.appendChild(option);
+
+});
+
+}
+
+
+function gradeChanged(){
+
+selectedGrade=
+gradeSelect.value;
+
+selectedSection="";
+selectedTest=null;
+
+
+fillSections();
+
+clearTests();
+
+clearStudentsArea();
+
+showSelectedAssignment();
+
+}
+
+
+/* ==============================
+   الشعب
+============================== */
+
+function fillSections(){
+
+const select=
+document.getElementById(
+"sectionSelect"
+);
+
+
+select.innerHTML=
+
+'<option value="">-- اختر الشعبة --</option>';
+
+
+if(
+!selectedSubjectId ||
+!selectedGrade
+){
+
+return;
+
+}
+
+
+const list=
+unique(
+
+assignments
+.filter(a=>
+
+a.subjectId===
+selectedSubjectId &&
+
+a.grade===
+selectedGrade
+
+)
+.map(a=>a.section)
+
+);
+
+
+list.sort(
+(a,b)=>
+sectionOrder.indexOf(a)-
+sectionOrder.indexOf(b)
+);
+
+
+list.forEach(section=>{
+
+const option=
+document.createElement("option");
+
+option.value=section;
+option.textContent=section;
+
+select.appendChild(option);
+
+});
+
+}
+
+
+async function classChanged(){
+
+selectedSection=
+sectionSelect.value;
+
+selectedTest=null;
+
+clearStudentsArea();
+
+showSelectedAssignment();
+
+
+if(
+selectedSubjectId &&
+selectedGrade &&
+selectedSection
+){
+
+await loadTestsForClass();
+
+}
+
+else{
+
+clearTests();
+
+}
+
+}
+
+
+/* ==============================
+   الاختبارات المطابقة
+============================== */
+
+async function loadTestsForClass(){
+
+clearTests();
+
+
+if(
+!selectedSubjectId ||
+!selectedGrade ||
+!selectedSection
+){
+
+return;
+
+}
+
+
+const snap=
+
+await db
+.collection("tests")
+.where(
+"subjectId",
+"==",
+selectedSubjectId
+)
+.get();
+
+
+tests=[];
+
+
+snap.forEach(doc=>{
+
+const data=doc.data()||{};
+
+const classes=
+Array.isArray(data.classes)
+?
+data.classes
+:
+[];
+
+
+const belongs=
+classes.some(c=>
+
+c.grade===selectedGrade &&
+c.section===selectedSection
+
+);
+
+
+if(belongs){
+
+tests.push({
+id:doc.id,
+...data
+});
+
+}
+
+});
+
+
+tests.sort(
+(a,b)=>
+
+String(a.date||"")
+.localeCompare(
+String(b.date||"")
+)
+
+);
+
+
+const select=
+document.getElementById(
+"testSelect"
+);
+
+
+if(!tests.length){
+
+select.innerHTML=
+
+'<option value="">لا توجد اختبارات لهذا الفصل</option>';
+
+return;
+
+}
+
+
+select.innerHTML=
+
+'<option value="">-- اختر الاختبار --</option>';
+
+
+tests.forEach(test=>{
+
+const option=
+document.createElement("option");
+
+option.value=test.id;
+
+option.textContent=
+
+test.name+
+(
+test.date
+?
+" - "+test.date
+:
+""
+);
+
+select.appendChild(option);
+
+});
+
+}
+
+
+/* ==============================
+   الاختبار
+============================== */
+
+async function testChanged(){
+
+const testId=
+testSelect.value;
+
+
+selectedTest=
+tests.find(
+t=>t.id===testId
+)||null;
+
+
+if(!selectedTest){
+
+clearStudentsArea();
+
+return;
+
+}
+
+
+showTestDetails();
+
+await loadClassStudents();
+
+}
+
+
+/* ==============================
+   الطلاب
+============================== */
+
+async function loadClassStudents(){
+
+const area=
+document.getElementById(
+"studentsArea"
+);
+
+
+area.innerHTML=`
+
+<div class="empty">
+جاري تحميل الطلاب والدرجات...
+</div>
+
+`;
+
+
+const snap=
+
+await db
+.collection("students")
+.where(
+"grade",
+"==",
+selectedGrade
+)
+.get();
+
+
+currentStudents=[];
+
+
+snap.forEach(doc=>{
+
+const data=doc.data()||{};
+
+
+if(
+data.section===
+selectedSection
+){
+
+currentStudents.push({
+
+...data,
+
+code:
+data.code||doc.id
+
+});
+
+}
+
+});
+
+
+currentStudents.sort(
+(a,b)=>
+
+String(a.name||"")
+.localeCompare(
+String(b.name||""),
+"ar"
+)
+
+);
+
+
+await loadSavedGrades();
+
+renderStudentsTable();
+
+showTestDetails();
+
+}
+
+
+/* ==============================
+   تحميل الدرجات المحفوظة
+============================== */
+
+async function loadSavedGrades(){
+
+savedGrades={};
+
+
+if(!selectedTest)
+return;
+
+
+const promises=
+currentStudents.map(
+async student=>{
+
+const id=
+
+selectedTest.id+
+"_"+
+student.code;
+
+
+const doc=
+
+await db
+.collection("grades")
+.doc(id)
+.get();
+
+
+if(doc.exists){
+
+savedGrades[
+student.code
+]=
+doc.data();
+
+}
+
+}
+);
+
+
+await Promise.all(
+promises
+);
+
+}
+
+
+/* ==============================
+   جدول الطلاب
+============================== */
+
+function renderStudentsTable(){
+
+const area=
+document.getElementById(
+"studentsArea"
+);
+
+
+if(!currentStudents.length){
+
+area.innerHTML=`
+
+<div class="empty">
+لا يوجد طلاب في هذا الفصل.
+</div>
+
+`;
+
+updateSummary();
+
+return;
+
+}
+
+
+let html=`
+
+<div class="table-wrap">
+
+<table>
+
+<thead>
+
+<tr>
+
+<th>#</th>
+<th>كود الطالب</th>
+<th>اسم الطالب</th>
+<th>الحضور</th>
+<th>الدرجة</th>
+<th>الحالة</th>
+<th class="whatsapp-col">ولي الأمر</th>
+
+</tr>
+
+</thead>
+
+<tbody>
+
+`;
+
+
+currentStudents.forEach(
+(student,index)=>{
+
+const saved=
+savedGrades[
+student.code
+]||{};
+
+
+const attendance=
+saved.attendance||
+"present";
+
+
+const mark=
+saved.mark!==null &&
+saved.mark!==undefined
+?
+saved.mark
+:
+"";
+
+
+const isAbsent=
+attendance==="absent";
+
+
+html+=`
+
+<tr
+id="row_${escapeHtml(student.code)}"
+class="${isAbsent?'absent-row':''}">
+
+<td>
+${index+1}
+</td>
+
+<td>
+${escapeHtml(student.code)}
+</td>
+
+<td class="student-name">
+${escapeHtml(student.name)}
+</td>
+
+<td>
+
+<select
+class="attendance-select"
+id="attendance_${escapeHtml(student.code)}"
+onchange='attendanceChanged(${JSON.stringify(student.code)})'>
+
+<option
+value="present"
+${attendance==="present"?"selected":""}>
+حاضر
+</option>
+
+<option
+value="absent"
+${attendance==="absent"?"selected":""}>
+غائب
+</option>
+
+</select>
+
+</td>
+
+<td>
+
+<input
+class="mark-input"
+id="mark_${escapeHtml(student.code)}"
+type="number"
+min="0"
+max="${escapeHtml(selectedTest.fullMark)}"
+step="0.01"
+value="${escapeHtml(mark)}"
+${isAbsent?"disabled":""}
+oninput='markChanged(${JSON.stringify(student.code)})'>
+
+</td>
+
+<td id="status_${escapeHtml(student.code)}">
+
+${saved.updatedAt
+?
+'<span class="saved">محفوظ ✓</span>'
+:
+'<span class="not-saved">غير محفوظ</span>'
+}
+
+</td>
+
+<td class="whatsapp-col">
+
+<button
+class="small-btn btn-whatsapp"
+onclick='sendWhatsApp(${JSON.stringify(student.code)})'>
+
+واتساب
+
+</button>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+
+html+=`
+
+</tbody>
+</table>
+</div>
+
+`;
+
+
+area.innerHTML=html;
+
+
+currentStudents.forEach(
+student=>{
+
+attendanceChanged(
+student.code,
+false
+);
+
+});
+
+
+updateSummary();
+
+}
+
+
+/* ==============================
+   حضور
+============================== */
+
+function attendanceChanged(
+code,
+markDirty=true
+){
+
+const attendance=
+document.getElementById(
+"attendance_"+code
+);
+
+
+const mark=
+document.getElementById(
+"mark_"+code
+);
+
+
+const row=
+document.getElementById(
+"row_"+code
+);
+
+
+if(
+!attendance ||
+!mark
+)return;
+
+
+if(
+attendance.value==="absent"
+){
+
+mark.value="";
+mark.disabled=true;
+
+if(row)
+row.classList.add(
+"absent-row"
+);
+
+}
+
+else{
+
+mark.disabled=false;
+
+if(row)
+row.classList.remove(
+"absent-row"
+);
+
+}
+
+
+if(markDirty){
+
+const status=
+document.getElementById(
+"status_"+code
+);
+
+if(status){
+
+status.innerHTML=
+
+'<span class="not-saved">غير محفوظ</span>';
+
+}
+
+}
+
+
+updateSummary();
+
+}
+
+
+function markChanged(code){
+
+const input=
+document.getElementById(
+"mark_"+code
+);
+
+
+if(!input)
+return;
+
+
+if(
+input.value!=="" &&
+Number(input.value)>
+Number(selectedTest.fullMark)
+){
+
+input.value=
+selectedTest.fullMark;
+
+}
+
+
+if(
+input.value!=="" &&
+Number(input.value)<0
+){
+
+input.value=0;
+
+}
+
+
+const status=
+document.getElementById(
+"status_"+code
+);
+
+
+if(status){
+
+status.innerHTML=
+
+'<span class="not-saved">غير محفوظ</span>';
+
+}
+
+
+updateSummary();
+
+}
+
+
+/* ==============================
+   الجميع حاضر / غائب
+============================== */
+
+function setAllAttendance(
+value
+){
+
+if(!currentStudents.length){
+
+return;
+
+}
+
+
+currentStudents.forEach(
+student=>{
+
+const select=
+document.getElementById(
+"attendance_"+student.code
+);
+
+
+if(select){
+
+select.value=value;
+
+attendanceChanged(
+student.code
+);
+
+}
+
+});
+
+}
+
+
+/* ==============================
+   الحفظ
+============================== */
+
+async function saveAllGrades(){
+
+if(
+!selectedTest ||
+!currentStudents.length
+){
+
+alert(
+"اختر الاختبار أولًا"
+);
+
+return;
+
+}
+
+
+const records=[];
+
+
+for(
+const student of currentStudents
+){
+
+const attendanceEl=
+document.getElementById(
+"attendance_"+student.code
+);
+
+
+const markEl=
+document.getElementById(
+"mark_"+student.code
+);
+
+
+const attendance=
+attendanceEl.value;
+
+
+let mark=null;
+
+
+if(
+attendance==="present"
+){
+
+if(
+markEl.value===""
+){
+
+alert(
+
+"لم يتم إدخال درجة الطالب:\n"+
+student.name
+
+);
+
+markEl.focus();
+
+return;
+
+}
+
+
+mark=
+Number(
+markEl.value
+);
+
+
+if(
+Number.isNaN(mark) ||
+mark<0 ||
+mark>
+Number(selectedTest.fullMark)
+){
+
+alert(
+
+"درجة الطالب "+
+student.name+
+" يجب أن تكون من 0 إلى "+
+selectedTest.fullMark
+
+);
+
+markEl.focus();
+
+return;
+
+}
+
+}
+
+
+records.push({
+student,
+attendance,
+mark
+});
+
+}
+
+
+try{
+
+for(
+let i=0;
+i<records.length;
+i+=400
+){
+
+const batch=
+db.batch();
+
+
+records
+.slice(i,i+400)
+.forEach(item=>{
+
+const docId=
+
+selectedTest.id+
+"_"+
+item.student.code;
+
+
+const ref=
+
+db
+.collection("grades")
+.doc(docId);
+
+
+batch.set(
+ref,
+{
+
+testId:
+selectedTest.id,
+
+studentCode:
+String(
+item.student.code
+),
+
+studentName:
+item.student.name||"",
+
+teacherEmail:
+currentUsername,
+
+teacherName:
+currentTeacher.name||"",
+
+subjectId:
+selectedSubjectId,
+
+subjectName:
+selectedSubjectName,
+
+grade:
+selectedGrade,
+
+section:
+selectedSection,
+
+attendance:
+item.attendance,
+
+mark:
+item.attendance==="absent"
+?
+null
+:
+item.mark,
+
+testName:
+selectedTest.name,
+
+testDate:
+selectedTest.date||"",
+
+fullMark:
+Number(
+selectedTest.fullMark
+),
+
+updatedAt:
+firebase.firestore
+.FieldValue
+.serverTimestamp()
+
+},
+{
+merge:true
+}
+);
+
+});
+
+
+await batch.commit();
+
+}
+
+
+alert(
+"تم حفظ الحضور والدرجات بنجاح ✅"
+);
+
+
+await loadSavedGrades();
+
+renderStudentsTable();
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+
+"حدث خطأ أثناء الحفظ:\n"+
+error.message
+
+);
+
+}
+
+}
+
+
+/* ==============================
+   الإحصائيات السريعة
+============================== */
+
+function updateSummary(){
+
+const total=
+currentStudents.length;
+
+
+let present=0;
+let absent=0;
+let entered=0;
+
+let totalMarks=0;
+
+
+currentStudents.forEach(
+student=>{
+
+const attendance=
+document.getElementById(
+"attendance_"+student.code
+);
+
+
+const mark=
+document.getElementById(
+"mark_"+student.code
+);
+
+
+if(
+!attendance ||
+!mark
+)return;
+
+
+if(
+attendance.value==="absent"
+){
+
+absent++;
+
+}
+
+else{
+
+present++;
+
+
+if(mark.value!==""){
+
+entered++;
+
+totalMarks+=
+Number(mark.value)||0;
+
+}
+
+}
+
+});
+
+
+document.getElementById(
+"sumStudents"
+).textContent=
+total;
+
+
+document.getElementById(
+"sumPresent"
+).textContent=
+present;
+
+
+document.getElementById(
+"sumAbsent"
+).textContent=
+absent;
+
+
+document.getElementById(
+"sumEntered"
+).textContent=
+entered;
+
+
+document.getElementById(
+"sumAverage"
+).textContent=
+
+entered
+?
+(
+totalMarks/entered
+).toFixed(2)
+:
+"-";
+
+
+document.getElementById(
+"detailStudents"
+).textContent=
+total;
+
+}
+
+
+/* ==============================
+   تفاصيل الاختبار
+============================== */
+
+function showSelectedAssignment(){
+
+const box=
+document.getElementById(
+"selectedAssignmentInfo"
+);
+
+
+if(
+!selectedSubjectId &&
+!selectedGrade &&
+!selectedSection
+){
+
+box.style.display=
+"none";
+
+return;
+
+}
+
+
+box.style.display=
+"block";
+
+
+let text=[];
+
+
+if(selectedSubjectName)
+text.push(
+selectedSubjectName
+);
+
+
+if(selectedGrade)
+text.push(
+selectedGrade
+);
+
+
+if(selectedSection)
+text.push(
+"الشعبة "+selectedSection
+);
+
+
+box.textContent=
+text.join(" - ");
+
+}
+
+
+function showTestDetails(){
+
+if(!selectedTest){
+
+document.getElementById(
+"testDetails"
+).style.display=
+"none";
+
+return;
+
+}
+
+
+document.getElementById(
+"testDetails"
+).style.display=
+"block";
+
+
+document.getElementById(
+"detailTeacher"
+).textContent=
+
+currentTeacher.name||"";
+
+
+document.getElementById(
+"detailSubject"
+).textContent=
+
+selectedSubjectName||"";
+
+
+document.getElementById(
+"detailClass"
+).textContent=
+
+selectedGrade+
+" / "+
+selectedSection;
+
+
+document.getElementById(
+"detailTest"
+).textContent=
+
+selectedTest.name||"";
+
+
+document.getElementById(
+"detailDate"
+).textContent=
+
+selectedTest.date||"-";
+
+
+document.getElementById(
+"detailFullMark"
+).textContent=
+
+selectedTest.fullMark;
+
+
+document.getElementById(
+"detailPrintDate"
+).textContent=
+
+todayArabic();
+
+}
+
+
+/* ==============================
+   تنظيف الاختيارات
+============================== */
+
+function clearTests(){
+
+selectedTest=null;
+
+const select=
+document.getElementById(
+"testSelect"
+);
+
+
+select.innerHTML=
+
+'<option value="">-- اختر الاختبار --</option>';
+
+
+clearStudentsArea();
+
+}
+
+
+function clearStudentsArea(){
+
+currentStudents=[];
+savedGrades={};
+
+
+document.getElementById(
+"testDetails"
+).style.display=
+"none";
+
+
+document.getElementById(
+"studentsArea"
+).innerHTML=`
+
+<div class="empty">
+
+اختر المادة والفصل والاختبار لعرض الطلاب.
+
+</div>
+
+`;
+
+}
+
+
+/* ==============================
+   WhatsApp
+============================== */
+
+function normalizeSaudiPhone(
+phone
+){
+
+let p=
+String(phone||"")
+.replace(/\D/g,"");
+
+
+if(!p)
+return "";
+
+
+if(
+p.startsWith("00966")
+){
+
+p=p.substring(2);
+
+}
+
+
+if(
+p.startsWith("966")
+){
+
+return p;
+
+}
+
+
+if(
+p.startsWith("05") &&
+p.length===10
+){
+
+return "966"+
+p.substring(1);
+
+}
+
+
+if(
+p.startsWith("5") &&
+p.length===9
+){
+
+return "966"+p;
+
+}
+
+
+return p;
+
+}
+
+
+function sendWhatsApp(
+code
+){
+
+if(!selectedTest){
+
+alert(
+"اختر الاختبار أولًا"
+);
+
+return;
+
+}
+
+
+const student=
+currentStudents.find(
+s=>
+String(s.code)===
+String(code)
+);
+
+
+if(!student)
+return;
+
+
+const phone=
+normalizeSaudiPhone(
+
+student.guardianPhone ||
+student.phone ||
+""
+
+);
+
+
+if(!phone){
+
+alert(
+
+"لا يوجد رقم جوال مسجل لولي أمر الطالب:\n"+
+student.name
+
+);
+
+return;
+
+}
+
+
+const attendance=
+document.getElementById(
+"attendance_"+code
+).value;
+
+
+const mark=
+document.getElementById(
+"mark_"+code
+).value;
+
+
+let message="";
+
+
+if(
+attendance==="absent"
+){
+
+message=
+
+`مدارس الفلاح الأهلية
+
+ولي أمر الطالب: ${student.name}
+
+نفيدكم بغياب الطالب عن اختبار:
+${selectedTest.name}
+
+المادة: ${selectedSubjectName}
+الفصل: ${selectedGrade} / ${selectedSection}
+تاريخ الاختبار: ${selectedTest.date||"-"}
+
+معلم المادة:
+${currentTeacher.name||""}`;
+
+}
+
+else{
+
+if(mark===""){
+
+alert(
+"أدخل درجة الطالب أولًا"
+);
+
+return;
+
+}
+
+
+message=
+
+`مدارس الفلاح الأهلية
+
+ولي أمر الطالب: ${student.name}
+
+نتيجة اختبار:
+${selectedTest.name}
+
+المادة: ${selectedSubjectName}
+الدرجة: ${mark} من ${selectedTest.fullMark}
+الفصل: ${selectedGrade} / ${selectedSection}
+تاريخ الاختبار: ${selectedTest.date||"-"}
+
+معلم المادة:
+${currentTeacher.name||""}`;
+
+}
+
+
+window.open(
+
+"https://wa.me/"+
+phone+
+"?text="+
+encodeURIComponent(message),
+
+"_blank"
+
+);
+
+}
+
+
+/* ==============================
+   تحليل النتائج
+============================== */
+
+function openAnalysis(){
+
+if(!selectedTest){
+
+alert(
+"اختر المادة والفصل والاختبار أولًا"
+);
+
+return;
+
+}
+
+
+/*
+نرسل الاختيارات للصفحة
+عن طريق URL
+*/
+
+const params=
+new URLSearchParams({
+
+source:"teacher",
+
+subjectId:
+selectedSubjectId,
+
+grade:
+selectedGrade,
+
+section:
+selectedSection,
+
+testId:
+selectedTest.id
+
+});
+
+
+location.href=
+
+"analysis.html?"+
+params.toString();
+
+}
+
+
+/* ==============================
+   الطباعة
+============================== */
+
+function printReport(){
+
+if(!selectedTest){
+
+alert(
+"اختر الاختبار أولًا"
+);
+
+return;
+
+}
+
+
+if(!currentStudents.length){
+
+alert(
+"لا يوجد طلاب للطباعة"
+);
+
+return;
+
+}
+
+
+document.getElementById(
+"detailPrintDate"
+).textContent=
+todayArabic();
+
+
+window.print();
+
+}
+
+
+/* ==============================
+   خروج
+============================== */
+
+function logout(){
+
+[
+"currentUserRole",
+"currentUser",
+"currentUserName",
+"currentUserEmail"
+]
+.forEach(key=>
+
+localStorage.removeItem(key)
+
+);
+
+
+location.href=
+"index.html";
+
+}
+
+
+/* ==============================
+   تشغيل
+============================== */
+
+async function start(){
+
+if(!protectTeacher())
+return;
+
+
+try{
+
+await loadTeacher();
+
+}
+
+catch(error){
+
+console.error(error);
+
+alert(
+
+"حدث خطأ أثناء تحميل صفحة المعلم:\n"+
+error.message
+
+);
+
+}
+
+}
+
+
+start();
+
 </script>
 
 </body>
