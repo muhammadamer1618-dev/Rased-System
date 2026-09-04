@@ -402,6 +402,27 @@ tbody tr:nth-child(even){
     font-size:11px;
 }
 
+
+/* ======================================================
+   PARENT MESSAGES
+====================================================== */
+
+.parent-actions{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
+.whatsapp-result,.whatsapp-custom{border:0;color:#fff;border-radius:5px;padding:7px 9px;cursor:pointer;font-size:10px;font-weight:bold}
+.whatsapp-result{background:#198754}.whatsapp-custom{background:#0b7285}
+.messages-btn{background:#0b7285;color:#fff}
+.message-tools{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-bottom:12px}
+.message-search{width:100%;height:42px;border:1px solid #bdc8d2;border-radius:7px;padding:8px 11px;font-family:Tahoma,Arial,sans-serif}
+.message-log-text{text-align:right;white-space:pre-wrap;line-height:1.6;min-width:250px;max-width:390px}
+.message-log-table{min-width:950px}
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.48);z-index:9999;align-items:center;justify-content:center;padding:15px}
+.modal-overlay.show{display:flex}.modal-box{width:min(620px,96%);background:#fff;border-radius:12px;box-shadow:0 12px 40px rgba(0,0,0,.25);overflow:hidden}
+.modal-head{background:#073b68;color:#fff;padding:15px 18px;font-weight:bold;font-size:16px}.modal-body{padding:18px}
+.modal-student{background:#f3f7fa;border:1px solid #d9e2ea;border-radius:7px;padding:10px;margin-bottom:12px;font-size:13px;line-height:1.7}
+.modal-body textarea{width:100%;min-height:160px;resize:vertical;border:1px solid #bdc8d2;border-radius:7px;padding:12px;font-family:Tahoma,Arial,sans-serif;font-size:14px;line-height:1.8;direction:rtl}
+.modal-actions{display:flex;gap:10px;justify-content:flex-start;margin-top:12px}.modal-actions button{border:0;border-radius:7px;padding:10px 18px;font-weight:bold;cursor:pointer}.send-custom-btn{background:#198754;color:#fff}.cancel-modal-btn{background:#e8edf2;color:#21364a}
+@media(max-width:700px){.message-tools{grid-template-columns:1fr}}
+
 /* ======================================================
    EMPTY
 ====================================================== */
@@ -518,7 +539,9 @@ tbody tr:nth-child(even){
     .footer-note,
     .footer,
     .whatsapp-col,
-    .summary{
+    .summary,
+    .messages-card,
+    .modal-overlay{
         display:none !important;
     }
 
@@ -824,6 +847,12 @@ tbody tr:nth-child(even){
 
 </div>
 
+<div class="actions" style="grid-template-columns:1fr;margin-top:10px">
+<button class="action-btn messages-btn" onclick="scrollToMessages()">
+📨 سجل رسائلي لأولياء الأمور
+</button>
+</div>
+
 
 <div class="delete-warning">
 
@@ -956,6 +985,36 @@ tbody tr:nth-child(even){
 </div>
 
 
+<div class="card messages-card" id="messagesSection">
+<div class="card-title">📨 سجل رسائلي لأولياء الأمور</div>
+<div class="card-body">
+<div class="message-tools">
+<input id="messageLogSearch" class="message-search" placeholder="بحث باسم الطالب أو نص الرسالة" oninput="renderMessageLogs()">
+<button class="action-btn print-btn" onclick="printMessageLog()">🖨️ طباعة سجل الرسائل</button>
+</div>
+<div class="table-wrap">
+<table class="message-log-table">
+<thead><tr><th>#</th><th>التاريخ والوقت</th><th>الطالب</th><th>الفصل</th><th>المادة</th><th>الاختبار / النوع</th><th>جوال ولي الأمر</th><th>الرسالة</th></tr></thead>
+<tbody id="messageLogsBody"><tr><td colspan="8">جاري تحميل السجل...</td></tr></tbody>
+</table>
+</div>
+</div>
+</div>
+
+<div class="modal-overlay" id="customMessageModal" onclick="modalBackdropClose(event)">
+<div class="modal-box">
+<div class="modal-head">✉️ إرسال رسالة لولي الأمر</div>
+<div class="modal-body">
+<div class="modal-student" id="customMessageStudentInfo"></div>
+<textarea id="customMessageText" placeholder="اكتب رسالتك لولي الأمر هنا..."></textarea>
+<div class="modal-actions">
+<button class="send-custom-btn" onclick="sendCustomMessage()">إرسال عبر واتساب</button>
+<button class="cancel-modal-btn" onclick="closeCustomMessage()">إلغاء</button>
+</div>
+</div>
+</div>
+</div>
+
 <div class="footer">
 تصميم محمد عامر أحمد - نظام راصد 2026
 </div>
@@ -1032,6 +1091,8 @@ let selectedTest=null;
 
 let currentStudents=[];
 let savedGrades={};
+let messageLogs=[];
+let customMessageStudent=null;
 
 
 /* ======================================================
@@ -1871,12 +1932,20 @@ savedGrades[String(student.code)]
 
 <td class="whatsapp-col">
 
+<div class="parent-actions">
 <button
-class="whatsapp"
+class="whatsapp-result"
 onclick='sendWhatsApp(${JSON.stringify(String(student.code))})'
 >
-واتساب
+📊 النتيجة
 </button>
+<button
+class="whatsapp-custom"
+onclick='openCustomMessage(${JSON.stringify(String(student.code))})'
+>
+✉️ رسالة
+</button>
+</div>
 
 </td>
 
@@ -2589,64 +2658,66 @@ error.message
    WHATSAPP
 ====================================================== */
 
-function sendWhatsApp(code){
+async function logAndOpenWhatsApp(student,phone,message,type,attendance=null,mark=null){
 
-if(!selectedTest){
-return;
+const waWindow=window.open("about:blank","_blank");
+
+if(!waWindow){
+alert("اسمح بالنوافذ المنبثقة لهذا الموقع حتى يتم فتح واتساب.");
+return false;
 }
 
+try{
 
-const student=
-currentStudents.find(
-s=>
-String(s.code)===
-String(code)
-);
+await db.collection("messageLogs").add({
+teacherEmail:currentUsername,
+teacherName:currentTeacher?.name||"",
+studentCode:String(student.code||""),
+studentName:student.name||"",
+guardianPhone:phone,
+subjectId:selectedSubjectId||"",
+subjectName:selectedSubjectName||"",
+grade:selectedGrade||student.grade||"",
+section:selectedSection||student.section||"",
+testId:selectedTest?.id||"",
+testName:selectedTest?.name||"",
+testDate:selectedTest?.date||"",
+attendance:attendance,
+mark:attendance==="absent"?null:(mark===""||mark===null?null:Number(mark)),
+fullMark:selectedTest?Number(selectedTest.fullMark):null,
+messageType:type,
+message:message,
+sentAt:firebase.firestore.FieldValue.serverTimestamp()
+});
 
+waWindow.location.href="https://wa.me/"+phone+"?text="+encodeURIComponent(message);
+await loadMessageLogs();
+return true;
 
-if(!student){
-return;
+}catch(error){
+if(waWindow&&!waWindow.closed) waWindow.close();
+console.error(error);
+alert("تعذر تسجيل الرسالة، لذلك لم يتم فتح واتساب:\n"+error.message);
+return false;
+}
 }
 
+async function sendWhatsApp(code){
 
-const phone=
-normalizeSaudiPhone(
+if(!selectedTest) return;
 
-student.guardianPhone ||
-student.phone ||
-""
+const student=currentStudents.find(s=>String(s.code)===String(code));
+if(!student) return;
 
-);
+const phone=normalizeSaudiPhone(student.guardianPhone||student.phone||"");
+if(!phone){alert("لا يوجد رقم جوال مسجل لولي أمر الطالب:\n"+student.name);return;}
 
-
-if(!phone){
-
-alert(
-"لا يوجد رقم جوال مسجل لولي أمر الطالب:\n"+
-student.name
-);
-
-return;
-
-}
-
-
-const attendance=
-el("attendance_"+code).value;
-
-
-const mark=
-el("mark_"+code).value;
-
-
+const attendance=el("attendance_"+code).value;
+const mark=el("mark_"+code).value;
 let message="";
 
-
 if(attendance==="absent"){
-
-message=
-
-`مدارس الفلاح الأهلية
+message=`مدارس الفلاح الأهلية
 
 ولي أمر الطالب: ${student.name}
 
@@ -2659,25 +2730,9 @@ ${selectedTest.name}
 
 معلم المادة:
 ${currentTeacher.name||""}`;
-
-}
-
-else{
-
-if(mark===""){
-
-alert(
-"أدخل درجة الطالب أولًا."
-);
-
-return;
-
-}
-
-
-message=
-
-`مدارس الفلاح الأهلية
+}else{
+if(mark===""){alert("أدخل درجة الطالب أولًا.");return;}
+message=`مدارس الفلاح الأهلية
 
 ولي أمر الطالب: ${student.name}
 
@@ -2691,23 +2746,79 @@ ${selectedTest.name}
 
 معلم المادة:
 ${currentTeacher.name||""}`;
-
 }
 
-
-window.open(
-
-"https://wa.me/"+
-phone+
-"?text="+
-encodeURIComponent(message),
-
-"_blank"
-
-);
-
+await logAndOpenWhatsApp(student,phone,message,"result",attendance,mark);
 }
 
+function openCustomMessage(code){
+const student=currentStudents.find(s=>String(s.code)===String(code));
+if(!student) return;
+const phone=normalizeSaudiPhone(student.guardianPhone||student.phone||"");
+if(!phone){alert("لا يوجد رقم جوال مسجل لولي أمر الطالب:\n"+student.name);return;}
+customMessageStudent=student;
+el("customMessageStudentInfo").innerHTML="<strong>الطالب:</strong> "+escapeHtml(student.name)+"<br><strong>الفصل:</strong> "+escapeHtml(student.grade||selectedGrade||"-")+" / "+escapeHtml(student.section||selectedSection||"-")+"<br><strong>جوال ولي الأمر:</strong> "+escapeHtml(phone);
+el("customMessageText").value="";
+el("customMessageModal").classList.add("show");
+setTimeout(()=>el("customMessageText").focus(),50);
+}
+
+function closeCustomMessage(){el("customMessageModal").classList.remove("show");customMessageStudent=null;}
+function modalBackdropClose(event){if(event.target===el("customMessageModal"))closeCustomMessage();}
+
+async function sendCustomMessage(){
+if(!customMessageStudent) return;
+const raw=el("customMessageText").value.trim();
+if(!raw){alert("اكتب الرسالة أولًا.");el("customMessageText").focus();return;}
+const student=customMessageStudent;
+const phone=normalizeSaudiPhone(student.guardianPhone||student.phone||"");
+if(!phone){alert("لا يوجد رقم جوال مسجل لولي الأمر.");return;}
+const message=`مدارس الفلاح الأهلية
+
+ولي أمر الطالب: ${student.name}
+
+${raw}
+
+معلم المادة:
+${currentTeacher.name||""}`;
+const ok=await logAndOpenWhatsApp(student,phone,message,"custom",null,null);
+if(ok) closeCustomMessage();
+}
+
+function scrollToMessages(){el("messagesSection").scrollIntoView({behavior:"smooth",block:"start"});}
+
+function formatMessageDate(ts){
+if(!ts) return "الآن";
+try{const d=ts.toDate?ts.toDate():new Date(ts);return new Intl.DateTimeFormat("ar-SA",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).format(d);}catch{return "-";}
+}
+
+async function loadMessageLogs(){
+try{
+const snap=await db.collection("messageLogs").where("teacherEmail","==",currentUsername).get();
+messageLogs=snap.docs.map(doc=>({id:doc.id,...doc.data()}));
+messageLogs.sort((a,b)=>(b.sentAt?.toMillis?.()||0)-(a.sentAt?.toMillis?.()||0));
+renderMessageLogs();
+}catch(error){console.error(error);el("messageLogsBody").innerHTML='<tr><td colspan="8">تعذر تحميل سجل الرسائل.</td></tr>';}
+}
+
+function getFilteredTeacherLogs(){
+const q=String(el("messageLogSearch")?.value||"").trim().toLowerCase();
+return messageLogs.filter(log=>{if(!q)return true;return [log.studentName,log.studentCode,log.subjectName,log.testName,log.message,log.guardianPhone].map(v=>String(v||"").toLowerCase()).join(" ").includes(q);});
+}
+
+function renderMessageLogs(){
+const rows=getFilteredTeacherLogs(),body=el("messageLogsBody");
+if(!rows.length){body.innerHTML='<tr><td colspan="8">لا توجد رسائل مسجلة.</td></tr>';return;}
+body.innerHTML=rows.map((log,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(formatMessageDate(log.sentAt))}</td><td><strong>${escapeHtml(log.studentName||"-")}</strong><br><small>${escapeHtml(log.studentCode||"")}</small></td><td>${escapeHtml(log.grade||"-")} / ${escapeHtml(log.section||"-")}</td><td>${escapeHtml(log.subjectName||"-")}</td><td>${escapeHtml(log.messageType==="custom"?"رسالة عامة":(log.testName||"نتيجة اختبار"))}</td><td style="direction:ltr">${escapeHtml(log.guardianPhone||"-")}</td><td class="message-log-text">${escapeHtml(log.message||"-")}</td></tr>`).join("");
+}
+
+function printMessageLog(){
+const rows=getFilteredTeacherLogs();
+if(!rows.length){alert("لا توجد رسائل للطباعة.");return;}
+const body=rows.map((log,i)=>`<tr><td>${i+1}</td><td>${escapeHtml(formatMessageDate(log.sentAt))}</td><td>${escapeHtml(log.studentName||"-")}</td><td>${escapeHtml(log.grade||"-")} / ${escapeHtml(log.section||"-")}</td><td>${escapeHtml(log.subjectName||"-")}</td><td>${escapeHtml(log.messageType==="custom"?"رسالة عامة":(log.testName||"نتيجة اختبار"))}</td><td>${escapeHtml(log.guardianPhone||"-")}</td><td class="msg">${escapeHtml(log.message||"-")}</td></tr>`).join("");
+const html=`<!DOCTYPE html><html lang="ar" dir="rtl"><head><meta charset="UTF-8"><title>سجل رسائل المعلم</title><style>@page{size:A4 landscape;margin:7mm}*{box-sizing:border-box;-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}body{font-family:Tahoma,Arial,sans-serif;margin:0}.head{text-align:center;border-bottom:2px solid #073b68;margin-bottom:7px;padding-bottom:5px}.head img{width:48px;height:48px;object-fit:contain}.head h1{font-size:16px;margin:2px}.head h2{font-size:12px;margin:2px;color:#073b68}.meta{font-size:8pt;margin:5px 0}.meta span{margin-left:25px}table{width:100%;border-collapse:collapse;table-layout:fixed}th,td{border:1px solid #777;padding:3px;font-size:6.5pt;text-align:center;vertical-align:middle}th{background:#073b68!important;color:#fff!important}.msg{text-align:right;white-space:pre-wrap;word-break:break-word}th:nth-child(1){width:3%}th:nth-child(2){width:11%}th:nth-child(3){width:11%}th:nth-child(4){width:8%}th:nth-child(5){width:9%}th:nth-child(6){width:11%}th:nth-child(7){width:10%}th:nth-child(8){width:37%}.foot{display:flex;justify-content:space-between;border-top:1px solid #777;margin-top:5px;padding-top:3px;font-size:6.5pt}</style></head><body><div class="head"><img src="logo.jpeg"><h1>مدارس الفلاح الأهلية</h1><h2>سجل رسائل أولياء الأمور - المعلم</h2></div><div class="meta"><span><strong>المعلم:</strong> ${escapeHtml(currentTeacher?.name||"")}</span><span><strong>عدد الرسائل:</strong> ${rows.length}</span></div><table><thead><tr><th>م</th><th>التاريخ والوقت</th><th>الطالب</th><th>الفصل</th><th>المادة</th><th>الاختبار / النوع</th><th>الجوال</th><th>نص الرسالة</th></tr></thead><tbody>${body}</tbody></table><div class="foot"><span>نظام راصد - مدارس الفلاح الأهلية</span><span>تصميم محمد عامر أحمد - 2026</span></div><script>window.onload=()=>setTimeout(()=>window.print(),250)<\/script></body></html>`;
+const w=window.open("","_blank");if(!w){alert("اسمح بالنوافذ المنبثقة للطباعة.");return;}w.document.open();w.document.write(html);w.document.close();
+}
 
 /* ======================================================
    ANALYSIS
@@ -2893,6 +3004,7 @@ return;
 try{
 
 await loadTeacher();
+await loadMessageLogs();
 
 }
 
