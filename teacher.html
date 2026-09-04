@@ -409,8 +409,8 @@ tbody tr:nth-child(even){
 ====================================================== */
 
 .parent-actions{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}
-.whatsapp-result,.whatsapp-custom{border:0;color:#fff;border-radius:5px;padding:7px 9px;cursor:pointer;font-size:10px;font-weight:bold}
-.whatsapp-result{background:#198754}.whatsapp-custom{background:#0b7285}
+.whatsapp-result,.whatsapp-custom,.whatsapp-file{border:0;color:#fff;border-radius:5px;padding:7px 9px;cursor:pointer;font-size:10px;font-weight:bold}
+.whatsapp-result{background:#198754}.whatsapp-custom{background:#0b7285}.whatsapp-file{background:#6f42c1}
 .messages-btn{background:#0b7285;color:#fff}
 .message-tools{display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-bottom:12px}
 .message-search{width:100%;height:42px;border:1px solid #bdc8d2;border-radius:7px;padding:8px 11px;font-family:Tahoma,Arial,sans-serif}
@@ -1955,6 +1955,13 @@ class="whatsapp-custom"
 onclick='openCustomMessage(${JSON.stringify(String(student.code))})'
 >
 ✉️ رسالة
+</button>
+
+<button
+class="whatsapp-file"
+onclick='openFileModal(${JSON.stringify(String(student.code))})'
+>
+📎 ملف
 </button>
 </div>
 
