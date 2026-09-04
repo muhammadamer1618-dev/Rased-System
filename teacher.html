@@ -3213,9 +3213,18 @@ async function uploadFileAndGenerateLink(){
       String(currentUsername||"teacher")
       .replace(/[^a-zA-Z0-9_-]/g,"_");
 
+    const originalName=String(file.name||"file");
+    const lastDot=originalName.lastIndexOf(".");
+    const rawExt=lastDot>=0 ? originalName.slice(lastDot+1) : "";
+    const safeExt=rawExt.replace(/[^a-zA-Z0-9]/g,"").toLowerCase().slice(0,10);
+
+    /* اسم داخلي إنجليزي فقط لتجنب InvalidKey مع الأسماء العربية */
+    const generatedName=
+      Date.now()+"_"+Math.random().toString(36).slice(2,10)+
+      (safeExt ? "."+safeExt : "");
+
     const filePath=
-      teacherFolder+"/"+
-      Date.now()+"_"+safeUploadFileName(file.name);
+      teacherFolder+"/"+generatedName;
 
     const {data,error}=
       await supabaseClient
