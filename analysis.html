@@ -11,25 +11,50 @@
 
 <style>
 
-*{box-sizing:border-box}
+*{
+    box-sizing:border-box;
+}
 
 :root{
-  --navy:#073b68;
-  --navy2:#0d558c;
-  --blue:#2585d8;
-  --green:#35b765;
-  --yellow:#ffd44d;
-  --red:#ef3f4a;
-  --gray:#d9dee3;
-  --border:#ccd5de;
-  --text:#14283c;
+    --navy:#073b68;
+    --navy2:#0d558c;
+
+    --green:#35b765;
+    --greenLight:#d8f3df;
+    --greenDark:#126b34;
+
+    --blue:#3488d8;
+    --blueLight:#dceeff;
+    --blueDark:#125c9d;
+
+    --yellow:#ffd44d;
+    --yellowLight:#fff1aa;
+    --yellowDark:#795d00;
+
+    --red:#ef404a;
+    --redLight:#ffd1d4;
+    --redDark:#aa1f28;
+
+    --purple:#7654c4;
+    --purpleLight:#eee7ff;
+
+    --gray:#9da5ac;
+    --grayLight:#e7eaed;
+
+    --border:#ccd5de;
+    --text:#14283c;
+}
+
+html,
+body{
+    margin:0;
+    padding:0;
 }
 
 body{
-  margin:0;
-  font-family:Tahoma,Arial,sans-serif;
-  background:#f3f6f9;
-  color:var(--text);
+    font-family:Tahoma,Arial,sans-serif;
+    background:#f3f6f9;
+    color:var(--text);
 }
 
 /* =====================================================
@@ -37,59 +62,59 @@ body{
 ===================================================== */
 
 .header{
-  background:linear-gradient(135deg,#06365f,#0a558b);
-  color:#fff;
-  text-align:center;
-  padding:15px;
-  position:relative;
-  box-shadow:0 3px 12px rgba(0,0,0,.16);
+    background:linear-gradient(135deg,#06365f,#0a558b);
+    color:#fff;
+    text-align:center;
+    padding:14px;
+    position:relative;
+    box-shadow:0 3px 12px rgba(0,0,0,.16);
 }
 
 .logo{
-  width:68px;
-  height:68px;
-  object-fit:contain;
-  background:#fff;
-  border-radius:50%;
-  padding:4px;
+    width:68px;
+    height:68px;
+    object-fit:contain;
+    background:#fff;
+    border-radius:50%;
+    padding:4px;
 }
 
 .header h1{
-  margin:4px 0 2px;
-  font-size:24px;
+    margin:3px 0 2px;
+    font-size:24px;
 }
 
 .header p{
-  margin:0;
-  color:#f0c739;
-  font-weight:bold;
+    margin:0;
+    color:#f0c739;
+    font-weight:bold;
 }
 
 .header-actions{
-  position:absolute;
-  left:18px;
-  top:22px;
-  display:flex;
-  gap:8px;
+    position:absolute;
+    left:18px;
+    top:22px;
+    display:flex;
+    gap:8px;
 }
 
 button{
-  font-family:Tahoma,Arial,sans-serif;
-  border:0;
-  border-radius:7px;
-  padding:10px 14px;
-  font-weight:bold;
-  cursor:pointer;
+    font-family:Tahoma,Arial,sans-serif;
+    border:0;
+    border-radius:7px;
+    padding:10px 14px;
+    font-weight:bold;
+    cursor:pointer;
 }
 
 .back-btn{
-  background:#fff;
-  color:#183b5a;
+    background:#fff;
+    color:#183b5a;
 }
 
 .print-btn{
-  background:#d6a821;
-  color:#fff;
+    background:#d6a821;
+    color:#fff;
 }
 
 /* =====================================================
@@ -97,35 +122,35 @@ button{
 ===================================================== */
 
 .container{
-  width:min(1200px,96%);
-  margin:18px auto 35px;
+    width:min(1200px,96%);
+    margin:16px auto 35px;
 }
 
 .card{
-  background:#fff;
-  border:1px solid #dce3e9;
-  border-radius:10px;
-  box-shadow:0 2px 12px rgba(0,0,0,.055);
-  margin-bottom:13px;
-  overflow:hidden;
+    background:#fff;
+    border:1px solid #dce3e9;
+    border-radius:10px;
+    box-shadow:0 2px 12px rgba(0,0,0,.055);
+    margin-bottom:12px;
+    overflow:hidden;
 }
 
 .card-title{
-  padding:11px 15px;
-  border-bottom:1px solid #e2e7eb;
-  color:#0b4776;
-  font-size:15px;
-  font-weight:bold;
+    padding:10px 15px;
+    border-bottom:1px solid #e2e7eb;
+    color:#0b4776;
+    font-size:15px;
+    font-weight:bold;
 }
 
 .card-body{
-  padding:14px;
+    padding:13px;
 }
 
 .empty{
-  text-align:center;
-  padding:35px 15px;
-  color:#7b8997;
+    text-align:center;
+    padding:35px 15px;
+    color:#7b8997;
 }
 
 /* =====================================================
@@ -133,254 +158,300 @@ button{
 ===================================================== */
 
 .mode-note{
-  background:#e8f3ff;
-  border:1px solid #c3dcf4;
-  color:#174f7c;
-  border-radius:7px;
-  padding:9px 11px;
-  font-size:11px;
-  margin-bottom:11px;
+    background:#e8f3ff;
+    border:1px solid #c3dcf4;
+    color:#174f7c;
+    border-radius:7px;
+    padding:8px 11px;
+    font-size:11px;
+    margin-bottom:10px;
 }
 
 .filters{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  gap:10px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
 }
 
 .field label{
-  display:block;
-  text-align:center;
-  font-size:11px;
-  font-weight:bold;
-  margin-bottom:5px;
+    display:block;
+    text-align:center;
+    font-size:11px;
+    font-weight:bold;
+    margin-bottom:5px;
 }
 
 select,
 input{
-  width:100%;
-  height:41px;
-  border:1px solid #bec9d3;
-  border-radius:6px;
-  background:#fff;
-  color:#111;
-  padding:6px 10px;
-  font-family:Tahoma,Arial,sans-serif;
-  direction:rtl;
-  text-align:right;
+    width:100%;
+    height:41px;
+    border:1px solid #bec9d3;
+    border-radius:6px;
+    background:#fff;
+    color:#111;
+    padding:6px 10px;
+    font-family:Tahoma,Arial,sans-serif;
+    direction:rtl;
+    text-align:right;
 }
 
 .selected-info{
-  margin-top:10px;
-  padding:8px;
-  text-align:center;
-  border-radius:6px;
-  background:#f6f8fa;
-  border:1px solid #dce2e7;
-  font-size:11px;
-  font-weight:bold;
+    margin-top:9px;
+    padding:7px;
+    text-align:center;
+    border-radius:6px;
+    background:#f6f8fa;
+    border:1px solid #dce2e7;
+    font-size:11px;
+    font-weight:bold;
 }
 
 /* =====================================================
-   LEVEL SETTINGS
+   SETTINGS
 ===================================================== */
 
 .settings{
-  display:grid;
-  grid-template-columns:repeat(3,1fr) auto;
-  gap:8px;
-  align-items:end;
+    display:grid;
+    grid-template-columns:repeat(3,1fr) auto;
+    gap:8px;
+    align-items:end;
 }
 
 .setting label{
-  display:block;
-  font-size:10px;
-  font-weight:bold;
-  margin-bottom:4px;
+    display:block;
+    font-size:10px;
+    font-weight:bold;
+    margin-bottom:4px;
 }
 
 .setting input{
-  height:36px;
-  text-align:center;
+    height:36px;
+    text-align:center;
 }
 
 .analyze-btn{
-  height:36px;
-  background:#6f42c1;
-  color:#fff;
+    height:36px;
+    background:#6f42c1;
+    color:#fff;
 }
 
 /* =====================================================
-   PRINT HEADER
+   REPORT HEADER
 ===================================================== */
 
 .report-header{
-  background:#fff;
-  text-align:center;
-  padding:8px 12px 6px;
-  border:1px solid var(--border);
-  border-radius:8px;
-  margin-bottom:9px;
+    background:#fff;
+    text-align:center;
+    padding:7px 10px 6px;
+    border:1px solid var(--border);
+    border-radius:8px;
+    margin-bottom:7px;
 }
 
 .report-logo{
-  width:62px;
-  height:62px;
-  object-fit:contain;
+    width:56px;
+    height:56px;
+    object-fit:contain;
 }
 
 .report-header h2{
-  margin:1px 0;
-  font-size:21px;
-  color:#073b68;
+    margin:0;
+    font-size:19px;
+    color:#073b68;
 }
 
 .report-header h3{
-  margin:2px 0 8px;
-  font-size:15px;
+    margin:2px 0 6px;
+    font-size:14px;
 }
 
 .meta{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  border:1px solid #aeb9c3;
-  border-left:0;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    border:1px solid #aeb9c3;
+    border-left:0;
 }
 
 .meta-item{
-  border-left:1px solid #aeb9c3;
+    border-left:1px solid #aeb9c3;
 }
 
 .meta-title{
-  background:#edf1f4;
-  font-weight:bold;
-  padding:5px;
-  font-size:10px;
+    background:#dceaf5;
+    color:#073b68;
+    font-weight:bold;
+    padding:4px;
+    font-size:9px;
 }
 
 .meta-value{
-  padding:6px 4px;
-  font-size:11px;
-  font-weight:bold;
+    padding:5px 3px;
+    font-size:10px;
+    font-weight:bold;
 }
 
 /* =====================================================
-   KPI - COMPACT
+   KPI
 ===================================================== */
 
 .kpi-grid{
-  display:grid;
-  grid-template-columns:repeat(8,1fr);
-  gap:5px;
-  margin-bottom:9px;
+    display:grid;
+    grid-template-columns:repeat(8,1fr);
+    gap:4px;
+    margin-bottom:7px;
 }
 
 .kpi{
-  min-height:60px;
-  background:#fff;
-  border:1px solid #cfd7de;
-  border-radius:6px;
-  text-align:center;
-  padding:6px 3px;
+    min-height:54px;
+    border:1px solid #cfd7de;
+    border-radius:6px;
+    text-align:center;
+    padding:5px 2px;
+    background:#f8fbfd;
 }
 
 .kpi-label{
-  font-size:9px;
-  font-weight:bold;
-  min-height:20px;
+    font-size:8.5px;
+    font-weight:bold;
+    min-height:18px;
 }
 
 .kpi-value{
-  font-size:19px;
-  line-height:22px;
-  font-weight:bold;
-  color:#073b68;
+    font-size:18px;
+    line-height:21px;
+    font-weight:bold;
+    color:#073b68;
 }
 
-.kpi.green .kpi-value{color:#198754}
-.kpi.red .kpi-value{color:#e0333e}
-.kpi.gold .kpi-value{color:#b88700}
-.kpi.purple .kpi-value{color:#6f42c1}
+.kpi.total{
+    background:#e6f1f9;
+    border-color:#aacbe3;
+}
+
+.kpi.green{
+    background:var(--greenLight);
+    border-color:#8bd29f;
+}
+
+.kpi.green .kpi-value{
+    color:var(--greenDark);
+}
+
+.kpi.red{
+    background:var(--redLight);
+    border-color:#ee9da3;
+}
+
+.kpi.red .kpi-value{
+    color:var(--redDark);
+}
+
+.kpi.gold{
+    background:#fff3c4;
+    border-color:#e7cd68;
+}
+
+.kpi.gold .kpi-value{
+    color:#806200;
+}
+
+.kpi.purple{
+    background:var(--purpleLight);
+    border-color:#c5b5ed;
+}
+
+.kpi.purple .kpi-value{
+    color:#6042aa;
+}
+
+.kpi.blue{
+    background:var(--blueLight);
+    border-color:#a4cce9;
+}
+
+.kpi.blue .kpi-value{
+    color:var(--blueDark);
+}
 
 /* =====================================================
-   LEVEL STRIP
+   LEVELS
 ===================================================== */
 
 .level-section{
-  border:1px solid #ccd5dc;
-  border-radius:7px;
-  background:#fff;
-  padding:8px;
-  margin-bottom:9px;
+    border:1px solid #ccd5dc;
+    border-radius:7px;
+    background:#fff;
+    padding:6px;
+    margin-bottom:7px;
 }
 
 .small-heading{
-  text-align:center;
-  font-size:12px;
-  font-weight:bold;
-  margin-bottom:7px;
+    text-align:center;
+    font-size:11px;
+    font-weight:bold;
+    margin-bottom:5px;
+    color:#073b68;
 }
 
 .level-strip{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
-  overflow:hidden;
-  border-radius:5px;
-  border:1px solid #d2d7dc;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    overflow:hidden;
+    border-radius:5px;
+    border:1px solid #c7ced4;
 }
 
 .level-segment{
-  text-align:center;
-  padding:7px 3px 5px;
-  font-weight:bold;
+    text-align:center;
+    padding:5px 3px;
+    font-weight:bold;
 }
 
 .level-segment .count{
-  font-size:18px;
-  display:block;
+    font-size:17px;
+    display:block;
 }
 
 .level-segment .percent{
-  font-size:9px;
-  display:block;
-  margin-top:2px;
+    font-size:8px;
+    display:block;
 }
 
 .level-high{
-  background:#40ba67;
-  color:white;
+    background:#35b765 !important;
+    color:#fff !important;
 }
 
 .level-medium{
-  background:#3488d8;
-  color:white;
+    background:#3488d8 !important;
+    color:#fff !important;
 }
 
 .level-care{
-  background:#ffd44d;
-  color:#222;
+    background:#ffd44d !important;
+    color:#322800 !important;
 }
 
 .level-case{
-  background:#ef404a;
-  color:white;
+    background:#ef404a !important;
+    color:#fff !important;
 }
 
 .level-labels{
-  display:grid;
-  grid-template-columns:repeat(4,1fr);
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
 }
 
 .level-label{
-  text-align:center;
-  padding-top:4px;
-  font-size:9px;
-  line-height:1.45;
+    text-align:center;
+    padding-top:3px;
+    font-size:8px;
+    line-height:1.35;
 }
 
 .level-label strong{
-  display:block;
-  font-size:10px;
+    display:block;
+    font-size:9px;
 }
 
 /* =====================================================
@@ -388,205 +459,256 @@ input{
 ===================================================== */
 
 .chart-box{
-  background:#fff;
-  border:1px solid #ccd5dc;
-  border-radius:7px;
-  padding:8px 12px 7px;
-  margin-bottom:9px;
+    background:#fff;
+    border:1px solid #ccd5dc;
+    border-radius:7px;
+    padding:6px 10px 5px;
+    margin-bottom:7px;
 }
 
 .chart-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:4px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:3px;
 }
 
 .chart-title{
-  font-size:12px;
-  font-weight:bold;
-  color:#073b68;
+    font-size:11px;
+    font-weight:bold;
+    color:#073b68;
 }
 
 .chart-caption{
-  font-size:9px;
+    font-size:8px;
+    color:#667788;
 }
 
 .chart-area{
-  height:190px;
-  display:flex;
-  direction:ltr;
-  position:relative;
+    height:165px;
+    display:flex;
+    direction:ltr;
+    position:relative;
 }
 
 .y-axis{
-  width:31px;
-  height:160px;
-  margin-top:2px;
-  border-right:1px solid #8c98a3;
-  position:relative;
+    width:30px;
+    height:137px;
+    margin-top:2px;
+    border-right:1px solid #7e8993;
+    position:relative;
 }
 
 .y-label{
-  position:absolute;
-  right:5px;
-  transform:translateY(50%);
-  font-size:8px;
-  color:#475569;
+    position:absolute;
+    right:5px;
+    transform:translateY(50%);
+    font-size:7px;
+    color:#475569;
 }
 
 .plot{
-  flex:1;
-  height:160px;
-  margin-top:2px;
-  border-bottom:1px solid #8c98a3;
-  position:relative;
-  display:flex;
-  align-items:flex-end;
-  justify-content:space-around;
-  padding:0 4%;
-  background:
-    repeating-linear-gradient(
-      to top,
-      transparent 0,
-      transparent 31px,
-      #edf0f2 31px,
-      #edf0f2 32px
-    );
+    flex:1;
+    height:137px;
+    margin-top:2px;
+    border-bottom:1px solid #7e8993;
+    position:relative;
+    display:flex;
+    align-items:flex-end;
+    justify-content:space-around;
+    padding:0 5%;
+    background:
+        repeating-linear-gradient(
+            to top,
+            transparent 0,
+            transparent 26px,
+            #e8ecef 26px,
+            #e8ecef 27px
+        );
 }
 
 .bar-group{
-  width:18%;
-  height:100%;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-end;
-  align-items:center;
-  position:relative;
+    width:19%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-end;
+    align-items:center;
+    position:relative;
 }
 
 .bar-value{
-  font-size:11px;
-  font-weight:bold;
-  margin-bottom:3px;
-  direction:rtl;
+    font-size:10px;
+    font-weight:bold;
+    margin-bottom:2px;
+    direction:rtl;
+    color:#162b3e;
 }
 
 .bar{
-  width:58%;
-  min-height:2px;
-  border-radius:3px 3px 0 0;
+    width:58%;
+    min-height:3px;
+    border-radius:5px 5px 0 0;
 }
 
-.bar.green{background:#35b765}
-.bar.blue{background:#3488d8}
-.bar.yellow{background:#ffd44d}
-.bar.red{background:#ef404a}
+.bar.green{
+    background:#35b765 !important;
+    background-color:#35b765 !important;
+    border:1px solid #278d4b;
+}
+
+.bar.blue{
+    background:#3488d8 !important;
+    background-color:#3488d8 !important;
+    border:1px solid #2469a9;
+}
+
+.bar.yellow{
+    background:#ffd44d !important;
+    background-color:#ffd44d !important;
+    border:1px solid #d5a900;
+}
+
+.bar.red{
+    background:#ef404a !important;
+    background-color:#ef404a !important;
+    border:1px solid #c52d36;
+}
 
 .bar-name{
-  position:absolute;
-  top:165px;
-  width:130%;
-  text-align:center;
-  font-size:9px;
-  font-weight:bold;
-  direction:rtl;
+    position:absolute;
+    top:141px;
+    width:150%;
+    text-align:center;
+    font-size:8px;
+    font-weight:bold;
+    direction:rtl;
 }
 
 /* =====================================================
-   TABLE
+   DETAILS
 ===================================================== */
 
 .details-box{
-  background:#fff;
-  border:1px solid #ccd5dc;
-  border-radius:7px;
-  overflow:hidden;
+    background:#fff;
+    border:1px solid #bfcbd4;
+    border-radius:7px;
+    overflow:hidden;
 }
 
 .details-title{
-  padding:7px;
-  font-size:12px;
-  font-weight:bold;
-  text-align:center;
-  color:#073b68;
-  border-bottom:1px solid #ccd5dc;
+    padding:6px;
+    font-size:11px;
+    font-weight:bold;
+    text-align:center;
+    color:#fff;
+    background:#073b68;
 }
 
 .table-wrap{
-  overflow:auto;
+    overflow:auto;
 }
 
 table{
-  width:100%;
-  border-collapse:collapse;
-  min-width:720px;
+    width:100%;
+    border-collapse:collapse;
+    min-width:700px;
 }
 
 th{
-  background:#e8edf1;
-  color:#152a3e;
-  font-size:10px;
+    background:#dbe8f2;
+    color:#073b68;
+    font-size:9px;
+    font-weight:bold;
 }
 
-th,td{
-  padding:6px 5px;
-  border-left:1px solid #cbd3da;
-  border-bottom:1px solid #cbd3da;
-  text-align:center;
+th,
+td{
+    padding:5px 4px;
+    border-left:1px solid #bfc7ce;
+    border-bottom:1px solid #bfc7ce;
+    text-align:center;
 }
 
 td{
-  font-size:10px;
+    font-size:9px;
 }
 
 td.student-name{
-  text-align:right;
-  font-weight:bold;
+    text-align:right;
+    font-weight:bold;
 }
 
-/* whole row classification */
+/* =====================================================
+   STUDENT COLORS
+===================================================== */
 
 .row-high td{
-  background:#c9f0cd;
+    background:#d8f3df !important;
+}
+
+.row-high .student-name{
+    color:#126b34 !important;
+    font-weight:900;
 }
 
 .row-medium td{
-  background:#d5eaff;
+    background:#dceeff !important;
+}
+
+.row-medium .student-name{
+    color:#125c9d !important;
+    font-weight:900;
 }
 
 .row-care td{
-  background:#fff0a9;
+    background:#fff1aa !important;
+}
+
+.row-care .student-name{
+    color:#735800 !important;
+    font-weight:900;
 }
 
 .row-case td{
-  background:#ffc8cb;
+    background:#ffd1d4 !important;
+}
+
+.row-case .student-name{
+    color:#aa1f28 !important;
+    font-weight:900;
 }
 
 .row-absent td,
 .row-unrecorded td{
-  background:#e3e6e8;
-  color:#3d4852;
+    background:#e7eaed !important;
+    color:#4c5660;
+}
+
+.row-absent .student-name,
+.row-unrecorded .student-name{
+    color:#4c5660 !important;
+    font-weight:900;
 }
 
 .percent-high{
-  font-weight:bold;
-  color:#0d6c32;
+    color:#126b34;
+    font-weight:bold;
 }
 
 .percent-medium{
-  font-weight:bold;
-  color:#125da3;
+    color:#125c9d;
+    font-weight:bold;
 }
 
 .percent-care{
-  font-weight:bold;
-  color:#7c6000;
+    color:#735800;
+    font-weight:bold;
 }
 
 .percent-case{
-  font-weight:bold;
-  color:#b51f28;
+    color:#aa1f28;
+    font-weight:bold;
 }
 
 /* =====================================================
@@ -594,352 +716,526 @@ td.student-name{
 ===================================================== */
 
 .legend{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:17px;
-  padding:7px;
-  margin-top:7px;
-  border:1px solid #e0e4e7;
-  border-radius:6px;
-  background:#f8f9fa;
-  font-size:9px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    flex-wrap:wrap;
+    gap:15px;
+    padding:5px;
+    margin-top:5px;
+    border:1px solid #d5dde3;
+    border-radius:5px;
+    background:#f8fafb;
+    font-size:8px;
 }
 
 .legend-item{
-  display:flex;
-  align-items:center;
-  gap:5px;
+    display:flex;
+    align-items:center;
+    gap:4px;
+    font-weight:bold;
 }
 
 .dot{
-  width:11px;
-  height:11px;
-  border-radius:50%;
+    width:10px;
+    height:10px;
+    border-radius:50%;
 }
 
-.dot.green{background:#35b765}
-.dot.blue{background:#3488d8}
-.dot.yellow{background:#ffd44d}
-.dot.red{background:#ef404a}
-.dot.gray{background:#9da5ac}
+.dot.green{background:#35b765 !important}
+.dot.blue{background:#3488d8 !important}
+.dot.yellow{background:#ffd44d !important}
+.dot.red{background:#ef404a !important}
+.dot.gray{background:#9da5ac !important}
 
 /* =====================================================
    FOOTER
 ===================================================== */
 
 .report-footer{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  border-top:2px solid #173d61;
-  margin-top:8px;
-  padding:6px 3px 0;
-  font-size:9px;
-  font-weight:bold;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border-top:2px solid #173d61;
+    margin-top:6px;
+    padding:5px 3px 0;
+    font-size:8px;
+    font-weight:bold;
 }
 
 .screen-footer{
-  text-align:center;
-  color:#71808e;
-  padding:14px;
-  font-size:10px;
+    text-align:center;
+    color:#71808e;
+    padding:12px;
+    font-size:10px;
 }
 
 /* =====================================================
-   RESPONSIVE
+   MOBILE
 ===================================================== */
 
 @media(max-width:850px){
 
-  .header-actions{
-    position:static;
-    justify-content:center;
-    margin-top:10px;
-  }
+    .header-actions{
+        position:static;
+        justify-content:center;
+        margin-top:10px;
+    }
 
-  .filters{
-    grid-template-columns:repeat(2,1fr);
-  }
+    .filters{
+        grid-template-columns:repeat(2,1fr);
+    }
 
-  .kpi-grid{
-    grid-template-columns:repeat(4,1fr);
-  }
+    .settings{
+        grid-template-columns:repeat(2,1fr);
+    }
 
-  .settings{
-    grid-template-columns:repeat(2,1fr);
-  }
-
+    .kpi-grid{
+        grid-template-columns:repeat(4,1fr);
+    }
 }
 
 /* =====================================================
-   PRINT - A4 PORTRAIT
+   PRINT
 ===================================================== */
 
 @media print{
 
-  @page{
-    size:A4 portrait;
-    margin:5mm;
-  }
+    @page{
+        size:A4 portrait;
+        margin:4.5mm;
+    }
 
-  html,
-  body{
-    width:100%;
-    margin:0;
-    padding:0;
-    background:white;
-  }
+    /*
+       الحفاظ على جميع الألوان في الطباعة
+    */
 
-  .header,
-  .selection-card,
-  .settings-card,
-  .screen-footer{
-    display:none !important;
-  }
+    *,
+    *::before,
+    *::after{
+        -webkit-print-color-adjust:exact !important;
+        print-color-adjust:exact !important;
+        color-adjust:exact !important;
+    }
 
-  .container{
-    width:100%;
-    margin:0;
-    padding:0;
-  }
+    html,
+    body{
+        width:100%;
+        margin:0 !important;
+        padding:0 !important;
+        background:#fff !important;
+    }
 
-  #analysisArea{
-    width:100%;
-  }
+    .header,
+    .selection-card,
+    .settings-card,
+    .screen-footer{
+        display:none !important;
+    }
 
-  .report-header{
-    padding:2px 4px 3px;
-    margin:0 0 3px;
-    border-radius:0;
-  }
+    .container{
+        width:100%;
+        margin:0 !important;
+        padding:0 !important;
+    }
 
-  .report-logo{
-    width:40px;
-    height:40px;
-  }
+    #analysisArea{
+        width:100%;
+        margin:0;
+        padding:0;
+    }
 
-  .report-header h2{
-    font-size:14px;
-    margin:0;
-  }
+    /* HEADER */
 
-  .report-header h3{
-    font-size:10px;
-    margin:0 0 3px;
-  }
+    .report-header{
+        padding:1px 3px 2px;
+        margin:0 0 2px;
+        border-radius:0;
+    }
 
-  .meta{
-    margin-top:2px;
-  }
+    .report-logo{
+        width:36px;
+        height:36px;
+    }
 
-  .meta-title{
-    padding:2px;
-    font-size:6.8px;
-  }
+    .report-header h2{
+        font-size:12px;
+        margin:0;
+    }
 
-  .meta-value{
-    padding:2px;
-    font-size:7px;
-  }
+    .report-header h3{
+        font-size:8px;
+        margin:0 0 2px;
+    }
 
-  .kpi-grid{
-    grid-template-columns:repeat(8,1fr);
-    gap:2px;
-    margin-bottom:3px;
-  }
+    .meta{
+        margin-top:1px;
+    }
 
-  .kpi{
-    min-height:36px;
-    padding:2px 1px;
-    border-radius:2px;
-  }
+    .meta-title{
+        padding:1.5px;
+        font-size:5.8px;
+        background:#dceaf5 !important;
+        color:#073b68 !important;
+    }
 
-  .kpi-label{
-    font-size:5.8px;
-    min-height:13px;
-  }
+    .meta-value{
+        padding:2px;
+        font-size:6px;
+    }
 
-  .kpi-value{
-    font-size:11px;
-    line-height:12px;
-  }
+    /* KPI */
 
-  .level-section{
-    padding:3px;
-    margin-bottom:3px;
-    border-radius:0;
-  }
+    .kpi-grid{
+        grid-template-columns:repeat(8,1fr);
+        gap:1.5px;
+        margin-bottom:2px;
+    }
 
-  .small-heading{
-    font-size:7px;
-    margin-bottom:2px;
-  }
+    .kpi{
+        min-height:31px;
+        padding:1.5px 1px;
+        border-radius:2px;
+    }
 
-  .level-segment{
-    padding:2px;
-  }
+    .kpi-label{
+        font-size:5px;
+        min-height:11px;
+    }
 
-  .level-segment .count{
-    font-size:10px;
-  }
+    .kpi-value{
+        font-size:9px;
+        line-height:10px;
+    }
 
-  .level-segment .percent{
-    font-size:5.5px;
-  }
+    .kpi.total{
+        background:#e6f1f9 !important;
+    }
 
-  .level-label{
-    padding-top:1px;
-    font-size:5.5px;
-    line-height:1.2;
-  }
+    .kpi.green{
+        background:#d8f3df !important;
+    }
 
-  .level-label strong{
-    font-size:6px;
-  }
+    .kpi.red{
+        background:#ffd1d4 !important;
+    }
 
-  .chart-box{
-    padding:3px 5px 2px;
-    margin-bottom:3px;
-    border-radius:0;
-  }
+    .kpi.gold{
+        background:#fff3c4 !important;
+    }
 
-  .chart-header{
-    margin-bottom:1px;
-  }
+    .kpi.purple{
+        background:#eee7ff !important;
+    }
 
-  .chart-title{
-    font-size:7px;
-  }
+    .kpi.blue{
+        background:#dceeff !important;
+    }
 
-  .chart-caption{
-    font-size:5.5px;
-  }
+    /* LEVELS */
 
-  .chart-area{
-    height:108px;
-  }
+    .level-section{
+        padding:2px;
+        margin-bottom:2px;
+        border-radius:0;
+    }
 
-  .y-axis{
-    width:21px;
-    height:87px;
-  }
+    .small-heading{
+        font-size:5.8px;
+        margin-bottom:1px;
+    }
 
-  .y-label{
-    font-size:5px;
-  }
+    .level-segment{
+        padding:1.5px;
+    }
 
-  .plot{
-    height:87px;
-    background:
-      repeating-linear-gradient(
-        to top,
-        transparent 0,
-        transparent 16px,
-        #e7eaed 16px,
-        #e7eaed 17px
-      );
-  }
+    .level-segment .count{
+        font-size:8px;
+    }
 
-  .bar-value{
-    font-size:6px;
-    margin-bottom:1px;
-  }
+    .level-segment .percent{
+        font-size:4.5px;
+    }
 
-  .bar{
-    width:48%;
-  }
+    .level-high{
+        background:#35b765 !important;
+        color:#fff !important;
+    }
 
-  .bar-name{
-    top:90px;
-    font-size:5.5px;
-  }
+    .level-medium{
+        background:#3488d8 !important;
+        color:#fff !important;
+    }
 
-  .details-box{
-    border-radius:0;
-  }
+    .level-care{
+        background:#ffd44d !important;
+        color:#322800 !important;
+    }
 
-  .details-title{
-    padding:3px;
-    font-size:7px;
-  }
+    .level-case{
+        background:#ef404a !important;
+        color:#fff !important;
+    }
 
-  .table-wrap{
-    overflow:visible;
-  }
+    .level-label{
+        padding-top:1px;
+        font-size:4.5px;
+        line-height:1.1;
+    }
 
-  table{
-    min-width:0;
-    table-layout:fixed;
-  }
+    .level-label strong{
+        font-size:5px;
+    }
 
-  th,td{
-    padding:2px 2px;
-    font-size:5.8px;
-    border:1px solid #888;
-    line-height:1.15;
-  }
+    /* CHART */
 
-  th{
-    font-size:5.8px;
-  }
+    .chart-box{
+        padding:2px 4px 1px;
+        margin-bottom:2px;
+        border-radius:0;
+    }
 
-  th:nth-child(1),
-  td:nth-child(1){
-    width:5%;
-  }
+    .chart-header{
+        margin-bottom:0;
+    }
 
-  th:nth-child(2),
-  td:nth-child(2){
-    width:16%;
-  }
+    .chart-title{
+        font-size:5.8px;
+    }
 
-  th:nth-child(3),
-  td:nth-child(3){
-    width:38%;
-  }
+    .chart-caption{
+        font-size:4.5px;
+    }
 
-  th:nth-child(4),
-  td:nth-child(4){
-    width:13%;
-  }
+    .chart-area{
+        height:93px;
+    }
 
-  th:nth-child(5),
-  td:nth-child(5){
-    width:15%;
-  }
+    .y-axis{
+        width:19px;
+        height:74px;
+        margin-top:1px;
+    }
 
-  th:nth-child(6),
-  td:nth-child(6){
-    width:13%;
-  }
+    .y-label{
+        font-size:4px;
+        right:3px;
+    }
 
-  tr{
-    break-inside:avoid;
-    page-break-inside:avoid;
-  }
+    .plot{
+        height:74px;
+        margin-top:1px;
+        background:
+            repeating-linear-gradient(
+                to top,
+                transparent 0,
+                transparent 13px,
+                #e4e8eb 13px,
+                #e4e8eb 14px
+            ) !important;
+    }
 
-  .legend{
-    gap:8px;
-    padding:2px;
-    margin-top:2px;
-    font-size:5.5px;
-    border-radius:0;
-  }
+    .bar-value{
+        font-size:5px;
+        margin-bottom:1px;
+        color:#111 !important;
+    }
 
-  .dot{
-    width:6px;
-    height:6px;
-  }
+    .bar{
+        width:50%;
+        min-height:2px;
+    }
 
-  .report-footer{
-    margin-top:3px;
-    padding-top:2px;
-    font-size:5.8px;
-    border-top:1px solid #173d61;
-  }
+    /*
+       الرسم البياني الملون في الطباعة
+    */
 
+    .bar.green{
+        background:#35b765 !important;
+        background-color:#35b765 !important;
+        border:1px solid #278d4b !important;
+    }
+
+    .bar.blue{
+        background:#3488d8 !important;
+        background-color:#3488d8 !important;
+        border:1px solid #2469a9 !important;
+    }
+
+    .bar.yellow{
+        background:#ffd44d !important;
+        background-color:#ffd44d !important;
+        border:1px solid #d5a900 !important;
+    }
+
+    .bar.red{
+        background:#ef404a !important;
+        background-color:#ef404a !important;
+        border:1px solid #c52d36 !important;
+    }
+
+    .bar-name{
+        top:77px;
+        font-size:4.5px;
+    }
+
+    /* TABLE */
+
+    .details-box{
+        border-radius:0;
+    }
+
+    .details-title{
+        padding:2px;
+        font-size:5.8px;
+        background:#073b68 !important;
+        color:#fff !important;
+    }
+
+    .table-wrap{
+        overflow:visible;
+    }
+
+    table{
+        min-width:0;
+        table-layout:fixed;
+    }
+
+    th,
+    td{
+        padding:1.5px 1.5px;
+        font-size:5px;
+        border:1px solid #7e7e7e;
+        line-height:1.05;
+    }
+
+    th{
+        font-size:5px;
+        background:#dbe8f2 !important;
+        color:#073b68 !important;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1){
+        width:5%;
+    }
+
+    th:nth-child(2),
+    td:nth-child(2){
+        width:16%;
+    }
+
+    th:nth-child(3),
+    td:nth-child(3){
+        width:38%;
+    }
+
+    th:nth-child(4),
+    td:nth-child(4){
+        width:13%;
+    }
+
+    th:nth-child(5),
+    td:nth-child(5){
+        width:15%;
+    }
+
+    th:nth-child(6),
+    td:nth-child(6){
+        width:13%;
+    }
+
+    /*
+       ألوان أسماء وصفوف الطلاب
+    */
+
+    .row-high td{
+        background:#d8f3df !important;
+        background-color:#d8f3df !important;
+    }
+
+    .row-high .student-name{
+        color:#126b34 !important;
+        font-weight:900 !important;
+    }
+
+    .row-medium td{
+        background:#dceeff !important;
+        background-color:#dceeff !important;
+    }
+
+    .row-medium .student-name{
+        color:#125c9d !important;
+        font-weight:900 !important;
+    }
+
+    .row-care td{
+        background:#fff1aa !important;
+        background-color:#fff1aa !important;
+    }
+
+    .row-care .student-name{
+        color:#735800 !important;
+        font-weight:900 !important;
+    }
+
+    .row-case td{
+        background:#ffd1d4 !important;
+        background-color:#ffd1d4 !important;
+    }
+
+    .row-case .student-name{
+        color:#aa1f28 !important;
+        font-weight:900 !important;
+    }
+
+    .row-absent td,
+    .row-unrecorded td{
+        background:#e7eaed !important;
+        background-color:#e7eaed !important;
+    }
+
+    .row-absent .student-name,
+    .row-unrecorded .student-name{
+        color:#4c5660 !important;
+        font-weight:900 !important;
+    }
+
+    tr{
+        break-inside:avoid;
+        page-break-inside:avoid;
+    }
+
+    /* LEGEND */
+
+    .legend{
+        gap:7px;
+        padding:1.5px;
+        margin-top:2px;
+        font-size:4.5px;
+        border-radius:0;
+        background:#f8fafb !important;
+    }
+
+    .dot{
+        width:5px;
+        height:5px;
+    }
+
+    .dot.green{background:#35b765 !important}
+    .dot.blue{background:#3488d8 !important}
+    .dot.yellow{background:#ffd44d !important}
+    .dot.red{background:#ef404a !important}
+    .dot.gray{background:#9da5ac !important}
+
+    /* FOOTER */
+
+    .report-footer{
+        margin-top:2px;
+        padding-top:1.5px;
+        font-size:4.8px;
+        border-top:1px solid #173d61;
+    }
 }
 
 </style>
@@ -947,213 +1243,179 @@ td.student-name{
 
 <body>
 
-<!-- =====================================================
-     HEADER
-===================================================== -->
-
 <header class="header">
 
-<img src="logo.jpeg" class="logo">
+    <img src="logo.jpeg" class="logo">
 
-<h1>مدارس الفلاح الأهلية</h1>
+    <h1>مدارس الفلاح الأهلية</h1>
 
-<p>نظام راصد - تحليل نتائج الاختبار</p>
+    <p>نظام راصد - تحليل نتائج الاختبار</p>
 
-<div class="header-actions">
+    <div class="header-actions">
 
-<button class="back-btn" onclick="goBack()">
-↩ رجوع
-</button>
+        <button class="back-btn" onclick="goBack()">
+            ↩ رجوع
+        </button>
 
-<button class="print-btn" onclick="printAnalysis()">
-🖨️ طباعة / PDF
-</button>
+        <button class="print-btn" onclick="printAnalysis()">
+            🖨️ طباعة / PDF
+        </button>
 
-</div>
+    </div>
 
 </header>
 
 
 <div class="container">
 
-<!-- =====================================================
-     FILTERS
-===================================================== -->
-
 <div class="card selection-card">
 
-<div class="card-title">
-🔎 تحديد الاختبار
-</div>
+    <div class="card-title">
+        🔎 تحديد الاختبار
+    </div>
 
-<div class="card-body">
+    <div class="card-body">
 
-<div id="modeNote" class="mode-note">
-جاري تحميل البيانات...
-</div>
+        <div id="modeNote" class="mode-note">
+            جاري تحميل البيانات...
+        </div>
 
-<div class="filters">
+        <div class="filters">
 
-<div class="field">
+            <div class="field">
 
-<label>المادة</label>
+                <label>المادة</label>
 
-<select id="subjectSelect" onchange="subjectChanged()">
+                <select id="subjectSelect" onchange="subjectChanged()">
+                    <option value="">اختر المادة</option>
+                </select>
 
-<option value="">
-اختر المادة
-</option>
-
-</select>
-
-</div>
+            </div>
 
 
-<div class="field">
+            <div class="field">
 
-<label>الصف</label>
+                <label>الصف</label>
 
-<select id="gradeSelect" onchange="gradeChanged()">
+                <select id="gradeSelect" onchange="gradeChanged()">
+                    <option value="">اختر الصف</option>
+                </select>
 
-<option value="">
-اختر الصف
-</option>
-
-</select>
-
-</div>
+            </div>
 
 
-<div class="field">
+            <div class="field">
 
-<label>الشعبة</label>
+                <label>الشعبة</label>
 
-<select id="sectionSelect" onchange="sectionChanged()">
+                <select id="sectionSelect" onchange="sectionChanged()">
+                    <option value="">اختر الشعبة</option>
+                </select>
 
-<option value="">
-اختر الشعبة
-</option>
-
-</select>
-
-</div>
+            </div>
 
 
-<div class="field">
+            <div class="field">
 
-<label>الاختبار</label>
+                <label>الاختبار</label>
 
-<select id="testSelect" onchange="testChanged()">
+                <select id="testSelect" onchange="testChanged()">
+                    <option value="">اختر الاختبار</option>
+                </select>
 
-<option value="">
-اختر الاختبار
-</option>
+            </div>
 
-</select>
+        </div>
+
+        <div
+            id="selectedInfo"
+            class="selected-info"
+            style="display:none">
+        </div>
+
+    </div>
 
 </div>
 
-</div>
-
-<div
-id="selectedInfo"
-class="selected-info"
-style="display:none">
-</div>
-
-</div>
-
-</div>
-
-
-<!-- =====================================================
-     SETTINGS
-===================================================== -->
 
 <div class="card settings-card">
 
-<div class="card-title">
-⚙️ حدود التصنيف
+    <div class="card-title">
+        ⚙️ حدود التصنيف
+    </div>
+
+    <div class="card-body">
+
+        <div class="settings">
+
+            <div class="setting">
+
+                <label>المستوى المرتفع يبدأ من %</label>
+
+                <input
+                    id="highMin"
+                    type="number"
+                    value="85"
+                    min="0"
+                    max="100">
+
+            </div>
+
+
+            <div class="setting">
+
+                <label>المستوى المتوسط يبدأ من %</label>
+
+                <input
+                    id="mediumMin"
+                    type="number"
+                    value="70"
+                    min="0"
+                    max="100">
+
+            </div>
+
+
+            <div class="setting">
+
+                <label>أولى بالرعاية تبدأ من %</label>
+
+                <input
+                    id="careMin"
+                    type="number"
+                    value="50"
+                    min="0"
+                    max="100">
+
+            </div>
+
+
+            <button
+                class="analyze-btn"
+                onclick="reanalyze()">
+
+                📊 إعادة التحليل
+
+            </button>
+
+        </div>
+
+    </div>
+
 </div>
 
-<div class="card-body">
-
-<div class="settings">
-
-<div class="setting">
-
-<label>المستوى المرتفع يبدأ من %</label>
-
-<input
-id="highMin"
-type="number"
-value="85"
-min="0"
-max="100">
-
-</div>
-
-
-<div class="setting">
-
-<label>المستوى المتوسط يبدأ من %</label>
-
-<input
-id="mediumMin"
-type="number"
-value="70"
-min="0"
-max="100">
-
-</div>
-
-
-<div class="setting">
-
-<label>أولى بالرعاية تبدأ من %</label>
-
-<input
-id="careMin"
-type="number"
-value="50"
-min="0"
-max="100">
-
-</div>
-
-
-<button
-class="analyze-btn"
-onclick="reanalyze()">
-
-📊 إعادة التحليل
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- =====================================================
-     ANALYSIS
-===================================================== -->
 
 <div id="analysisArea">
 
-<div class="empty">
-
-اختر المادة والصف والشعبة والاختبار لعرض التحليل.
-
-</div>
+    <div class="empty">
+        اختر المادة والصف والشعبة والاختبار لعرض التحليل.
+    </div>
 
 </div>
 
 
 <div class="screen-footer">
-تصميم محمد عامر أحمد - نظام راصد 2026
+    تصميم محمد عامر أحمد - نظام راصد 2026
 </div>
 
 </div>
@@ -1167,17 +1429,17 @@ onclick="reanalyze()">
 
 const firebaseConfig={
 
-apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
+    apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
 
-authDomain:"results2026-7c0dd.firebaseapp.com",
+    authDomain:"results2026-7c0dd.firebaseapp.com",
 
-projectId:"results2026-7c0dd",
+    projectId:"results2026-7c0dd",
 
-storageBucket:"results2026-7c0dd.firebasestorage.app",
+    storageBucket:"results2026-7c0dd.firebasestorage.app",
 
-messagingSenderId:"241421115694",
+    messagingSenderId:"241421115694",
 
-appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
+    appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
 
 };
 
@@ -1192,25 +1454,25 @@ const db=firebase.firestore();
 
 const gradeOrder=[
 
-"1 ابتدائي",
-"2 ابتدائي",
-"3 ابتدائي",
-"4 ابتدائي",
-"5 ابتدائي",
-"6 ابتدائي",
+    "1 ابتدائي",
+    "2 ابتدائي",
+    "3 ابتدائي",
+    "4 ابتدائي",
+    "5 ابتدائي",
+    "6 ابتدائي",
 
-"1 متوسط",
-"2 متوسط",
-"3 متوسط",
+    "1 متوسط",
+    "2 متوسط",
+    "3 متوسط",
 
-"1 ثانوي",
-"2 ثانوي",
-"3 ثانوي"
+    "1 ثانوي",
+    "2 ثانوي",
+    "3 ثانوي"
 
 ];
 
 const sectionOrder=[
-"أ","ب","ج","د"
+    "أ","ب","ج","د"
 ];
 
 
@@ -1246,22 +1508,22 @@ let analyzedStudents=[];
 
 const urlParams=
 new URLSearchParams(
-window.location.search
+    window.location.search
 );
 
 const incoming={
 
-subjectId:
-urlParams.get("subjectId")||"",
+    subjectId:
+        urlParams.get("subjectId")||"",
 
-grade:
-urlParams.get("grade")||"",
+    grade:
+        urlParams.get("grade")||"",
 
-section:
-urlParams.get("section")||"",
+    section:
+        urlParams.get("section")||"",
 
-testId:
-urlParams.get("testId")||""
+    testId:
+        urlParams.get("testId")||""
 
 };
 
@@ -1271,88 +1533,77 @@ urlParams.get("testId")||""
 ===================================================== */
 
 function el(id){
-return document.getElementById(id);
+    return document.getElementById(id);
 }
 
 
 function escapeHtml(value){
 
-return String(value??"")
-
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
+    return String(value??"")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
 
 }
 
 
 function unique(values){
-return [...new Set(values)];
+    return [...new Set(values)];
 }
 
 
-function clearSelect(
-select,
-text
-){
+function clearSelect(select,text){
 
-select.innerHTML="";
+    select.innerHTML="";
 
-const option=
-document.createElement("option");
+    const option=
+        document.createElement("option");
 
-option.value="";
-option.textContent=text;
+    option.value="";
+    option.textContent=text;
 
-select.appendChild(option);
+    select.appendChild(option);
 
 }
 
 
 function formatNumber(value){
 
-if(
-value===null ||
-value===undefined ||
-Number.isNaN(Number(value))
-){
+    if(
+        value===null ||
+        value===undefined ||
+        Number.isNaN(Number(value))
+    ){
+        return "-";
+    }
 
-return "-";
+    const n=Number(value);
 
-}
-
-const n=Number(value);
-
-return Number.isInteger(n)
-?
-String(n)
-:
-n.toFixed(2);
-
+    return Number.isInteger(n)
+        ? String(n)
+        : n.toFixed(2);
 }
 
 
 function sortGrades(list){
 
-return list.sort(
-(a,b)=>
-gradeOrder.indexOf(a)-
-gradeOrder.indexOf(b)
-);
-
+    return list.sort(
+        (a,b)=>
+        gradeOrder.indexOf(a)-
+        gradeOrder.indexOf(b)
+    );
 }
 
 
 function sortSections(list){
 
-return list.sort(
-(a,b)=>
-sectionOrder.indexOf(a)-
-sectionOrder.indexOf(b)
-);
-
+    return list.sort(
+        (a,b)=>
+        sectionOrder.indexOf(a)-
+        sectionOrder.indexOf(b)
+    );
 }
 
 
@@ -1362,39 +1613,37 @@ sectionOrder.indexOf(b)
 
 function protectPage(){
 
-role=
-localStorage.getItem(
-"currentUserRole"
-)||"";
+    role=
+        localStorage.getItem(
+            "currentUserRole"
+        )||"";
 
 
-isAdmin=
-role==="admin" ||
-role==="superadmin";
+    isAdmin=
+        role==="admin" ||
+        role==="superadmin";
 
 
-isTeacher=
-role==="teacher";
+    isTeacher=
+        role==="teacher";
 
 
-if(
-!isAdmin &&
-!isTeacher
-){
+    if(
+        !isAdmin &&
+        !isTeacher
+    ){
 
-alert(
-"يجب تسجيل الدخول أولًا."
-);
+        alert(
+            "يجب تسجيل الدخول أولًا."
+        );
 
-location.href=
-"index.html";
+        location.href=
+            "index.html";
 
-return false;
+        return false;
+    }
 
-}
-
-return true;
-
+    return true;
 }
 
 
@@ -1404,73 +1653,64 @@ return true;
 
 async function loadTeacher(){
 
-if(!isTeacher){
-return;
-}
+    if(!isTeacher){
+        return;
+    }
 
 
-currentUsername=(
+    currentUsername=(
 
-localStorage.getItem("currentUserEmail") ||
+        localStorage.getItem("currentUserEmail") ||
 
-localStorage.getItem("currentUser") ||
+        localStorage.getItem("currentUser") ||
 
-""
+        ""
 
-).trim().toLowerCase();
-
-
-if(!currentUsername){
-
-throw new Error(
-"لم يتم العثور على حساب المعلم."
-);
-
-}
+    ).trim().toLowerCase();
 
 
-const doc=
+    if(!currentUsername){
 
-await db
-.collection("teachers")
-.doc(currentUsername)
-.get();
-
-
-if(!doc.exists){
-
-throw new Error(
-"لم يتم العثور على بيانات المعلم."
-);
-
-}
+        throw new Error(
+            "لم يتم العثور على حساب المعلم."
+        );
+    }
 
 
-currentTeacher={
-email:doc.id,
-...doc.data()
-};
+    const doc=
+        await db
+        .collection("teachers")
+        .doc(currentUsername)
+        .get();
 
 
-assignments=
+    if(!doc.exists){
 
-Array.isArray(
-currentTeacher.assignments
-)
+        throw new Error(
+            "لم يتم العثور على بيانات المعلم."
+        );
+    }
 
-?
 
-currentTeacher.assignments.filter(
-a=>
-a.subjectId &&
-a.grade &&
-a.section
-)
+    currentTeacher={
+        email:doc.id,
+        ...doc.data()
+    };
 
-:
 
-[];
-
+    assignments=
+        Array.isArray(
+            currentTeacher.assignments
+        )
+        ?
+        currentTeacher.assignments.filter(
+            a=>
+            a.subjectId &&
+            a.grade &&
+            a.section
+        )
+        :
+        [];
 }
 
 
@@ -1480,98 +1720,93 @@ a.section
 
 async function loadSubjects(){
 
-const snap=
-await db
-.collection("subjects")
-.get();
+    const snap=
+        await db
+        .collection("subjects")
+        .get();
 
 
-subjects=[];
+    subjects=[];
 
 
-snap.forEach(doc=>{
+    snap.forEach(doc=>{
 
-subjects.push({
-id:doc.id,
-...doc.data()
-});
+        subjects.push({
+            id:doc.id,
+            ...doc.data()
+        });
 
-});
-
-
-subjects.sort(
-(a,b)=>
-
-String(a.name||"")
-.localeCompare(
-String(b.name||""),
-"ar"
-)
-
-);
+    });
 
 
-renderSubjects();
+    subjects.sort(
+        (a,b)=>
+        String(a.name||"")
+        .localeCompare(
+            String(b.name||""),
+            "ar"
+        )
+    );
 
+
+    renderSubjects();
 }
 
 
 function renderSubjects(){
 
-const select=
-el("subjectSelect");
+    const select=
+        el("subjectSelect");
 
 
-clearSelect(
-select,
-"اختر المادة"
-);
+    clearSelect(
+        select,
+        "اختر المادة"
+    );
 
 
-let list=[];
+    let list=[];
 
 
-if(isAdmin){
+    if(isAdmin){
 
-list=subjects;
+        list=subjects;
 
-}
+    }
 
-else{
+    else{
 
-const ids=
-new Set(
-assignments.map(
-a=>a.subjectId
-)
-);
-
-
-list=
-subjects.filter(
-s=>ids.has(s.id)
-);
-
-}
+        const ids=
+            new Set(
+                assignments.map(
+                    a=>a.subjectId
+                )
+            );
 
 
-list.forEach(subject=>{
+        list=
+            subjects.filter(
+                s=>ids.has(s.id)
+            );
+    }
 
-const option=
-document.createElement(
-"option"
-);
 
-option.value=
-subject.id;
+    list.forEach(subject=>{
 
-option.textContent=
-subject.name;
+        const option=
+            document.createElement(
+                "option"
+            );
 
-select.appendChild(option);
+        option.value=
+            subject.id;
 
-});
+        option.textContent=
+            subject.name;
 
+        select.appendChild(option);
+
+    });
 }
 
 
@@ -1581,42 +1816,41 @@ select.appendChild(option);
 
 async function subjectChanged(){
 
-selectedSubjectId=
-el("subjectSelect").value;
+    selectedSubjectId=
+        el("subjectSelect").value;
 
 
-const subject=
-subjects.find(
-s=>s.id===selectedSubjectId
-);
+    const subject=
+        subjects.find(
+            s=>s.id===selectedSubjectId
+        );
 
 
-selectedSubjectName=
-subject?.name||"";
+    selectedSubjectName=
+        subject?.name||"";
 
 
-selectedGrade="";
-selectedSection="";
-selectedTest=null;
+    selectedGrade="";
+    selectedSection="";
+    selectedTest=null;
 
 
-await fillGrades();
+    await fillGrades();
 
 
-clearSelect(
-el("sectionSelect"),
-"اختر الشعبة"
-);
+    clearSelect(
+        el("sectionSelect"),
+        "اختر الشعبة"
+    );
 
 
-clearSelect(
-el("testSelect"),
-"اختر الاختبار"
-);
+    clearSelect(
+        el("testSelect"),
+        "اختر الاختبار"
+    );
 
 
-clearAnalysis();
-
+    clearAnalysis();
 }
 
 
@@ -1626,128 +1860,126 @@ clearAnalysis();
 
 async function fillGrades(){
 
-const select=
-el("gradeSelect");
+    const select=
+        el("gradeSelect");
 
 
-clearSelect(
-select,
-"اختر الصف"
-);
+    clearSelect(
+        select,
+        "اختر الصف"
+    );
 
 
-if(!selectedSubjectId){
-return;
-}
+    if(!selectedSubjectId){
+        return;
+    }
 
 
-let list=[];
+    let list=[];
 
 
-if(isTeacher){
+    if(isTeacher){
 
-list=
-unique(
+        list=
+            unique(
 
-assignments
-.filter(
-a=>
-a.subjectId===
-selectedSubjectId
-)
-.map(a=>a.grade)
+                assignments
+                .filter(
+                    a=>
+                    a.subjectId===
+                    selectedSubjectId
+                )
+                .map(a=>a.grade)
 
-);
+            );
 
-}
+    }
 
-else{
+    else{
 
-const snap=
-await db
-.collection("tests")
-.where(
-"subjectId",
-"==",
-selectedSubjectId
-)
-.get();
-
-
-const set=
-new Set();
+        const snap=
+            await db
+            .collection("tests")
+            .where(
+                "subjectId",
+                "==",
+                selectedSubjectId
+            )
+            .get();
 
 
-snap.forEach(doc=>{
-
-const data=doc.data()||{};
-
-
-const classes=
-Array.isArray(data.classes)
-?
-data.classes
-:
-[];
+        const set=
+            new Set();
 
 
-classes.forEach(c=>{
+        snap.forEach(doc=>{
 
-if(c.grade){
-set.add(c.grade);
-}
-
-});
-
-});
+            const data=
+                doc.data()||{};
 
 
-list=[...set];
+            const classes=
+                Array.isArray(data.classes)
+                ?
+                data.classes
+                :
+                [];
 
-}
+
+            classes.forEach(c=>{
+
+                if(c.grade){
+                    set.add(c.grade);
+                }
+
+            });
+
+        });
 
 
-sortGrades(list);
+        list=[...set];
+    }
 
 
-list.forEach(grade=>{
+    sortGrades(list);
 
-const option=
-document.createElement(
-"option"
-);
 
-option.value=grade;
-option.textContent=grade;
+    list.forEach(grade=>{
 
-select.appendChild(option);
+        const option=
+            document.createElement(
+                "option"
+            );
 
-});
+        option.value=grade;
+        option.textContent=grade;
 
+        select.appendChild(option);
+
+    });
 }
 
 
 async function gradeChanged(){
 
-selectedGrade=
-el("gradeSelect").value;
+    selectedGrade=
+        el("gradeSelect").value;
 
 
-selectedSection="";
-selectedTest=null;
+    selectedSection="";
+    selectedTest=null;
 
 
-await fillSections();
+    await fillSections();
 
 
-clearSelect(
-el("testSelect"),
-"اختر الاختبار"
-);
+    clearSelect(
+        el("testSelect"),
+        "اختر الاختبار"
+    );
 
 
-clearAnalysis();
-
+    clearAnalysis();
 }
 
 
@@ -1757,154 +1989,147 @@ clearAnalysis();
 
 async function fillSections(){
 
-const select=
-el("sectionSelect");
+    const select=
+        el("sectionSelect");
 
 
-clearSelect(
-select,
-"اختر الشعبة"
-);
+    clearSelect(
+        select,
+        "اختر الشعبة"
+    );
 
 
-if(
-!selectedSubjectId ||
-!selectedGrade
-){
-return;
-}
+    if(
+        !selectedSubjectId ||
+        !selectedGrade
+    ){
+        return;
+    }
 
 
-let list=[];
+    let list=[];
 
 
-if(isTeacher){
+    if(isTeacher){
 
-list=
-unique(
+        list=
+            unique(
 
-assignments
-.filter(a=>
+                assignments
+                .filter(a=>
 
-a.subjectId===
-selectedSubjectId &&
+                    a.subjectId===
+                    selectedSubjectId &&
 
-a.grade===
-selectedGrade
+                    a.grade===
+                    selectedGrade
 
-)
-.map(a=>a.section)
+                )
+                .map(a=>a.section)
 
-);
+            );
 
-}
+    }
 
-else{
+    else{
 
-const snap=
-await db
-.collection("tests")
-.where(
-"subjectId",
-"==",
-selectedSubjectId
-)
-.get();
-
-
-const set=
-new Set();
+        const snap=
+            await db
+            .collection("tests")
+            .where(
+                "subjectId",
+                "==",
+                selectedSubjectId
+            )
+            .get();
 
 
-snap.forEach(doc=>{
-
-const data=
-doc.data()||{};
+        const set=
+            new Set();
 
 
-const classes=
-Array.isArray(
-data.classes
-)
-?
-data.classes
-:
-[];
+        snap.forEach(doc=>{
+
+            const data=
+                doc.data()||{};
 
 
-classes.forEach(c=>{
-
-if(
-c.grade===
-selectedGrade &&
-c.section
-){
-
-set.add(
-c.section
-);
-
-}
-
-});
-
-});
+            const classes=
+                Array.isArray(data.classes)
+                ?
+                data.classes
+                :
+                [];
 
 
-list=[...set];
+            classes.forEach(c=>{
 
-}
+                if(
+                    c.grade===
+                    selectedGrade &&
+                    c.section
+                ){
+
+                    set.add(c.section);
+
+                }
+
+            });
+
+        });
 
 
-sortSections(list);
+        list=[...set];
+    }
 
 
-list.forEach(section=>{
+    sortSections(list);
 
-const option=
-document.createElement(
-"option"
-);
 
-option.value=section;
-option.textContent=section;
+    list.forEach(section=>{
 
-select.appendChild(option);
+        const option=
+            document.createElement(
+                "option"
+            );
 
-});
+        option.value=section;
+        option.textContent=section;
 
+        select.appendChild(option);
+
+    });
 }
 
 
 async function sectionChanged(){
 
-selectedSection=
-el("sectionSelect").value;
+    selectedSection=
+        el("sectionSelect").value;
 
-selectedTest=null;
+    selectedTest=null;
 
-clearAnalysis();
+    clearAnalysis();
 
 
-if(
-selectedSubjectId &&
-selectedGrade &&
-selectedSection
-){
+    if(
+        selectedSubjectId &&
+        selectedGrade &&
+        selectedSection
+    ){
 
-await loadTests();
+        await loadTests();
 
-}
+    }
 
-else{
+    else{
 
-clearSelect(
-el("testSelect"),
-"اختر الاختبار"
-);
+        clearSelect(
+            el("testSelect"),
+            "اختر الاختبار"
+        );
 
-}
-
+    }
 }
 
 
@@ -1914,143 +2139,136 @@ el("testSelect"),
 
 async function loadTests(){
 
-const select=
-el("testSelect");
+    const select=
+        el("testSelect");
 
 
-clearSelect(
-select,
-"اختر الاختبار"
-);
+    clearSelect(
+        select,
+        "اختر الاختبار"
+    );
 
 
-const snap=
-await db
-.collection("tests")
-.where(
-"subjectId",
-"==",
-selectedSubjectId
-)
-.get();
+    const snap=
+        await db
+        .collection("tests")
+        .where(
+            "subjectId",
+            "==",
+            selectedSubjectId
+        )
+        .get();
 
 
-tests=[];
+    tests=[];
 
 
-snap.forEach(doc=>{
+    snap.forEach(doc=>{
 
-const data=
-doc.data()||{};
-
-
-const classes=
-Array.isArray(data.classes)
-?
-data.classes
-:
-[];
+        const data=
+            doc.data()||{};
 
 
-const matches=
-classes.some(c=>
-
-c.grade===selectedGrade &&
-c.section===selectedSection
-
-);
-
-
-if(matches){
-
-tests.push({
-id:doc.id,
-...data
-});
-
-}
-
-});
+        const classes=
+            Array.isArray(data.classes)
+            ?
+            data.classes
+            :
+            [];
 
 
-tests.sort(
-(a,b)=>
+        const matches=
+            classes.some(c=>
 
-String(a.date||"")
-.localeCompare(
-String(b.date||"")
-)
+                c.grade===selectedGrade &&
+                c.section===selectedSection
 
-);
+            );
 
 
-if(!tests.length){
+        if(matches){
 
-clearSelect(
-select,
-"لا توجد اختبارات"
-);
+            tests.push({
+                id:doc.id,
+                ...data
+            });
 
-return;
+        }
 
-}
-
-
-tests.forEach(test=>{
-
-const option=
-document.createElement(
-"option"
-);
-
-option.value=
-test.id;
+    });
 
 
-option.textContent=
-
-test.name+
-(
-test.date
-?
-" - "+test.date
-:
-""
-);
+    tests.sort(
+        (a,b)=>
+        String(a.date||"")
+        .localeCompare(
+            String(b.date||"")
+        )
+    );
 
 
-select.appendChild(option);
+    if(!tests.length){
 
-});
+        clearSelect(
+            select,
+            "لا توجد اختبارات"
+        );
 
+        return;
+    }
+
+
+    tests.forEach(test=>{
+
+        const option=
+            document.createElement(
+                "option"
+            );
+
+        option.value=
+            test.id;
+
+
+        option.textContent=
+            test.name+
+            (
+                test.date
+                ?
+                " - "+test.date
+                :
+                ""
+            );
+
+
+        select.appendChild(option);
+
+    });
 }
 
 
 async function testChanged(){
 
-const id=
-el("testSelect").value;
+    const id=
+        el("testSelect").value;
 
 
-selectedTest=
-tests.find(
-t=>t.id===id
-)||null;
+    selectedTest=
+        tests.find(
+            t=>t.id===id
+        )||null;
 
 
-if(!selectedTest){
+    if(!selectedTest){
 
-clearAnalysis();
+        clearAnalysis();
 
-return;
+        return;
+    }
 
-}
 
+    showSelectedInfo();
 
-showSelectedInfo();
-
-await loadResults();
-
+    await loadResults();
 }
 
 
@@ -2060,200 +2278,197 @@ await loadResults();
 
 async function loadResults(){
 
-el("analysisArea").innerHTML=`
+    el("analysisArea").innerHTML=`
 
-<div class="empty">
-جاري تحليل النتائج...
-</div>
+        <div class="empty">
+            جاري تحليل النتائج...
+        </div>
 
-`;
-
-
-/* students */
-
-const studentSnap=
-
-await db
-.collection("students")
-.where(
-"grade",
-"==",
-selectedGrade
-)
-.get();
+    `;
 
 
-students=[];
+    const studentSnap=
+        await db
+        .collection("students")
+        .where(
+            "grade",
+            "==",
+            selectedGrade
+        )
+        .get();
 
 
-studentSnap.forEach(doc=>{
-
-const data=
-doc.data()||{};
+    students=[];
 
 
-if(
-data.section===
-selectedSection
-){
+    studentSnap.forEach(doc=>{
 
-students.push({
-
-...data,
-
-code:
-data.code||doc.id
-
-});
-
-}
-
-});
+        const data=
+            doc.data()||{};
 
 
-students.sort(
-(a,b)=>
+        if(
+            data.section===
+            selectedSection
+        ){
 
-String(a.name||"")
-.localeCompare(
-String(b.name||""),
-"ar"
-)
+            students.push({
 
-);
+                ...data,
 
+                code:
+                    data.code||
+                    doc.id
 
-/* grade records */
+            });
 
-const gradeSnap=
+        }
 
-await db
-.collection("grades")
-.where(
-"testId",
-"==",
-selectedTest.id
-)
-.get();
+    });
 
 
-gradeRecords=[];
+    students.sort(
+        (a,b)=>
+        String(a.name||"")
+        .localeCompare(
+            String(b.name||""),
+            "ar"
+        )
+    );
 
 
-gradeSnap.forEach(doc=>{
-
-const data=
-doc.data()||{};
-
-
-if(
-data.grade===selectedGrade &&
-data.section===selectedSection
-){
-
-gradeRecords.push({
-id:doc.id,
-...data
-});
-
-}
-
-});
+    const gradeSnap=
+        await db
+        .collection("grades")
+        .where(
+            "testId",
+            "==",
+            selectedTest.id
+        )
+        .get();
 
 
-reanalyze();
+    gradeRecords=[];
 
+
+    gradeSnap.forEach(doc=>{
+
+        const data=
+            doc.data()||{};
+
+
+        if(
+            data.grade===selectedGrade &&
+            data.section===selectedSection
+        ){
+
+            gradeRecords.push({
+                id:doc.id,
+                ...data
+            });
+
+        }
+
+    });
+
+
+    reanalyze();
 }
 
 
 /* =====================================================
-   LEVELS
+   LEVEL SETTINGS
 ===================================================== */
 
 function getLevelSettings(){
 
-let high=
-Number(
-el("highMin").value
-);
+    let high=
+        Number(
+            el("highMin").value
+        );
 
 
-let medium=
-Number(
-el("mediumMin").value
-);
+    let medium=
+        Number(
+            el("mediumMin").value
+        );
 
 
-let care=
-Number(
-el("careMin").value
-);
+    let care=
+        Number(
+            el("careMin").value
+        );
 
 
-if(Number.isNaN(high)) high=85;
-if(Number.isNaN(medium)) medium=70;
-if(Number.isNaN(care)) care=50;
+    if(Number.isNaN(high)){
+        high=85;
+    }
+
+    if(Number.isNaN(medium)){
+        medium=70;
+    }
+
+    if(Number.isNaN(care)){
+        care=50;
+    }
 
 
-high=
-Math.max(
-0,
-Math.min(100,high)
-);
+    high=
+        Math.max(
+            0,
+            Math.min(100,high)
+        );
 
 
-medium=
-Math.max(
-0,
-Math.min(100,medium)
-);
+    medium=
+        Math.max(
+            0,
+            Math.min(100,medium)
+        );
 
 
-care=
-Math.max(
-0,
-Math.min(100,care)
-);
+    care=
+        Math.max(
+            0,
+            Math.min(100,care)
+        );
 
 
-if(medium>=high){
+    if(medium>=high){
 
-medium=
-Math.max(
-0,
-high-1
-);
+        medium=
+            Math.max(
+                0,
+                high-1
+            );
 
-el("mediumMin").value=
-medium;
-
-}
-
-
-if(care>=medium){
-
-care=
-Math.max(
-0,
-medium-1
-);
-
-el("careMin").value=
-care;
-
-}
+        el("mediumMin").value=
+            medium;
+    }
 
 
-el("highMin").value=
-high;
+    if(care>=medium){
+
+        care=
+            Math.max(
+                0,
+                medium-1
+            );
+
+        el("careMin").value=
+            care;
+    }
 
 
-return{
-high,
-medium,
-care
-};
+    el("highMin").value=
+        high;
 
+
+    return{
+        high,
+        medium,
+        care
+    };
 }
 
 
@@ -2263,533 +2478,520 @@ care
 
 function reanalyze(){
 
-if(!selectedTest){
-return;
-}
+    if(!selectedTest){
+        return;
+    }
 
 
-const limits=
-getLevelSettings();
+    const limits=
+        getLevelSettings();
 
 
-analyzedStudents=
-students.map(student=>{
+    analyzedStudents=
+        students.map(student=>{
 
-const record=
-gradeRecords.find(
-r=>
-String(r.studentCode)===
-String(student.code)
-);
-
-
-if(!record){
-
-return{
-
-student,
-attendance:"unrecorded",
-mark:null,
-percentage:null,
-level:"unrecorded"
-
-};
-
-}
+            const record=
+                gradeRecords.find(
+                    r=>
+                    String(r.studentCode)===
+                    String(student.code)
+                );
 
 
-if(
-record.attendance===
-"absent"
-){
+            if(!record){
 
-return{
+                return{
 
-student,
-record,
-attendance:"absent",
-mark:null,
-percentage:null,
-level:"absent"
+                    student,
+                    attendance:"unrecorded",
+                    mark:null,
+                    percentage:null,
+                    level:"unrecorded"
 
-};
+                };
 
-}
+            }
 
 
-const mark=
-Number(record.mark);
+            if(
+                record.attendance===
+                "absent"
+            ){
+
+                return{
+
+                    student,
+                    record,
+                    attendance:"absent",
+                    mark:null,
+                    percentage:null,
+                    level:"absent"
+
+                };
+
+            }
 
 
-const fullMark=
-Number(
-record.fullMark ||
-selectedTest.fullMark
-);
+            const mark=
+                Number(record.mark);
 
 
-const percentage=
-
-fullMark>0
-?
-(mark/fullMark)*100
-:
-0;
+            const fullMark=
+                Number(
+                    record.fullMark ||
+                    selectedTest.fullMark
+                );
 
 
-let level="case";
+            const percentage=
+                fullMark>0
+                ?
+                (mark/fullMark)*100
+                :
+                0;
 
 
-if(
-percentage>=limits.high
-){
-
-level="high";
-
-}
-
-else if(
-percentage>=limits.medium
-){
-
-level="medium";
-
-}
-
-else if(
-percentage>=limits.care
-){
-
-level="care";
-
-}
+            let level="case";
 
 
-return{
+            if(
+                percentage>=
+                limits.high
+            ){
 
-student,
-record,
-attendance:"present",
-mark,
-fullMark,
-percentage,
-level
+                level="high";
 
-};
+            }
 
-});
+            else if(
+                percentage>=
+                limits.medium
+            ){
+
+                level="medium";
+
+            }
+
+            else if(
+                percentage>=
+                limits.care
+            ){
+
+                level="care";
+
+            }
 
 
-renderAnalysis();
+            return{
 
+                student,
+                record,
+                attendance:"present",
+                mark,
+                fullMark,
+                percentage,
+                level
+
+            };
+
+        });
+
+
+    renderAnalysis();
 }
 
 
 /* =====================================================
-   RENDER ANALYSIS
+   RENDER
 ===================================================== */
 
 function renderAnalysis(){
 
-const total=
-analyzedStudents.length;
+    const total=
+        analyzedStudents.length;
 
 
-const present=
-analyzedStudents.filter(
-x=>x.attendance==="present"
-);
+    const present=
+        analyzedStudents.filter(
+            x=>
+            x.attendance==="present"
+        );
 
 
-const absent=
-analyzedStudents.filter(
-x=>x.attendance==="absent"
-);
+    const absent=
+        analyzedStudents.filter(
+            x=>
+            x.attendance==="absent"
+        );
 
 
-const unrecorded=
-analyzedStudents.filter(
-x=>x.attendance==="unrecorded"
-);
+    const unrecorded=
+        analyzedStudents.filter(
+            x=>
+            x.attendance==="unrecorded"
+        );
 
 
-const high=
-present.filter(
-x=>x.level==="high"
-);
+    const high=
+        present.filter(
+            x=>x.level==="high"
+        );
 
 
-const medium=
-present.filter(
-x=>x.level==="medium"
-);
+    const medium=
+        present.filter(
+            x=>x.level==="medium"
+        );
 
 
-const care=
-present.filter(
-x=>x.level==="care"
-);
+    const care=
+        present.filter(
+            x=>x.level==="care"
+        );
 
 
-const cases=
-present.filter(
-x=>x.level==="case"
-);
+    const cases=
+        present.filter(
+            x=>x.level==="case"
+        );
 
 
-const marks=
-present.map(
-x=>x.mark
-);
+    const marks=
+        present.map(
+            x=>x.mark
+        );
 
 
-const average=
-marks.length
-?
-marks.reduce(
-(a,b)=>a+b,
-0
-)/marks.length
-:
-null;
+    const average=
+        marks.length
+        ?
+        marks.reduce(
+            (a,b)=>a+b,
+            0
+        )/marks.length
+        :
+        null;
 
 
-const highest=
-marks.length
-?
-Math.max(...marks)
-:
-null;
+    const highest=
+        marks.length
+        ?
+        Math.max(...marks)
+        :
+        null;
 
 
-const lowest=
-marks.length
-?
-Math.min(...marks)
-:
-null;
+    const lowest=
+        marks.length
+        ?
+        Math.min(...marks)
+        :
+        null;
 
 
-const passed=
-present.filter(
-x=>x.percentage>=50
-).length;
+    const passed=
+        present.filter(
+            x=>x.percentage>=50
+        ).length;
 
 
-const successRate=
+    const successRate=
+        present.length
+        ?
+        (passed/present.length)*100
+        :
+        0;
 
-present.length
-?
-(passed/present.length)*100
-:
-0;
 
+    const limits=
+        getLevelSettings();
 
-const limits=
-getLevelSettings();
 
+    el("analysisArea").innerHTML=`
 
-el("analysisArea").innerHTML=`
+        <div class="report-header">
 
-<!-- =================================================
-     REPORT HEADER
-================================================= -->
+            <img
+                src="logo.jpeg"
+                class="report-logo">
 
-<div class="report-header">
+            <h2>
+                مدارس الفلاح الأهلية
+            </h2>
 
-<img
-src="logo.jpeg"
-class="report-logo"
->
+            <h3>
+                تحليل نتائج الاختبار
+            </h3>
 
-<h2>
-مدارس الفلاح الأهلية
-</h2>
 
-<h3>
-تحليل نتائج الاختبار
-</h3>
+            <div class="meta">
 
+                <div class="meta-item">
 
-<div class="meta">
+                    <div class="meta-title">
+                        المادة
+                    </div>
 
-<div class="meta-item">
+                    <div class="meta-value">
+                        ${escapeHtml(selectedSubjectName)}
+                    </div>
 
-<div class="meta-title">
-المادة
-</div>
+                </div>
 
-<div class="meta-value">
-${escapeHtml(selectedSubjectName)}
-</div>
 
-</div>
+                <div class="meta-item">
 
+                    <div class="meta-title">
+                        الصف / الشعبة
+                    </div>
 
-<div class="meta-item">
+                    <div class="meta-value">
 
-<div class="meta-title">
-الصف / الشعبة
-</div>
+                        ${escapeHtml(
+                            selectedGrade+
+                            " / "+
+                            selectedSection
+                        )}
 
-<div class="meta-value">
+                    </div>
 
-${escapeHtml(
-selectedGrade+
-" / "+
-selectedSection
-)}
+                </div>
 
-</div>
 
-</div>
+                <div class="meta-item">
 
+                    <div class="meta-title">
+                        الاختبار
+                    </div>
 
-<div class="meta-item">
+                    <div class="meta-value">
+                        ${escapeHtml(selectedTest.name)}
+                    </div>
 
-<div class="meta-title">
-الاختبار
-</div>
+                </div>
 
-<div class="meta-value">
-${escapeHtml(selectedTest.name)}
-</div>
 
-</div>
+                <div class="meta-item">
 
+                    <div class="meta-title">
+                        تاريخ الاختبار
+                    </div>
 
-<div class="meta-item">
+                    <div class="meta-value">
+                        ${escapeHtml(
+                            selectedTest.date||"-"
+                        )}
+                    </div>
 
-<div class="meta-title">
-تاريخ الاختبار
-</div>
+                </div>
 
-<div class="meta-value">
-${escapeHtml(selectedTest.date||"-")}
-</div>
+            </div>
 
-</div>
+        </div>
 
-</div>
 
-</div>
+        <div class="kpi-grid">
 
+            ${kpi(
+                "إجمالي الطلاب",
+                total,
+                "total"
+            )}
 
-<!-- =================================================
-     KPIs
-================================================= -->
+            ${kpi(
+                "حاضر",
+                present.length,
+                "green"
+            )}
 
-<div class="kpi-grid">
+            ${kpi(
+                "غائب",
+                absent.length,
+                "red"
+            )}
 
-${kpi(
-"إجمالي الطلاب",
-total,
-""
-)}
+            ${kpi(
+                "لم يتم الرصد",
+                unrecorded.length,
+                "purple"
+            )}
 
-${kpi(
-"حاضر",
-present.length,
-"green"
-)}
+            ${kpi(
+                "المتوسط",
+                formatNumber(average),
+                "blue"
+            )}
 
-${kpi(
-"غائب",
-absent.length,
-"red"
-)}
+            ${kpi(
+                "أعلى درجة",
+                formatNumber(highest),
+                "green"
+            )}
 
-${kpi(
-"لم يتم الرصد",
-unrecorded.length,
-"purple"
-)}
+            ${kpi(
+                "أقل درجة",
+                formatNumber(lowest),
+                "red"
+            )}
 
-${kpi(
-"المتوسط",
-formatNumber(average),
-""
-)}
+            ${kpi(
+                "نسبة النجاح",
+                successRate.toFixed(1)+"%",
+                "gold"
+            )}
 
-${kpi(
-"أعلى درجة",
-formatNumber(highest),
-""
-)}
+        </div>
 
-${kpi(
-"أقل درجة",
-formatNumber(lowest),
-"red"
-)}
 
-${kpi(
-"نسبة النجاح",
-successRate.toFixed(1)+"%",
-"green"
-)}
+        <div class="level-section">
 
-</div>
+            <div class="small-heading">
+                توزيع المستويات
+            </div>
 
 
-<!-- =================================================
-     LEVEL STRIP
-================================================= -->
+            <div class="level-strip">
 
-<div class="level-section">
+                ${levelSegment(
+                    high.length,
+                    present.length,
+                    "level-high"
+                )}
 
-<div class="small-heading">
-توزيع المستويات (من الطلاب الحاضرين)
-</div>
+                ${levelSegment(
+                    medium.length,
+                    present.length,
+                    "level-medium"
+                )}
 
+                ${levelSegment(
+                    care.length,
+                    present.length,
+                    "level-care"
+                )}
 
-<div class="level-strip">
+                ${levelSegment(
+                    cases.length,
+                    present.length,
+                    "level-case"
+                )}
 
-${levelSegment(
-high.length,
-present.length,
-"level-high"
-)}
+            </div>
 
-${levelSegment(
-medium.length,
-present.length,
-"level-medium"
-)}
 
-${levelSegment(
-care.length,
-present.length,
-"level-care"
-)}
+            <div class="level-labels">
 
-${levelSegment(
-cases.length,
-present.length,
-"level-case"
-)}
+                <div class="level-label">
 
-</div>
+                    <strong>
+                        مستوى مرتفع
+                    </strong>
 
+                    ${limits.high}% فأعلى
 
-<div class="level-labels">
+                </div>
 
-<div class="level-label">
 
-<strong>مستوى مرتفع</strong>
+                <div class="level-label">
 
-${limits.high}% فأعلى
+                    <strong>
+                        مستوى متوسط
+                    </strong>
 
-</div>
+                    ${limits.medium}% إلى أقل من ${limits.high}%
 
+                </div>
 
-<div class="level-label">
 
-<strong>مستوى متوسط</strong>
+                <div class="level-label">
 
-${limits.medium}% - ${limits.high-0.01}%
+                    <strong>
+                        أولى بالرعاية
+                    </strong>
 
-</div>
+                    ${limits.care}% إلى أقل من ${limits.medium}%
 
+                </div>
 
-<div class="level-label">
 
-<strong>أولى بالرعاية</strong>
+                <div class="level-label">
 
-${limits.care}% - ${limits.medium-0.01}%
+                    <strong>
+                        دراسة حالة
+                    </strong>
 
-</div>
+                    أقل من ${limits.care}%
 
+                </div>
 
-<div class="level-label">
+            </div>
 
-<strong>دراسة حالة</strong>
+        </div>
 
-أقل من ${limits.care}%
 
-</div>
+        ${buildChart(
+            high.length,
+            medium.length,
+            care.length,
+            cases.length,
+            present.length
+        )}
 
-</div>
 
-</div>
+        <div class="details-box">
 
+            <div class="details-title">
+                تفاصيل درجات الطلاب
+            </div>
 
-<!-- =================================================
-     CHART
-================================================= -->
+            ${buildTable()}
 
-${buildChart(
-high.length,
-medium.length,
-care.length,
-cases.length,
-present.length
-)}
+        </div>
 
 
-<!-- =================================================
-     DETAILS
-================================================= -->
+        <div class="legend">
 
-<div class="details-box">
+            <div class="legend-item">
+                <span class="dot green"></span>
+                مستوى مرتفع
+            </div>
 
-<div class="details-title">
-تفاصيل درجات الطلاب
-</div>
+            <div class="legend-item">
+                <span class="dot blue"></span>
+                مستوى متوسط
+            </div>
 
-${buildTable()}
+            <div class="legend-item">
+                <span class="dot yellow"></span>
+                أولى بالرعاية
+            </div>
 
-</div>
+            <div class="legend-item">
+                <span class="dot red"></span>
+                دراسة حالة
+            </div>
 
+            <div class="legend-item">
+                <span class="dot gray"></span>
+                غائب / لم يتم الرصد
+            </div>
 
-<!-- =================================================
-     LEGEND
-================================================= -->
+        </div>
 
-<div class="legend">
 
-<div class="legend-item">
-<span class="dot green"></span>
-مرتفع
-</div>
+        <div class="report-footer">
 
-<div class="legend-item">
-<span class="dot blue"></span>
-متوسط
-</div>
+            <div>
+                نظام راصد - مدارس الفلاح الأهلية
+            </div>
 
-<div class="legend-item">
-<span class="dot yellow"></span>
-أولى بالرعاية
-</div>
+            <div>
+                تصميم محمد عامر أحمد - 2026
+            </div>
 
-<div class="legend-item">
-<span class="dot red"></span>
-دراسة حالة
-</div>
+        </div>
 
-<div class="legend-item">
-<span class="dot gray"></span>
-غائب / لم يتم الرصد
-</div>
-
-</div>
-
-
-<div class="report-footer">
-
-<div>
-نظام راصد - مدارس الفلاح الأهلية
-</div>
-
-<div>
-تصميم محمد عامر أحمد - 2026
-</div>
-
-</div>
-
-`;
-
+    `;
 }
 
 
@@ -2798,27 +3000,26 @@ ${buildTable()}
 ===================================================== */
 
 function kpi(
-label,
-value,
-type
+    label,
+    value,
+    type
 ){
 
-return`
+    return`
 
-<div class="kpi ${type}">
+        <div class="kpi ${type}">
 
-<div class="kpi-label">
-${label}
-</div>
+            <div class="kpi-label">
+                ${label}
+            </div>
 
-<div class="kpi-value">
-${value}
-</div>
+            <div class="kpi-value">
+                ${value}
+            </div>
 
-</div>
+        </div>
 
-`;
-
+    `;
 }
 
 
@@ -2827,36 +3028,34 @@ ${value}
 ===================================================== */
 
 function levelSegment(
-count,
-total,
-className
+    count,
+    total,
+    className
 ){
 
-const percent=
+    const percent=
+        total
+        ?
+        (count/total)*100
+        :
+        0;
 
-total
-?
-(count/total)*100
-:
-0;
 
+    return`
 
-return`
+        <div class="level-segment ${className}">
 
-<div class="level-segment ${className}">
+            <span class="count">
+                ${count}
+            </span>
 
-<span class="count">
-${count}
-</span>
+            <span class="percent">
+                ${percent.toFixed(1)}%
+            </span>
 
-<span class="percent">
-${percent.toFixed(1)}%
-</span>
+        </div>
 
-</div>
-
-`;
-
+    `;
 }
 
 
@@ -2865,196 +3064,210 @@ ${percent.toFixed(1)}%
 ===================================================== */
 
 function buildChart(
-high,
-medium,
-care,
-cases,
-totalPresent
+    high,
+    medium,
+    care,
+    cases,
+    totalPresent
 ){
 
-const values=[
-high,
-medium,
-care,
-cases
-];
+    const values=[
+        high,
+        medium,
+        care,
+        cases
+    ];
 
 
-const maxValue=
-Math.max(
-...values,
-1
-);
+    const maxValue=
+        Math.max(
+            ...values,
+            1
+        );
 
 
-/*
-نجعل أعلى قيمة في الرسم تصل تقريبًا إلى
-85% من مساحة الرسم.
-*/
+    function height(value){
 
-function height(value){
+        if(value===0){
+            return 2;
+        }
 
-if(value===0){
-return 2;
-}
-
-return Math.max(
-4,
-(value/maxValue)*82
-);
-
-}
+        return Math.max(
+            6,
+            (value/maxValue)*82
+        );
+    }
 
 
-const axisMax=
-Math.max(
-maxValue,
-4
-);
+    const axisMax=
+        Math.max(
+            maxValue,
+            4
+        );
 
 
-const axisValues=[
-axisMax,
-Math.round(axisMax*.75),
-Math.round(axisMax*.5),
-Math.round(axisMax*.25),
-0
-];
+    const axisValues=[
+
+        axisMax,
+
+        Math.round(
+            axisMax*.75
+        ),
+
+        Math.round(
+            axisMax*.5
+        ),
+
+        Math.round(
+            axisMax*.25
+        ),
+
+        0
+
+    ];
 
 
-return`
+    return`
 
-<div class="chart-box">
+        <div class="chart-box">
 
-<div class="chart-header">
+            <div class="chart-header">
 
-<div class="chart-title">
-الرسم البياني لتوزيع المستويات
-</div>
+                <div class="chart-title">
+                    📊 الرسم البياني لتوزيع المستويات
+                </div>
 
-<div class="chart-caption">
-عدد الطلاب
-</div>
+                <div class="chart-caption">
+                    عدد الطلاب
+                </div>
 
-</div>
-
-
-<div class="chart-area">
-
-<div class="y-axis">
-
-${axisValues.map(
-(value,index)=>{
-
-const bottom=
-(index/(axisValues.length-1))*100;
+            </div>
 
 
-return`
+            <div class="chart-area">
 
-<span
-class="y-label"
-style="bottom:${bottom}%"
->
-${value}
-</span>
+                <div class="y-axis">
 
-`;
+                    ${axisValues.map(
+                        (value,index)=>{
 
-}
-).join("")}
+                            const bottom=
+                                (
+                                    index/
+                                    (
+                                        axisValues.length-1
+                                    )
+                                )*100;
 
-</div>
+
+                            return`
+
+                                <span
+                                    class="y-label"
+                                    style="bottom:${bottom}%">
+
+                                    ${value}
+
+                                </span>
+
+                            `;
+
+                        }
+                    ).join("")}
+
+                </div>
 
 
-<div class="plot">
+                <div class="plot">
 
-${chartBar(
-high,
-totalPresent,
-height(high),
-"green",
-"مرتفع"
-)}
+                    ${chartBar(
+                        high,
+                        totalPresent,
+                        height(high),
+                        "green",
+                        "مستوى مرتفع"
+                    )}
 
-${chartBar(
-medium,
-totalPresent,
-height(medium),
-"blue",
-"متوسط"
-)}
+                    ${chartBar(
+                        medium,
+                        totalPresent,
+                        height(medium),
+                        "blue",
+                        "مستوى متوسط"
+                    )}
 
-${chartBar(
-care,
-totalPresent,
-height(care),
-"yellow",
-"أولى بالرعاية"
-)}
+                    ${chartBar(
+                        care,
+                        totalPresent,
+                        height(care),
+                        "yellow",
+                        "أولى بالرعاية"
+                    )}
 
-${chartBar(
-cases,
-totalPresent,
-height(cases),
-"red",
-"دراسة حالة"
-)}
+                    ${chartBar(
+                        cases,
+                        totalPresent,
+                        height(cases),
+                        "red",
+                        "دراسة حالة"
+                    )}
 
-</div>
+                </div>
 
-</div>
+            </div>
 
-</div>
+        </div>
 
-`;
-
+    `;
 }
 
 
 function chartBar(
-value,
-total,
-heightPercent,
-color,
-name
+    value,
+    total,
+    heightPercent,
+    color,
+    name
 ){
 
-const percent=
-total
-?
-(value/total)*100
-:
-0;
+    const percent=
+        total
+        ?
+        (value/total)*100
+        :
+        0;
 
 
-return`
+    return`
 
-<div class="bar-group">
+        <div class="bar-group">
 
-<div class="bar-value">
+            <div class="bar-value">
 
-${value}
-&nbsp;
-<span style="font-size:.75em">
-(${percent.toFixed(1)}%)
-</span>
+                ${value}
 
-</div>
+                <span style="font-size:.75em">
 
-<div
-class="bar ${color}"
-style="height:${heightPercent}%">
-</div>
+                    (${percent.toFixed(1)}%)
 
-<div class="bar-name">
-${name}
-</div>
+                </span>
 
-</div>
+            </div>
 
-`;
 
+            <div
+                class="bar ${color}"
+                style="height:${heightPercent}% !important;">
+            </div>
+
+
+            <div class="bar-name">
+                ${name}
+            </div>
+
+        </div>
+
+    `;
 }
 
 
@@ -3064,193 +3277,210 @@ ${name}
 
 function buildTable(){
 
-if(!analyzedStudents.length){
+    if(!analyzedStudents.length){
 
-return`
+        return`
 
-<div class="empty">
-لا يوجد طلاب في هذا الفصل.
-</div>
+            <div class="empty">
+                لا يوجد طلاب في هذا الفصل.
+            </div>
 
-`;
+        `;
+    }
 
-}
 
+    let rows="";
 
-let rows="";
 
+    analyzedStudents.forEach(
+        (item,index)=>{
 
-analyzedStudents.forEach(
-(item,index)=>{
+            let rowClass="";
+            let attendance="";
+            let mark="-";
+            let percentage="-";
+            let percentClass="";
 
-let rowClass="";
-let attendance="";
-let mark="-";
-let percentage="-";
-let percentClass="";
 
+            if(
+                item.attendance===
+                "absent"
+            ){
 
-if(
-item.attendance==="absent"
-){
+                rowClass=
+                    "row-absent";
 
-rowClass=
-"row-absent";
+                attendance=
+                    "غائب";
 
-attendance=
-"غائب";
+            }
 
-}
+            else if(
+                item.attendance===
+                "unrecorded"
+            ){
 
-else if(
-item.attendance==="unrecorded"
-){
+                rowClass=
+                    "row-unrecorded";
 
-rowClass=
-"row-unrecorded";
+                attendance=
+                    "لم يتم الرصد";
 
-attendance=
-"لم يتم الرصد";
+            }
 
-}
+            else{
 
-else{
+                attendance=
+                    "حاضر";
 
-attendance=
-"حاضر";
 
+                mark=
+                    formatNumber(item.mark)+
+                    " / "+
+                    formatNumber(item.fullMark);
 
-mark=
 
-formatNumber(item.mark)+
-" / "+
-formatNumber(item.fullMark);
+                percentage=
+                    item.percentage.toFixed(1)+"%";
 
 
-percentage=
-item.percentage.toFixed(1)+"%";
+                if(
+                    item.level==="high"
+                ){
 
+                    rowClass=
+                        "row-high";
 
-if(item.level==="high"){
+                    percentClass=
+                        "percent-high";
 
-rowClass="row-high";
+                }
 
-percentClass=
-"percent-high";
+                else if(
+                    item.level==="medium"
+                ){
 
-}
+                    rowClass=
+                        "row-medium";
 
-else if(
-item.level==="medium"
-){
+                    percentClass=
+                        "percent-medium";
 
-rowClass=
-"row-medium";
+                }
 
-percentClass=
-"percent-medium";
+                else if(
+                    item.level==="care"
+                ){
 
-}
+                    rowClass=
+                        "row-care";
 
-else if(
-item.level==="care"
-){
+                    percentClass=
+                        "percent-care";
 
-rowClass=
-"row-care";
+                }
 
-percentClass=
-"percent-care";
+                else{
 
-}
+                    rowClass=
+                        "row-case";
 
-else{
+                    percentClass=
+                        "percent-case";
 
-rowClass=
-"row-case";
+                }
 
-percentClass=
-"percent-case";
+            }
 
-}
 
-}
+            rows+=`
 
+                <tr class="${rowClass}">
 
-rows+=`
+                    <td>
+                        ${index+1}
+                    </td>
 
-<tr class="${rowClass}">
+                    <td>
+                        ${escapeHtml(
+                            item.student.code
+                        )}
+                    </td>
 
-<td>
-${index+1}
-</td>
+                    <td class="student-name">
 
-<td>
-${escapeHtml(
-item.student.code
-)}
-</td>
+                        ${escapeHtml(
+                            item.student.name
+                        )}
 
-<td class="student-name">
+                    </td>
 
-${escapeHtml(
-item.student.name
-)}
+                    <td>
+                        ${attendance}
+                    </td>
 
-</td>
+                    <td>
+                        ${mark}
+                    </td>
 
-<td>
-${attendance}
-</td>
+                    <td class="${percentClass}">
+                        ${percentage}
+                    </td>
 
-<td>
-${mark}
-</td>
+                </tr>
 
-<td class="${percentClass}">
-${percentage}
-</td>
+            `;
 
-</tr>
+        }
+    );
 
-`;
 
-});
+    return`
 
+        <div class="table-wrap">
 
-return`
+            <table>
 
-<div class="table-wrap">
+                <thead>
 
-<table>
+                    <tr>
 
-<thead>
+                        <th>#</th>
 
-<tr>
+                        <th>
+                            كود الطالب
+                        </th>
 
-<th>#</th>
-<th>كود الطالب</th>
-<th>اسم الطالب</th>
-<th>الحضور</th>
-<th>الدرجة</th>
-<th>النسبة</th>
+                        <th>
+                            اسم الطالب
+                        </th>
 
-</tr>
+                        <th>
+                            الحضور
+                        </th>
 
-</thead>
+                        <th>
+                            الدرجة
+                        </th>
 
-<tbody>
+                        <th>
+                            النسبة
+                        </th>
 
-${rows}
+                    </tr>
 
-</tbody>
+                </thead>
 
-</table>
 
-</div>
+                <tbody>
+                    ${rows}
+                </tbody>
 
-`;
+            </table>
 
+        </div>
+
+    `;
 }
 
 
@@ -3260,43 +3490,41 @@ ${rows}
 
 function showSelectedInfo(){
 
-const box=
-el("selectedInfo");
+    const box=
+        el("selectedInfo");
 
 
-if(!selectedTest){
+    if(!selectedTest){
 
-box.style.display=
-"none";
+        box.style.display=
+            "none";
 
-return;
-
-}
-
-
-box.style.display=
-"block";
+        return;
+    }
 
 
-box.textContent=
+    box.style.display=
+        "block";
 
-selectedSubjectName+
-" | "+
-selectedGrade+
-" / "+
-selectedSection+
-" | "+
-selectedTest.name+
-" | الدرجة النهائية: "+
-selectedTest.fullMark+
-(
-selectedTest.date
-?
-" | "+selectedTest.date
-:
-""
-);
 
+    box.textContent=
+
+        selectedSubjectName+
+        " | "+
+        selectedGrade+
+        " / "+
+        selectedSection+
+        " | "+
+        selectedTest.name+
+        " | الدرجة النهائية: "+
+        selectedTest.fullMark+
+        (
+            selectedTest.date
+            ?
+            " | "+selectedTest.date
+            :
+            ""
+        );
 }
 
 
@@ -3306,25 +3534,24 @@ selectedTest.date
 
 function clearAnalysis(){
 
-students=[];
-gradeRecords=[];
-analyzedStudents=[];
+    students=[];
+    gradeRecords=[];
+    analyzedStudents=[];
 
 
-el("selectedInfo").style.display=
-"none";
+    el("selectedInfo").style.display=
+        "none";
 
 
-el("analysisArea").innerHTML=`
+    el("analysisArea").innerHTML=`
 
-<div class="empty">
+        <div class="empty">
 
-اختر المادة والصف والشعبة والاختبار لعرض التحليل.
+            اختر المادة والصف والشعبة والاختبار لعرض التحليل.
 
-</div>
+        </div>
 
-`;
-
+    `;
 }
 
 
@@ -3334,30 +3561,27 @@ el("analysisArea").innerHTML=`
 
 function printAnalysis(){
 
-if(!selectedTest){
+    if(!selectedTest){
 
-alert(
-"اختر الاختبار أولًا."
-);
+        alert(
+            "اختر الاختبار أولًا."
+        );
 
-return;
-
-}
-
-
-if(!students.length){
-
-alert(
-"لا توجد بيانات للطباعة."
-);
-
-return;
-
-}
+        return;
+    }
 
 
-window.print();
+    if(!students.length){
 
+        alert(
+            "لا توجد بيانات للطباعة."
+        );
+
+        return;
+    }
+
+
+    window.print();
 }
 
 
@@ -3367,195 +3591,196 @@ window.print();
 
 function goBack(){
 
-if(isTeacher){
+    if(isTeacher){
 
-location.href=
-"teacher.html";
+        location.href=
+            "teacher.html";
 
-}
+    }
 
-else{
+    else{
 
-location.href=
-"admin.html";
+        location.href=
+            "admin.html";
 
-}
-
+    }
 }
 
 
 /* =====================================================
-   INCOMING TEACHER SELECTION
+   INCOMING SELECTION
 ===================================================== */
 
 async function applyIncoming(){
 
-if(!incoming.subjectId){
-return;
-}
+    if(!incoming.subjectId){
+        return;
+    }
 
 
-/*
-لو معلم نتأكد أن الفصل مسند إليه.
-*/
+    /*
+       تأمين فتح التحليل من رابط المعلم:
+       لا نثق في قيم الرابط إلا لو الفصل
+       مسند فعلًا للمعلم.
+    */
 
-if(isTeacher){
+    if(isTeacher){
 
-const allowed=
-assignments.some(a=>
+        const allowed=
+            assignments.some(a=>
 
-a.subjectId===
-incoming.subjectId &&
+                a.subjectId===
+                incoming.subjectId &&
 
-a.grade===
-incoming.grade &&
+                a.grade===
+                incoming.grade &&
 
-a.section===
-incoming.section
+                a.section===
+                incoming.section
 
-);
+            );
 
 
-if(!allowed){
-return;
-}
+        if(!allowed){
+            return;
+        }
+    }
 
-}
 
+    const subjectSelect=
+        el("subjectSelect");
 
-const subjectSelect=
-el("subjectSelect");
 
+    const subjectExists=
+        [...subjectSelect.options]
+        .some(
+            o=>
+            o.value===
+            incoming.subjectId
+        );
 
-const subjectExists=
-[...subjectSelect.options]
-.some(
-o=>
-o.value===
-incoming.subjectId
-);
 
+    if(!subjectExists){
+        return;
+    }
 
-if(!subjectExists){
-return;
-}
 
+    subjectSelect.value=
+        incoming.subjectId;
 
-subjectSelect.value=
-incoming.subjectId;
 
+    selectedSubjectId=
+        incoming.subjectId;
 
-selectedSubjectId=
-incoming.subjectId;
 
+    const subject=
+        subjects.find(
+            s=>s.id===
+            selectedSubjectId
+        );
 
-const subject=
-subjects.find(
-s=>s.id===selectedSubjectId
-);
 
+    selectedSubjectName=
+        subject?.name||"";
 
-selectedSubjectName=
-subject?.name||"";
 
+    await fillGrades();
 
-await fillGrades();
 
+    if(incoming.grade){
 
-if(incoming.grade){
+        const gradeSelect=
+            el("gradeSelect");
 
-const gradeSelect=
-el("gradeSelect");
 
+        const exists=
+            [...gradeSelect.options]
+            .some(
+                o=>
+                o.value===
+                incoming.grade
+            );
 
-const exists=
-[...gradeSelect.options]
-.some(
-o=>
-o.value===incoming.grade
-);
 
+        if(exists){
 
-if(exists){
+            gradeSelect.value=
+                incoming.grade;
 
-gradeSelect.value=
-incoming.grade;
+            selectedGrade=
+                incoming.grade;
 
-selectedGrade=
-incoming.grade;
+            await fillSections();
 
-await fillSections();
+        }
+    }
 
-}
 
-}
+    if(
+        incoming.section &&
+        selectedGrade
+    ){
 
+        const sectionSelect=
+            el("sectionSelect");
 
-if(
-incoming.section &&
-selectedGrade
-){
 
-const sectionSelect=
-el("sectionSelect");
+        const exists=
+            [...sectionSelect.options]
+            .some(
+                o=>
+                o.value===
+                incoming.section
+            );
 
 
-const exists=
-[...sectionSelect.options]
-.some(
-o=>
-o.value===
-incoming.section
-);
+        if(exists){
 
+            sectionSelect.value=
+                incoming.section;
 
-if(exists){
+            selectedSection=
+                incoming.section;
 
-sectionSelect.value=
-incoming.section;
+            await loadTests();
 
-selectedSection=
-incoming.section;
+        }
+    }
 
-await loadTests();
 
-}
+    if(
+        incoming.testId &&
+        selectedSection
+    ){
 
-}
+        const exists=
+            tests.some(
+                t=>
+                t.id===
+                incoming.testId
+            );
 
 
-if(
-incoming.testId &&
-selectedSection
-){
+        if(exists){
 
-const exists=
-tests.some(
-t=>
-t.id===incoming.testId
-);
+            el("testSelect").value=
+                incoming.testId;
 
 
-if(exists){
+            selectedTest=
+                tests.find(
+                    t=>
+                    t.id===
+                    incoming.testId
+                );
 
-el("testSelect").value=
-incoming.testId;
 
+            showSelectedInfo();
 
-selectedTest=
-tests.find(
-t=>t.id===incoming.testId
-);
+            await loadResults();
 
-
-showSelectedInfo();
-
-await loadResults();
-
-}
-
-}
-
+        }
+    }
 }
 
 
@@ -3565,22 +3790,21 @@ await loadResults();
 
 function renderMode(){
 
-if(isAdmin){
+    if(isAdmin){
 
-el("modeNote").innerHTML=
+        el("modeNote").innerHTML=
 
-"👑 <strong>الإدارة:</strong> يمكنك تحليل أي مادة وأي فصل وأي اختبار في المدرسة.";
+            "👑 <strong>الإدارة:</strong> يمكنك تحليل أي مادة وأي فصل وأي اختبار في المدرسة.";
 
-}
+    }
 
-else{
+    else{
 
-el("modeNote").innerHTML=
+        el("modeNote").innerHTML=
 
-"👨‍🏫 <strong>المعلم:</strong> يمكنك تحليل المواد والفصول المسندة إليك فقط.";
+            "👨‍🏫 <strong>المعلم:</strong> يمكنك تحليل المواد والفصول المسندة إليك فقط.";
 
-}
-
+    }
 }
 
 
@@ -3590,37 +3814,36 @@ el("modeNote").innerHTML=
 
 async function start(){
 
-if(!protectPage()){
-return;
-}
+    if(!protectPage()){
+        return;
+    }
 
 
-try{
+    try{
 
-await loadTeacher();
+        await loadTeacher();
 
-await loadSubjects();
+        await loadSubjects();
 
-renderMode();
+        renderMode();
 
-await applyIncoming();
+        await applyIncoming();
 
-}
+    }
 
-catch(error){
+    catch(error){
 
-console.error(error);
+        console.error(error);
 
 
-alert(
+        alert(
 
-"حدث خطأ أثناء تحميل التحليل:\n"+
-error.message
+            "حدث خطأ أثناء تحميل التحليل:\n"+
+            error.message
 
-);
+        );
 
-}
-
+    }
 }
 
 
