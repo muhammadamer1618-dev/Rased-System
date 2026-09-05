@@ -1151,6 +1151,16 @@ id="teacherOriginalUsername">
 
 </div>
 
+<div class="col">
+
+<label>
+رقم جوال المعلم
+</label>
+
+<input id="teacherPhone" inputmode="tel" placeholder="مثال: 05xxxxxxxx">
+
+</div>
+
 </div>
 
 
@@ -1186,6 +1196,7 @@ onclick="clearTeacherForm()">
 
 <th>اسم المعلم</th>
 <th>اسم المستخدم</th>
+<th>رقم الجوال</th>
 <th>عدد الإسنادات</th>
 <th>الإجراءات</th>
 
@@ -3625,7 +3636,7 @@ if(!teachers.length){
 
 body.innerHTML=
 
-"<tr><td colspan='4'>لا يوجد معلمون</td></tr>";
+"<tr><td colspan='5'>لا يوجد معلمون</td></tr>";
 
 return;
 
@@ -3664,11 +3675,25 @@ teacher.email
 
 <td>
 
+${escapeHtml(teacher.phone||"-")}
+
+</td>
+
+<td>
+
 ${assignments.length}
 
 </td>
 
 <td>
+
+<button
+class="small-btn btn-success"
+onclick='sendTeacherCredentials(${JSON.stringify(teacher.email)})'>
+
+📲 إرسال
+
+</button>
 
 <button
 class="small-btn btn-warning"
@@ -3695,6 +3720,74 @@ onclick='deleteTeacher(${JSON.stringify(teacher.email)})'>
 body.appendChild(tr);
 
 });
+
+}
+
+
+function normalizeTeacherPhone(phone){
+
+let p=String(phone||"").replace(/\D/g,"");
+
+if(!p) return "";
+
+if(p.startsWith("00966")) p=p.substring(2);
+if(p.startsWith("966")) return p;
+if(p.startsWith("05") && p.length===10) return "966"+p.substring(1);
+if(p.startsWith("5") && p.length===9) return "966"+p;
+
+return p;
+
+}
+
+
+async function sendTeacherCredentials(username){
+
+const teacher=teachers.find(t=>t.email===username);
+
+if(!teacher){
+alert("لم يتم العثور على بيانات المعلم.");
+return;
+}
+
+const phone=normalizeTeacherPhone(teacher.phone||"");
+
+if(!phone){
+alert("لا يوجد رقم جوال مسجل للمعلم:\n"+(teacher.name||username)+"\n\nاضغط تعديل وأضف رقم الجوال أولًا.");
+return;
+}
+
+let password="";
+
+try{
+const userDoc=await db.collection("users").doc(username).get();
+password=userDoc.exists ? (userDoc.data().password||"") : "";
+}catch(error){
+console.error(error);
+}
+
+if(!password){
+alert("لا توجد كلمة مرور محفوظة لهذا المعلم.");
+return;
+}
+
+const message=`مدارس الفلاح الأهلية
+نظام راصد
+
+أ/ ${teacher.name||""}
+تم إنشاء حسابكم في نظام راصد.
+
+اسم المستخدم:
+${teacher.email||username}
+
+كلمة المرور:
+${password}
+
+يرجى الاحتفاظ ببيانات الدخول.`;
+
+window.open(
+"https://wa.me/"+phone+"?text="+encodeURIComponent(message),
+"_blank"
+);
 
 }
 
@@ -3733,6 +3826,15 @@ const password=
 document
 .getElementById(
 "teacherPassword"
+)
+.value
+.trim();
+
+
+const phone=
+document
+.getElementById(
+"teacherPhone"
 )
 .value
 .trim();
@@ -3818,7 +3920,8 @@ await db
 ...oldData,
 
 name,
-email:username
+email:username,
+phone
 
 },{
 merge:true
@@ -3913,6 +4016,14 @@ userDoc.exists
 "";
 
 
+document
+.getElementById(
+"teacherPhone"
+)
+.value=
+teacher.phone||"";
+
+
 scrollToSection(
 "teachersSection"
 );
@@ -3946,6 +4057,13 @@ document
 document
 .getElementById(
 "teacherPassword"
+)
+.value="";
+
+
+document
+.getElementById(
+"teacherPhone"
 )
 .value="";
 
