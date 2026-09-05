@@ -1402,7 +1402,7 @@ onclick="clearCurrentTeacherAssignments()">
 <div class="row">
 <div class="col"><label>اسم الاختبار</label><input id="testName" placeholder="مثال: اختبار الفترة الأولى"></div>
 <div class="col"><label>الدرجة النهائية</label><input id="testFullMark" type="number" min="1" step="0.01"></div>
-<div class="col"><label>تاريخ الاختبار</label><input id="testDate" type="date"></div>
+<div class="col"><label>تاريخ الاختبار <span style="color:#6c757d;font-weight:normal">(اختياري)</span></label><input id="testDate" type="date"></div>
 </div>
 <div style="margin-top:18px">
 <label style="font-size:15px">المواد</label>
@@ -4956,7 +4956,7 @@ function toggleTestGrade(grade){const boxes=Array.from(document.querySelectorAll
 
 async function saveTest(){
 const id=document.getElementById("testEditId").value;const name=document.getElementById("testName").value.trim();const fullMark=Number(document.getElementById("testFullMark").value);const date=document.getElementById("testDate").value;const classes=getCheckedTestClasses();const subjectIds=getCheckedTestSubjectIds();
-if(!name){alert("أدخل اسم الاختبار");return;} if(!subjectIds.length){alert("اختر مادة واحدة على الأقل");return;} if(!fullMark||fullMark<=0){alert("أدخل الدرجة النهائية");return;} if(!date){alert("حدد تاريخ الاختبار");return;} if(!classes.length){alert("حدد فصلًا واحدًا على الأقل للاختبار");return;}
+if(!name){alert("أدخل اسم الاختبار");return;} if(!subjectIds.length){alert("اختر مادة واحدة على الأقل");return;} if(!fullMark||fullMark<=0){alert("أدخل الدرجة النهائية");return;} if(!classes.length){alert("حدد فصلًا واحدًا على الأقل للاختبار");return;}
 if(id){
 if(subjectIds.length!==1){alert("عند تعديل اختبار موجود اختر مادة واحدة فقط.");return;}
 const subject=subjects.find(s=>s.id===subjectIds[0]);if(!subject){alert("المادة غير موجودة");return;}const oldTest=tests.find(t=>t.id===id);
