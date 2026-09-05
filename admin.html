@@ -3220,6 +3220,59 @@ function selectAllTestSubjects(){document.querySelectorAll(".test-subject-check"
 function clearAllTestSubjects(){document.querySelectorAll(".test-subject-check").forEach(b=>b.checked=false);updateTestSubjectsSummary();}
 function updateTestSubjectsSummary(){const ids=getCheckedTestSubjectIds();const names=ids.map(id=>subjects.find(s=>s.id===id)?.name||"").filter(Boolean);const el=document.getElementById("testSubjectsSummary");if(el)el.textContent=names.length?`المواد المختارة (${names.length}): ${names.join("، ")}`:"لم يتم اختيار مواد.";}
 
+
+function fillMessageSubjectFilter(){
+
+const select=document.getElementById("messageSubjectFilter");
+
+if(!select) return;
+
+const current=select.value;
+
+select.innerHTML='<option value="">كل المواد</option>';
+
+subjects.forEach(subject=>{
+
+const option=document.createElement("option");
+option.value=subject.id;
+option.textContent=subject.name;
+select.appendChild(option);
+
+});
+
+if(subjects.some(s=>s.id===current)){
+select.value=current;
+}
+
+}
+
+
+function fillMessageTeacherFilter(){
+
+const select=document.getElementById("messageTeacherFilter");
+
+if(!select) return;
+
+const current=select.value;
+
+select.innerHTML='<option value="">كل المعلمين</option>';
+
+teachers.forEach(teacher=>{
+
+const option=document.createElement("option");
+option.value=teacher.email;
+option.textContent=teacher.name||teacher.email;
+select.appendChild(option);
+
+});
+
+if(teachers.some(t=>t.email===current)){
+select.value=current;
+}
+
+}
+
+
 function assignmentSubjectChanged(){
 const select=document.getElementById("assignmentSubject");
 const info=document.getElementById("selectedAssignmentSubject");
