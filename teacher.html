@@ -898,7 +898,7 @@ tbody tr:nth-child(even){
 <div class="card">
 
 <div class="card-title">
-👨‍🎓 الطلاب والحضور والدرجات
+👨‍🎓 الطلاب والرسائل والحضور والدرجات
 </div>
 
 <div class="card-body">
@@ -981,7 +981,7 @@ tbody tr:nth-child(even){
 <div id="studentsArea">
 
 <div class="empty">
-اختر المادة والصف والشعبة والاختبار لعرض الطلاب.
+اختر المادة والصف والشعبة لعرض الطلاب وإرسال الرسائل.
 </div>
 
 </div>
@@ -1594,6 +1594,10 @@ selectedGrade &&
 selectedSection
 ){
 
+/* الطلاب يظهرون فور اختيار الفصل حتى لو لا يوجد اختبار */
+await loadStudents();
+
+/* الاختبارات اختيار إضافي للرصد فقط */
 await loadTests();
 
 }
@@ -1604,6 +1608,8 @@ clearSelect(
 el("testSelect"),
 "اختر الاختبار"
 );
+
+clearStudents();
 
 }
 
@@ -1734,7 +1740,9 @@ if(!selectedTest){
 
 resetTestInfo();
 
-clearStudents();
+/* لا نخفي الطلاب: تظل الرسائل متاحة بدون اختبار */
+savedGrades={};
+renderStudents();
 
 return;
 
@@ -1893,6 +1901,87 @@ el("studentsArea").innerHTML=`
 
 el("summaryArea").style.display=
 "none";
+
+return;
+
+}
+
+
+/*
+إذا لم يتم اختيار اختبار:
+نعرض الطلاب فورًا مع زر الرسالة فقط.
+لا تظهر أدوات الحضور والدرجة لأنها تخص الاختبار.
+*/
+if(!selectedTest){
+
+let rows="";
+
+currentStudents.forEach((student,index)=>{
+
+rows+=`
+
+<tr>
+
+<td>${index+1}</td>
+
+<td>${escapeHtml(student.code)}</td>
+
+<td class="student-name">${escapeHtml(student.name)}</td>
+
+<td class="whatsapp-col">
+
+<div class="parent-actions">
+
+<button
+class="whatsapp-custom"
+onclick='openCustomMessage(${JSON.stringify(String(student.code))})'
+>
+✉️ رسالة لولي الأمر
+</button>
+
+</div>
+
+</td>
+
+</tr>
+
+`;
+
+});
+
+
+el("studentsArea").innerHTML=`
+
+<div style="margin-bottom:10px;padding:10px 12px;background:#e8f3ff;border:1px solid #bdd9f5;border-radius:7px;color:#174f7c;font-size:12px;line-height:1.7">
+👨‍🎓 تم عرض طلاب الفصل. يمكنك إرسال رسالة لولي الأمر الآن، أو اختيار اختبار لإظهار الحضور والدرجات.
+</div>
+
+<div class="table-wrap">
+
+<table style="min-width:620px">
+
+<thead>
+
+<tr>
+<th>#</th>
+<th>كود الطالب</th>
+<th>اسم الطالب</th>
+<th class="whatsapp-col">ولي الأمر</th>
+</tr>
+
+</thead>
+
+<tbody>
+${rows}
+</tbody>
+
+</table>
+
+</div>
+
+`;
+
+el("summaryArea").style.display="none";
 
 return;
 
@@ -3148,7 +3237,7 @@ el("studentsArea").innerHTML=`
 
 <div class="empty">
 
-اختر المادة والصف والشعبة والاختبار لعرض الطلاب.
+اختر المادة والصف والشعبة لعرض الطلاب وإرسال الرسائل.
 
 </div>
 
