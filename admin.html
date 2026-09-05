@@ -538,6 +538,9 @@ max-width:150px
 
 
 .file-link{display:inline-block;margin-top:5px;padding:5px 8px;border-radius:6px;background:#e7f1ff;color:#084298;text-decoration:none;font-weight:bold}
+
+/* الاختبارات المرنة */
+.test-subjects-panel{border:1px solid #dbe5ef;border-radius:12px;padding:12px;background:#fafcff;max-height:260px;overflow:auto}.test-subject-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #edf1f5}.test-subject-item:last-child{border-bottom:0}.test-subject-item input{width:20px!important;height:20px!important;flex:0 0 auto}.test-subject-tools,.test-class-tools{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 12px}.test-selection-summary{margin-top:9px;padding:9px 11px;border-radius:8px;background:#eef4fa;color:#174f7c;font-size:13px;font-weight:bold;line-height:1.8}
 </style>
 </head>
 
@@ -1392,221 +1395,39 @@ onclick="clearCurrentTeacherAssignments()">
 <!-- =========================================
      الاختبارات
 ========================================= -->
-
-<div
-class="box"
-id="testsSection">
-
-<div class="box-title">
-📝 إدارة الاختبارات
-</div>
-
+<div class="box" id="testsSection">
+<div class="box-title">📝 إدارة الاختبارات</div>
 <div class="box-body">
-
-<input
-type="hidden"
-id="testEditId">
-
-
+<input type="hidden" id="testEditId">
 <div class="row">
-
-<div class="col">
-
-<label>
-اسم الاختبار
-</label>
-
-<input
-id="testName"
-placeholder="مثال: الاختبار الدوري الأول">
-
+<div class="col"><label>اسم الاختبار</label><input id="testName" placeholder="مثال: اختبار الفترة الأولى"></div>
+<div class="col"><label>الدرجة النهائية</label><input id="testFullMark" type="number" min="1" step="0.01"></div>
+<div class="col"><label>تاريخ الاختبار</label><input id="testDate" type="date"></div>
 </div>
-
-
-<div class="col">
-
-<label>
-المادة
-</label>
-
-<select
-id="testSubject"
-class="subject-select"
-onchange="testSubjectChanged()">
-
-<option value="">
--- اختر المادة --
-</option>
-
-</select>
-
-
-<div
-id="selectedTestSubject"
-class="selected-subject">
+<div style="margin-top:18px">
+<label style="font-size:15px">المواد</label>
+<div class="test-subject-tools"><button class="btn-success" type="button" onclick="selectAllTestSubjects()">✓ تحديد كل المواد</button><button class="btn-light" type="button" onclick="clearAllTestSubjects()">إلغاء تحديد المواد</button></div>
+<div id="testSubjectsPanel" class="test-subjects-panel"></div>
+<div id="testSubjectsSummary" class="test-selection-summary">لم يتم اختيار مواد.</div>
 </div>
-
+<div class="info-box">يمكن إنشاء نفس الاختبار لأكثر من مادة دفعة واحدة بنفس الاسم والدرجة والتاريخ والفصول. عند تعديل اختبار موجود يتم تعديل هذا الاختبار فقط حفاظًا على البيانات الحالية.</div>
+<div class="note"><strong>ظهور الاختبارات لولي الأمر:</strong> يمكنك إظهار الاختبار أو إخفاءه في أي وقت بدون حذف الاختبار أو درجات الطلاب.</div>
+<div style="margin-top:18px">
+<label style="font-size:15px">الفصول والشعب المستهدفة</label>
+<div class="test-class-tools">
+<button class="btn-success" type="button" onclick="selectAllTestClasses()">✓ كل الفصول</button>
+<button class="btn-primary" type="button" onclick="selectStageTestClasses('ابتدائي')">كل الابتدائي</button>
+<button class="btn-primary" type="button" onclick="selectStageTestClasses('متوسط')">كل المتوسط</button>
+<button class="btn-primary" type="button" onclick="selectStageTestClasses('ثانوي')">كل الثانوي</button>
+<button class="btn-light" type="button" onclick="clearAllTestClasses()">إلغاء التحديد</button>
 </div>
-
-
-<div class="col">
-
-<label>
-الدرجة النهائية
-</label>
-
-<input
-id="testFullMark"
-type="number"
-min="1"
-step="0.01">
-
+<div class="class-grid"><table class="class-table"><thead><tr><th>الصف</th><th>اختيار الصف</th><th>أ</th><th>ب</th><th>ج</th><th>د</th></tr></thead><tbody id="testClassGrid"></tbody></table></div>
+<div id="testClassesSummary" class="test-selection-summary">لم يتم اختيار فصول.</div>
 </div>
-
-
-<div class="col">
-
-<label>
-تاريخ الاختبار
-</label>
-
-<input
-id="testDate"
-type="date">
-
-</div>
-
-</div>
-
-
-<div class="info-box">
-
-الاختبار يرتبط بالمادة والفصول.
-راصد سيعرف المعلم المسؤول تلقائيًا من الإسناد.
-
-</div>
-
-<div class="note">
-<strong>ظهور الاختبارات لولي الأمر:</strong>
-يمكنك إظهار الاختبار أو إخفاءه عن ولي الأمر في أي وقت بدون حذف الاختبار أو درجات الطلاب.
-الاختبارات القديمة والجديدة تكون مخفية ما لم يتم تفعيل ظهورها.
-</div>
-
-
-<div class="actions">
-
-<button
-class="btn-success"
-onclick="selectAllTestClasses()">
-
-✓ تحديد كل الفصول
-
-</button>
-
-
-<button
-class="btn-light"
-onclick="clearAllTestClasses()">
-
-إلغاء التحديد
-
-</button>
-
-</div>
-
-
-<div class="class-grid">
-
-<table class="class-table">
-
-<thead>
-
-<tr>
-
-<th>الصف</th>
-<th>أ</th>
-<th>ب</th>
-<th>ج</th>
-<th>د</th>
-
-</tr>
-
-</thead>
-
-
-<tbody id="testClassGrid"></tbody>
-
-</table>
-
-</div>
-
-
-<div class="actions">
-
-<button
-class="btn-primary"
-onclick="saveTest()">
-
-💾 حفظ الاختبار
-
-</button>
-
-
-<button
-class="btn-light"
-onclick="clearTestForm()">
-
-اختبار جديد
-
-</button>
-
-</div>
-
-
-<div class="table-wrap">
-
-<table>
-
-<thead>
-
-<tr>
-
-<th>الاختبار</th>
-<th>المادة</th>
-<th>الدرجة</th>
-<th>التاريخ</th>
-<th>الفصول</th>
-<th>ولي الأمر</th>
-<th>الإجراءات</th>
-
-</tr>
-
-</thead>
-
-
-<tbody id="testsBody"></tbody>
-
-</table>
-
-</div>
-
-
-<div class="danger-zone">
-
-<button
-class="btn-danger"
-onclick="deleteAllTests()">
-
-🗑️ حذف جميع الاختبارات
-
-</button>
-
-</div>
-
-</div>
-</div>
-
-
+<div class="actions"><button class="btn-primary" onclick="saveTest()">💾 حفظ الاختبار</button><button class="btn-light" onclick="clearTestForm()">اختبار جديد</button></div>
+<div class="table-wrap"><table><thead><tr><th>الاختبار</th><th>المادة</th><th>الدرجة</th><th>التاريخ</th><th>الفصول</th><th>ولي الأمر</th><th>الإجراءات</th></tr></thead><tbody id="testsBody"></tbody></table></div>
+<div class="danger-zone"><button class="btn-danger" onclick="deleteAllTests()">🗑️ حذف جميع الاختبارات</button></div>
+</div></div>
 
 <!-- =========================================
      سجل الرسائل
@@ -2119,6 +1940,9 @@ ${escapeHtml(grade)}
 
 `;
 
+if(checkClass==="test-class-check"){
+html+=`<td><button type="button" class="small-btn btn-light" onclick='toggleTestGrade(${JSON.stringify(grade)})'>الصف كله</button></td>`;
+}
 
 sections.forEach(section=>{
 
@@ -2160,6 +1984,10 @@ buildClassGrid(
 "testClassGrid",
 "test-class-check"
 );
+
+document.querySelectorAll(".test-class-check").forEach(box=>{
+box.addEventListener("change",updateTestClassesSummary);
+});
 
 }
 
@@ -3370,256 +3198,36 @@ body.appendChild(tr);
 
 
 function fillSubjectSelectors(){
-
-const assignment=
-document.getElementById(
-"assignmentSubject"
-);
-
-
-const test=
-document.getElementById(
-"testSubject"
-);
-
-
-const assignmentCurrent=
-assignment.value;
-
-
-const testCurrent=
-test.value;
-
-
-assignment.innerHTML=
-
-'<option value="">-- اختر المادة --</option>';
-
-
-test.innerHTML=
-
-'<option value="">-- اختر المادة --</option>';
-
-
-subjects.forEach(subject=>{
-
-const option1=
-document.createElement("option");
-
-option1.value=
-subject.id;
-
-option1.textContent=
-subject.name;
-
-assignment.appendChild(
-option1
-);
-
-
-const option2=
-document.createElement("option");
-
-option2.value=
-subject.id;
-
-option2.textContent=
-subject.name;
-
-test.appendChild(
-option2
-);
-
-});
-
-
-if(
-subjects.some(
-s=>s.id===assignmentCurrent
-)
-){
-
-assignment.value=
-assignmentCurrent;
-
-}
-
-
-if(
-subjects.some(
-s=>s.id===testCurrent
-)
-){
-
-test.value=
-testCurrent;
-
-}
-
-
+const assignment=document.getElementById("assignmentSubject");
+const current=assignment.value;
+assignment.innerHTML='<option value="">-- اختر المادة --</option>';
+subjects.forEach(subject=>{const o=document.createElement("option");o.value=subject.id;o.textContent=subject.name;assignment.appendChild(o);});
+if(subjects.some(s=>s.id===current)) assignment.value=current;
 assignmentSubjectChanged();
-
-testSubjectChanged();
-
+renderTestSubjectChoices();
 }
 
-
-
-function fillMessageSubjectFilter(){
-
-const select=document.getElementById("messageSubjectFilter");
-
-if(!select) return;
-
-const current=select.value;
-
-select.innerHTML='<option value="">كل المواد</option>';
-
-subjects.forEach(subject=>{
-
-const option=document.createElement("option");
-option.value=subject.id;
-option.textContent=subject.name;
-select.appendChild(option);
-
-});
-
-if(subjects.some(s=>s.id===current)){
-select.value=current;
+function renderTestSubjectChoices(selectedIds){
+const panel=document.getElementById("testSubjectsPanel"); if(!panel)return;
+const selected=selectedIds instanceof Set?selectedIds:new Set(Array.from(document.querySelectorAll(".test-subject-check:checked")).map(b=>b.value));
+panel.innerHTML="";
+if(!subjects.length){panel.innerHTML="<div class='note'>أضف المواد أولًا.</div>";updateTestSubjectsSummary();return;}
+subjects.forEach(subject=>{const label=document.createElement("label");label.className="test-subject-item";label.innerHTML=`<input type="checkbox" class="test-subject-check" value="${escapeHtml(subject.id)}" ${selected.has(subject.id)?"checked":""}><span>${escapeHtml(subject.name)}</span>`;panel.appendChild(label);});
+panel.querySelectorAll(".test-subject-check").forEach(b=>b.addEventListener("change",updateTestSubjectsSummary)); updateTestSubjectsSummary();
 }
-
-}
-
-function fillMessageTeacherFilter(){
-
-const select=document.getElementById("messageTeacherFilter");
-
-if(!select) return;
-
-const current=select.value;
-
-select.innerHTML='<option value="">كل المعلمين</option>';
-
-teachers.forEach(teacher=>{
-
-const option=document.createElement("option");
-option.value=teacher.email;
-option.textContent=teacher.name||teacher.email;
-select.appendChild(option);
-
-});
-
-if(teachers.some(t=>t.email===current)){
-select.value=current;
-}
-
-}
-
+function getCheckedTestSubjectIds(){return Array.from(document.querySelectorAll(".test-subject-check:checked")).map(b=>b.value);}
+function selectAllTestSubjects(){document.querySelectorAll(".test-subject-check").forEach(b=>b.checked=true);updateTestSubjectsSummary();}
+function clearAllTestSubjects(){document.querySelectorAll(".test-subject-check").forEach(b=>b.checked=false);updateTestSubjectsSummary();}
+function updateTestSubjectsSummary(){const ids=getCheckedTestSubjectIds();const names=ids.map(id=>subjects.find(s=>s.id===id)?.name||"").filter(Boolean);const el=document.getElementById("testSubjectsSummary");if(el)el.textContent=names.length?`المواد المختارة (${names.length}): ${names.join("، ")}`:"لم يتم اختيار مواد.";}
 
 function assignmentSubjectChanged(){
-
-const select=
-document.getElementById(
-"assignmentSubject"
-);
-
-
-const info=
-document.getElementById(
-"selectedAssignmentSubject"
-);
-
-
-if(!select.value){
-
-info.style.display=
-"none";
-
-info.innerHTML="";
-
-clearAllAssignments();
-
-return;
-
-}
-
-
-const subject=
-subjects.find(
-s=>s.id===select.value
-);
-
-
-if(subject){
-
-info.style.display=
-"block";
-
-
-info.innerHTML=
-
-"المادة المختارة: "+
-escapeHtml(
-subject.name
-);
-
-}
-
-
+const select=document.getElementById("assignmentSubject");
+const info=document.getElementById("selectedAssignmentSubject");
+if(!select.value){info.style.display="none";info.innerHTML="";clearAllAssignments();return;}
+const subject=subjects.find(s=>s.id===select.value);
+if(subject){info.style.display="block";info.innerHTML="المادة المختارة: "+escapeHtml(subject.name);}
 loadAssignmentChecks();
-
 }
-
-
-function testSubjectChanged(){
-
-const select=
-document.getElementById(
-"testSubject"
-);
-
-
-const info=
-document.getElementById(
-"selectedTestSubject"
-);
-
-
-if(!select.value){
-
-info.style.display=
-"none";
-
-info.innerHTML="";
-
-return;
-
-}
-
-
-const subject=
-subjects.find(
-s=>s.id===select.value
-);
-
-
-if(subject){
-
-info.style.display=
-"block";
-
-
-info.innerHTML=
-
-"المادة المختارة: "+
-escapeHtml(
-subject.name
-);
-
-}
-
-}
-
 
 async function saveSubject(){
 
@@ -5286,417 +4894,31 @@ error.message
 
 }
 
-function getCheckedTestClasses(){
-
-const classes=[];
-
-
-document
-.querySelectorAll(
-".test-class-check:checked"
-)
-.forEach(box=>{
-
-classes.push({
-
-grade:
-box.dataset.grade,
-
-section:
-box.dataset.section
-
-});
-
-});
-
-
-return sortClasses(
-classes
-);
-
-}
-
-
-function selectAllTestClasses(){
-
-document
-.querySelectorAll(
-".test-class-check"
-)
-.forEach(box=>{
-
-box.checked=true;
-
-});
-
-}
-
-
-function clearAllTestClasses(){
-
-document
-.querySelectorAll(
-".test-class-check"
-)
-.forEach(box=>{
-
-box.checked=false;
-
-});
-
-}
-
+function getCheckedTestClasses(){const classes=[];document.querySelectorAll(".test-class-check:checked").forEach(b=>classes.push({grade:b.dataset.grade,section:b.dataset.section}));return sortClasses(classes);}
+function updateTestClassesSummary(){const list=getCheckedTestClasses();const el=document.getElementById("testClassesSummary");if(el)el.textContent=list.length?`الفصول المختارة (${list.length}): ${list.map(classLabel).join("، ")}`:"لم يتم اختيار فصول.";}
+function selectAllTestClasses(){document.querySelectorAll(".test-class-check").forEach(b=>b.checked=true);updateTestClassesSummary();}
+function clearAllTestClasses(){document.querySelectorAll(".test-class-check").forEach(b=>b.checked=false);updateTestClassesSummary();}
+function selectStageTestClasses(stage){document.querySelectorAll(".test-class-check").forEach(b=>b.checked=String(b.dataset.grade||"").includes(stage));updateTestClassesSummary();}
+function toggleTestGrade(grade){const boxes=Array.from(document.querySelectorAll(".test-class-check")).filter(b=>b.dataset.grade===grade);const check=boxes.some(b=>!b.checked);boxes.forEach(b=>b.checked=check);updateTestClassesSummary();}
 
 async function saveTest(){
-
-const id=
-document
-.getElementById(
-"testEditId"
-)
-.value;
-
-
-const name=
-document
-.getElementById(
-"testName"
-)
-.value
-.trim();
-
-
-const subjectId=
-document
-.getElementById(
-"testSubject"
-)
-.value;
-
-
-const fullMark=
-Number(
-
-document
-.getElementById(
-"testFullMark"
-)
-.value
-
-);
-
-
-const date=
-document
-.getElementById(
-"testDate"
-)
-.value;
-
-
-const classes=
-getCheckedTestClasses();
-
-
-if(!name){
-
-alert(
-"أدخل اسم الاختبار"
-);
-
-return;
-
-}
-
-
-if(!subjectId){
-
-alert(
-"اختر المادة"
-);
-
-return;
-
-}
-
-
-if(
-!fullMark ||
-fullMark<=0
-){
-
-alert(
-"أدخل الدرجة النهائية"
-);
-
-return;
-
-}
-
-
-if(!date){
-
-alert(
-"حدد تاريخ الاختبار"
-);
-
-return;
-
-}
-
-
-if(!classes.length){
-
-alert(
-"حدد فصلًا واحدًا على الأقل للاختبار"
-);
-
-return;
-
-}
-
-
-const subject=
-subjects.find(
-s=>s.id===subjectId
-);
-
-
-if(!subject){
-
-alert(
-"المادة غير موجودة"
-);
-
-return;
-
-}
-
-
-let visibleToParent=false;
-
+const id=document.getElementById("testEditId").value;const name=document.getElementById("testName").value.trim();const fullMark=Number(document.getElementById("testFullMark").value);const date=document.getElementById("testDate").value;const classes=getCheckedTestClasses();const subjectIds=getCheckedTestSubjectIds();
+if(!name){alert("أدخل اسم الاختبار");return;} if(!subjectIds.length){alert("اختر مادة واحدة على الأقل");return;} if(!fullMark||fullMark<=0){alert("أدخل الدرجة النهائية");return;} if(!date){alert("حدد تاريخ الاختبار");return;} if(!classes.length){alert("حدد فصلًا واحدًا على الأقل للاختبار");return;}
 if(id){
-
-const oldTest=
-tests.find(t=>t.id===id);
-
-visibleToParent=
-oldTest?.visibleToParent===true;
-
+if(subjectIds.length!==1){alert("عند تعديل اختبار موجود اختر مادة واحدة فقط.");return;}
+const subject=subjects.find(s=>s.id===subjectIds[0]);if(!subject){alert("المادة غير موجودة");return;}const oldTest=tests.find(t=>t.id===id);
+await db.collection("tests").doc(id).set({name,subjectId:subject.id,subjectName:subject.name,fullMark,date,classes,visibleToParent:oldTest?.visibleToParent===true},{merge:true});
+alert("تم تعديل الاختبار بنجاح ✅");
+}else{
+const selectedSubjects=subjectIds.map(id=>subjects.find(s=>s.id===id)).filter(Boolean);if(!selectedSubjects.length){alert("المواد المختارة غير موجودة");return;}
+const batch=db.batch();selectedSubjects.forEach(subject=>{const ref=db.collection("tests").doc();batch.set(ref,{name,subjectId:subject.id,subjectName:subject.name,fullMark,date,classes,visibleToParent:false,createdAt:firebase.firestore.FieldValue.serverTimestamp()});});await batch.commit();
+alert(`تم إنشاء الاختبار بنجاح لـ ${selectedSubjects.length} مادة ✅`);
+}
+clearTestForm();await loadTests();
 }
 
-
-const data={
-
-name,
-
-subjectId:
-subject.id,
-
-subjectName:
-subject.name,
-
-fullMark,
-
-date,
-
-classes,
-
-visibleToParent
-
-};
-
-
-if(id){
-
-await db
-.collection("tests")
-.doc(id)
-.set(
-data,
-{
-merge:true
-}
-);
-
-}
-
-else{
-
-await db
-.collection("tests")
-.add({
-
-...data,
-
-createdAt:
-firebase.firestore
-.FieldValue
-.serverTimestamp()
-
-});
-
-}
-
-
-alert(
-"تم حفظ الاختبار بنجاح ✅"
-);
-
-
-clearTestForm();
-
-await loadTests();
-
-}
-
-
-function editTest(id){
-
-const test=
-tests.find(
-t=>t.id===id
-);
-
-
-if(!test){
-
-return;
-
-}
-
-
-document
-.getElementById(
-"testEditId"
-)
-.value=
-test.id;
-
-
-document
-.getElementById(
-"testName"
-)
-.value=
-test.name||"";
-
-
-document
-.getElementById(
-"testSubject"
-)
-.value=
-test.subjectId||"";
-
-
-document
-.getElementById(
-"testFullMark"
-)
-.value=
-test.fullMark||"";
-
-
-document
-.getElementById(
-"testDate"
-)
-.value=
-test.date||"";
-
-
-testSubjectChanged();
-
-clearAllTestClasses();
-
-
-const classes=
-Array.isArray(
-test.classes
-)
-?
-test.classes
-:
-[];
-
-
-document
-.querySelectorAll(
-".test-class-check"
-)
-.forEach(box=>{
-
-box.checked=
-classes.some(c=>
-
-c.grade===
-box.dataset.grade &&
-
-c.section===
-box.dataset.section
-
-);
-
-});
-
-
-scrollToSection(
-"testsSection"
-);
-
-}
-
-
-function clearTestForm(){
-
-document
-.getElementById(
-"testEditId"
-)
-.value="";
-
-
-document
-.getElementById(
-"testName"
-)
-.value="";
-
-
-document
-.getElementById(
-"testSubject"
-)
-.value="";
-
-
-document
-.getElementById(
-"testFullMark"
-)
-.value="";
-
-
-document
-.getElementById(
-"testDate"
-)
-.value="";
-
-
-document
-.getElementById(
-"selectedTestSubject"
-)
-.style.display=
-"none";
-
-
-clearAllTestClasses();
-
-}
-
+function editTest(id){const test=tests.find(t=>t.id===id);if(!test)return;document.getElementById("testEditId").value=test.id;document.getElementById("testName").value=test.name||"";document.getElementById("testFullMark").value=test.fullMark||"";document.getElementById("testDate").value=test.date||"";renderTestSubjectChoices(new Set(test.subjectId?[test.subjectId]:[]));clearAllTestClasses();const classes=Array.isArray(test.classes)?test.classes:[];document.querySelectorAll(".test-class-check").forEach(b=>b.checked=classes.some(c=>c.grade===b.dataset.grade&&c.section===b.dataset.section));updateTestClassesSummary();scrollToSection("testsSection");}
+function clearTestForm(){document.getElementById("testEditId").value="";document.getElementById("testName").value="";document.getElementById("testFullMark").value="";document.getElementById("testDate").value="";clearAllTestSubjects();clearAllTestClasses();}
 
 async function deleteTest(id){
 
