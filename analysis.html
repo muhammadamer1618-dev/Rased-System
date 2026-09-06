@@ -1120,18 +1120,207 @@ td:nth-child(6){width:13%}
     }
 }
 
-/* PRINT FIX: SAFE A4 WIDTH - KEEP FONT SIZES */
+/* =========================================================
+   FINAL PRINT LAYOUT - FULL A4 / NO SIDE CROPPING
+========================================================= */
 @media print{
-  @page{size:A4 portrait;margin:6mm}
-  html,body{width:auto!important;min-width:0!important;max-width:none!important;margin:0!important;padding:0!important;overflow:visible!important}
-  .container,#analysisArea,.report{width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding-left:0!important;padding-right:0!important;overflow:visible!important}
-  .report-header,.kpis,.level-box,.chart-box,.students-box,.legend,.report-footer,.meta,.level-strip{width:100%!important;max-width:100%!important;min-width:0!important}
-  .meta-item,.kpi,.level{min-width:0!important}
-  .table-wrap{width:100%!important;max-width:100%!important;min-width:0!important;overflow:visible!important}
-  .students-box table{width:100%!important;max-width:100%!important;min-width:0!important;table-layout:fixed!important}
-  .students-box th,.students-box td{min-width:0!important;max-width:none!important;overflow-wrap:anywhere;word-break:normal}
-  .chart-area,.plot{min-width:0!important;max-width:100%!important}
-  .bar-label{width:100%!important;max-width:100%!important;white-space:normal!important}
+
+    @page{
+        size:A4 portrait;
+        margin:4mm !important;
+    }
+
+    html,
+    body{
+        width:202mm !important;
+        max-width:202mm !important;
+        margin:0 !important;
+        padding:0 !important;
+        background:#fff !important;
+        overflow:visible !important;
+    }
+
+    body{
+        display:block !important;
+    }
+
+    .screen-header,
+    .selection-card,
+    .settings-card,
+    .screen-footer{
+        display:none !important;
+    }
+
+    .container{
+        width:202mm !important;
+        max-width:202mm !important;
+        min-width:202mm !important;
+        margin:0 !important;
+        padding:0 !important;
+    }
+
+    #analysisArea,
+    .report{
+        width:202mm !important;
+        max-width:202mm !important;
+        min-width:202mm !important;
+        margin:0 !important;
+        padding:0 !important;
+    }
+
+    .report{
+        display:block !important;
+    }
+
+    .report-header,
+    .kpis,
+    .level-box,
+    .chart-box,
+    .students-box,
+    .legend,
+    .report-footer{
+        width:202mm !important;
+        max-width:202mm !important;
+        min-width:0 !important;
+        margin-left:0 !important;
+        margin-right:0 !important;
+        box-sizing:border-box !important;
+    }
+
+    .report-header{
+        margin-bottom:2mm !important;
+    }
+
+    .meta{
+        width:100% !important;
+        max-width:100% !important;
+        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    }
+
+    .meta-item{
+        min-width:0 !important;
+        overflow:hidden !important;
+    }
+
+    .meta-value{
+        white-space:normal !important;
+        overflow-wrap:anywhere !important;
+    }
+
+    .kpis{
+        grid-template-columns:repeat(8,minmax(0,1fr)) !important;
+    }
+
+    .kpi{
+        min-width:0 !important;
+    }
+
+    .level-strip{
+        width:100% !important;
+        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+    }
+
+    .level{
+        min-width:0 !important;
+    }
+
+    .chart-area{
+        width:100% !important;
+        max-width:100% !important;
+        min-width:0 !important;
+    }
+
+    .plot{
+        min-width:0 !important;
+        max-width:calc(100% - 6mm) !important;
+        padding-left:4% !important;
+        padding-right:4% !important;
+    }
+
+    .bar-group{
+        min-width:0 !important;
+    }
+
+    .bar-label{
+        width:100% !important;
+        max-width:100% !important;
+        white-space:normal !important;
+    }
+
+    .students-box{
+        overflow:visible !important;
+    }
+
+    .table-wrap{
+        width:100% !important;
+        max-width:100% !important;
+        min-width:0 !important;
+        overflow:visible !important;
+    }
+
+    .students-box table{
+        width:100% !important;
+        max-width:100% !important;
+        min-width:0 !important;
+        table-layout:fixed !important;
+        border-collapse:collapse !important;
+    }
+
+    .students-box th,
+    .students-box td{
+        box-sizing:border-box !important;
+        min-width:0 !important;
+        max-width:none !important;
+    }
+
+    .students-box th:nth-child(1),
+    .students-box td:nth-child(1){width:5% !important}
+
+    .students-box th:nth-child(2),
+    .students-box td:nth-child(2){width:16% !important}
+
+    .students-box th:nth-child(3),
+    .students-box td:nth-child(3){width:39% !important}
+
+    .students-box th:nth-child(4),
+    .students-box td:nth-child(4){width:12% !important}
+
+    .students-box th:nth-child(5),
+    .students-box td:nth-child(5){width:15% !important}
+
+    .students-box th:nth-child(6),
+    .students-box td:nth-child(6){width:13% !important}
+
+    .student-name{
+        white-space:normal !important;
+        overflow-wrap:break-word !important;
+    }
+
+    .legend{
+        justify-content:center !important;
+        flex-wrap:wrap !important;
+        box-sizing:border-box !important;
+    }
+
+    .report-footer{
+        box-sizing:border-box !important;
+    }
+
+    .card,
+    .report-header,
+    .level-box,
+    .chart-box,
+    .students-box{
+        box-shadow:none !important;
+    }
+
+    *,
+    *::before,
+    *::after{
+        box-sizing:border-box !important;
+        -webkit-print-color-adjust:exact !important;
+        print-color-adjust:exact !important;
+    }
 }
 
 </style>
