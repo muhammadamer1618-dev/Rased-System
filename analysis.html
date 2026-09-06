@@ -154,7 +154,7 @@ button{
 
 .filters{
     display:grid;
-    grid-template-columns:repeat(5,1fr);
+    grid-template-columns:repeat(4,1fr);
     gap:9px;
 }
 
@@ -1132,6 +1132,50 @@ td:nth-child(6){width:13%}
   .students-box th,.students-box td{min-width:0!important;max-width:none!important;overflow-wrap:anywhere;word-break:normal}
   .chart-area,.plot{min-width:0!important;max-width:100%!important}
   .bar-label{width:100%!important;max-width:100%!important;white-space:normal!important}
+}
+
+
+.teacher-meta-row{
+    display:grid;
+    grid-template-columns:115px 1fr;
+    border:1px solid #aebbc5;
+    border-bottom:0;
+}
+
+.teacher-meta-label{
+    background:#dceaf5;
+    color:#063f69;
+    font-size:9px;
+    font-weight:bold;
+    padding:4px 5px;
+    border-left:1px solid #aebbc5;
+}
+
+.teacher-meta-value{
+    font-size:10px;
+    font-weight:900;
+    padding:4px 7px;
+    text-align:right;
+}
+
+@media print{
+    .teacher-meta-row{
+        width:100% !important;
+        grid-template-columns:24mm 1fr !important;
+        border-color:#aebbc5 !important;
+    }
+
+    .teacher-meta-label{
+        background:#dceaf5 !important;
+        color:#063f69 !important;
+        font-size:6.5pt !important;
+        padding:1mm !important;
+    }
+
+    .teacher-meta-value{
+        font-size:7.2pt !important;
+        padding:1.1mm 1.5mm !important;
+    }
 }
 
 </style>
@@ -2441,20 +2485,19 @@ function renderAnalysis(){
                 </div>
 
 
-                <div class="meta">
+                <div class="teacher-meta-row">
 
-                    <div class="meta-item">
-
-                        <div class="meta-label">
-                            اسم المعلم
-                        </div>
-
-                        <div class="meta-value">
-                            ${escapeHtml(getAnalysisTeacherName())}
-                        </div>
-
+                    <div class="teacher-meta-label">
+                        اسم المعلم
                     </div>
 
+                    <div class="teacher-meta-value">
+                        ${escapeHtml(getAnalysisTeacherName())}
+                    </div>
+
+                </div>
+
+                <div class="meta">
 
                     <div class="meta-item">
 
