@@ -1121,206 +1121,155 @@ td:nth-child(6){width:13%}
 }
 
 /* =========================================================
-   FINAL PRINT LAYOUT - FULL A4 / NO SIDE CROPPING
+   DYNAMIC ONE-PAGE A4 PRINT
+   17–32 students: fills the sheet without side cropping
 ========================================================= */
 @media print{
+    @page{size:A4 portrait;margin:4mm}
 
-    @page{
-        size:A4 portrait;
-        margin:4mm !important;
+    html,body{
+        margin:0!important;
+        padding:0!important;
+        width:auto!important;
+        background:#fff!important;
+        overflow:visible!important;
     }
 
-    html,
-    body{
-        width:202mm !important;
-        max-width:202mm !important;
-        margin:0 !important;
-        padding:0 !important;
-        background:#fff !important;
-        overflow:visible !important;
+    .container,#analysisArea,.report{
+        width:100%!important;
+        max-width:100%!important;
+        min-width:0!important;
+        margin:0!important;
+        padding:0!important;
     }
 
-    body{
-        display:block !important;
+    .report-header,.kpis,.level-box,.chart-box,
+    .students-box,.legend,.report-footer{
+        width:100%!important;
+        max-width:100%!important;
+        min-width:0!important;
+        box-sizing:border-box!important;
     }
 
-    .screen-header,
-    .selection-card,
-    .settings-card,
-    .screen-footer{
-        display:none !important;
-    }
-
-    .container{
-        width:202mm !important;
-        max-width:202mm !important;
-        min-width:202mm !important;
-        margin:0 !important;
-        padding:0 !important;
-    }
-
-    #analysisArea,
-    .report{
-        width:202mm !important;
-        max-width:202mm !important;
-        min-width:202mm !important;
-        margin:0 !important;
-        padding:0 !important;
-    }
-
-    .report{
-        display:block !important;
-    }
-
-    .report-header,
-    .kpis,
-    .level-box,
-    .chart-box,
-    .students-box,
-    .legend,
-    .report-footer{
-        width:202mm !important;
-        max-width:202mm !important;
-        min-width:0 !important;
-        margin-left:0 !important;
-        margin-right:0 !important;
-        box-sizing:border-box !important;
-    }
-
-    .report-header{
-        margin-bottom:2mm !important;
-    }
-
-    .meta{
-        width:100% !important;
-        max-width:100% !important;
-        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-    }
-
-    .meta-item{
-        min-width:0 !important;
-        overflow:hidden !important;
-    }
-
-    .meta-value{
-        white-space:normal !important;
-        overflow-wrap:anywhere !important;
-    }
-
-    .kpis{
-        grid-template-columns:repeat(8,minmax(0,1fr)) !important;
-    }
-
-    .kpi{
-        min-width:0 !important;
-    }
-
-    .level-strip{
-        width:100% !important;
-        grid-template-columns:repeat(4,minmax(0,1fr)) !important;
-    }
-
-    .level{
-        min-width:0 !important;
-    }
-
-    .chart-area{
-        width:100% !important;
-        max-width:100% !important;
-        min-width:0 !important;
-    }
-
-    .plot{
-        min-width:0 !important;
-        max-width:calc(100% - 6mm) !important;
-        padding-left:4% !important;
-        padding-right:4% !important;
-    }
-
-    .bar-group{
-        min-width:0 !important;
-    }
-
-    .bar-label{
-        width:100% !important;
-        max-width:100% !important;
-        white-space:normal !important;
-    }
-
-    .students-box{
-        overflow:visible !important;
-    }
+    .meta{grid-template-columns:repeat(4,minmax(0,1fr))!important}
+    .kpis{grid-template-columns:repeat(8,minmax(0,1fr))!important}
+    .level-strip{grid-template-columns:repeat(4,minmax(0,1fr))!important}
 
     .table-wrap{
-        width:100% !important;
-        max-width:100% !important;
-        min-width:0 !important;
-        overflow:visible !important;
+        width:100%!important;
+        max-width:100%!important;
+        overflow:visible!important;
     }
 
     .students-box table{
-        width:100% !important;
-        max-width:100% !important;
-        min-width:0 !important;
-        table-layout:fixed !important;
-        border-collapse:collapse !important;
+        width:100%!important;
+        max-width:100%!important;
+        table-layout:fixed!important;
     }
 
-    .students-box th,
-    .students-box td{
-        box-sizing:border-box !important;
-        min-width:0 !important;
-        max-width:none !important;
+    .chart-area,.plot{min-width:0!important;max-width:100%!important}
+
+    /* ---------- small classes: <=22 ---------- */
+    body.print-small-class .report-header{
+        padding:2.2mm 2.5mm!important;
+        margin-bottom:2.5mm!important;
+    }
+    body.print-small-class .report-logo{width:13mm;height:13mm}
+    body.print-small-class .report-school{font-size:14pt}
+    body.print-small-class .report-title{font-size:11pt;margin:1mm 0 1.5mm}
+    body.print-small-class .meta-label{font-size:7.5pt;padding:1.2mm}
+    body.print-small-class .meta-value{font-size:8.4pt;padding:1.4mm}
+    body.print-small-class .kpi{min-height:14mm;padding:1.6mm .7mm}
+    body.print-small-class .kpi-label{font-size:6.7pt;min-height:4.5mm}
+    body.print-small-class .kpi-value{font-size:14pt;line-height:15pt}
+    body.print-small-class .level-box{padding:1.5mm;margin-bottom:2.5mm}
+    body.print-small-class .small-title{font-size:7.5pt}
+    body.print-small-class .level{padding:1.3mm}
+    body.print-small-class .level strong{font-size:11pt;line-height:12pt}
+    body.print-small-class .level span{font-size:6.2pt}
+    body.print-small-class .chart-box{padding:1.5mm 2.5mm 2mm;margin-bottom:2.5mm}
+    body.print-small-class .chart-title{font-size:7.5pt}
+    body.print-small-class .chart-area{height:34mm}
+    body.print-small-class .axis,body.print-small-class .plot{height:28mm}
+    body.print-small-class .bar-label{top:28.8mm;font-size:6.2pt}
+    body.print-small-class .bar-value{font-size:7pt}
+    body.print-small-class .students-title{font-size:9pt;padding:1.7mm}
+    body.print-small-class th{font-size:8pt;height:7mm}
+    body.print-small-class td{
+        font-size:8.3pt!important;
+        height:7.2mm!important;
+        padding:1.15mm 1mm!important;
+    }
+    body.print-small-class td.student-name{font-size:8.7pt!important}
+    body.print-small-class .legend{font-size:6.2pt;padding:1.3mm;margin-top:2mm}
+    body.print-small-class .report-footer{font-size:6.2pt;margin-top:2mm}
+
+    /* ---------- medium classes: 23–27 ---------- */
+    body.print-medium-class .report-header{padding:1.6mm 2mm!important;margin-bottom:2mm!important}
+    body.print-medium-class .report-logo{width:11mm;height:11mm}
+    body.print-medium-class .report-school{font-size:12pt}
+    body.print-medium-class .report-title{font-size:9.5pt}
+    body.print-medium-class .kpi{min-height:12mm;padding:1.1mm .5mm}
+    body.print-medium-class .kpi-label{font-size:6pt}
+    body.print-medium-class .kpi-value{font-size:12pt}
+    body.print-medium-class .chart-area{height:27mm}
+    body.print-medium-class .axis,body.print-medium-class .plot{height:22mm}
+    body.print-medium-class .bar-label{top:22.7mm;font-size:5.5pt}
+    body.print-medium-class .students-title{font-size:8pt;padding:1.3mm}
+    body.print-medium-class th{font-size:7.2pt;height:6mm}
+    body.print-medium-class td{
+        font-size:7.4pt!important;
+        height:5.9mm!important;
+        padding:.8mm!important;
+    }
+    body.print-medium-class td.student-name{font-size:7.8pt!important}
+
+    /* ---------- large classes: 28–32 ---------- */
+    body.print-large-class .report-header{
+        padding:1.1mm 1.8mm!important;
+        margin-bottom:1.3mm!important;
+    }
+    body.print-large-class .report-logo{width:9mm;height:9mm}
+    body.print-large-class .report-school{font-size:10.5pt}
+    body.print-large-class .report-title{font-size:8.5pt;margin:0 0 .7mm}
+    body.print-large-class .meta-label{font-size:6.2pt;padding:.7mm}
+    body.print-large-class .meta-value{font-size:6.8pt;padding:.8mm}
+    body.print-large-class .kpis{gap:.7mm;margin-bottom:1.2mm}
+    body.print-large-class .kpi{min-height:9.5mm;padding:.6mm .35mm}
+    body.print-large-class .kpi-label{font-size:5.3pt;min-height:3.5mm}
+    body.print-large-class .kpi-value{font-size:9.5pt;line-height:10pt}
+    body.print-large-class .level-box{padding:.7mm;margin-bottom:1.2mm}
+    body.print-large-class .small-title{font-size:6pt;margin-bottom:.4mm}
+    body.print-large-class .level{padding:.5mm}
+    body.print-large-class .level strong{font-size:8pt;line-height:8pt}
+    body.print-large-class .level span{font-size:4.9pt}
+    body.print-large-class .chart-box{padding:.6mm 1.5mm 1mm;margin-bottom:1.2mm}
+    body.print-large-class .chart-title{font-size:6pt;margin-bottom:.3mm}
+    body.print-large-class .chart-area{height:20mm}
+    body.print-large-class .axis,body.print-large-class .plot{height:16mm}
+    body.print-large-class .bar-label{top:16.5mm;font-size:4.8pt}
+    body.print-large-class .bar-value{font-size:5.5pt}
+    body.print-large-class .students-title{font-size:7.2pt;padding:1mm}
+    body.print-large-class th{font-size:6.5pt;height:5.2mm}
+    body.print-large-class td{
+        font-size:6.6pt!important;
+        height:4.75mm!important;
+        padding:.5mm .65mm!important;
+        line-height:1.08!important;
+    }
+    body.print-large-class td.student-name{
+        font-size:7pt!important;
+        padding-right:1.1mm!important;
+    }
+    body.print-large-class .legend{
+        margin-top:1mm;padding:.7mm;gap:2.5mm;font-size:5.1pt
+    }
+    body.print-large-class .report-footer{
+        margin-top:1mm;padding-top:.7mm;font-size:5.1pt
     }
 
-    .students-box th:nth-child(1),
-    .students-box td:nth-child(1){width:5% !important}
-
-    .students-box th:nth-child(2),
-    .students-box td:nth-child(2){width:16% !important}
-
-    .students-box th:nth-child(3),
-    .students-box td:nth-child(3){width:39% !important}
-
-    .students-box th:nth-child(4),
-    .students-box td:nth-child(4){width:12% !important}
-
-    .students-box th:nth-child(5),
-    .students-box td:nth-child(5){width:15% !important}
-
-    .students-box th:nth-child(6),
-    .students-box td:nth-child(6){width:13% !important}
-
-    .student-name{
-        white-space:normal !important;
-        overflow-wrap:break-word !important;
-    }
-
-    .legend{
-        justify-content:center !important;
-        flex-wrap:wrap !important;
-        box-sizing:border-box !important;
-    }
-
-    .report-footer{
-        box-sizing:border-box !important;
-    }
-
-    .card,
-    .report-header,
-    .level-box,
-    .chart-box,
-    .students-box{
-        box-shadow:none !important;
-    }
-
-    *,
-    *::before,
-    *::after{
-        box-sizing:border-box !important;
-        -webkit-print-color-adjust:exact !important;
-        print-color-adjust:exact !important;
-    }
+    tr{break-inside:avoid!important;page-break-inside:avoid!important}
+    *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
 }
 
 </style>
@@ -3237,20 +3186,25 @@ function setPrintDensity(){
 
     document.body.classList.remove(
         "print-small-class",
+        "print-medium-class",
         "print-large-class"
     );
 
-    if(
-        analyzedStudents.length<=22
-    ){
+    const count=analyzedStudents.length;
+
+    if(count<=22){
 
         document.body.classList.add(
             "print-small-class"
         );
 
-    }else if(
-        analyzedStudents.length<=30
-    ){
+    }else if(count<=27){
+
+        document.body.classList.add(
+            "print-medium-class"
+        );
+
+    }else{
 
         document.body.classList.add(
             "print-large-class"
@@ -3310,6 +3264,7 @@ function clearAnalysis(){
 
     document.body.classList.remove(
         "print-small-class",
+        "print-medium-class",
         "print-large-class"
     );
 
