@@ -154,7 +154,7 @@ button{
 
 .filters{
     display:grid;
-    grid-template-columns:repeat(4,1fr);
+    grid-template-columns:repeat(5,1fr);
     gap:9px;
 }
 
@@ -2287,6 +2287,47 @@ function reanalyze(){
 
 
 /* =========================================================
+   ANALYSIS TEACHER NAME
+========================================================= */
+
+function getAnalysisTeacherName(){
+
+    if(selectedTest){
+        const fromTest=
+            selectedTest.teacherName ||
+            selectedTest.createdByName ||
+            selectedTest.teacher ||
+            "";
+
+        if(fromTest){
+            return fromTest;
+        }
+    }
+
+    const recordWithTeacher=
+        gradeRecords.find(
+            record=>
+                record.teacherName ||
+                record.createdByName
+        );
+
+    if(recordWithTeacher){
+        return (
+            recordWithTeacher.teacherName ||
+            recordWithTeacher.createdByName ||
+            "-"
+        );
+    }
+
+    if(currentTeacher?.name){
+        return currentTeacher.name;
+    }
+
+    return "-";
+}
+
+
+/* =========================================================
    RENDER
 ========================================================= */
 
@@ -2401,6 +2442,19 @@ function renderAnalysis(){
 
 
                 <div class="meta">
+
+                    <div class="meta-item">
+
+                        <div class="meta-label">
+                            اسم المعلم
+                        </div>
+
+                        <div class="meta-value">
+                            ${escapeHtml(getAnalysisTeacherName())}
+                        </div>
+
+                    </div>
+
 
                     <div class="meta-item">
 
