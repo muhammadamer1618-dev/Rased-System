@@ -54,46 +54,52 @@ assignedClasses.forEach(a=>{
         t.name===tn &&
         (Array.isArray(t.classes)?t.classes:[]).some(c=>c.grade===g&&c.section===s)
     );
-
     if(!classTests.length)return;
 
-    let testIds=new Set(classTests.map(t=>t.id));
+    let testIds=new Set(classTests.map(t=>String(t.id)));
 
-    let classGrades=grades.filter(r=>
-        testIds.has(r.testId) &&
-        r.grade===g &&
-        r.section===s
-    );
+    // المهم هنا: الربط بالاختبار والطالب فقط.
+    // لا نعتمد على grade/section داخل وثيقة الدرجة لأنها قد لا تكون محفوظة في بعض السجلات القديمة.
+    let classGrades=grades.filter(r=>testIds.has(String(r.testId||"")));
 
     let weak=[];
+    let classStudents=students.filter(st=>st.grade===g&&st.section===s);
 
-    students
-    .filter(st=>st.grade===g&&st.section===s)
-    .forEach(st=>{
-        let r=classGrades.find(x=>
-            String(x.studentCode)===String(st.code) &&
-            score(x)
-        );
+    classStudents.forEach(st=>{
+        let studentKey=String(st.code||st.studentCode||"").trim();
 
-        if(!r)return;
+        let studentRecords=classGrades.filter(x=>{
+            let gradeStudentKey=String(x.studentCode||x.code||"").trim();
+            return gradeStudentKey===studentKey && score(x);
+        });
 
-        let td=classTests.find(x=>x.id===r.testId)||classTests[0];
-        let full=Number(r.fullMark||td?.fullMark||0);
-        let mark=Number(r.mark);
+        if(!studentRecords.length)return;
 
-        if(!full||!Number.isFinite(mark))return;
+        // لو وجد أكثر من سجل لنفس اسم الاختبار نأخذ السجل الأحدث/الأول الصالح.
+        let r=studentRecords[0];
+        let td=classTests.find(x=>String(x.id)===String(r.testId))||classTests[0];
 
-        let p=mark/full*100;
-        let cat=p<dl?"case":p<cl?"care":"";
+        let markRaw=r.mark;
+        let fullRaw=(r.fullMark!==null&&r.fullMark!==undefined&&String(r.fullMark)!=="")
+            ? r.fullMark
+            : td?.fullMark;
+
+        let mark=Number(markRaw);
+        let full=Number(fullRaw);
+
+        if(!Number.isFinite(mark)||!Number.isFinite(full)||full<=0)return;
+
+        let pct=mark/full*100;
+        let cat=pct<dl?"case":pct<cl?"care":"";
 
         if(cat){
             weak.push({
-                code:st.code||"",
-                name:st.name||st.code,
-                mark,
-                full,
+                code:studentKey,
+                name:st.name||studentKey,
+                mark:markRaw,
+                full:fullRaw,
                 testName:r.testName||td?.name||tn,
-                p,
+                p:pct,
                 cat
             });
         }
@@ -102,8 +108,7 @@ assignedClasses.forEach(a=>{
     if(weak.length){
         weak.sort((a,b)=>a.p-b.p);
         groups.push({
-            g,
-            s,
+            g,s,
             teacher:selectedTeacher()?.name||teacherName(sid,g,s,classGrades),
             weak
         });
