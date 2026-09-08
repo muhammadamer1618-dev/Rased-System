@@ -637,6 +637,14 @@ onclick="scrollToSection('messagesSection')">
 
 </button>
 
+<button
+class="btn-dark"
+onclick="scrollToSection('monitorsSection')">
+
+👁️ حسابات المتابعة
+
+</button>
+
 </div>
 
 
@@ -6169,6 +6177,16 @@ return;
 
 }
 
+const existing=await db.collection("users").doc(username).get();
+
+if(existing.exists && username!==original){
+
+alert("اسم المستخدم مستخدم بالفعل.");
+
+return;
+
+}
+
 if(original && original!==username){
 
 const oldDoc=await db.collection("users").doc(original).get();
@@ -6178,16 +6196,6 @@ if(oldDoc.exists && String(oldDoc.data().role||"").toLowerCase()==="monitor"){
 await db.collection("users").doc(original).delete();
 
 }
-
-}
-
-const existing=await db.collection("users").doc(username).get();
-
-if(existing.exists && username!==original){
-
-alert("اسم المستخدم مستخدم بالفعل.");
-
-return;
 
 }
 
