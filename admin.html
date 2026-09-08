@@ -1564,6 +1564,65 @@ onclick="clearCurrentTeacherAssignments()">
 </div>
 
 <!-- =========================================
+     حسابات المتابعة
+========================================= -->
+
+<div class="box" id="monitorsSection">
+
+<div class="box-title">
+👁️ حسابات المتابعة
+</div>
+
+<div class="box-body">
+
+<input type="hidden" id="monitorOriginalUsername">
+
+<div class="row">
+
+<div class="col">
+<label>اسم المتابع</label>
+<input id="monitorName">
+</div>
+
+<div class="col">
+<label>اسم المستخدم</label>
+<input id="monitorUsername">
+</div>
+
+<div class="col">
+<label>كلمة المرور</label>
+<input id="monitorPassword">
+</div>
+
+</div>
+
+<div class="actions">
+<button class="btn-primary" onclick="saveMonitor()">💾 حفظ حساب المتابع</button>
+<button class="btn-light" onclick="clearMonitorForm()">حساب جديد</button>
+</div>
+
+<div class="note">
+حساب المتابع مخصص للقراءة والمتابعة فقط، ولا يملك أدوات إضافة أو تعديل أو حذف الطلاب أو المواد أو المعلمين أو الاختبارات.
+</div>
+
+<div class="table-wrap">
+<table>
+<thead>
+<tr>
+<th>اسم المتابع</th>
+<th>اسم المستخدم</th>
+<th>الإجراءات</th>
+</tr>
+</thead>
+<tbody id="monitorsBody"></tbody>
+</table>
+</div>
+
+</div>
+</div>
+
+
+<!-- =========================================
      تنظيف البيانات
 ========================================= -->
 
@@ -1720,6 +1779,7 @@ let subjects=[];
 let tests=[];
 let messageLogs=[];
 let filteredMessageLogs=[];
+let monitors=[];
 
 
 /* =========================================
@@ -6024,6 +6084,178 @@ printWindow.document.close();
 }
 
 /* =========================================
+   حسابات المتابعة
+========================================= */
+
+async function loadMonitors(){
+
+const snap=await db.collection("users").get();
+
+monitors=[];
+
+snap.forEach(doc=>{
+
+const data=doc.data()||{};
+
+if(String(data.role||"").toLowerCase()==="monitor"){
+
+monitors.push({
+username:doc.id,
+name:data.name||doc.id,
+password:data.password||""
+});
+
+}
+
+});
+
+monitors.sort((a,b)=>
+String(a.name||"").localeCompare(String(b.name||""),"ar")
+);
+
+renderMonitors();
+
+}
+
+
+function renderMonitors(){
+
+const body=document.getElementById("monitorsBody");
+
+if(!body) return;
+
+body.innerHTML="";
+
+if(!monitors.length){
+
+body.innerHTML="<tr><td colspan='3'>لا توجد حسابات متابعة</td></tr>";
+
+return;
+
+}
+
+monitors.forEach(m=>{
+
+const tr=document.createElement("tr");
+
+tr.innerHTML=`
+<td>${escapeHtml(m.name)}</td>
+<td>${escapeHtml(m.username)}</td>
+<td>
+<button class="small-btn btn-warning" onclick='editMonitor(${JSON.stringify(m.username)})'>تعديل</button>
+<button class="small-btn btn-danger" onclick='deleteMonitor(${JSON.stringify(m.username)})'>حذف</button>
+</td>
+`;
+
+body.appendChild(tr);
+
+});
+
+}
+
+
+async function saveMonitor(){
+
+const original=document.getElementById("monitorOriginalUsername").value.trim();
+const name=document.getElementById("monitorName").value.trim();
+const username=document.getElementById("monitorUsername").value.trim().toLowerCase();
+const password=document.getElementById("monitorPassword").value.trim();
+
+if(!name || !username || !password){
+
+alert("أدخل اسم المتابع واسم المستخدم وكلمة المرور");
+
+return;
+
+}
+
+if(original && original!==username){
+
+const oldDoc=await db.collection("users").doc(original).get();
+
+if(oldDoc.exists && String(oldDoc.data().role||"").toLowerCase()==="monitor"){
+
+await db.collection("users").doc(original).delete();
+
+}
+
+}
+
+const existing=await db.collection("users").doc(username).get();
+
+if(existing.exists && username!==original){
+
+alert("اسم المستخدم مستخدم بالفعل.");
+
+return;
+
+}
+
+await db.collection("users").doc(username).set({
+name,
+role:"monitor",
+password
+},{
+merge:true
+});
+
+alert("تم حفظ حساب المتابع ✅");
+
+clearMonitorForm();
+
+await loadMonitors();
+
+}
+
+
+function editMonitor(username){
+
+const m=monitors.find(x=>x.username===username);
+
+if(!m) return;
+
+document.getElementById("monitorOriginalUsername").value=m.username;
+document.getElementById("monitorName").value=m.name||"";
+document.getElementById("monitorUsername").value=m.username||"";
+document.getElementById("monitorPassword").value=m.password||"";
+
+scrollToSection("monitorsSection");
+
+}
+
+
+function clearMonitorForm(){
+
+document.getElementById("monitorOriginalUsername").value="";
+document.getElementById("monitorName").value="";
+document.getElementById("monitorUsername").value="";
+document.getElementById("monitorPassword").value="";
+
+}
+
+
+async function deleteMonitor(username){
+
+const m=monitors.find(x=>x.username===username);
+
+if(!m) return;
+
+if(!confirm("هل تريد حذف حساب المتابع:\n"+m.name+" ؟")) return;
+
+const doc=await db.collection("users").doc(username).get();
+
+if(doc.exists && String(doc.data().role||"").toLowerCase()==="monitor"){
+
+await db.collection("users").doc(username).delete();
+
+}
+
+await loadMonitors();
+
+}
+
+
+/* =========================================
    حذف Collection
 ========================================= */
 
@@ -6529,7 +6761,8 @@ await Promise.all([
 loadStudents(),
 loadSubjects(),
 loadTeachers(),
-loadTests()
+loadTests(),
+loadMonitors()
 
 ]);
 
