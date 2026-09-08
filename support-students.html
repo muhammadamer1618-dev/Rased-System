@@ -37,7 +37,86 @@ function applyTeacherFilter(){renderSubjectOptions()}
 function fillTests(){test.innerHTML='<option value="">اختر الاختبار</option>';let allowedClasses=null;if(teacherFilter.value){allowedClasses=teacherAssignments().filter(a=>a.subjectId===subject.value).map(a=>a.grade+"|||"+a.section)}let names=[...new Set(tests.filter(x=>x.subjectId===subject.value&&(!allowedClasses||allowedClasses.some(k=>{let [g,s]=k.split("|||");return (x.classes||[]).some(c=>c.grade===g&&c.section===s)}))).map(x=>x.name).filter(Boolean))];names.sort().forEach(x=>{let o=document.createElement("option");o.value=x;o.textContent=x;test.appendChild(o)})}
 function teacherName(sid,g,s,rs){let actual=rs.find(r=>r.teacherName);if(actual)return actual.teacherName;let t=teachers.find(t=>(Array.isArray(t.assignments)?t.assignments:[]).some(a=>a.subjectId===sid&&a.grade===g&&a.section===s));return t?.name||"غير محدد"}
 function score(r){return r&&String(r.attendance||"").toLowerCase()!=="absent"&&r.mark!==null&&r.mark!==undefined&&String(r.mark)!==""}
-function generate(){let sid=subject.value,tn=test.value,cl=Number(care.value),dl=Number(caseLimit.value),teacherEmail=teacherFilter.value;if(!teacherEmail)return alert("اختر المعلم أولًا.");if(!sid||!tn)return alert("اختر المادة والاختبار.");if(!Number.isFinite(cl)||!Number.isFinite(dl)||dl<0||cl>100||dl>cl)return alert("راجع نسب التصنيف.");let tdocs=tests.filter(x=>x.subjectId===sid&&x.name===tn),keys=new Set(),allowed=new Set(teacherAssignments().filter(a=>a.subjectId===sid).map(a=>a.grade+"|||"+a.section));tdocs.forEach(t=>(Array.isArray(t.classes)?t.classes:[]).forEach(c=>{let k=c.grade+"|||"+c.section;if(allowed.has(k))keys.add(k)}));let groups=[];[...keys].forEach(k=>{let [g,s]=k.split("|||"),cts=tdocs.filter(t=>(t.classes||[]).some(c=>c.grade===g&&c.section===s)),ids=new Set(cts.map(x=>x.id)),rs=grades.filter(r=>ids.has(r.testId)&&r.grade===g&&r.section===s),weak=[];students.filter(st=>st.grade===g&&st.section===s).forEach(st=>{let r=rs.find(x=>String(x.studentCode)===String(st.code)&&score(x));if(!r)return;let td=cts.find(x=>x.id===r.testId)||cts[0],full=Number(r.fullMark||td?.fullMark||0),mark=Number(r.mark);if(!full||!Number.isFinite(mark))return;let p=mark/full*100,cat=p<dl?"case":p<cl?"care":"";if(cat)weak.push({name:st.name||st.code,mark,full,testName:r.testName||td?.name||tn,p,cat})});if(weak.length){weak.sort((a,b)=>a.p-b.p);groups.push({g,s,teacher:selectedTeacher()?.name||teacherName(sid,g,s,rs),weak})}});groups.sort((a,b)=>(order.indexOf(a.g)-order.indexOf(b.g))||a.s.localeCompare(b.s,"ar"));render(groups,subjects.find(x=>x.id===sid)?.name||"",tn,dl,cl)}
-function render(gs,sn,tn,dl,cl){let ca=0,cs=0,total=0;gs.forEach(g=>g.weak.forEach(x=>{total++;x.cat==="care"?ca++:cs++}));summary.style.display="grid";reportInfo.style.display="block";nAll.textContent=total;nCare.textContent=ca;nCase.textContent=cs;nClasses.textContent=gs.length;infoSubject.textContent=sn;infoTest.textContent=tn;infoCase.textContent=`أقل من ${dl}%`;infoCare.textContent=`من ${dl}% إلى أقل من ${cl}%`;meta.textContent=`المعلم: ${teacherNameText} | المادة: ${sn} | الاختبار: ${tn} | دراسة حالة: أقل من ${dl}% | أولى بالرعاية: من ${dl}% إلى أقل من ${cl}%`;report.innerHTML=gs.length?"":'<div class="empty">لا يوجد طلاب ضمن النسب المحددة.</div>';gs.forEach(g=>{let c=document.createElement("div");c.className="classCard";let rows=g.weak.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${esc(x.name)}</td><td>${esc(x.testName)}</td><td class="score">${esc(x.mark)}</td><td class="score">${esc(x.full)}</td><td><b>${x.p.toFixed(1)}%</b></td><td><span class="badge ${x.cat==='case'?'caseB':'careB'}">${x.cat==='case'?'دراسة حالة':'أولى بالرعاية'}</span></td></tr>`).join("");c.innerHTML=`<div class="classHead"><div><div class="classTitle">${esc(g.g)} / ${esc(g.s)}</div><div class="teacher">المعلم: ${esc(g.teacher)}</div></div><div class="classCount">إجمالي الحالات: ${g.weak.length}</div></div><div style="overflow:auto"><table><thead><tr><th style="width:5%">م</th><th style="width:27%">اسم الطالب</th><th style="width:18%">اسم الاختبار</th><th style="width:10%">درجة الاختبار</th><th style="width:10%">الدرجة النهائية</th><th style="width:12%">النسبة</th><th style="width:18%">التصنيف</th></tr></thead><tbody>${rows}</tbody></table></div>`;report.appendChild(c)})}
+function generate(){
+let sid=subject.value,tn=test.value,cl=Number(care.value),dl=Number(caseLimit.value),teacherEmail=teacherFilter.value;
+if(!teacherEmail)return alert("اختر المعلم أولًا.");
+if(!sid||!tn)return alert("اختر المادة والاختبار.");
+if(!Number.isFinite(cl)||!Number.isFinite(dl)||dl<0||cl>100||dl>cl)return alert("راجع نسب التصنيف.");
+
+let assignedClasses=teacherAssignments().filter(a=>a.subjectId===sid);
+let groups=[];
+
+assignedClasses.forEach(a=>{
+    let g=a.grade,s=a.section;
+
+    let classTests=tests.filter(t=>
+        t.subjectId===sid &&
+        t.name===tn &&
+        (Array.isArray(t.classes)?t.classes:[]).some(c=>c.grade===g&&c.section===s)
+    );
+
+    if(!classTests.length)return;
+
+    let testIds=new Set(classTests.map(t=>t.id));
+
+    let classGrades=grades.filter(r=>
+        testIds.has(r.testId) &&
+        r.grade===g &&
+        r.section===s
+    );
+
+    let weak=[];
+
+    students
+    .filter(st=>st.grade===g&&st.section===s)
+    .forEach(st=>{
+        let r=classGrades.find(x=>
+            String(x.studentCode)===String(st.code) &&
+            score(x)
+        );
+
+        if(!r)return;
+
+        let td=classTests.find(x=>x.id===r.testId)||classTests[0];
+        let full=Number(r.fullMark||td?.fullMark||0);
+        let mark=Number(r.mark);
+
+        if(!full||!Number.isFinite(mark))return;
+
+        let p=mark/full*100;
+        let cat=p<dl?"case":p<cl?"care":"";
+
+        if(cat){
+            weak.push({
+                code:st.code||"",
+                name:st.name||st.code,
+                mark,
+                full,
+                testName:r.testName||td?.name||tn,
+                p,
+                cat
+            });
+        }
+    });
+
+    if(weak.length){
+        weak.sort((a,b)=>a.p-b.p);
+        groups.push({
+            g,
+            s,
+            teacher:selectedTeacher()?.name||teacherName(sid,g,s,classGrades),
+            weak
+        });
+    }
+});
+
+groups.sort((a,b)=>
+    (order.indexOf(a.g)-order.indexOf(b.g)) ||
+    String(a.s).localeCompare(String(b.s),"ar")
+);
+
+render(groups,subjects.find(x=>x.id===sid)?.name||"",tn,dl,cl,selectedTeacher()?.name||"");
+}
+function render(gs,sn,tn,dl,cl){let ca=0,cs=0,total=0;gs.forEach(g=>g.weak.forEach(x=>{total++;x.cat==="care"?ca++:cs++}));summary.style.display="grid";reportInfo.style.display="block";nAll.textContent=total;nCare.textContent=ca;nCase.textContent=cs;nClasses.textContent=gs.length;infoSubject.textContent=sn;infoTest.textContent=tn;infoCase.textContent=`أقل من ${dl}%`;infoCare.textContent=`من ${dl}% إلى أقل من ${cl}%`;meta.textContent=`المعلم: ${teacherNameText} | المادة: ${sn} | الاختبار: ${tn} | دراسة حالة: أقل من ${dl}% | أولى بالرعاية: من ${dl}% إلى أقل من ${cl}%`;report.innerHTML=gs.length?"":'<div class="empty">لا يوجد طلاب ضمن النسب المحددة.</div>';gs.forEach(g=>{let c=document.createElement("div");c.className="classCard";let rows=g.weak.map((x,i)=>`<tr><td>${i+1}</td><td class="name">${esc(x.name)}</td><td>${esc(g.g)} / ${esc(g.s)}</td><td>${esc(x.testName)}</td><td class="score">${esc(x.mark)}</td><td class="score">${esc(x.full)}</td><td><b>${x.p.toFixed(1)}%</b></td><td><span class="badge ${x.cat==='case'?'caseB':'careB'}">${x.cat==='case'?'دراسة حالة':'أولى بالرعاية'}</span></td></tr>`).join("");c.innerHTML=`<div class="classHead"><div><div class="classTitle">${esc(g.g)} / ${esc(g.s)}</div><div class="teacher">المعلم: ${esc(g.teacher)}</div></div><div class="classCount">إجمالي الحالات: ${g.weak.length}</div></div><div style="overflow:auto"><table><thead><tr><th style="width:4%">م</th><th style="width:23%">اسم الطالب</th><th style="width:13%">الصف / الفصل</th><th style="width:16%">اسم الاختبار</th><th style="width:10%">درجة الاختبار</th><th style="width:10%">الدرجة النهائية</th><th style="width:10%">النسبة</th><th style="width:14%">التصنيف</th></tr></thead><tbody>${rows}</tbody></table></div>`;report.appendChild(c)})}
 async function start(){if(!auth())return;try{await load()}catch(e){console.error(e);alert("حدث خطأ أثناء تحميل البيانات: "+e.message)}}start();
 </script></body></html>
