@@ -95,7 +95,7 @@ async function submitExam(auto){
  let score=0,total=0,answers=[];qs.forEach(q=>{let g=gradeQuestion(q),p=Number(q.points||1);total+=p;if(g.correct)score+=p;answers.push({questionId:q.id,type:q.type||"mcq",answer:g.answer,correct:g.correct,points:p})});
  let full=Number(ex.fullMark||total||1),mark=total?Number((score/total*full).toFixed(2)):0;
  let previous=await db.collection("examAttempts").where("examId","==",ex.id).where("studentCode","==",String(st.code)).get();
- await db.collection("examAttempts").add({examId:ex.id,examName:ex.name||"",subjectId:ex.subjectId||"",subjectName:ex.subjectName||"English",studentCode:String(st.code),studentName:st.name||"",grade:st.grade||"",section:st.section||"",attemptNumber:previous.size+1,mark,fullMark:full,answers,submittedAt:firebase.firestore.FieldValue.serverTimestamp()});
+ await db.collection("examAttempts").add({examId:ex.id,examName:ex.name||"",subjectId:ex.subjectId||"",subjectName:ex.subjectName||"English",teacherEmail:ex.teacherEmail||"",teacherName:ex.teacherName||"",studentCode:String(st.code),studentName:st.name||"",grade:st.grade||"",section:st.section||"",attemptNumber:previous.size+1,mark,fullMark:full,answers,submittedAt:firebase.firestore.FieldValue.serverTimestamp()});
  let correction="";
  if(ex.showCorrections===true){
    correction=`<div style="margin-top:15px;text-align:right">${qs.map((q,i)=>{let a=answers.find(x=>x.questionId===q.id),chosen=answerText(q,a?.answer),right=correctTextFor(q);return `<div class="q" dir="${questionDir(q)}"><b>${i+1}) ${esc(q.text)}</b><br>إجابتك: ${esc(chosen)} ${a?.correct?"✅":"❌"}<br>الإجابة الصحيحة: <b>${esc(right)}</b></div>`}).join("")}</div>`;
