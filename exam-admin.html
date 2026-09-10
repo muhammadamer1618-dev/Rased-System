@@ -20,7 +20,7 @@ button{border:0;border-radius:8px;padding:10px 14px;font:inherit;font-weight:bol
 .actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.classes{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.chip{display:flex;align-items:center;gap:5px;padding:7px 9px;border:1px solid #ccd6df;border-radius:18px;background:#fafcff;font-size:12px}.chip input{width:auto}
 table{width:100%;border-collapse:collapse;min-width:850px}th,td{border:1px solid #d4dde5;padding:8px;text-align:center;font-size:12px}th{background:var(--blue);color:#fff}.table-wrap{overflow:auto}
 .qbox{border:1px solid #d7e0e8;border-radius:10px;padding:12px;margin:10px 0;background:#fbfdff}.qhead{display:flex;justify-content:space-between;gap:8px;align-items:center}.qhead b{color:var(--navy)}
-.option-row{display:grid;grid-template-columns:42px 1fr;gap:7px;align-items:center;margin:7px 0}.option-row input[type=radio]{width:20px;height:20px}
+.option-row{display:grid;grid-template-columns:42px 1fr;gap:7px;align-items:center;margin:7px 0}.option-row input[type=radio]{width:20px;height:20px}.type-panel{margin-top:12px;padding:12px;border:1px solid #d7e0e8;border-radius:10px;background:#fafcff}.pair-row{display:grid;grid-template-columns:1fr 1fr 80px;gap:7px;align-items:end;margin:7px 0}.type-badge{display:inline-block;padding:4px 8px;border-radius:15px;background:#e7f1ff;color:#174f7c;font-size:11px;font-weight:bold;margin-inline-start:6px}
 .note{background:#fff8db;color:#715d00;padding:10px;border-radius:8px;font-size:12px;line-height:1.7}.hidden{display:none!important}.empty{text-align:center;color:#788794;padding:25px}.stat{font-weight:bold;color:var(--blue)}
 .footer{text-align:center;color:#687786;font-size:10px;padding:12px}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.head-actions{position:static;justify-content:center;margin-top:8px}}
@@ -56,20 +56,39 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{border:1px solid
 <div id="questionCard" class="card hidden">
 <div class="card-title">❓ أسئلة الاختبار: <span id="currentExamLabel"></span></div>
 <div class="card-body">
-<div class="grid2">
-<div><label>نص السؤال</label><textarea id="qText" placeholder="اكتب السؤال هنا..."></textarea></div>
+<div class="grid">
 <div>
-<label>درجة السؤال</label><input id="qPoints" type="number" min="0.25" step="0.25" value="1">
-<label style="margin-top:10px">اتجاه نص السؤال والاختيارات</label>
+<label>نوع السؤال</label>
+<select id="qType" onchange="renderQuestionEditor()">
+<option value="mcq">اختيار من متعدد</option>
+<option value="truefalse">صح / خطأ</option>
+<option value="fill">أكمل الفراغ</option>
+<option value="short">إجابة قصيرة</option>
+<option value="order">ترتيب الكلمات</option>
+<option value="matching">توصيل Matching</option>
+<option value="reading">قطعة Reading + سؤال</option>
+</select>
+</div>
+<div><label>درجة السؤال</label><input id="qPoints" type="number" min="0.25" step="0.25" value="1"></div>
+<div>
+<label>اتجاه النص</label>
 <select id="qDirection">
 <option value="auto">تلقائي Auto</option>
-<option value="rtl">العربية — من اليمين لليسار RTL</option>
-<option value="ltr">English — Left to Right LTR</option>
+<option value="rtl">العربية — RTL</option>
+<option value="ltr">English — LTR</option>
 </select>
-<div class="note" style="margin-top:8px">اختر الاتجاه يدويًا أو اتركه تلقائيًا. سيتم تطبيقه على السؤال والاختيارات عند الطالب.</div>
 </div>
+<div><label>ترتيب السؤال</label><input id="qOrder" type="number" min="1" placeholder="تلقائي"></div>
 </div>
-<div id="optionsBox"></div>
+
+<div id="readingBox" class="type-panel hidden">
+<label>قطعة القراءة</label>
+<textarea id="qPassage" placeholder="اكتب قطعة القراءة هنا..."></textarea>
+</div>
+
+<div style="margin-top:12px"><label>نص السؤال</label><textarea id="qText" placeholder="اكتب السؤال هنا..."></textarea></div>
+
+<div id="answerBox" class="type-panel"></div>
 <div class="actions">
 <button class="green" onclick="saveQuestion()">➕ حفظ السؤال</button>
 <button class="light" onclick="clearQuestionForm()">تفريغ السؤال</button>
@@ -203,28 +222,161 @@ function questionDir(q){
  if(d==="rtl"||d==="ltr")return d;
  return /[\u0600-\u06FF]/.test(String(q?.text||""))?"rtl":"ltr";
 }
-function buildOptions(q=null){
- let opts=q?.options||["","","",""];optionsBox.innerHTML="";
- for(let i=0;i<4;i++)optionsBox.insertAdjacentHTML("beforeend",`<div class="option-row"><input type="radio" name="correct" value="${i}" ${Number(q?.correctIndex)===i?"checked":""}><input class="optText" value="${esc(opts[i]||"")}" placeholder="الاختيار ${i+1}"></div>`);
+const questionTypeNames={
+mcq:"اختيار من متعدد",
+truefalse:"صح / خطأ",
+fill:"أكمل الفراغ",
+short:"إجابة قصيرة",
+order:"ترتيب الكلمات",
+matching:"توصيل",
+reading:"Reading"
+};
+
+function buildChoiceEditor(q=null,isTrueFalse=false){
+ const opts=isTrueFalse?["صح","خطأ"]:(Array.isArray(q?.options)?q.options:["","","",""]);
+ answerBox.innerHTML="";
+ opts.forEach((o,i)=>{
+   answerBox.insertAdjacentHTML("beforeend",`<div class="option-row"><input type="radio" name="correct" value="${i}" ${Number(q?.correctIndex)===i?"checked":""}><input class="optText" value="${esc(o||"")}" placeholder="الاختيار ${i+1}" ${isTrueFalse?"readonly":""}></div>`);
+ });
 }
-async function openQuestions(id){let e=examsData.find(x=>x.id===id);if(!e||!canManageExam(e)){alert("لا يمكنك فتح أسئلة اختبار يخص معلماً آخر.");return;}selectedExamId=id;currentExamLabel.textContent=e?.name||"";questionCard.classList.remove("hidden");clearQuestionForm();await loadQuestions();questionCard.scrollIntoView({behavior:"smooth"})}
-function clearQuestionForm(){editingQuestionId.value="";qText.value="";qPoints.value=1;qDirection.value="auto";buildOptions()}
+
+function addPair(left="",right=""){
+ const row=document.createElement("div");
+ row.className="pair-row";
+ row.innerHTML=`<div><label>الطرف الأول</label><input class="pairLeft" value="${esc(left)}"></div><div><label>المطابقة الصحيحة</label><input class="pairRight" value="${esc(right)}"></div><button type="button" class="red" onclick="this.parentElement.remove()">حذف</button>`;
+ document.getElementById("pairsBox").appendChild(row);
+}
+
+function renderQuestionEditor(q=null){
+ const t=q?.type||qType.value||"mcq";
+ qType.value=t;
+ readingBox.classList.toggle("hidden",t!=="reading");
+ if(t==="reading") qPassage.value=q?.passage||"";
+ else qPassage.value="";
+
+ if(t==="mcq"||t==="reading"){
+   buildChoiceEditor(q,false);
+ }else if(t==="truefalse"){
+   buildChoiceEditor(q,true);
+ }else if(t==="fill"||t==="short"){
+   answerBox.innerHTML=`<label>الإجابة الصحيحة</label><input id="correctText" value="${esc(q?.correctText||"")}" placeholder="يمكن كتابة أكثر من إجابة صحيحة والفصل بينها بعلامة |"><div class="note" style="margin-top:8px">مثال: colour | color</div>`;
+ }else if(t==="order"){
+   answerBox.innerHTML=`<label>الجملة بالترتيب الصحيح</label><input id="correctText" value="${esc(q?.correctText||"")}" placeholder="اكتب الجملة الصحيحة كاملة">`;
+ }else if(t==="matching"){
+   answerBox.innerHTML=`<div id="pairsBox"></div><button type="button" class="light" onclick="addPair()">➕ إضافة زوج</button><div class="note" style="margin-top:8px">أدخل عنصر الطرف الأول وما يقابله في الطرف الثاني.</div>`;
+   const pairs=Array.isArray(q?.pairs)&&q.pairs.length?q.pairs:[{left:"",right:""},{left:"",right:""}];
+   pairs.forEach(p=>addPair(p.left||"",p.right||""));
+ }
+}
+
+async function openQuestions(id){
+ let e=examsData.find(x=>x.id===id);
+ if(!e||!canManageExam(e)){alert("لا يمكنك فتح أسئلة اختبار يخص معلماً آخر.");return;}
+ selectedExamId=id;currentExamLabel.textContent=e?.name||"";questionCard.classList.remove("hidden");clearQuestionForm();await loadQuestions();questionCard.scrollIntoView({behavior:"smooth"});
+}
+
+function clearQuestionForm(){
+ editingQuestionId.value="";
+ qText.value="";
+ qPoints.value=1;
+ qDirection.value="auto";
+ qOrder.value="";
+ qType.value="mcq";
+ qPassage.value="";
+ renderQuestionEditor();
+}
+
 async function saveQuestion(){
  if(!selectedExamId)return alert("اختر اختبارًا أولًا.");
- let text=qText.value.trim(),opts=[...document.querySelectorAll(".optText")].map(x=>x.value.trim()),r=document.querySelector('input[name="correct"]:checked');
- if(!text||opts.some(x=>!x)||!r)return alert("اكتب السؤال والاختيارات الأربعة وحدد الإجابة الصحيحة.");
- let data={text,options:opts,correctIndex:Number(r.value),points:Number(qPoints.value||1),textDirection:qDirection.value||"auto",updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
- let id=editingQuestionId.value;if(id)await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).set(data,{merge:true});
- else{let s=await db.collection("onlineExams").doc(selectedExamId).collection("questions").get();data.order=s.size+1;data.createdAt=firebase.firestore.FieldValue.serverTimestamp();await db.collection("onlineExams").doc(selectedExamId).collection("questions").add(data)}
+ try{await requireOwnedExam(selectedExamId)}catch(e){alert(e.message);return}
+
+ const type=qType.value||"mcq";
+ const text=qText.value.trim();
+ const points=Number(qPoints.value||1);
+ if(!text)return alert("اكتب نص السؤال.");
+ if(!points||points<=0)return alert("أدخل درجة صحيحة للسؤال.");
+
+ let data={
+   type,text,points,
+   textDirection:qDirection.value||"auto",
+   updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+ };
+
+ if(type==="mcq"||type==="reading"||type==="truefalse"){
+   const opts=[...document.querySelectorAll(".optText")].map(x=>x.value.trim());
+   const r=document.querySelector('input[name="correct"]:checked');
+   if(opts.some(x=>!x)||!r)return alert("أكمل الاختيارات وحدد الإجابة الصحيحة.");
+   data.options=opts;
+   data.correctIndex=Number(r.value);
+   if(type==="reading"){
+     data.passage=qPassage.value.trim();
+     if(!data.passage)return alert("اكتب قطعة القراءة.");
+   }
+ }else if(type==="fill"||type==="short"||type==="order"){
+   const correct=document.getElementById("correctText")?.value.trim()||"";
+   if(!correct)return alert("اكتب الإجابة الصحيحة.");
+   data.correctText=correct;
+ }else if(type==="matching"){
+   const lefts=[...document.querySelectorAll(".pairLeft")];
+   const rights=[...document.querySelectorAll(".pairRight")];
+   const pairs=lefts.map((x,i)=>({left:x.value.trim(),right:rights[i]?.value.trim()||""})).filter(p=>p.left||p.right);
+   if(pairs.length<2||pairs.some(p=>!p.left||!p.right))return alert("أدخل زوجين صحيحين على الأقل في سؤال التوصيل.");
+   data.pairs=pairs;
+ }
+
+ const id=editingQuestionId.value;
+ if(id){
+   if(qOrder.value) data.order=Number(qOrder.value);
+   await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).set(data,{merge:true});
+ }else{
+   const s=await db.collection("onlineExams").doc(selectedExamId).collection("questions").get();
+   data.order=qOrder.value?Number(qOrder.value):s.size+1;
+   data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+   await db.collection("onlineExams").doc(selectedExamId).collection("questions").add(data);
+ }
  clearQuestionForm();await loadQuestions();await loadExams();
 }
-async function loadQuestions(){
- let s=await db.collection("onlineExams").doc(selectedExamId).collection("questions").get(),arr=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
- if(!arr.length){questionsList.innerHTML='<div class="empty">لم تتم إضافة أسئلة بعد.</div>';return}
- questionsList.innerHTML=arr.map((q,i)=>`<div class="qbox" dir="${questionDir(q)}" style="text-align:${questionDir(q)==="ltr"?"left":"right"}"><div class="qhead"><b>${i+1}) ${esc(q.text)}</b><span>${esc(q.points||1)} درجة</span></div><ol>${(q.options||[]).map((o,j)=>`<li ${j===Number(q.correctIndex)?'style="font-weight:bold;color:#198754"':""}>${esc(o)} ${j===Number(q.correctIndex)?"✓":""}</li>`).join("")}</ol><div class="actions"><button class="primary" onclick="editQuestion('${q.id}')">تعديل</button><button class="red" onclick="deleteQuestion('${q.id}')">حذف</button></div></div>`).join("");
+
+function questionAnswerPreview(q){
+ const t=q.type||"mcq";
+ if(["mcq","truefalse","reading"].includes(t)){
+   return `<ol>${(q.options||[]).map((o,j)=>`<li ${j===Number(q.correctIndex)?'style="font-weight:bold;color:#198754"':""}>${esc(o)} ${j===Number(q.correctIndex)?"✓":""}</li>`).join("")}</ol>`;
+ }
+ if(t==="matching")return `<div>${(q.pairs||[]).map(p=>`${esc(p.left)} ↔ <b>${esc(p.right)}</b>`).join("<br>")}</div>`;
+ return `<div style="margin-top:8px">الإجابة الصحيحة: <b>${esc(q.correctText||"")}</b></div>`;
 }
-async function editQuestion(id){let d=await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).get();if(!d.exists)return;let q=d.data();editingQuestionId.value=id;qText.value=q.text||"";qPoints.value=q.points||1;qDirection.value=q.textDirection||"auto";buildOptions(q);questionCard.scrollIntoView({behavior:"smooth"})}
-async function deleteQuestion(id){if(!confirm("حذف هذا السؤال؟"))return;await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).delete();await loadQuestions();await loadExams()}
+
+async function loadQuestions(){
+ let s=await db.collection("onlineExams").doc(selectedExamId).collection("questions").get();
+ let arr=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
+ if(!arr.length){questionsList.innerHTML='<div class="empty">لم تتم إضافة أسئلة بعد.</div>';return}
+ questionsList.innerHTML=arr.map((q,i)=>{
+   const t=q.type||"mcq",d=questionDir(q);
+   return `<div class="qbox" dir="${d}" style="text-align:${d==="ltr"?"left":"right"}"><div class="qhead"><b>${i+1}) ${esc(q.text)} <span class="type-badge">${esc(questionTypeNames[t]||t)}</span></b><span>${esc(q.points||1)} درجة</span></div>${t==="reading"&&q.passage?`<div class="note" style="margin-top:8px">${esc(q.passage)}</div>`:""}${questionAnswerPreview(q)}<div class="actions"><button class="primary" onclick="editQuestion('${q.id}')">تعديل</button><button class="red" onclick="deleteQuestion('${q.id}')">حذف</button></div></div>`;
+ }).join("");
+}
+
+async function editQuestion(id){
+ let d=await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).get();
+ if(!d.exists)return;
+ let q=d.data();
+ editingQuestionId.value=id;
+ qText.value=q.text||"";
+ qPoints.value=q.points||1;
+ qDirection.value=q.textDirection||"auto";
+ qOrder.value=q.order||"";
+ qType.value=q.type||"mcq";
+ renderQuestionEditor(q);
+ questionCard.scrollIntoView({behavior:"smooth"});
+}
+
+async function deleteQuestion(id){
+ try{await requireOwnedExam(selectedExamId)}catch(e){alert(e.message);return}
+ if(!confirm("حذف هذا السؤال؟"))return;
+ await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).delete();
+ await loadQuestions();await loadExams();
+}
+
 async function showResults(id){
  let e=examsData.find(x=>x.id===id);if(!e||!canManageExam(e)){alert("لا يمكنك عرض نتائج اختبار يخص معلماً آخر.");return;}
  let s=await db.collection("examAttempts").where("examId","==",id).get(),arr=s.docs.map(d=>d.data());
@@ -234,7 +386,7 @@ async function showResults(id){
  resultRows.innerHTML=arr.length?arr.map((r,i)=>{let p=Number(r.fullMark)?Number(r.mark)/Number(r.fullMark)*100:0;let dt=r.submittedAt?.toDate?r.submittedAt.toDate().toLocaleString("ar-SA"):"-";return `<tr><td>${i+1}</td><td>${esc(r.studentName)}</td><td>${esc(r.grade)}</td><td>${esc(r.section)}</td><td>${esc(r.mark)}</td><td>${esc(r.fullMark)}</td><td>${p.toFixed(1)}%</td><td>${esc(dt)}</td></tr>`}).join(""):'<tr><td colspan="8">لا توجد نتائج بعد.</td></tr>';
  resultsCard.scrollIntoView({behavior:"smooth"});
 }
-async function start(){if(!protect())return;buildOptions();try{await loadBase()}catch(e){console.error(e);alert("حدث خطأ أثناء تحميل المنصة: "+e.message)}}
+async function start(){if(!protect())return;renderQuestionEditor();try{await loadBase()}catch(e){console.error(e);alert("حدث خطأ أثناء تحميل المنصة: "+e.message)}}
 start();
 </script>
 </body>
