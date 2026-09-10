@@ -48,6 +48,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{border:1px solid
 <option value="1">محاولة واحدة</option><option value="2">محاولتان</option>
 <option value="3">3 محاولات</option><option value="5">5 محاولات</option>
 <option value="0">غير محدود</option></select></div>
+<div><label>آخر موعد لأداء الاختبار</label><input id="deadline" type="datetime-local"><div style="font-size:10px;color:#687786;margin-top:4px">اتركه فارغًا إذا كان الاختبار بدون موعد نهائي.</div></div>
 </div>
 <label style="margin-top:12px">الصفوف والفصول المستهدفة</label>
 <div id="classChoices" class="classes"><span class="note">اختر المادة أولًا.</span></div>
@@ -116,7 +117,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{border:1px solid
 <div class="card">
 <div class="card-title">📋 الاختبارات الموجودة</div>
 <div class="card-body">
-<div class="table-wrap"><table><thead><tr><th>م</th><th>الاختبار</th><th>المادة</th><th>الفصول</th><th>الدرجة</th><th>المدة</th><th>الحالة</th><th>الأسئلة</th><th>الإجراءات</th></tr></thead><tbody id="examRows"></tbody></table></div>
+<div class="table-wrap"><table><thead><tr><th>م</th><th>الاختبار</th><th>المادة</th><th>الفصول</th><th>الدرجة</th><th>المدة</th><th>آخر موعد</th><th>الحالة</th><th>الأسئلة</th><th>الإجراءات</th></tr></thead><tbody id="examRows"></tbody></table></div>
 </div></div>
 
 <div id="resultsCard" class="card hidden">
@@ -181,11 +182,11 @@ function renderClasses(selected=[]){
  arr.forEach(c=>{let checked=selected.some(x=>x.grade===c.grade&&x.section===c.section)?"checked":"";classChoices.insertAdjacentHTML("beforeend",`<label class="chip"><input type="checkbox" class="classCheck" data-grade="${esc(c.grade)}" data-section="${esc(c.section)}" ${checked}>${esc(c.grade)} / ${esc(c.section)}</label>`)});
 }
 async function saveExam(){
- let name=examName.value.trim(),sid=subject.value,fm=Number(fullMark.value),dur=Number(duration.value),maxAtt=Number(maxAttempts.value);
+ let name=examName.value.trim(),sid=subject.value,fm=Number(fullMark.value),dur=Number(duration.value),maxAtt=Number(maxAttempts.value),deadlineValue=deadline.value.trim();
  let classes=[...document.querySelectorAll(".classCheck:checked")].map(x=>({grade:x.dataset.grade,section:x.dataset.section}));
  if(!name||!sid||!fm||!dur||!classes.length)return alert("أكمل اسم الاختبار والمادة والدرجة والمدة واختر فصلًا واحدًا على الأقل.");
  let subj=subjects.find(s=>s.id===sid);
- let data={name,subjectId:sid,subjectName:subj?.name||"",fullMark:fm,durationMinutes:dur,maxAttempts:maxAtt,classes,active:true,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+ let data={name,subjectId:sid,subjectName:subj?.name||"",fullMark:fm,durationMinutes:dur,maxAttempts:maxAtt,deadline:deadlineValue||"",classes,active:true,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
  if(role==="teacher" && !editingId.value){
    data.teacherEmail=currentUser;
    data.teacherName=currentTeacher?.name||localStorage.getItem("currentUserName")||currentUser;
@@ -209,17 +210,17 @@ async function loadExams(){
    examsData=examsData.filter(e=>String(e.teacherEmail||"").trim().toLowerCase()===me);
  }
  examRows.innerHTML="";
- if(!examsData.length){examRows.innerHTML='<tr><td colspan="9">لا توجد اختبارات حتى الآن.</td></tr>';return}
+ if(!examsData.length){examRows.innerHTML='<tr><td colspan="10">لا توجد اختبارات حتى الآن.</td></tr>';return}
  for(let i=0;i<examsData.length;i++){
    let e=examsData[i],qc=await db.collection("onlineExams").doc(e.id).collection("questions").get();
    let cls=(e.classes||[]).map(c=>c.grade+" "+c.section).join("، ");
-   examRows.insertAdjacentHTML("beforeend",`<tr><td>${i+1}</td><td>${esc(e.name)}</td><td>${esc(e.subjectName)}</td><td>${esc(cls)}</td><td>${esc(e.fullMark)}</td><td>${esc(e.durationMinutes)} د</td><td>${e.active!==false?"مفعل":"موقوف"}</td><td>${qc.size}</td><td><button class="primary" onclick="editExam('${e.id}')">تعديل</button> <button class="green" onclick="openQuestions('${e.id}')">الأسئلة</button> <button class="gold" onclick="showResults('${e.id}')">النتائج</button> <button class="light" onclick="toggleExam('${e.id}',${e.active!==false})">${e.active!==false?"إيقاف":"تفعيل"}</button> <button class="gold" onclick="deleteExamResults('${e.id}')">حذف النتائج</button> <button class="red" onclick="deleteExam('${e.id}')">حذف</button></td></tr>`);
+   examRows.insertAdjacentHTML("beforeend",`<tr><td>${i+1}</td><td>${esc(e.name)}</td><td>${esc(e.subjectName)}</td><td>${esc(cls)}</td><td>${esc(e.fullMark)}</td><td>${esc(e.durationMinutes)} د</td><td>${e.deadline?esc(new Date(e.deadline).toLocaleString("ar-SA")):"بدون موعد"}</td><td>${e.active!==false?"مفعل":"موقوف"}</td><td>${qc.size}</td><td><button class="primary" onclick="editExam('${e.id}')">تعديل</button> <button class="green" onclick="openQuestions('${e.id}')">الأسئلة</button> <button class="gold" onclick="showResults('${e.id}')">النتائج</button> <button class="light" onclick="toggleExam('${e.id}',${e.active!==false})">${e.active!==false?"إيقاف":"تفعيل"}</button> <button class="gold" onclick="deleteExamResults('${e.id}')">حذف النتائج</button> <button class="red" onclick="deleteExam('${e.id}')">حذف</button></td></tr>`);
  }
 }
 function editExam(id){
- let e=examsData.find(x=>x.id===id);if(!e||!canManageExam(e)){alert("لا يمكنك تعديل اختبار يخص معلماً آخر.");return;}editingId.value=id;examName.value=e.name||"";subject.value=e.subjectId||"";fullMark.value=e.fullMark||10;duration.value=e.durationMinutes||15;maxAttempts.value=(e.maxAttempts===undefined?1:Number(e.maxAttempts));renderClasses(e.classes||[]);openQuestions(id);window.scrollTo({top:0,behavior:"smooth"});
+ let e=examsData.find(x=>x.id===id);if(!e||!canManageExam(e)){alert("لا يمكنك تعديل اختبار يخص معلماً آخر.");return;}editingId.value=id;examName.value=e.name||"";subject.value=e.subjectId||"";fullMark.value=e.fullMark||10;duration.value=e.durationMinutes||15;maxAttempts.value=(e.maxAttempts===undefined?1:Number(e.maxAttempts));deadline.value=e.deadline||"";renderClasses(e.classes||[]);openQuestions(id);window.scrollTo({top:0,behavior:"smooth"});
 }
-function clearExamForm(){editingId.value="";examName.value="";subject.value="";fullMark.value=10;duration.value=15;maxAttempts.value=1;classChoices.innerHTML='<span class="note">اختر المادة أولًا.</span>';questionCard.classList.add("hidden");selectedExamId=""}
+function clearExamForm(){editingId.value="";examName.value="";subject.value="";fullMark.value=10;duration.value=15;maxAttempts.value=1;deadline.value="";classChoices.innerHTML='<span class="note">اختر المادة أولًا.</span>';questionCard.classList.add("hidden");selectedExamId=""}
 async function toggleExam(id,current){try{await requireOwnedExam(id);await db.collection("onlineExams").doc(id).update({active:!current});await loadExams()}catch(e){alert(e.message)}}
 async function deleteExam(id){
  try{await requireOwnedExam(id)}catch(e){alert(e.message);return}
