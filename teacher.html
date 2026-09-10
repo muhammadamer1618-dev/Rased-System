@@ -865,7 +865,7 @@ tbody tr:nth-child(even){
 📊 تحليل نتائج هذا الفصل
 </button>
 
-<button class="action-btn" style="background:#c69a2b;color:#fff" onclick="openExamPlatform()">
+<button id="examPlatformBtn" class="action-btn" style="background:#c69a2b;color:#fff;display:none" onclick="openExamPlatform()">
 📝 منصة الاختبارات الإلكترونية
 </button>
 
@@ -1329,6 +1329,69 @@ el("printFooterTeacher").textContent=
 
 
 fillSubjects();
+
+await applyExamPlatformAccess();
+
+}
+
+
+
+/* ======================================================
+   EXAM PLATFORM ACCESS
+====================================================== */
+
+async function applyExamPlatformAccess(){
+
+const btn=el("examPlatformBtn");
+
+if(!btn)return;
+
+btn.style.display="none";
+
+try{
+
+const settings=
+await db.collection("systemSettings")
+.doc("examPlatform")
+.get();
+
+/*
+إذا لم توجد إعدادات بعد، نحافظ على السلوك القديم:
+الزر يظهر لجميع المعلمين.
+*/
+if(!settings.exists || !Array.isArray(settings.data()?.enabledSubjectIds)){
+
+btn.style.display="";
+return;
+
+}
+
+const enabled=
+new Set(
+settings.data().enabledSubjectIds.map(String)
+);
+
+const teacherHasEnabledSubject=
+assignments.some(a=>
+a.subjectId &&
+enabled.has(String(a.subjectId))
+);
+
+btn.style.display=
+teacherHasEnabledSubject
+?
+""
+:
+"none";
+
+}catch(error){
+
+console.error("EXAM PLATFORM ACCESS ERROR:",error);
+
+/* لا نعطل ميزة كانت تعمل بسبب خطأ قراءة عابر */
+btn.style.display="";
+
+}
 
 }
 
