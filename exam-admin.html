@@ -60,7 +60,13 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{border:1px solid
 <div><label>نص السؤال</label><textarea id="qText" placeholder="اكتب السؤال هنا..."></textarea></div>
 <div>
 <label>درجة السؤال</label><input id="qPoints" type="number" min="0.25" step="0.25" value="1">
-<div class="note" style="margin-top:8px">النسخة الأولى تدعم الاختيار من متعدد. اختر الدائرة أمام الإجابة الصحيحة.</div>
+<label style="margin-top:10px">اتجاه نص السؤال والاختيارات</label>
+<select id="qDirection">
+<option value="auto">تلقائي Auto</option>
+<option value="rtl">العربية — من اليمين لليسار RTL</option>
+<option value="ltr">English — Left to Right LTR</option>
+</select>
+<div class="note" style="margin-top:8px">اختر الاتجاه يدويًا أو اتركه تلقائيًا. سيتم تطبيقه على السؤال والاختيارات عند الطالب.</div>
 </div>
 </div>
 <div id="optionsBox"></div>
@@ -170,17 +176,22 @@ async function deleteExam(id){
   await db.collection("onlineExams").doc(id).delete();if(selectedExamId===id){questionCard.classList.add("hidden");resultsCard.classList.add("hidden")}await loadExams();
  }catch(e){alert("تعذر الحذف: "+e.message)}
 }
+function questionDir(q){
+ let d=q?.textDirection||"auto";
+ if(d==="rtl"||d==="ltr")return d;
+ return /[\u0600-\u06FF]/.test(String(q?.text||""))?"rtl":"ltr";
+}
 function buildOptions(q=null){
  let opts=q?.options||["","","",""];optionsBox.innerHTML="";
  for(let i=0;i<4;i++)optionsBox.insertAdjacentHTML("beforeend",`<div class="option-row"><input type="radio" name="correct" value="${i}" ${Number(q?.correctIndex)===i?"checked":""}><input class="optText" value="${esc(opts[i]||"")}" placeholder="الاختيار ${i+1}"></div>`);
 }
 async function openQuestions(id){selectedExamId=id;let e=examsData.find(x=>x.id===id);currentExamLabel.textContent=e?.name||"";questionCard.classList.remove("hidden");clearQuestionForm();await loadQuestions();questionCard.scrollIntoView({behavior:"smooth"})}
-function clearQuestionForm(){editingQuestionId.value="";qText.value="";qPoints.value=1;buildOptions()}
+function clearQuestionForm(){editingQuestionId.value="";qText.value="";qPoints.value=1;qDirection.value="auto";buildOptions()}
 async function saveQuestion(){
  if(!selectedExamId)return alert("اختر اختبارًا أولًا.");
  let text=qText.value.trim(),opts=[...document.querySelectorAll(".optText")].map(x=>x.value.trim()),r=document.querySelector('input[name="correct"]:checked');
  if(!text||opts.some(x=>!x)||!r)return alert("اكتب السؤال والاختيارات الأربعة وحدد الإجابة الصحيحة.");
- let data={text,options:opts,correctIndex:Number(r.value),points:Number(qPoints.value||1),updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+ let data={text,options:opts,correctIndex:Number(r.value),points:Number(qPoints.value||1),textDirection:qDirection.value||"auto",updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
  let id=editingQuestionId.value;if(id)await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).set(data,{merge:true});
  else{let s=await db.collection("onlineExams").doc(selectedExamId).collection("questions").get();data.order=s.size+1;data.createdAt=firebase.firestore.FieldValue.serverTimestamp();await db.collection("onlineExams").doc(selectedExamId).collection("questions").add(data)}
  clearQuestionForm();await loadQuestions();await loadExams();
@@ -188,9 +199,9 @@ async function saveQuestion(){
 async function loadQuestions(){
  let s=await db.collection("onlineExams").doc(selectedExamId).collection("questions").get(),arr=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
  if(!arr.length){questionsList.innerHTML='<div class="empty">لم تتم إضافة أسئلة بعد.</div>';return}
- questionsList.innerHTML=arr.map((q,i)=>`<div class="qbox"><div class="qhead"><b>${i+1}) ${esc(q.text)}</b><span>${esc(q.points||1)} درجة</span></div><ol>${(q.options||[]).map((o,j)=>`<li ${j===Number(q.correctIndex)?'style="font-weight:bold;color:#198754"':""}>${esc(o)} ${j===Number(q.correctIndex)?"✓":""}</li>`).join("")}</ol><div class="actions"><button class="primary" onclick="editQuestion('${q.id}')">تعديل</button><button class="red" onclick="deleteQuestion('${q.id}')">حذف</button></div></div>`).join("");
+ questionsList.innerHTML=arr.map((q,i)=>`<div class="qbox" dir="${questionDir(q)}" style="text-align:${questionDir(q)==="ltr"?"left":"right"}"><div class="qhead"><b>${i+1}) ${esc(q.text)}</b><span>${esc(q.points||1)} درجة</span></div><ol>${(q.options||[]).map((o,j)=>`<li ${j===Number(q.correctIndex)?'style="font-weight:bold;color:#198754"':""}>${esc(o)} ${j===Number(q.correctIndex)?"✓":""}</li>`).join("")}</ol><div class="actions"><button class="primary" onclick="editQuestion('${q.id}')">تعديل</button><button class="red" onclick="deleteQuestion('${q.id}')">حذف</button></div></div>`).join("");
 }
-async function editQuestion(id){let d=await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).get();if(!d.exists)return;let q=d.data();editingQuestionId.value=id;qText.value=q.text||"";qPoints.value=q.points||1;buildOptions(q);questionCard.scrollIntoView({behavior:"smooth"})}
+async function editQuestion(id){let d=await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).get();if(!d.exists)return;let q=d.data();editingQuestionId.value=id;qText.value=q.text||"";qPoints.value=q.points||1;qDirection.value=q.textDirection||"auto";buildOptions(q);questionCard.scrollIntoView({behavior:"smooth"})}
 async function deleteQuestion(id){if(!confirm("حذف هذا السؤال؟"))return;await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).delete();await loadQuestions();await loadExams()}
 async function showResults(id){
  let e=examsData.find(x=>x.id===id),s=await db.collection("examAttempts").where("examId","==",id).get(),arr=s.docs.map(d=>d.data());
