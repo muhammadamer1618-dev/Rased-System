@@ -20,7 +20,7 @@ button{border:0;border-radius:8px;padding:10px 14px;font:inherit;font-weight:bol
 .actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.classes{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.chip{display:flex;align-items:center;gap:5px;padding:7px 9px;border:1px solid #ccd6df;border-radius:18px;background:#fafcff;font-size:12px}.chip input{width:auto}
 table{width:100%;border-collapse:collapse;min-width:850px}th,td{border:1px solid #d4dde5;padding:8px;text-align:center;font-size:12px}th{background:var(--blue);color:#fff}.table-wrap{overflow:auto}
 .qbox{border:1px solid #d7e0e8;border-radius:10px;padding:12px;margin:10px 0;background:#fbfdff}.qhead{display:flex;justify-content:space-between;gap:8px;align-items:center}.qhead b{color:var(--navy)}
-.option-row{display:grid;grid-template-columns:42px 1fr;gap:7px;align-items:center;margin:7px 0}.option-row input[type=radio]{width:20px;height:20px}
+.option-row{display:grid;grid-template-columns:42px 1fr;gap:7px;align-items:center;margin:7px 0}.option-row input[type=radio]{width:20px;height:20px}.type-panel{margin-top:12px;padding:12px;border:1px solid #d7e0e8;border-radius:10px;background:#fafcff}.pair-row{display:grid;grid-template-columns:1fr 1fr 80px;gap:7px;align-items:end;margin:7px 0}.type-badge{display:inline-block;padding:4px 8px;border-radius:15px;background:#e7f1ff;color:#174f7c;font-size:11px;font-weight:bold;margin-inline-start:6px}
 .note{background:#fff8db;color:#715d00;padding:10px;border-radius:8px;font-size:12px;line-height:1.7}.hidden{display:none!important}.empty{text-align:center;color:#788794;padding:25px}.stat{font-weight:bold;color:var(--blue)}
 .footer{text-align:center;color:#687786;font-size:10px;padding:12px}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.head-actions{position:static;justify-content:center;margin-top:8px}}
@@ -44,14 +44,10 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{border:1px solid
 <div><label>المادة</label><select id="subject" onchange="renderClasses()"><option value="">اختر المادة</option></select></div>
 <div><label>الدرجة النهائية</label><input id="fullMark" type="number" min="1" value="10"></div>
 <div><label>مدة الاختبار بالدقائق</label><input id="duration" type="number" min="1" value="15"></div>
-<div><label>عدد محاولات الطالب</label>
-<select id="maxAttempts">
-<option value="1">محاولة واحدة</option>
-<option value="2">محاولتان</option>
-<option value="3">3 محاولات</option>
-<option value="5">5 محاولات</option>
-<option value="0">غير محدود</option>
-</select></div>
+<div><label>عدد محاولات الطالب</label><select id="maxAttempts">
+<option value="1">محاولة واحدة</option><option value="2">محاولتان</option>
+<option value="3">3 محاولات</option><option value="5">5 محاولات</option>
+<option value="0">غير محدود</option></select></div>
 </div>
 <label style="margin-top:12px">الصفوف والفصول المستهدفة</label>
 <div id="classChoices" class="classes"><span class="note">اختر المادة أولًا.</span></div>
@@ -64,20 +60,39 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{border:1px solid
 <div id="questionCard" class="card hidden">
 <div class="card-title">❓ أسئلة الاختبار: <span id="currentExamLabel"></span></div>
 <div class="card-body">
-<div class="grid2">
-<div><label>نص السؤال</label><textarea id="qText" placeholder="اكتب السؤال هنا..."></textarea></div>
+<div class="grid">
 <div>
-<label>درجة السؤال</label><input id="qPoints" type="number" min="0.25" step="0.25" value="1">
-<label style="margin-top:10px">اتجاه نص السؤال والاختيارات</label>
+<label>نوع السؤال</label>
+<select id="qType" onchange="renderQuestionEditor()">
+<option value="mcq">اختيار من متعدد</option>
+<option value="truefalse">صح / خطأ</option>
+<option value="fill">أكمل الفراغ</option>
+<option value="short">إجابة قصيرة</option>
+<option value="order">ترتيب الكلمات</option>
+<option value="matching">توصيل Matching</option>
+<option value="reading">قطعة Reading + سؤال</option>
+</select>
+</div>
+<div><label>درجة السؤال</label><input id="qPoints" type="number" min="0.25" step="0.25" value="1"></div>
+<div>
+<label>اتجاه النص</label>
 <select id="qDirection">
 <option value="auto">تلقائي Auto</option>
-<option value="rtl">العربية — من اليمين لليسار RTL</option>
-<option value="ltr">English — Left to Right LTR</option>
+<option value="rtl">العربية — RTL</option>
+<option value="ltr">English — LTR</option>
 </select>
-<div class="note" style="margin-top:8px">اختر الاتجاه يدويًا أو اتركه تلقائيًا. سيتم تطبيقه على السؤال والاختيارات عند الطالب.</div>
 </div>
+<div><label>ترتيب السؤال</label><input id="qOrder" type="number" min="1" placeholder="تلقائي"></div>
 </div>
-<div id="optionsBox"></div>
+
+<div id="readingBox" class="type-panel hidden">
+<label>قطعة القراءة</label>
+<textarea id="qPassage" placeholder="اكتب قطعة القراءة هنا..."></textarea>
+</div>
+
+<div style="margin-top:12px"><label>نص السؤال</label><textarea id="qText" placeholder="اكتب السؤال هنا..."></textarea></div>
+
+<div id="answerBox" class="type-panel"></div>
 <div class="actions">
 <button class="green" onclick="saveQuestion()">➕ حفظ السؤال</button>
 <button class="light" onclick="clearQuestionForm()">تفريغ السؤال</button>
@@ -88,16 +103,15 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{border:1px solid
 </div></div>
 
 <div class="card">
-<div class="card-title">⚙️ إدارة مرنة للاختبارات والنتائج</div>
+<div class="card-title">⚙️ إدارة الاختبارات والنتائج</div>
 <div class="card-body">
-<div class="note">عمليات الحذف الجماعي لا تؤثر على درجات راصد الرسمية؛ هي خاصة بمنصة الاختبارات الإلكترونية فقط.</div>
+<div class="note">هذه العمليات تخص الاختبارات الإلكترونية فقط ولا تمس درجات راصد الرسمية.</div>
 <div class="actions">
 <button class="green" onclick="setAllExamsActive(true)">▶ تفعيل جميع اختباراتي</button>
 <button class="light" onclick="setAllExamsActive(false)">⏸ إيقاف جميع اختباراتي</button>
 <button class="gold" onclick="deleteAllMyResults()">🧹 حذف جميع النتائج</button>
 <button class="red" onclick="deleteAllMyExams()">🗑️ حذف جميع الاختبارات</button>
-</div>
-</div></div>
+</div></div></div>
 
 <div class="card">
 <div class="card-title">📋 الاختبارات الموجودة</div>
@@ -221,91 +235,47 @@ async function deleteExam(id){
 
 async function commitDeletes(docs){
  let batch=db.batch(),n=0;
- for(const d of docs){
-   batch.delete(d.ref);n++;
-   if(n>=400){await batch.commit();batch=db.batch();n=0}
- }
+ for(const d of docs){batch.delete(d.ref);n++;if(n>=400){await batch.commit();batch=db.batch();n=0}}
  if(n)await batch.commit();
 }
-function myExamIds(){
- return new Set(examsData.filter(e=>canManageExam(e)).map(e=>e.id));
-}
+function myExamIds(){return new Set(examsData.filter(e=>canManageExam(e)).map(e=>e.id))}
 async function deleteExamResults(id){
  try{await requireOwnedExam(id)}catch(e){alert(e.message);return}
  const e=examsData.find(x=>x.id===id);
  if(!confirm(`حذف جميع نتائج ومحاولات اختبار "${e?.name||""}"؟\nسيبقى الاختبار والأسئلة كما هي.`))return;
- try{
-   const s=await db.collection("examAttempts").where("examId","==",id).get();
-   await commitDeletes(s.docs);
-   alert(`تم حذف ${s.size} محاولة/نتيجة.`);
-   resultsCard.classList.add("hidden");
- }catch(e){alert("تعذر حذف النتائج: "+e.message)}
+ try{const s=await db.collection("examAttempts").where("examId","==",id).get();await commitDeletes(s.docs);resultsCard.classList.add("hidden");alert(`تم حذف ${s.size} محاولة/نتيجة.`)}
+ catch(e){alert("تعذر حذف النتائج: "+e.message)}
 }
 async function deleteAllMyResults(){
- const ids=myExamIds();
- if(!ids.size)return alert("لا توجد اختبارات.");
- if(!confirm(`سيتم حذف جميع نتائج ${ids.size} اختبارًا ظاهرًا لحسابك مع بقاء الاختبارات والأسئلة.\nهل أنت متأكد؟`))return;
- const word=prompt('للتأكيد اكتب كلمة: حذف النتائج');
- if(word!=="حذف النتائج")return alert("تم إلغاء العملية.");
- try{
-   let total=0;
-   for(const id of ids){
-     const s=await db.collection("examAttempts").where("examId","==",id).get();
-     total+=s.size;await commitDeletes(s.docs);
-   }
-   resultsCard.classList.add("hidden");
-   alert(`تم حذف ${total} نتيجة/محاولة.`);
- }catch(e){alert("تعذر حذف النتائج: "+e.message)}
+ const ids=myExamIds();if(!ids.size)return alert("لا توجد اختبارات.");
+ if(!confirm("سيتم حذف جميع نتائج اختباراتك مع بقاء الاختبارات والأسئلة. هل أنت متأكد؟"))return;
+ if(prompt("للتأكيد اكتب: حذف النتائج")!=="حذف النتائج")return alert("تم إلغاء العملية.");
+ try{let total=0;for(const id of ids){const s=await db.collection("examAttempts").where("examId","==",id).get();total+=s.size;await commitDeletes(s.docs)}resultsCard.classList.add("hidden");alert(`تم حذف ${total} نتيجة/محاولة.`)}
+ catch(e){alert("تعذر حذف النتائج: "+e.message)}
 }
 async function setAllExamsActive(active){
- const list=examsData.filter(e=>canManageExam(e));
- if(!list.length)return alert("لا توجد اختبارات.");
- if(!confirm(`${active?"تفعيل":"إيقاف"} جميع الاختبارات الظاهرة لحسابك؟`))return;
- try{
-   let batch=db.batch(),n=0;
-   for(const e of list){
-     batch.update(db.collection("onlineExams").doc(e.id),{active,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});n++;
-     if(n>=400){await batch.commit();batch=db.batch();n=0}
-   }
-   if(n)await batch.commit();
-   await loadExams();
- }catch(e){alert("تعذر تنفيذ العملية: "+e.message)}
+ const list=examsData.filter(e=>canManageExam(e));if(!list.length)return alert("لا توجد اختبارات.");
+ if(!confirm(`${active?"تفعيل":"إيقاف"} جميع اختباراتك؟`))return;
+ try{let batch=db.batch(),n=0;for(const e of list){batch.update(db.collection("onlineExams").doc(e.id),{active,updatedAt:firebase.firestore.FieldValue.serverTimestamp()});n++;if(n>=400){await batch.commit();batch=db.batch();n=0}}if(n)await batch.commit();await loadExams()}
+ catch(e){alert("تعذر تنفيذ العملية: "+e.message)}
 }
 async function deleteAllMyExams(){
- const list=examsData.filter(e=>canManageExam(e));
- if(!list.length)return alert("لا توجد اختبارات للحذف.");
- if(!confirm(`تحذير: سيتم حذف ${list.length} اختبارًا مع جميع الأسئلة والنتائج التابعة لها نهائيًا.`))return;
- const word=prompt('للتأكيد النهائي اكتب: حذف جميع الاختبارات');
- if(word!=="حذف جميع الاختبارات")return alert("تم إلغاء العملية.");
- try{
-   for(const e of list){
-     const qs=await db.collection("onlineExams").doc(e.id).collection("questions").get();
-     await commitDeletes(qs.docs);
-     const at=await db.collection("examAttempts").where("examId","==",e.id).get();
-     await commitDeletes(at.docs);
-     await db.collection("onlineExams").doc(e.id).delete();
-   }
-   selectedExamId="";questionCard.classList.add("hidden");resultsCard.classList.add("hidden");
-   clearExamForm();await loadExams();
-   alert("تم حذف جميع الاختبارات والنتائج التابعة لها.");
- }catch(e){alert("تعذر حذف جميع الاختبارات: "+e.message)}
+ const list=examsData.filter(e=>canManageExam(e));if(!list.length)return alert("لا توجد اختبارات للحذف.");
+ if(!confirm(`سيتم حذف ${list.length} اختبارًا مع الأسئلة والنتائج التابعة لها نهائيًا.`))return;
+ if(prompt("للتأكيد اكتب: حذف جميع الاختبارات")!=="حذف جميع الاختبارات")return alert("تم إلغاء العملية.");
+ try{for(const e of list){const qs=await db.collection("onlineExams").doc(e.id).collection("questions").get();await commitDeletes(qs.docs);const at=await db.collection("examAttempts").where("examId","==",e.id).get();await commitDeletes(at.docs);await db.collection("onlineExams").doc(e.id).delete()}selectedExamId="";questionCard.classList.add("hidden");resultsCard.classList.add("hidden");clearExamForm();await loadExams();alert("تم حذف جميع الاختبارات والنتائج التابعة لها.")}
+ catch(e){alert("تعذر حذف جميع الاختبارات: "+e.message)}
 }
 async function deleteAttempt(examId,attemptId){
  try{await requireOwnedExam(examId)}catch(e){alert(e.message);return}
  if(!confirm("حذف هذه المحاولة فقط؟"))return;
- try{
-   await db.collection("examAttempts").doc(attemptId).delete();
-   await showResults(examId);
- }catch(e){alert("تعذر حذف المحاولة: "+e.message)}
+ try{await db.collection("examAttempts").doc(attemptId).delete();await showResults(examId)}catch(e){alert("تعذر حذف المحاولة: "+e.message)}
 }
 async function deleteStudentAttempts(examId,studentCode,studentName){
  try{await requireOwnedExam(examId)}catch(e){alert(e.message);return}
  if(!confirm(`حذف جميع محاولات الطالب ${studentName||studentCode} في هذا الاختبار؟`))return;
- try{
-   const s=await db.collection("examAttempts").where("examId","==",examId).where("studentCode","==",String(studentCode)).get();
-   await commitDeletes(s.docs);
-   await showResults(examId);
- }catch(e){alert("تعذر حذف محاولات الطالب: "+e.message)}
+ try{const s=await db.collection("examAttempts").where("examId","==",examId).where("studentCode","==",String(studentCode)).get();await commitDeletes(s.docs);await showResults(examId)}
+ catch(e){alert("تعذر حذف محاولات الطالب: "+e.message)}
 }
 
 function questionDir(q){
@@ -313,64 +283,175 @@ function questionDir(q){
  if(d==="rtl"||d==="ltr")return d;
  return /[\u0600-\u06FF]/.test(String(q?.text||""))?"rtl":"ltr";
 }
-function buildOptions(q=null){
- let opts=q?.options||["","","",""];optionsBox.innerHTML="";
- for(let i=0;i<4;i++)optionsBox.insertAdjacentHTML("beforeend",`<div class="option-row"><input type="radio" name="correct" value="${i}" ${Number(q?.correctIndex)===i?"checked":""}><input class="optText" value="${esc(opts[i]||"")}" placeholder="الاختيار ${i+1}"></div>`);
+const questionTypeNames={
+mcq:"اختيار من متعدد",
+truefalse:"صح / خطأ",
+fill:"أكمل الفراغ",
+short:"إجابة قصيرة",
+order:"ترتيب الكلمات",
+matching:"توصيل",
+reading:"Reading"
+};
+
+function buildChoiceEditor(q=null,isTrueFalse=false){
+ const opts=isTrueFalse?["صح","خطأ"]:(Array.isArray(q?.options)?q.options:["","","",""]);
+ answerBox.innerHTML="";
+ opts.forEach((o,i)=>{
+   answerBox.insertAdjacentHTML("beforeend",`<div class="option-row"><input type="radio" name="correct" value="${i}" ${Number(q?.correctIndex)===i?"checked":""}><input class="optText" value="${esc(o||"")}" placeholder="الاختيار ${i+1}" ${isTrueFalse?"readonly":""}></div>`);
+ });
 }
-async function openQuestions(id){let e=examsData.find(x=>x.id===id);if(!e||!canManageExam(e)){alert("لا يمكنك فتح أسئلة اختبار يخص معلماً آخر.");return;}selectedExamId=id;currentExamLabel.textContent=e?.name||"";questionCard.classList.remove("hidden");clearQuestionForm();await loadQuestions();questionCard.scrollIntoView({behavior:"smooth"})}
-function clearQuestionForm(){editingQuestionId.value="";qText.value="";qPoints.value=1;qDirection.value="auto";buildOptions()}
+
+function addPair(left="",right=""){
+ const row=document.createElement("div");
+ row.className="pair-row";
+ row.innerHTML=`<div><label>الطرف الأول</label><input class="pairLeft" value="${esc(left)}"></div><div><label>المطابقة الصحيحة</label><input class="pairRight" value="${esc(right)}"></div><button type="button" class="red" onclick="this.parentElement.remove()">حذف</button>`;
+ document.getElementById("pairsBox").appendChild(row);
+}
+
+function renderQuestionEditor(q=null){
+ const t=q?.type||qType.value||"mcq";
+ qType.value=t;
+ readingBox.classList.toggle("hidden",t!=="reading");
+ if(t==="reading") qPassage.value=q?.passage||"";
+ else qPassage.value="";
+
+ if(t==="mcq"||t==="reading"){
+   buildChoiceEditor(q,false);
+ }else if(t==="truefalse"){
+   buildChoiceEditor(q,true);
+ }else if(t==="fill"||t==="short"){
+   answerBox.innerHTML=`<label>الإجابة الصحيحة</label><input id="correctText" value="${esc(q?.correctText||"")}" placeholder="يمكن كتابة أكثر من إجابة صحيحة والفصل بينها بعلامة |"><div class="note" style="margin-top:8px">مثال: colour | color</div>`;
+ }else if(t==="order"){
+   answerBox.innerHTML=`<label>الجملة بالترتيب الصحيح</label><input id="correctText" value="${esc(q?.correctText||"")}" placeholder="اكتب الجملة الصحيحة كاملة">`;
+ }else if(t==="matching"){
+   answerBox.innerHTML=`<div id="pairsBox"></div><button type="button" class="light" onclick="addPair()">➕ إضافة زوج</button><div class="note" style="margin-top:8px">أدخل عنصر الطرف الأول وما يقابله في الطرف الثاني.</div>`;
+   const pairs=Array.isArray(q?.pairs)&&q.pairs.length?q.pairs:[{left:"",right:""},{left:"",right:""}];
+   pairs.forEach(p=>addPair(p.left||"",p.right||""));
+ }
+}
+
+async function openQuestions(id){
+ let e=examsData.find(x=>x.id===id);
+ if(!e||!canManageExam(e)){alert("لا يمكنك فتح أسئلة اختبار يخص معلماً آخر.");return;}
+ selectedExamId=id;currentExamLabel.textContent=e?.name||"";questionCard.classList.remove("hidden");clearQuestionForm();await loadQuestions();questionCard.scrollIntoView({behavior:"smooth"});
+}
+
+function clearQuestionForm(){
+ editingQuestionId.value="";
+ qText.value="";
+ qPoints.value=1;
+ qDirection.value="auto";
+ qOrder.value="";
+ qType.value="mcq";
+ qPassage.value="";
+ renderQuestionEditor();
+}
+
 async function saveQuestion(){
  if(!selectedExamId)return alert("اختر اختبارًا أولًا.");
- let text=qText.value.trim(),opts=[...document.querySelectorAll(".optText")].map(x=>x.value.trim()),r=document.querySelector('input[name="correct"]:checked');
- if(!text||opts.some(x=>!x)||!r)return alert("اكتب السؤال والاختيارات الأربعة وحدد الإجابة الصحيحة.");
- let data={text,options:opts,correctIndex:Number(r.value),points:Number(qPoints.value||1),textDirection:qDirection.value||"auto",updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
- let id=editingQuestionId.value;if(id)await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).set(data,{merge:true});
- else{let s=await db.collection("onlineExams").doc(selectedExamId).collection("questions").get();data.order=s.size+1;data.createdAt=firebase.firestore.FieldValue.serverTimestamp();await db.collection("onlineExams").doc(selectedExamId).collection("questions").add(data)}
+ try{await requireOwnedExam(selectedExamId)}catch(e){alert(e.message);return}
+
+ const type=qType.value||"mcq";
+ const text=qText.value.trim();
+ const points=Number(qPoints.value||1);
+ if(!text)return alert("اكتب نص السؤال.");
+ if(!points||points<=0)return alert("أدخل درجة صحيحة للسؤال.");
+
+ let data={
+   type,text,points,
+   textDirection:qDirection.value||"auto",
+   updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+ };
+
+ if(type==="mcq"||type==="reading"||type==="truefalse"){
+   const opts=[...document.querySelectorAll(".optText")].map(x=>x.value.trim());
+   const r=document.querySelector('input[name="correct"]:checked');
+   if(opts.some(x=>!x)||!r)return alert("أكمل الاختيارات وحدد الإجابة الصحيحة.");
+   data.options=opts;
+   data.correctIndex=Number(r.value);
+   if(type==="reading"){
+     data.passage=qPassage.value.trim();
+     if(!data.passage)return alert("اكتب قطعة القراءة.");
+   }
+ }else if(type==="fill"||type==="short"||type==="order"){
+   const correct=document.getElementById("correctText")?.value.trim()||"";
+   if(!correct)return alert("اكتب الإجابة الصحيحة.");
+   data.correctText=correct;
+ }else if(type==="matching"){
+   const lefts=[...document.querySelectorAll(".pairLeft")];
+   const rights=[...document.querySelectorAll(".pairRight")];
+   const pairs=lefts.map((x,i)=>({left:x.value.trim(),right:rights[i]?.value.trim()||""})).filter(p=>p.left||p.right);
+   if(pairs.length<2||pairs.some(p=>!p.left||!p.right))return alert("أدخل زوجين صحيحين على الأقل في سؤال التوصيل.");
+   data.pairs=pairs;
+ }
+
+ const id=editingQuestionId.value;
+ if(id){
+   if(qOrder.value) data.order=Number(qOrder.value);
+   await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).set(data,{merge:true});
+ }else{
+   const s=await db.collection("onlineExams").doc(selectedExamId).collection("questions").get();
+   data.order=qOrder.value?Number(qOrder.value):s.size+1;
+   data.createdAt=firebase.firestore.FieldValue.serverTimestamp();
+   await db.collection("onlineExams").doc(selectedExamId).collection("questions").add(data);
+ }
  clearQuestionForm();await loadQuestions();await loadExams();
 }
-async function loadQuestions(){
- let s=await db.collection("onlineExams").doc(selectedExamId).collection("questions").get(),arr=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
- if(!arr.length){questionsList.innerHTML='<div class="empty">لم تتم إضافة أسئلة بعد.</div>';return}
- questionsList.innerHTML=arr.map((q,i)=>`<div class="qbox" dir="${questionDir(q)}" style="text-align:${questionDir(q)==="ltr"?"left":"right"}"><div class="qhead"><b>${i+1}) ${esc(q.text)}</b><span>${esc(q.points||1)} درجة</span></div><ol>${(q.options||[]).map((o,j)=>`<li ${j===Number(q.correctIndex)?'style="font-weight:bold;color:#198754"':""}>${esc(o)} ${j===Number(q.correctIndex)?"✓":""}</li>`).join("")}</ol><div class="actions"><button class="primary" onclick="editQuestion('${q.id}')">تعديل</button><button class="red" onclick="deleteQuestion('${q.id}')">حذف</button></div></div>`).join("");
+
+function questionAnswerPreview(q){
+ const t=q.type||"mcq";
+ if(["mcq","truefalse","reading"].includes(t)){
+   return `<ol>${(q.options||[]).map((o,j)=>`<li ${j===Number(q.correctIndex)?'style="font-weight:bold;color:#198754"':""}>${esc(o)} ${j===Number(q.correctIndex)?"✓":""}</li>`).join("")}</ol>`;
+ }
+ if(t==="matching")return `<div>${(q.pairs||[]).map(p=>`${esc(p.left)} ↔ <b>${esc(p.right)}</b>`).join("<br>")}</div>`;
+ return `<div style="margin-top:8px">الإجابة الصحيحة: <b>${esc(q.correctText||"")}</b></div>`;
 }
-async function editQuestion(id){let d=await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).get();if(!d.exists)return;let q=d.data();editingQuestionId.value=id;qText.value=q.text||"";qPoints.value=q.points||1;qDirection.value=q.textDirection||"auto";buildOptions(q);questionCard.scrollIntoView({behavior:"smooth"})}
-async function deleteQuestion(id){if(!confirm("حذف هذا السؤال؟"))return;await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).delete();await loadQuestions();await loadExams()}
+
+async function loadQuestions(){
+ let s=await db.collection("onlineExams").doc(selectedExamId).collection("questions").get();
+ let arr=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));
+ if(!arr.length){questionsList.innerHTML='<div class="empty">لم تتم إضافة أسئلة بعد.</div>';return}
+ questionsList.innerHTML=arr.map((q,i)=>{
+   const t=q.type||"mcq",d=questionDir(q);
+   return `<div class="qbox" dir="${d}" style="text-align:${d==="ltr"?"left":"right"}"><div class="qhead"><b>${i+1}) ${esc(q.text)} <span class="type-badge">${esc(questionTypeNames[t]||t)}</span></b><span>${esc(q.points||1)} درجة</span></div>${t==="reading"&&q.passage?`<div class="note" style="margin-top:8px">${esc(q.passage)}</div>`:""}${questionAnswerPreview(q)}<div class="actions"><button class="primary" onclick="editQuestion('${q.id}')">تعديل</button><button class="red" onclick="deleteQuestion('${q.id}')">حذف</button></div></div>`;
+ }).join("");
+}
+
+async function editQuestion(id){
+ let d=await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).get();
+ if(!d.exists)return;
+ let q=d.data();
+ editingQuestionId.value=id;
+ qText.value=q.text||"";
+ qPoints.value=q.points||1;
+ qDirection.value=q.textDirection||"auto";
+ qOrder.value=q.order||"";
+ qType.value=q.type||"mcq";
+ renderQuestionEditor(q);
+ questionCard.scrollIntoView({behavior:"smooth"});
+}
+
+async function deleteQuestion(id){
+ try{await requireOwnedExam(selectedExamId)}catch(e){alert(e.message);return}
+ if(!confirm("حذف هذا السؤال؟"))return;
+ await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).delete();
+ await loadQuestions();await loadExams();
+}
+
 async function showResults(id){
- let e=examsData.find(x=>x.id===id);
- if(!e||!canManageExam(e)){alert("لا يمكنك عرض نتائج اختبار يخص معلماً آخر.");return;}
- let s=await db.collection("examAttempts").where("examId","==",id).get();
- let arr=s.docs.map(d=>({id:d.id,...d.data()}));
- arr.sort((a,b)=>{
-   const an=String(a.studentName||"").localeCompare(String(b.studentName||""),"ar");
-   return an || Number(a.attemptNumber||1)-Number(b.attemptNumber||1);
- });
- resultsTitle.textContent=e?.name||"";
- resultsCard.classList.remove("hidden");
-
- let avg=arr.length?arr.reduce((a,x)=>a+(Number(x.mark)||0)/(Number(x.fullMark)||1)*100,0)/arr.length:0;
- const byStudent={};
- arr.forEach(r=>{
-   const k=String(r.studentCode||r.studentName||"");
-   (byStudent[k] ||= []).push(r);
- });
- const students=Object.values(byStudent);
- let bestAvg=students.length?students.reduce((sum,list)=>{
-   const best=Math.max(...list.map(x=>Number(x.fullMark)?Number(x.mark)/Number(x.fullMark)*100:0));
-   return sum+best;
- },0)/students.length:0;
-
- resultsSummary.innerHTML=`عدد الطلاب: <span class="stat">${students.length}</span> — عدد المحاولات: <span class="stat">${arr.length}</span> — متوسط كل المحاولات: <span class="stat">${avg.toFixed(1)}%</span> — متوسط أفضل محاولة: <span class="stat">${bestAvg.toFixed(1)}%</span> <button class="red" style="margin-right:10px" onclick="deleteExamResults('${id}')">حذف نتائج هذا الاختبار</button>`;
-
- resultRows.innerHTML=arr.length?arr.map((r,i)=>{
-   let p=Number(r.fullMark)?Number(r.mark)/Number(r.fullMark)*100:0;
-   let dt=r.submittedAt?.toDate?r.submittedAt.toDate().toLocaleString("ar-SA"):"-";
-   const code=String(r.studentCode||"").replace(/'/g,"\\'");
-   const name=String(r.studentName||"").replace(/'/g,"\\'");
-   return `<tr><td>${i+1}</td><td>${esc(r.studentName)}</td><td>${esc(r.grade)}</td><td>${esc(r.section)}</td><td>${esc(r.attemptNumber||1)}</td><td>${esc(r.mark)}</td><td>${esc(r.fullMark)}</td><td>${p.toFixed(1)}%</td><td>${esc(dt)}</td><td><button class="red" onclick="deleteAttempt('${id}','${r.id}')">حذف المحاولة</button> <button class="light" onclick="deleteStudentAttempts('${id}','${code}','${name}')">حذف محاولات الطالب</button></td></tr>`;
- }).join(""):'<tr><td colspan="10">لا توجد نتائج بعد.</td></tr>';
+ let exm=examsData.find(x=>x.id===id);if(!exm||!canManageExam(exm)){alert("لا يمكنك عرض نتائج اختبار يخص معلماً آخر.");return;}
+ let s=await db.collection("examAttempts").where("examId","==",id).get(),arr=s.docs.map(d=>({id:d.id,...d.data()}));
+ arr.sort((a,b)=>String(a.studentName||"").localeCompare(String(b.studentName||""),"ar")||Number(a.attemptNumber||1)-Number(b.attemptNumber||1));
+ resultsTitle.textContent=exm?.name||"";resultsCard.classList.remove("hidden");
+ const groups={};arr.forEach(r=>(groups[String(r.studentCode||r.studentName||"")]??=[]).push(r));
+ const students=Object.values(groups);
+ const avg=arr.length?arr.reduce((a,x)=>a+(Number(x.mark)||0)/(Number(x.fullMark)||1)*100,0)/arr.length:0;
+ const bestAvg=students.length?students.reduce((sum,list)=>sum+Math.max(...list.map(x=>Number(x.fullMark)?Number(x.mark)/Number(x.fullMark)*100:0)),0)/students.length:0;
+ resultsSummary.innerHTML=`عدد الطلاب: <span class="stat">${students.length}</span> — المحاولات: <span class="stat">${arr.length}</span> — متوسط المحاولات: <span class="stat">${avg.toFixed(1)}%</span> — متوسط أفضل محاولة: <span class="stat">${bestAvg.toFixed(1)}%</span> <button class="red" onclick="deleteExamResults('${id}')">حذف نتائج الاختبار</button>`;
+ resultRows.innerHTML=arr.length?arr.map((r,i)=>{let p=Number(r.fullMark)?Number(r.mark)/Number(r.fullMark)*100:0,dt=r.submittedAt?.toDate?r.submittedAt.toDate().toLocaleString("ar-SA"):"-",code=String(r.studentCode||"").replace(/'/g,"\\'"),name=String(r.studentName||"").replace(/'/g,"\\'");return `<tr><td>${i+1}</td><td>${esc(r.studentName)}</td><td>${esc(r.grade)}</td><td>${esc(r.section)}</td><td>${esc(r.attemptNumber||1)}</td><td>${esc(r.mark)}</td><td>${esc(r.fullMark)}</td><td>${p.toFixed(1)}%</td><td>${esc(dt)}</td><td><button class="red" onclick="deleteAttempt('${id}','${r.id}')">حذف المحاولة</button> <button class="light" onclick="deleteStudentAttempts('${id}','${code}','${name}')">حذف محاولات الطالب</button></td></tr>`}).join(""):'<tr><td colspan="10">لا توجد نتائج بعد.</td></tr>';
  resultsCard.scrollIntoView({behavior:"smooth"});
 }
-async function start(){if(!protect())return;buildOptions();try{await loadBase()}catch(e){console.error(e);alert("حدث خطأ أثناء تحميل المنصة: "+e.message)}}
+async function start(){if(!protect())return;renderQuestionEditor();try{await loadBase()}catch(e){console.error(e);alert("حدث خطأ أثناء تحميل المنصة: "+e.message)}}
 start();
 </script>
 </body>
