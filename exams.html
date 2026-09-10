@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>منصة الاختبارات</title>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial;background:#f4f7fb;color:#1f2937}header{background:linear-gradient(135deg,#0c2745,#174f7c);color:white;text-align:center;padding:22px}.logo{width:80px;height:80px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}header h1{margin:6px 0}header p{margin:0;color:#f4d77b;font-weight:bold}.wrap{max-width:950px;margin:20px auto;padding:12px}.card{background:#fff;border:1px solid #d7e0e8;border-radius:14px;margin-bottom:14px;overflow:hidden}.title{padding:13px;background:#eef4fa;color:#123c63;font-weight:bold}.body{padding:16px}input{width:100%;padding:11px;border:1px solid #bdc9d4;border-radius:8px;font:inherit}button{border:0;border-radius:8px;padding:11px 16px;font:inherit;font-weight:bold;background:#174f7c;color:#fff;cursor:pointer;margin-top:10px}.hidden{display:none}.info,.exam{padding:12px;border:1px solid #d7e0e8;border-radius:9px;margin-top:10px}.q{padding:14px;border:1px solid #d7e0e8;border-radius:9px;margin:10px 0}.opt{display:block;padding:8px;margin:5px 0;border:1px solid #e0e5ea;border-radius:7px}.opt input{width:auto}.timer{text-align:center;color:#dc3545;font-size:20px;font-weight:bold}.footer{text-align:center;color:#687786;font-size:11px;padding:15px}
+</style></head><body>
+<header><img src="logo.jpeg" class="logo" onerror="this.style.display='none'"><h1>منصة الاختبارات</h1><p>الاختبارات الإلكترونية</p></header>
+<div class="wrap">
+<div id="login" class="card"><div class="title">🎓 دخول الطالب</div><div class="body"><p>أدخل رقم هوية الطالب.</p><input id="code" placeholder="أدخل رقم هوية الطالب"><button onclick="loginStudent()">دخول</button></div></div>
+<div id="list" class="card hidden"><div class="title">📝 الاختبارات المتاحة</div><div class="body"><div id="student"></div><div id="exams"></div><button onclick="logout()">خروج</button></div></div>
+<div id="take" class="card hidden"><div class="title" id="examName">الاختبار</div><div class="body"><div id="timer" class="timer"></div><div id="questions"></div><button onclick="submitExam(false)">تسليم الاختبار</button></div></div>
+<div id="result" class="card hidden"><div class="title">📊 النتيجة</div><div class="body" id="resultBody"></div></div>
+<div class="footer">تصميم محمد عامر أحمد - نظام راصد 2026</div></div>
+<script>
+const firebaseConfig={apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",authDomain:"results2026-7c0dd.firebaseapp.com",projectId:"results2026-7c0dd",storageBucket:"results2026-7c0dd.firebasestorage.app",messagingSenderId:"241421115694",appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"};
+firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
+let st=null,ex=null,qs=[],left=0,timerId=null;
+function view(x){["login","list","take","result"].forEach(i=>document.getElementById(i).classList.toggle("hidden",i!==x))}
+function esc(x){return String(x??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]))}
+function targets(e){return (e.classes||[]).some(c=>c.grade===st.grade&&c.section===st.section)}
+async function loginStudent(){
+ let c=code.value.trim();if(!c)return alert("أدخل رقم هوية الطالب.");
+ let d=await db.collection("students").doc(c).get();
+ if(d.exists)st={code:d.data().code||d.id,...d.data()};
+ else{let q=await db.collection("students").where("code","==",c).limit(1).get();if(!q.empty){let x=q.docs[0];st={code:x.data().code||x.id,...x.data()}}}
+ if(!st)return alert("رقم الهوية غير مسجل.");
+ student.innerHTML=`<div class="info"><b>${esc(st.name)}</b><br>${esc(st.grade)} / ${esc(st.section)}</div>`;await loadExams();
+}
+async function loadExams(){
+ view("list");let s=await db.collection("onlineExams").get();let arr=s.docs.map(d=>({id:d.id,...d.data()})).filter(e=>e.active!==false&&targets(e));
+ let a=await db.collection("examAttempts").where("studentCode","==",String(st.code)).get();let done=new Set(a.docs.map(d=>d.data().examId));
+ exams.innerHTML=arr.length?arr.map(e=>`<div class="exam"><b>${esc(e.name)}</b><br>${esc(e.subjectName||"English")} — ${esc(e.durationMinutes||0)} دقيقة — ${esc(e.fullMark||0)} درجة<br>${done.has(e.id)?"<b>تم أداء الاختبار</b>":`<button onclick="startExam('${e.id}')">بدء الاختبار</button>`}</div>`).join(""):"<div class='info'>لا توجد اختبارات متاحة حاليًا.</div>";
+}
+async function startExam(id){
+ let old=await db.collection("examAttempts").where("examId","==",id).where("studentCode","==",String(st.code)).limit(1).get();if(!old.empty)return alert("سبق أداء الاختبار.");
+ let d=await db.collection("onlineExams").doc(id).get();ex={id:d.id,...d.data()};if(!targets(ex))return alert("الاختبار غير مخصص لفصلك.");
+ let s=await db.collection("onlineExams").doc(id).collection("questions").get();qs=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));if(!qs.length)return alert("لا توجد أسئلة.");
+ examName.textContent=ex.name;questions.innerHTML=qs.map((q,i)=>`<div class="q"><b>${i+1}) ${esc(q.text)}</b>${(q.options||[]).map((o,j)=>`<label class="opt"><input type="radio" name="q_${q.id}" value="${j}"> ${esc(o)}</label>`).join("")}</div>`).join("");
+ left=Number(ex.durationMinutes||0)*60;view("take");tick();clearInterval(timerId);if(left>0)timerId=setInterval(()=>{left--;tick();if(left<=0){clearInterval(timerId);submitExam(true)}},1000);
+}
+function tick(){timer.textContent=left?`⏱️ ${Math.floor(left/60)}:${String(left%60).padStart(2,"0")}`:""}
+async function submitExam(auto){
+ if(!auto&&!confirm("تسليم الاختبار الآن؟"))return;clearInterval(timerId);
+ let score=0,total=0,answers=[];qs.forEach(q=>{let r=document.querySelector(`input[name="q_${CSS.escape(q.id)}"]:checked`),ans=r?Number(r.value):null,p=Number(q.points||1),ok=ans!==null&&ans===Number(q.correctIndex);total+=p;if(ok)score+=p;answers.push({questionId:q.id,answer:ans,correct:ok,points:p})});
+ let full=Number(ex.fullMark||total||1),mark=total?Number((score/total*full).toFixed(2)):0;
+ await db.collection("examAttempts").add({examId:ex.id,examName:ex.name||"",subjectId:ex.subjectId||"",subjectName:ex.subjectName||"English",studentCode:String(st.code),studentName:st.name||"",grade:st.grade||"",section:st.section||"",mark,fullMark:full,answers,submittedAt:firebase.firestore.FieldValue.serverTimestamp()});
+ resultBody.innerHTML=`<h2>تم تسليم الاختبار بنجاح</h2><h1>${mark} / ${full}</h1><button onclick="loadExams()">العودة للاختبارات</button>`;view("result");
+}
+function logout(){st=null;code.value="";view("login")}
+</script></body></html>
