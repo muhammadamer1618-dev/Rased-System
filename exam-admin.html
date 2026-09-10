@@ -100,7 +100,7 @@ const firebaseConfig={apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",authDomai
 firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
 const gradesOrder=["1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي","1 متوسط","2 متوسط","3 متوسط","1 ثانوي","2 ثانوي","3 ثانوي"];
 const sections=["أ","ب","ج","د"];
-let role="",currentUser="",subjects=[],teachers=[],examsData=[],assignments=[],selectedExamId="";
+let role="",currentUser="",currentTeacher=null,subjects=[],teachers=[],examsData=[],assignments=[],selectedExamId="";
 function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
 function protect(){
  role=String(localStorage.getItem("currentUserRole")||"").toLowerCase();
@@ -108,13 +108,25 @@ function protect(){
  if(!["admin","superadmin","teacher"].includes(role)){alert("يجب تسجيل الدخول كمعلم أو إدارة.");location.href="index.html";return false}return true;
 }
 function goBack(){location.href=role==="teacher"?"teacher.html":"admin.html"}
+function canManageExam(e){
+ if(role!=="teacher") return true;
+ return String(e?.teacherEmail||"").trim().toLowerCase()===String(currentUser||"").trim().toLowerCase();
+}
+async function requireOwnedExam(id){
+ const d=await db.collection("onlineExams").doc(id).get();
+ if(!d.exists) throw new Error("الاختبار غير موجود.");
+ const e={id:d.id,...d.data()};
+ if(!canManageExam(e)) throw new Error("لا يمكنك إدارة اختبار يخص معلماً آخر.");
+ return e;
+}
 async function loadBase(){
  const [ss,ts]=await Promise.all([db.collection("subjects").get(),db.collection("teachers").get()]);
  subjects=ss.docs.map(d=>({id:d.id,...d.data()}));
  teachers=ts.docs.map(d=>({id:d.id,...d.data()}));
  if(role==="teacher"){
-   let t=teachers.find(x=>x.id===currentUser||x.email===currentUser);
-   assignments=Array.isArray(t?.assignments)?t.assignments:[];
+   currentTeacher=teachers.find(x=>x.id===currentUser||x.email===currentUser)||null;
+   if(!currentTeacher) throw new Error("لم يتم العثور على بيانات المعلم.");
+   assignments=Array.isArray(currentTeacher.assignments)?currentTeacher.assignments:[];
  }
  renderSubjects();await loadExams();
 }
@@ -140,9 +152,18 @@ async function saveExam(){
  if(!name||!sid||!fm||!dur||!classes.length)return alert("أكمل اسم الاختبار والمادة والدرجة والمدة واختر فصلًا واحدًا على الأقل.");
  let subj=subjects.find(s=>s.id===sid);
  let data={name,subjectId:sid,subjectName:subj?.name||"",fullMark:fm,durationMinutes:dur,classes,active:true,updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+ if(role==="teacher" && !editingId.value){
+   data.teacherEmail=currentUser;
+   data.teacherName=currentTeacher?.name||localStorage.getItem("currentUserName")||currentUser;
+   data.createdByRole="teacher";
+ }else if(role!=="teacher" && !editingId.value){
+   data.teacherEmail=currentUser||"";
+   data.teacherName=localStorage.getItem("currentUserName")||"الإدارة";
+   data.createdByRole=role||"admin";
+ }
  try{
   let id=editingId.value;
-  if(id){await db.collection("onlineExams").doc(id).set(data,{merge:true});selectedExamId=id}
+  if(id){await requireOwnedExam(id);await db.collection("onlineExams").doc(id).set(data,{merge:true});selectedExamId=id}
   else{data.createdAt=firebase.firestore.FieldValue.serverTimestamp();let d=await db.collection("onlineExams").add(data);selectedExamId=d.id;editingId.value=d.id}
   alert("تم حفظ الاختبار.");await loadExams();openQuestions(selectedExamId);
  }catch(e){console.error(e);alert("تعذر الحفظ: "+e.message)}
@@ -150,8 +171,8 @@ async function saveExam(){
 async function loadExams(){
  let s=await db.collection("onlineExams").get();examsData=s.docs.map(d=>({id:d.id,...d.data()}));
  if(role==="teacher"){
-   let allowed=new Set(assignments.map(a=>a.subjectId+"|"+a.grade+"|"+a.section));
-   examsData=examsData.filter(e=>(e.classes||[]).some(c=>allowed.has(e.subjectId+"|"+c.grade+"|"+c.section)));
+   const me=String(currentUser||"").trim().toLowerCase();
+   examsData=examsData.filter(e=>String(e.teacherEmail||"").trim().toLowerCase()===me);
  }
  examRows.innerHTML="";
  if(!examsData.length){examRows.innerHTML='<tr><td colspan="9">لا توجد اختبارات حتى الآن.</td></tr>';return}
@@ -162,11 +183,12 @@ async function loadExams(){
  }
 }
 function editExam(id){
- let e=examsData.find(x=>x.id===id);if(!e)return;editingId.value=id;examName.value=e.name||"";subject.value=e.subjectId||"";fullMark.value=e.fullMark||10;duration.value=e.durationMinutes||15;renderClasses(e.classes||[]);openQuestions(id);window.scrollTo({top:0,behavior:"smooth"});
+ let e=examsData.find(x=>x.id===id);if(!e||!canManageExam(e)){alert("لا يمكنك تعديل اختبار يخص معلماً آخر.");return;}editingId.value=id;examName.value=e.name||"";subject.value=e.subjectId||"";fullMark.value=e.fullMark||10;duration.value=e.durationMinutes||15;renderClasses(e.classes||[]);openQuestions(id);window.scrollTo({top:0,behavior:"smooth"});
 }
 function clearExamForm(){editingId.value="";examName.value="";subject.value="";fullMark.value=10;duration.value=15;classChoices.innerHTML='<span class="note">اختر المادة أولًا.</span>';questionCard.classList.add("hidden");selectedExamId=""}
-async function toggleExam(id,current){await db.collection("onlineExams").doc(id).update({active:!current});await loadExams()}
+async function toggleExam(id,current){try{await requireOwnedExam(id);await db.collection("onlineExams").doc(id).update({active:!current});await loadExams()}catch(e){alert(e.message)}}
 async function deleteExam(id){
+ try{await requireOwnedExam(id)}catch(e){alert(e.message);return}
  if(!confirm("سيتم حذف الاختبار وأسئلته ونتائجه المرتبطة به. هل أنت متأكد؟"))return;
  try{
   let qs=await db.collection("onlineExams").doc(id).collection("questions").get();let batch=db.batch(),n=0;
@@ -185,7 +207,7 @@ function buildOptions(q=null){
  let opts=q?.options||["","","",""];optionsBox.innerHTML="";
  for(let i=0;i<4;i++)optionsBox.insertAdjacentHTML("beforeend",`<div class="option-row"><input type="radio" name="correct" value="${i}" ${Number(q?.correctIndex)===i?"checked":""}><input class="optText" value="${esc(opts[i]||"")}" placeholder="الاختيار ${i+1}"></div>`);
 }
-async function openQuestions(id){selectedExamId=id;let e=examsData.find(x=>x.id===id);currentExamLabel.textContent=e?.name||"";questionCard.classList.remove("hidden");clearQuestionForm();await loadQuestions();questionCard.scrollIntoView({behavior:"smooth"})}
+async function openQuestions(id){let e=examsData.find(x=>x.id===id);if(!e||!canManageExam(e)){alert("لا يمكنك فتح أسئلة اختبار يخص معلماً آخر.");return;}selectedExamId=id;currentExamLabel.textContent=e?.name||"";questionCard.classList.remove("hidden");clearQuestionForm();await loadQuestions();questionCard.scrollIntoView({behavior:"smooth"})}
 function clearQuestionForm(){editingQuestionId.value="";qText.value="";qPoints.value=1;qDirection.value="auto";buildOptions()}
 async function saveQuestion(){
  if(!selectedExamId)return alert("اختر اختبارًا أولًا.");
@@ -204,7 +226,8 @@ async function loadQuestions(){
 async function editQuestion(id){let d=await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).get();if(!d.exists)return;let q=d.data();editingQuestionId.value=id;qText.value=q.text||"";qPoints.value=q.points||1;qDirection.value=q.textDirection||"auto";buildOptions(q);questionCard.scrollIntoView({behavior:"smooth"})}
 async function deleteQuestion(id){if(!confirm("حذف هذا السؤال؟"))return;await db.collection("onlineExams").doc(selectedExamId).collection("questions").doc(id).delete();await loadQuestions();await loadExams()}
 async function showResults(id){
- let e=examsData.find(x=>x.id===id),s=await db.collection("examAttempts").where("examId","==",id).get(),arr=s.docs.map(d=>d.data());
+ let e=examsData.find(x=>x.id===id);if(!e||!canManageExam(e)){alert("لا يمكنك عرض نتائج اختبار يخص معلماً آخر.");return;}
+ let s=await db.collection("examAttempts").where("examId","==",id).get(),arr=s.docs.map(d=>d.data());
  resultsTitle.textContent=e?.name||"";resultsCard.classList.remove("hidden");
  let avg=arr.length?arr.reduce((a,x)=>a+(Number(x.mark)||0)/(Number(x.fullMark)||1)*100,0)/arr.length:0;
  resultsSummary.innerHTML=`عدد من أدوا الاختبار: <span class="stat">${arr.length}</span> — متوسط النسبة: <span class="stat">${avg.toFixed(1)}%</span>`;
