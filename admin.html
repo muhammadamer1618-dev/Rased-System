@@ -539,6 +539,39 @@ max-width:150px
 
 .file-link{display:inline-block;margin-top:5px;padding:5px 8px;border-radius:6px;background:#e7f1ff;color:#084298;text-decoration:none;font-weight:bold}
 
+.exam-access-list{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+gap:9px;
+margin-top:12px
+}
+.exam-access-item{
+display:flex;
+align-items:center;
+gap:9px;
+padding:11px 12px;
+border:1px solid #dbe5ef;
+border-radius:9px;
+background:#fafcff;
+cursor:pointer
+}
+.exam-access-item:hover{background:#f1f7fc;border-color:#9dbbd3}
+.exam-access-item input{
+width:20px!important;
+height:20px!important;
+flex:0 0 auto
+}
+.exam-access-item span{font-weight:bold;color:#173b5d}
+.exam-access-summary{
+margin-top:10px;
+padding:10px 12px;
+background:#e7f1ff;
+color:#084298;
+border-radius:8px;
+font-size:13px;
+font-weight:bold
+}
+
 /* الاختبارات المرنة */
 .test-subjects-panel{border:1px solid #dbe5ef;border-radius:12px;padding:12px;background:#fafcff;max-height:260px;overflow:auto}.test-subject-item{display:flex;align-items:center;gap:8px;padding:8px 10px;border-bottom:1px solid #edf1f5}.test-subject-item:last-child{border-bottom:0}.test-subject-item input{width:20px!important;height:20px!important;flex:0 0 auto}.test-subject-tools,.test-class-tools{display:flex;flex-wrap:wrap;gap:7px;margin:8px 0 12px}.test-selection-summary{margin-top:9px;padding:9px 11px;border-radius:8px;background:#eef4fa;color:#174f7c;font-size:13px;font-weight:bold;line-height:1.8}
 </style>
@@ -611,6 +644,14 @@ class="btn-primary"
 onclick="scrollToSection('subjectsSection')">
 
 📚 المواد
+
+</button>
+
+<button
+class="btn-success"
+onclick="scrollToSection('examAccessSection')">
+
+🎛️ إتاحة الاختبارات الإلكترونية
 
 </button>
 
@@ -1120,6 +1161,41 @@ onclick="deleteAllSubjects()">
 
 </button>
 
+</div>
+
+</div>
+</div>
+
+
+<!-- =========================================
+     إتاحة الاختبارات الإلكترونية
+========================================= -->
+
+<div class="box" id="examAccessSection">
+
+<div class="box-title">
+🎛️ إتاحة منصة الاختبارات الإلكترونية للمعلمين
+</div>
+
+<div class="box-body">
+
+<div class="note">
+اختر المواد التي تريد إتاحة زر <strong>منصة الاختبارات الإلكترونية</strong> لمعلميها.
+إذا كان المعلم يدرّس مادة واحدة على الأقل من المواد المحددة فسيظهر له الزر، وإذا كانت جميع مواده غير محددة فسيختفي الزر من صفحته.
+</div>
+
+<div class="actions">
+<button class="btn-success" onclick="selectAllExamAccessSubjects()">✅ تحديد الكل</button>
+<button class="btn-light" onclick="clearAllExamAccessSubjects()">⬜ إلغاء تحديد الكل</button>
+<button class="btn-primary" onclick="saveExamAccessSettings()">💾 حفظ الإتاحة</button>
+</div>
+
+<div id="examAccessSubjectsList" class="exam-access-list">
+جاري تحميل المواد...
+</div>
+
+<div id="examAccessSummary" class="exam-access-summary">
+-
 </div>
 
 </div>
@@ -1789,6 +1865,7 @@ let tests=[];
 let messageLogs=[];
 let filteredMessageLogs=[];
 let monitors=[];
+let examAccessEnabledSubjectIds=null;
 
 
 /* =========================================
@@ -3270,6 +3347,133 @@ renderSubjects();
 fillSubjectSelectors();
 
 fillMessageSubjectFilter();
+
+await loadExamAccessSettings();
+
+}
+
+
+
+async function loadExamAccessSettings(){
+
+try{
+
+const doc=
+await db.collection("systemSettings")
+.doc("examPlatform")
+.get();
+
+if(doc.exists && Array.isArray(doc.data()?.enabledSubjectIds)){
+examAccessEnabledSubjectIds=doc.data().enabledSubjectIds.map(String);
+}else{
+/* أول تشغيل: جميع المواد متاحة افتراضيًا */
+examAccessEnabledSubjectIds=subjects.map(s=>String(s.id));
+}
+
+renderExamAccessSubjects();
+
+}catch(error){
+
+console.error("EXAM ACCESS LOAD ERROR:",error);
+
+/* عند تعذر قراءة الإعداد لا نخفي المنصة عن الجميع */
+examAccessEnabledSubjectIds=subjects.map(s=>String(s.id));
+renderExamAccessSubjects();
+
+}
+
+}
+
+function renderExamAccessSubjects(){
+
+const area=document.getElementById("examAccessSubjectsList");
+const summary=document.getElementById("examAccessSummary");
+
+if(!area || !summary)return;
+
+if(!subjects.length){
+area.innerHTML="<div>لا توجد مواد مسجلة.</div>";
+summary.textContent="لا توجد مواد.";
+return;
+}
+
+const enabled=new Set((examAccessEnabledSubjectIds||[]).map(String));
+
+area.innerHTML=subjects.map(subject=>`
+<label class="exam-access-item">
+<input
+type="checkbox"
+class="exam-access-subject"
+value="${escapeHtml(subject.id)}"
+${enabled.has(String(subject.id))?"checked":""}
+onchange="updateExamAccessSummary()">
+<span>${escapeHtml(subject.name||"المادة")}</span>
+</label>
+`).join("");
+
+updateExamAccessSummary();
+
+}
+
+function updateExamAccessSummary(){
+
+const total=document.querySelectorAll(".exam-access-subject").length;
+const selected=document.querySelectorAll(".exam-access-subject:checked").length;
+const summary=document.getElementById("examAccessSummary");
+
+if(summary){
+summary.textContent="المواد المتاحة: "+selected+" من "+total;
+}
+
+}
+
+function selectAllExamAccessSubjects(){
+
+document.querySelectorAll(".exam-access-subject")
+.forEach(item=>item.checked=true);
+
+updateExamAccessSummary();
+
+}
+
+function clearAllExamAccessSubjects(){
+
+document.querySelectorAll(".exam-access-subject")
+.forEach(item=>item.checked=false);
+
+updateExamAccessSummary();
+
+}
+
+async function saveExamAccessSettings(){
+
+const ids=[...document.querySelectorAll(".exam-access-subject:checked")]
+.map(item=>String(item.value));
+
+try{
+
+await db.collection("systemSettings")
+.doc("examPlatform")
+.set({
+enabledSubjectIds:ids,
+updatedAt:firebase.firestore.FieldValue.serverTimestamp()
+},{merge:true});
+
+examAccessEnabledSubjectIds=ids;
+
+updateExamAccessSummary();
+
+alert(
+"تم حفظ إتاحة الاختبارات الإلكترونية بنجاح ✅\n\n"+
+"عدد المواد المفعلة: "+ids.length
+);
+
+}catch(error){
+
+console.error(error);
+alert("تعذر حفظ الإعداد:\n"+error.message);
+
+}
 
 }
 
