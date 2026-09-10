@@ -4,7 +4,7 @@
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial;background:#f4f7fb;color:#1f2937}header{background:linear-gradient(135deg,#0c2745,#174f7c);color:white;text-align:center;padding:22px}.logo{width:80px;height:80px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}header h1{margin:6px 0}header p{margin:0;color:#f4d77b;font-weight:bold}.wrap{max-width:950px;margin:20px auto;padding:12px}.card{background:#fff;border:1px solid #d7e0e8;border-radius:14px;margin-bottom:14px;overflow:hidden}.title{padding:13px;background:#eef4fa;color:#123c63;font-weight:bold}.body{padding:16px}input{width:100%;padding:11px;border:1px solid #bdc9d4;border-radius:8px;font:inherit}button{border:0;border-radius:8px;padding:11px 16px;font:inherit;font-weight:bold;background:#174f7c;color:#fff;cursor:pointer;margin-top:10px}.hidden{display:none}.info,.exam{padding:12px;border:1px solid #d7e0e8;border-radius:9px;margin-top:10px}.q{padding:14px;border:1px solid #d7e0e8;border-radius:9px;margin:10px 0}.opt{display:block;padding:8px;margin:5px 0;border:1px solid #e0e5ea;border-radius:7px}.opt input{width:auto}.text-answer{width:100%;padding:10px;border:1px solid #bdc9d4;border-radius:8px;margin-top:8px}.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center;margin:7px 0}.passage{padding:12px;background:#f8fafc;border:1px solid #d7e0e8;border-radius:8px;line-height:1.9;margin:10px 0}.q[dir="ltr"]{text-align:left}.q[dir="rtl"]{text-align:right}.q[dir="ltr"] .opt{text-align:left}.q[dir="rtl"] .opt{text-align:right}.timer{text-align:center;color:#dc3545;font-size:20px;font-weight:bold}.footer{text-align:center;color:#687786;font-size:11px;padding:15px}
+*{box-sizing:border-box}body{margin:0;font-family:Tahoma,Arial;background:#f4f7fb;color:#1f2937}header{background:linear-gradient(135deg,#0c2745,#174f7c);color:white;text-align:center;padding:22px}.logo{width:80px;height:80px;object-fit:contain;background:#fff;border-radius:50%;padding:5px}header h1{margin:6px 0}header p{margin:0;color:#f4d77b;font-weight:bold}.wrap{max-width:950px;margin:20px auto;padding:12px}.card{background:#fff;border:1px solid #d7e0e8;border-radius:14px;margin-bottom:14px;overflow:hidden}.title{padding:13px;background:#eef4fa;color:#123c63;font-weight:bold}.body{padding:16px}input{width:100%;padding:11px;border:1px solid #bdc9d4;border-radius:8px;font:inherit}button{border:0;border-radius:8px;padding:11px 16px;font:inherit;font-weight:bold;background:#174f7c;color:#fff;cursor:pointer;margin-top:10px}.hidden{display:none}.info,.exam{padding:12px;border:1px solid #d7e0e8;border-radius:9px;margin-top:10px}.q{padding:14px;border:1px solid #d7e0e8;border-radius:9px;margin:10px 0}.opt{display:block;padding:8px;margin:5px 0;border:1px solid #e0e5ea;border-radius:7px}.opt input{width:auto}.text-answer{width:100%;padding:10px;border:1px solid #bdc9d4;border-radius:8px;margin-top:8px}.match-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;align-items:center;margin:7px 0}.passage{padding:12px;background:#f8fafc;border:1px solid #d7e0e8;border-radius:8px;line-height:1.9;margin:10px 0}.q[dir="ltr"]{text-align:left}.q[dir="rtl"]{text-align:right}.q[dir="ltr"] .opt{text-align:left}.q[dir="rtl"] .opt{text-align:right}.timer{text-align:center;color:#dc3545;font-size:20px;font-weight:bold}.deadline-open{color:#198754;font-weight:bold}.deadline-ended{color:#dc3545;font-weight:bold}.footer{text-align:center;color:#687786;font-size:11px;padding:15px}
 </style></head><body>
 <header><img src="logo.jpeg" class="logo" onerror="this.style.display='none'"><h1>منصة الاختبارات</h1><p>الاختبارات الإلكترونية</p></header>
 <div class="wrap">
@@ -33,10 +33,26 @@ async function loginStudent(){
  if(!st)return alert("رقم الهوية غير مسجل.");
  student.innerHTML=`<div class="info"><b>${esc(st.name)}</b><br>${esc(st.grade)} / ${esc(st.section)}</div>`;await loadExams();
 }
+function deadlineEnded(e){
+ if(!e?.deadline)return false;
+ const t=new Date(e.deadline).getTime();
+ return Number.isFinite(t)&&Date.now()>t;
+}
+function deadlineText(e){
+ if(!e?.deadline)return "بدون موعد نهائي";
+ const d=new Date(e.deadline);
+ if(Number.isNaN(d.getTime()))return "بدون موعد نهائي";
+ return d.toLocaleString("ar-SA");
+}
 async function loadExams(){
  view("list");let s=await db.collection("onlineExams").get();let arr=s.docs.map(d=>({id:d.id,...d.data()})).filter(e=>e.active!==false&&targets(e));
  let a=await db.collection("examAttempts").where("studentCode","==",String(st.code)).get(),all=a.docs.map(d=>d.data());
- exams.innerHTML=arr.length?arr.map(e=>{let used=all.filter(x=>x.examId===e.id).length,max=(e.maxAttempts===undefined?1:Number(e.maxAttempts)),allowed=max===0||used<max;return `<div class="exam"><b>${esc(e.name)}</b><br>${esc(e.subjectName||"English")} — ${esc(e.durationMinutes||0)} دقيقة — ${esc(e.fullMark||0)} درجة<br>المحاولات: ${used}${max===0?" / غير محدود":" / "+max}<br>${allowed?`<button onclick="startExam('${e.id}')">بدء التدريب</button>`:"<b>اكتملت المحاولات المسموحة</b>"}</div>`}).join(""):"<div class='info'>لا توجد اختبارات متاحة حاليًا.</div>";
+ exams.innerHTML=arr.length?arr.map(e=>{
+   let used=all.filter(x=>x.examId===e.id).length,max=(e.maxAttempts===undefined?1:Number(e.maxAttempts)),attemptAllowed=max===0||used<max,ended=deadlineEnded(e);
+   let action=ended?'<div class="deadline-ended">🔴 انتهى موعد الاختبار</div>':(attemptAllowed?`<button onclick="startExam('${e.id}')">بدء التدريب</button>`:'<b>اكتملت المحاولات المسموحة</b>');
+   let deadlineLine=e.deadline?`<br>آخر موعد: ${esc(deadlineText(e))}`:"";
+   return `<div class="exam"><b>${esc(e.name)}</b><br>${esc(e.subjectName||"English")} — ${esc(e.durationMinutes||0)} دقيقة — ${esc(e.fullMark||0)} درجة${deadlineLine}<br>المحاولات: ${used}${max===0?" / غير محدود":" / "+max}<br>${action}</div>`
+ }).join(""):"<div class='info'>لا توجد اختبارات متاحة حاليًا.</div>";
 }
 
 function normalized(v){return String(v??"").trim().toLowerCase().replace(/\s+/g," ")}
@@ -83,7 +99,7 @@ function correctTextFor(q){
  return q.correctText||"";
 }
 async function startExam(id){
- let d=await db.collection("onlineExams").doc(id).get();ex={id:d.id,...d.data()};if(!targets(ex))return alert("الاختبار غير مخصص لفصلك.");
+ let d=await db.collection("onlineExams").doc(id).get();ex={id:d.id,...d.data()};if(!targets(ex))return alert("الاختبار غير مخصص لفصلك.");if(deadlineEnded(ex))return alert("انتهى موعد الاختبار.");
  let old=await db.collection("examAttempts").where("examId","==",id).where("studentCode","==",String(st.code)).get(),max=(ex.maxAttempts===undefined?1:Number(ex.maxAttempts));if(max!==0&&old.size>=max)return alert("اكتملت المحاولات المسموحة لهذا التدريب.");
  let s=await db.collection("onlineExams").doc(id).collection("questions").get();qs=s.docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>(a.order||0)-(b.order||0));if(!qs.length)return alert("لا توجد أسئلة.");
  examName.textContent=ex.name;questions.innerHTML=qs.map((q,i)=>renderStudentQuestion(q,i)).join("");
