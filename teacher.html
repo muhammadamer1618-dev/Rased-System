@@ -859,10 +859,14 @@ tbody tr:nth-child(even){
 </div>
 
 
-<div class="actions" style="grid-template-columns:1fr;margin-top:10px">
+<div class="actions" style="grid-template-columns:1fr 1fr;margin-top:10px">
 
 <button class="action-btn analysis-btn" onclick="openAnalysis()">
 📊 تحليل نتائج هذا الفصل
+</button>
+
+<button class="action-btn" style="background:#c69a2b;color:#fff" onclick="openExamPlatform()">
+📝 منصة الاختبارات الإلكترونية
 </button>
 
 </div>
@@ -3102,6 +3106,10 @@ const w=window.open("","_blank");if(!w){alert("اسمح بالنوافذ الم�
 /* ======================================================
    ANALYSIS
 ====================================================== */
+
+function openExamPlatform(){
+location.href="exam-admin.html";
+}
 
 function openAnalysis(){
 
