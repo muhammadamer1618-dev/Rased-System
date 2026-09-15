@@ -6,6 +6,7 @@
 <title>إدارة منصة الاختبارات</title>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-storage-compat.js"></script>
 <style>
 *{box-sizing:border-box}:root{--navy:#0c2745;--blue:#174f7c;--gold:#c69a2b;--green:#198754;--red:#dc3545;--bg:#f4f7fb;--line:#d7e0e8}
 body{margin:0;font-family:Tahoma,Arial,sans-serif;background:var(--bg);color:#1f2937}
@@ -20,7 +21,7 @@ button{border:0;border-radius:8px;padding:10px 14px;font:inherit;font-weight:bol
 .actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}.classes{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.chip{display:flex;align-items:center;gap:5px;padding:7px 9px;border:1px solid #ccd6df;border-radius:18px;background:#fafcff;font-size:12px}.chip input{width:auto}
 table{width:100%;border-collapse:collapse;min-width:850px}th,td{border:1px solid #d4dde5;padding:8px;text-align:center;font-size:12px}th{background:var(--blue);color:#fff}.table-wrap{overflow:auto}
 .qbox{border:1px solid #d7e0e8;border-radius:10px;padding:12px;margin:10px 0;background:#fbfdff}.qhead{display:flex;justify-content:space-between;gap:8px;align-items:center}.qhead b{color:var(--navy)}
-.option-row{display:grid;grid-template-columns:42px 1fr;gap:7px;align-items:center;margin:7px 0}.option-row input[type=radio]{width:20px;height:20px}.type-panel{margin-top:12px;padding:12px;border:1px solid #d7e0e8;border-radius:10px;background:#fafcff}.pair-row{display:grid;grid-template-columns:1fr 1fr 80px;gap:7px;align-items:end;margin:7px 0}.type-badge{display:inline-block;padding:4px 8px;border-radius:15px;background:#e7f1ff;color:#174f7c;font-size:11px;font-weight:bold;margin-inline-start:6px}
+.option-row{display:grid;grid-template-columns:42px 1fr 72px;gap:7px;align-items:center;margin:7px 0}.option-row input[type=radio]{width:20px;height:20px}.option-row.truefalse{grid-template-columns:42px 1fr}.q-image-preview{display:block;max-width:320px;max-height:220px;object-fit:contain;border:1px solid #d7e0e8;border-radius:10px;margin-top:8px;background:#fff}.image-tools{display:flex;gap:7px;flex-wrap:wrap;align-items:center}.image-tools input[type=file]{max-width:420px}.small-note{font-size:10px;color:#687786;margin-top:4px}.type-panel{margin-top:12px;padding:12px;border:1px solid #d7e0e8;border-radius:10px;background:#fafcff}.pair-row{display:grid;grid-template-columns:1fr 1fr 80px;gap:7px;align-items:end;margin:7px 0}.type-badge{display:inline-block;padding:4px 8px;border-radius:15px;background:#e7f1ff;color:#174f7c;font-size:11px;font-weight:bold;margin-inline-start:6px}
 .note{background:#fff8db;color:#715d00;padding:10px;border-radius:8px;font-size:12px;line-height:1.7}.hidden{display:none!important}.empty{text-align:center;color:#788794;padding:25px}.stat{font-weight:bold;color:var(--blue)}
 .footer{text-align:center;color:#687786;font-size:10px;padding:12px}
 @media(max-width:850px){.grid{grid-template-columns:repeat(2,1fr)}.grid2{grid-template-columns:1fr}.head-actions{position:static;justify-content:center;margin-top:8px}}
@@ -92,7 +93,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{border:1px solid
 </div>
 
 <div style="margin-top:12px"><label>نص السؤال</label><textarea id="qText" placeholder="اكتب السؤال هنا..."></textarea></div>
-
+<div class="type-panel"><label>صورة السؤال (اختيارية)</label><div class="image-tools"><input id="qImageFile" type="file" accept="image/*" onchange="previewQuestionImage()"><button type="button" class="red hidden" id="removeImageBtn" onclick="removeQuestionImage()">حذف الصورة</button></div><div class="small-note">مناسبة للمسائل الرياضية، الأشكال الهندسية والرسوم البيانية.</div><img id="qImagePreview" class="q-image-preview hidden" alt="صورة السؤال"><input type="hidden" id="existingImageUrl"><input type="hidden" id="existingImagePath"></div>
 <div id="answerBox" class="type-panel"></div>
 <div class="actions">
 <button class="green" onclick="saveQuestion()">➕ حفظ السؤال</button>
@@ -132,7 +133,7 @@ table{width:100%;border-collapse:collapse;min-width:850px}th,td{border:1px solid
 
 <script>
 const firebaseConfig={apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",authDomain:"results2026-7c0dd.firebaseapp.com",projectId:"results2026-7c0dd",storageBucket:"results2026-7c0dd.firebasestorage.app",messagingSenderId:"241421115694",appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"};
-firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
+firebase.initializeApp(firebaseConfig);const db=firebase.firestore();const storage=firebase.storage();
 const gradesOrder=["1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي","1 متوسط","2 متوسط","3 متوسط","1 ثانوي","2 ثانوي","3 ثانوي"];
 const sections=["أ","ب","ج","د"];
 let role="",currentUser="",currentTeacher=null,subjects=[],teachers=[],examsData=[],assignments=[],selectedExamId="";
@@ -294,13 +295,13 @@ matching:"توصيل",
 reading:"Reading"
 };
 
-function buildChoiceEditor(q=null,isTrueFalse=false){
- const opts=isTrueFalse?["صح","خطأ"]:(Array.isArray(q?.options)?q.options:["","","",""]);
- answerBox.innerHTML="";
- opts.forEach((o,i)=>{
-   answerBox.insertAdjacentHTML("beforeend",`<div class="option-row"><input type="radio" name="correct" value="${i}" ${Number(q?.correctIndex)===i?"checked":""}><input class="optText" value="${esc(o||"")}" placeholder="الاختيار ${i+1}" ${isTrueFalse?"readonly":""}></div>`);
- });
-}
+function refreshChoiceIndexes(){[...answerBox.querySelectorAll(".option-row")].forEach((row,i)=>{let r=row.querySelector('input[type="radio"]'),x=row.querySelector(".optText");if(r)r.value=i;if(x&&!x.readOnly)x.placeholder=`الاختيار ${i+1}`})}
+function addChoiceRow(text="",checked=false){let row=document.createElement("div");row.className="option-row";row.innerHTML=`<input type="radio" name="correct" value="0" ${checked?"checked":""}><input class="optText" value="${esc(text)}" placeholder="اكتب الاختيار"><button type="button" class="red" onclick="removeChoiceRow(this)">حذف</button>`;answerBox.appendChild(row);refreshChoiceIndexes()}
+function removeChoiceRow(btn){let rows=answerBox.querySelectorAll(".option-row");if(rows.length<=2)return alert("يجب وجود اختيارين على الأقل.");btn.closest(".option-row").remove();refreshChoiceIndexes()}
+function buildChoiceEditor(q=null,isTrueFalse=false){answerBox.innerHTML="";if(isTrueFalse){["صح","خطأ"].forEach((o,i)=>answerBox.insertAdjacentHTML("beforeend",`<div class="option-row truefalse"><input type="radio" name="correct" value="${i}" ${Number(q?.correctIndex)===i?"checked":""}><input class="optText" value="${o}" readonly></div>`));return}let opts=Array.isArray(q?.options)&&q.options.length?q.options:["",""];opts.forEach((o,i)=>addChoiceRow(o,Number(q?.correctIndex)===i));answerBox.insertAdjacentHTML("beforeend",`<button type="button" class="light" onclick="addChoiceRow()">➕ إضافة اختيار</button><div class="note" style="margin-top:8px">اختياران على الأقل، ويمكن إضافة أي عدد من الاختيارات.</div>`)}
+function previewQuestionImage(){let f=qImageFile.files?.[0];if(!f)return;if(!f.type.startsWith("image/")){qImageFile.value="";return alert("اختر صورة فقط.")}if(f.size>5*1024*1024){qImageFile.value="";return alert("حجم الصورة يجب ألا يتجاوز 5MB.")}qImagePreview.src=URL.createObjectURL(f);qImagePreview.classList.remove("hidden");removeImageBtn.classList.remove("hidden")}
+function removeQuestionImage(){qImageFile.value="";existingImageUrl.value="";existingImagePath.value="";qImagePreview.removeAttribute("src");qImagePreview.classList.add("hidden");removeImageBtn.classList.add("hidden")}
+async function uploadQuestionImage(examId){let f=qImageFile.files?.[0];if(!f)return {url:existingImageUrl.value||"",path:existingImagePath.value||""};let n=String(f.name||"image").replace(/[^a-zA-Z0-9._-]/g,"_").slice(-80),path=`exam-question-images/${examId}/${Date.now()}_${Math.random().toString(36).slice(2,9)}_${n}`,ref=storage.ref().child(path);await ref.put(f);return {url:await ref.getDownloadURL(),path}}
 
 function addPair(left="",right=""){
  const row=document.createElement("div");
@@ -345,6 +346,7 @@ function clearQuestionForm(){
  qOrder.value="";
  qType.value="mcq";
  qPassage.value="";
+ qImageFile.value="";existingImageUrl.value="";existingImagePath.value="";qImagePreview.removeAttribute("src");qImagePreview.classList.add("hidden");removeImageBtn.classList.add("hidden");
  renderQuestionEditor();
 }
 
@@ -358,15 +360,13 @@ async function saveQuestion(){
  if(!text)return alert("اكتب نص السؤال.");
  if(!points||points<=0)return alert("أدخل درجة صحيحة للسؤال.");
 
- let data={
-   type,text,points,
-   textDirection:qDirection.value||"auto",
-   updatedAt:firebase.firestore.FieldValue.serverTimestamp()
- };
+ let data={type,text,points,textDirection:qDirection.value||"auto",updatedAt:firebase.firestore.FieldValue.serverTimestamp()};
+ try{let img=await uploadQuestionImage(selectedExamId);data.imageUrl=img.url||"";data.imagePath=img.path||""}catch(e){console.error(e);return alert("تعذر رفع صورة السؤال: "+e.message)}
 
  if(type==="mcq"||type==="reading"||type==="truefalse"){
-   const opts=[...document.querySelectorAll(".optText")].map(x=>x.value.trim());
-   const r=document.querySelector('input[name="correct"]:checked');
+   const opts=[...answerBox.querySelectorAll(".optText")].map(x=>x.value.trim());
+   const r=answerBox.querySelector('input[name="correct"]:checked');
+   if(type!=="truefalse"&&opts.length<2)return alert("أضف اختيارين على الأقل.");
    if(opts.some(x=>!x)||!r)return alert("أكمل الاختيارات وحدد الإجابة الصحيحة.");
    data.options=opts;
    data.correctIndex=Number(r.value);
@@ -414,7 +414,7 @@ async function loadQuestions(){
  if(!arr.length){questionsList.innerHTML='<div class="empty">لم تتم إضافة أسئلة بعد.</div>';return}
  questionsList.innerHTML=arr.map((q,i)=>{
    const t=q.type||"mcq",d=questionDir(q);
-   return `<div class="qbox" dir="${d}" style="text-align:${d==="ltr"?"left":"right"}"><div class="qhead"><b>${i+1}) ${esc(q.text)} <span class="type-badge">${esc(questionTypeNames[t]||t)}</span></b><span>${esc(q.points||1)} درجة</span></div>${t==="reading"&&q.passage?`<div class="note" style="margin-top:8px">${esc(q.passage)}</div>`:""}${questionAnswerPreview(q)}<div class="actions"><button class="primary" onclick="editQuestion('${q.id}')">تعديل</button><button class="red" onclick="deleteQuestion('${q.id}')">حذف</button></div></div>`;
+   return `<div class="qbox" dir="${d}" style="text-align:${d==="ltr"?"left":"right"}"><div class="qhead"><b>${i+1}) ${esc(q.text)} <span class="type-badge">${esc(questionTypeNames[t]||t)}</span></b><span>${esc(q.points||1)} درجة</span></div>${q.imageUrl?`<img class="q-image-preview" src="${esc(q.imageUrl)}" alt="صورة السؤال">`:""}${t==="reading"&&q.passage?`<div class="note" style="margin-top:8px">${esc(q.passage)}</div>`:""}${questionAnswerPreview(q)}<div class="actions"><button class="primary" onclick="editQuestion('${q.id}')">تعديل</button><button class="red" onclick="deleteQuestion('${q.id}')">حذف</button></div></div>`;
  }).join("");
 }
 
@@ -428,6 +428,8 @@ async function editQuestion(id){
  qDirection.value=q.textDirection||"auto";
  qOrder.value=q.order||"";
  qType.value=q.type||"mcq";
+ qImageFile.value="";existingImageUrl.value=q.imageUrl||"";existingImagePath.value=q.imagePath||"";
+ if(q.imageUrl){qImagePreview.src=q.imageUrl;qImagePreview.classList.remove("hidden");removeImageBtn.classList.remove("hidden")}else{qImagePreview.removeAttribute("src");qImagePreview.classList.add("hidden");removeImageBtn.classList.add("hidden")}
  renderQuestionEditor(q);
  questionCard.scrollIntoView({behavior:"smooth"});
 }
