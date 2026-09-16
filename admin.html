@@ -590,48 +590,6 @@ font-weight:bold
 @media(max-width:700px){.progress-stats{grid-template-columns:repeat(2,1fr)}.progress-chart{height:230px}}
 
 </style>
-
-<style id="rased-mobile-friendly">
-*{box-sizing:border-box;}
-html{width:100%;overflow-x:hidden;}
-body{width:100%;max-width:100%;overflow-x:hidden;}
-img{max-width:100%;height:auto;}
-button,input,select,textarea{max-width:100%;}
-.table-wrap,.table-container,.table-responsive,.results-container,.results-content,.data-table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-table{max-width:100%;}
-@media (max-width:768px){
-  body{font-size:15px;}
-  .container,.main-container,.page-container,.content,.content-container,.wrap,.wrapper,.card,.panel{max-width:100%;}
-  header,.header,.topbar,.navbar,.nav{height:auto;min-height:0;}
-  header,.header,.topbar,.navbar,.nav,.toolbar,.actions,.filters,.filter-row,.form-row,.button-row,.stats,.cards,.grid,.controls{flex-wrap:wrap;}
-  header,.header,.topbar,.navbar,.nav{padding-left:12px!important;padding-right:12px!important;}
-  .container,.main-container,.page-container,.content,.content-container,.wrap,.wrapper{width:100%!important;padding-left:12px!important;padding-right:12px!important;}
-  .card,.panel,.box,.section{margin-left:0!important;margin-right:0!important;}
-  .grid,.cards{grid-template-columns:1fr!important;}
-  .filters,.filter-row,.form-row,.button-row,.toolbar,.actions{gap:8px!important;}
-  .filters>* ,.filter-row>* ,.form-row>*{min-width:0!important;width:100%!important;max-width:100%!important;}
-  input,select,textarea{width:100%;min-height:44px;font-size:16px;}
-  button{min-height:44px;font-size:15px;}
-  .button-row button,.actions button,.toolbar button{width:100%;}
-  .table-wrap,.table-container,.table-responsive,.results-container,.results-content,.data-table-wrap{overflow-x:auto!important;}
-  table{min-width:600px;}
-  th,td{white-space:nowrap;}
-  .modal,.dialog,.popup{max-width:calc(100vw - 24px)!important;width:auto!important;}
-  .modal-content,.dialog-content{max-width:100%;}
-  .logo{max-width:110px!important;height:auto!important;}
-  h1{font-size:clamp(22px,6vw,32px)!important;}
-  h2{font-size:clamp(19px,5vw,27px)!important;}
-  h3{font-size:clamp(17px,4.5vw,23px)!important;}
-  .parent-progress-box,.parent-subject-picker{max-width:100%;}
-}
-@media (max-width:420px){
-  body{font-size:14px;}
-  header,.header,.topbar,.navbar,.nav{padding:8px!important;}
-  .container,.main-container,.page-container,.content,.content-container,.wrap,.wrapper{padding-left:8px!important;padding-right:8px!important;}
-  table{min-width:560px;}
-  th,td{padding:7px 6px!important;}
-}
-</style>
 </head>
 
 
@@ -6416,6 +6374,74 @@ window.print();
 };
 <\/script>
 
+<script>
+
+/* ===== Manager read-only account =====
+   Username: manager
+   Password: 123456
+   This block is intentionally isolated from the existing admin login.
+*/
+(function(){
+  const MANAGER_USER="manager";
+  const MANAGER_PASS="123456";
+
+  function tryManagerLogin(){
+    const inputs=[...document.querySelectorAll("input")];
+    const userInput=inputs.find(i=>/user|username|email|اسم المستخدم|المستخدم/i.test((i.placeholder||"")+" "+(i.name||"")+" "+(i.id||"")));
+    const passInput=inputs.find(i=>String(i.type).toLowerCase()==="password");
+    if(!userInput || !passInput) return false;
+
+    const user=String(userInput.value||"").trim();
+    const pass=String(passInput.value||"");
+    if(user!==MANAGER_USER || pass!==MANAGER_PASS) return false;
+
+    const form=userInput.closest("form") || passInput.closest("form");
+    if(form && !form.dataset.rasedManagerBound){
+      form.dataset.rasedManagerBound="1";
+      form.addEventListener("submit",function(ev){
+        const u=String(userInput.value||"").trim();
+        const p=String(passInput.value||"");
+        if(u===MANAGER_USER && p===MANAGER_PASS){
+          ev.preventDefault();
+          ev.stopImmediatePropagation();
+          localStorage.setItem("currentUserRole","manager");
+          localStorage.setItem("currentUserEmail",MANAGER_USER);
+          localStorage.setItem("currentUserName","مدير الإشراف");
+          location.href="manager.html";
+        }
+      },true);
+    }
+    return true;
+  }
+
+  function bindManager(){
+    tryManagerLogin();
+    document.querySelectorAll("button,input[type=submit]").forEach(btn=>{
+      if(btn.dataset.rasedManagerClick) return;
+      btn.dataset.rasedManagerClick="1";
+      btn.addEventListener("click",function(ev){
+        const inputs=[...document.querySelectorAll("input")];
+        const userInput=inputs.find(i=>/user|username|email|اسم المستخدم|المستخدم/i.test((i.placeholder||"")+" "+(i.name||"")+" "+(i.id||"")));
+        const passInput=inputs.find(i=>String(i.type).toLowerCase()==="password");
+        if(userInput && passInput &&
+           String(userInput.value||"").trim()===MANAGER_USER &&
+           String(passInput.value||"")===MANAGER_PASS){
+          ev.preventDefault();
+          ev.stopImmediatePropagation();
+          localStorage.setItem("currentUserRole","manager");
+          localStorage.setItem("currentUserEmail",MANAGER_USER);
+          localStorage.setItem("currentUserName","مدير الإشراف");
+          location.href="manager.html";
+        }
+      },true);
+    });
+  }
+
+  bindManager();
+  new MutationObserver(bindManager).observe(document.documentElement,{childList:true,subtree:true});
+})();
+
+</script>
 </body>
 
 </html>
