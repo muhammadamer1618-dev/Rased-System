@@ -773,6 +773,35 @@ tbody tr:hover{
 .parent-subject-option:hover{background:#eef4fa;color:#174f7c}
 .parent-progress-box{overflow:visible!important}
 
+
+/* الإصلاح النهائي لعدم اختفاء قائمة المادة خلف حاويات النتائج */
+.results-container,
+.results-content,
+.parent-progress-box,
+.parent-subject-picker{
+    overflow:visible !important;
+}
+
+.parent-progress-box{
+    position:relative !important;
+    z-index:5000 !important;
+}
+
+.parent-subject-picker{
+    position:relative !important;
+    z-index:6000 !important;
+}
+
+.parent-subject-menu{
+    z-index:999999 !important;
+    position:absolute !important;
+}
+
+.table-wrap{
+    position:relative;
+    z-index:1;
+}
+
 </style>
 </head>
 
