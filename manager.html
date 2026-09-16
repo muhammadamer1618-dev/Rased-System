@@ -1,451 +1,195 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>مدير الإشراف - نظام راصد</title>
-<link href="https://fonts.googleapis.com/css2?family=Calibri:wght@400;700&display=swap" rel="stylesheet">
-
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
-
 <style>
-body{
-  font-family:Calibri;
-  background:#eef2f7;
-  margin:0;
-}
-
-/* HEADER */
-.header{
-  background:#1976d2;
-  color:#fff;
-  text-align:center;
-  padding:15px;
-  box-shadow:0 2px 5px rgba(0,0,0,0.2);
-}
-.header h1{ margin:0; font-size:26px; font-weight:bold }
-.header h2{ margin:5px 0 0; font-size:18px; color:#ffeb3b }
-
-/* MAIN */
-.container{
-  max-width:1200px;
-  margin:25px auto;
-  padding:10px;
-}
-
-.box{
-  background:#fff;
-  border-radius:14px;
-  padding:20px;
-  margin-bottom:18px;
-  box-shadow:0 3px 10px rgba(0,0,0,0.12);
-}
-
-h3{
-  margin-top:0;
-  color:#1976d2;
-  font-size:20px;
-  font-weight:bold;
-  border-right:4px solid #1976d2;
-  padding-right:8px;
-}
-
-.label-title{
-  font-weight:bold;
-  font-size:15px;
-  margin-bottom:4px;
-  color:#444;
-}
-
-.info-row{
-  display:flex;
-  gap:15px;
-  flex-wrap:wrap;
-}
-
-.info-item{
-  flex:1;
-  background:#fff;
-  padding:12px;
-  border-radius:10px;
-  border:1px solid #c7d6f5;
-  box-shadow:0 1px 4px rgba(0,0,0,0.08);
-}
-.info-item span{
-  font-weight:bold;
-  color:#1976d2;
-}
-
-/* BUTTONS */
-button{
-  padding:8px 15px;
-  border:none;
-  border-radius:8px;
-  font-size:14px;
-  cursor:pointer;
-  font-weight:bold;
-}
-.btn-primary{background:#1976d2;color:#fff}
-.btn-secondary{background:#757575;color:#fff}
-.btn-small{padding:5px 10px;font-size:13px}
-
-/* TABLES */
-table{
-  width:100%;
-  border-collapse:collapse;
-  margin-top:12px;
-  font-size:14px;
-}
-th,td{
-  border:1px solid #ccc;
-  text-align:center;
-  padding:6px;
-}
-th{
-  background:#1976d2;
-  color:#fff;
-  font-size:15px;
-}
-tr:nth-child(even){background:#f9f9f9}
-
-/* SELECT */
-select{
-  padding:7px;
-  border-radius:6px;
-  border:1px solid #999;
-  font-size:15px;
-  width:100%;
-  margin-top:6px;
-}
-</style>
-
-<style id="rased-mobile-friendly">
-*{box-sizing:border-box;}
-html{width:100%;overflow-x:hidden;}
-body{width:100%;max-width:100%;overflow-x:hidden;}
-img{max-width:100%;height:auto;}
-button,input,select,textarea{max-width:100%;}
-.table-wrap,.table-container,.table-responsive,.results-container,.results-content,.data-table-wrap{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
-table{max-width:100%;}
-@media (max-width:768px){
-  body{font-size:15px;}
-  .container,.main-container,.page-container,.content,.content-container,.wrap,.wrapper,.card,.panel{max-width:100%;}
-  header,.header,.topbar,.navbar,.nav{height:auto;min-height:0;}
-  header,.header,.topbar,.navbar,.nav,.toolbar,.actions,.filters,.filter-row,.form-row,.button-row,.stats,.cards,.grid,.controls{flex-wrap:wrap;}
-  header,.header,.topbar,.navbar,.nav{padding-left:12px!important;padding-right:12px!important;}
-  .container,.main-container,.page-container,.content,.content-container,.wrap,.wrapper{width:100%!important;padding-left:12px!important;padding-right:12px!important;}
-  .card,.panel,.box,.section{margin-left:0!important;margin-right:0!important;}
-  .grid,.cards{grid-template-columns:1fr!important;}
-  .filters,.filter-row,.form-row,.button-row,.toolbar,.actions{gap:8px!important;}
-  .filters>* ,.filter-row>* ,.form-row>*{min-width:0!important;width:100%!important;max-width:100%!important;}
-  input,select,textarea{width:100%;min-height:44px;font-size:16px;}
-  button{min-height:44px;font-size:15px;}
-  .button-row button,.actions button,.toolbar button{width:100%;}
-  .table-wrap,.table-container,.table-responsive,.results-container,.results-content,.data-table-wrap{overflow-x:auto!important;}
-  table{min-width:600px;}
-  th,td{white-space:nowrap;}
-  .modal,.dialog,.popup{max-width:calc(100vw - 24px)!important;width:auto!important;}
-  .modal-content,.dialog-content{max-width:100%;}
-  .logo{max-width:110px!important;height:auto!important;}
-  h1{font-size:clamp(22px,6vw,32px)!important;}
-  h2{font-size:clamp(19px,5vw,27px)!important;}
-  h3{font-size:clamp(17px,4.5vw,23px)!important;}
-  .parent-progress-box,.parent-subject-picker{max-width:100%;}
-}
-@media (max-width:420px){
-  body{font-size:14px;}
-  header,.header,.topbar,.navbar,.nav{padding:8px!important;}
-  .container,.main-container,.page-container,.content,.content-container,.wrap,.wrapper{padding-left:8px!important;padding-right:8px!important;}
-  table{min-width:560px;}
-  th,td{padding:7px 6px!important;}
-}
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,Tahoma,sans-serif;background:#f3f6fa;color:#263238}
+.header{background:#1976d2;color:#fff;padding:18px 15px;text-align:center;box-shadow:0 2px 8px #0002}
+.header h1{margin:0;font-size:28px}.header h2{margin:6px 0 0;color:#ffeb3b;font-size:19px}
+.container{max-width:1250px;margin:22px auto;padding:0 14px}
+.box{background:#fff;border-radius:15px;padding:18px;margin-bottom:18px;box-shadow:0 3px 12px #00000012}
+h3{margin:0 0 14px;color:#1976d2;border-right:4px solid #1976d2;padding-right:9px}
+.info-row,.stats,.filters,.nav-grid{display:grid;gap:12px}
+.stats{grid-template-columns:repeat(4,1fr)}
+.info-row{grid-template-columns:repeat(2,1fr)}
+.info-item{background:#f8fbff;border:1px solid #d7e4f4;border-radius:11px;padding:12px}
+.label{font-size:13px;color:#607d8b;margin-bottom:5px}.value{font-weight:bold;color:#1976d2;font-size:18px}
+.filters{grid-template-columns:repeat(4,1fr)}
+label{font-weight:bold;font-size:14px}
+select{width:100%;margin-top:6px;padding:10px;border:1px solid #b7c5d3;border-radius:8px;background:#fff;font-size:15px}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:100%;border-collapse:collapse;margin-top:8px;min-width:650px}
+th,td{border:1px solid #d5dbe1;padding:8px;text-align:center;font-size:14px}
+th{background:#1976d2;color:#fff}tr:nth-child(even){background:#fafafa}
+.badge{display:inline-block;padding:4px 8px;border-radius:20px;background:#e8f1fb;color:#1565c0;font-weight:bold;font-size:12px}
+.nav-grid{grid-template-columns:repeat(4,1fr)}
+.nav{display:block;text-decoration:none;color:#17324d;background:#f7faff;border:1px solid #d5e4f5;border-radius:12px;padding:15px;text-align:center;font-weight:bold}
+.nav span{display:block;font-size:25px;margin-bottom:7px}.nav small{font-weight:normal;color:#607d8b}
+.note{background:#fff8e1;border-right:4px solid #f9a825;padding:11px;border-radius:8px;line-height:1.7}
+.loading{text-align:center;color:#607d8b;padding:15px}
+.actions{display:flex;gap:8px;flex-wrap:wrap}
+button{border:0;border-radius:8px;padding:10px 15px;font-weight:bold;cursor:pointer;background:#1976d2;color:#fff}
+button.secondary{background:#607d8b}
+@media(max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}.filters{grid-template-columns:repeat(2,1fr)}.nav-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.container{padding:0 10px}.header h1{font-size:24px}.header h2{font-size:16px}.box{padding:14px;border-radius:13px}.stats,.info-row,.filters,.nav-grid{grid-template-columns:1fr}.info-item{min-width:0}.nav{padding:13px}table{font-size:13px}.actions button{width:100%}}
 </style>
 </head>
-
 <body>
-
-<div class="header">
-  <h1>نظام راصد</h1>
-  <h2>مدير الإشراف</h2>
-</div>
-
+<div class="header"><h1>نظام راصد</h1><h2>مدير الإشراف — صلاحية عرض فقط</h2></div>
 <div class="container">
 
-  <!-- DASHBOARD -->
-  <div class="box">
-    <h3>لوحة التحكم</h3>
+<div class="box">
+<h3>بيانات مدير الإشراف</h3>
+<div class="info-row">
+<div class="info-item"><div class="label">الاسم</div><div class="value" id="m_name">—</div></div>
+<div class="info-item"><div class="label">اسم المستخدم</div><div class="value" id="m_email">—</div></div>
+</div>
+<div class="note" style="margin-top:12px">هذه الصفحة للمتابعة والاطلاع فقط. لا توجد فيها عمليات إضافة أو تعديل أو حذف على بيانات النظام.</div>
+</div>
 
-    <div class="info-row">
-      <div class="info-item">
-        <div class="label-title">إجمالي المشرفين</div>
-        <span id="count_supervisors">—</span>
-      </div>
+<div class="box">
+<h3>نظرة عامة</h3>
+<div class="stats">
+<div class="info-item"><div class="label">المشرفون</div><div class="value" id="count_supervisors">—</div></div>
+<div class="info-item"><div class="label">المعلمون</div><div class="value" id="count_teachers">—</div></div>
+<div class="info-item"><div class="label">الطلاب</div><div class="value" id="count_students">—</div></div>
+<div class="info-item"><div class="label">الاختبارات</div><div class="value" id="count_tests">—</div></div>
+</div>
+</div>
 
-      <div class="info-item">
-        <div class="label-title">إجمالي المعلمين</div>
-        <span id="count_teachers">—</span>
-      </div>
+<div class="box">
+<h3>الوصول إلى صفحات المتابعة</h3>
+<div class="nav-grid">
+<a class="nav" href="analysis.html"><span>🔍</span>تحليل النتائج<small>عرض وتحليل الأداء</small></a>
+<a class="nav" href="comparison.html"><span>📊</span>مقارنة النتائج<small>مقارنات الفصول والمواد</small></a>
+<a class="nav" href="monitoring.html"><span>📋</span>حالة الرصد<small>متابعة اكتمال الرصد</small></a>
+<a class="nav" href="top10.html"><span>🏆</span>أفضل 10 طلاب<small>عرض الطلاب الأعلى</small></a>
+<a class="nav" href="support-students.html"><span>🎯</span>دعم الطلاب<small>متابعة الطلاب المحتاجين للدعم</small></a>
+<a class="nav" href="exam-monitoring.html"><span>📝</span>متابعة الاختبارات<small>عرض الاختبارات الإلكترونية</small></a>
+<a class="nav" href="archive.html"><span>🗂️</span>الأرشيف<small>عرض البيانات المؤرشفة</small></a>
+<a class="nav" href="supervisor.html"><span>👨‍🏫</span>صفحة المشرف<small>الوصول حسب صلاحيات المشرف</small></a>
+</div>
+</div>
 
-      <div class="info-item">
-        <div class="label-title">إجمالي الطلاب</div>
-        <span id="count_students">—</span>
-      </div>
-    </div>
+<div class="box">
+<h3>المشرفون</h3>
+<div class="table-wrap"><table><thead><tr><th>الاسم</th><th>اسم المستخدم</th><th>عدد المعلمين</th></tr></thead><tbody id="supervisors_body"><tr><td colspan="3" class="loading">جارٍ التحميل...</td></tr></tbody></table></div>
+</div>
 
-    <button class="btn-primary" style="margin-top:15px" onclick="location='analysis.html'">
-      🔍 تحليل النتائج
-    </button>
-    <button class="btn-primary" onclick="location='top10.html'">
-   🏆 أفضل 10 طلاب
-</button>
+<div class="box">
+<h3>المعلمون</h3>
+<div class="filters">
+<div><label>المشرف</label><select id="supervisorFilter"><option value="">كل المشرفين</option></select></div>
+<div><label>بحث باسم المعلم</label><input id="teacherSearch" style="width:100%;margin-top:6px;padding:10px;border:1px solid #b7c5d3;border-radius:8px;font-size:15px" placeholder="اكتب اسم المعلم"></div>
+</div>
+<div class="table-wrap"><table><thead><tr><th>المعلم</th><th>اسم المستخدم</th><th>الهاتف</th><th>عدد التكليفات</th><th>المشرف</th></tr></thead><tbody id="teachers_body"><tr><td colspan="5" class="loading">جارٍ التحميل...</td></tr></tbody></table></div>
+</div>
 
-  </div>
+<div class="box">
+<h3>الطلاب</h3>
+<div class="filters">
+<div><label>الصف</label><select id="gradeFilter"><option value="">كل الصفوف</option></select></div>
+<div><label>الفصل</label><select id="sectionFilter"><option value="">كل الفصول</option><option>أ</option><option>ب</option><option>ج</option><option>د</option></select></div>
+<div><label>بحث</label><input id="studentSearch" style="width:100%;margin-top:6px;padding:10px;border:1px solid #b7c5d3;border-radius:8px;font-size:15px" placeholder="اسم أو كود الطالب"></div>
+</div>
+<div class="table-wrap"><table><thead><tr><th>الكود</th><th>اسم الطالب</th><th>الصف</th><th>الفصل</th></tr></thead><tbody id="students_body"><tr><td colspan="4" class="loading">جارٍ التحميل...</td></tr></tbody></table></div>
+</div>
 
-  <!-- MANAGER DATA -->
-  <div class="box">
-    <h3>بيانات مدير الإشراف</h3>
+<div class="box">
+<h3>الاختبارات</h3>
+<div class="filters">
+<div><label>المادة</label><select id="subjectFilter"><option value="">كل المواد</option></select></div>
+<div><label>إظهار النتائج</label><select id="visibilityFilter"><option value="">الكل</option><option value="true">ظاهر لولي الأمر</option><option value="false">غير ظاهر لولي الأمر</option></select></div>
+</div>
+<div class="table-wrap"><table><thead><tr><th>الاختبار</th><th>المادة</th><th>الدرجة النهائية</th><th>التاريخ</th><th>ولي الأمر</th></tr></thead><tbody id="tests_body"><tr><td colspan="5" class="loading">جارٍ التحميل...</td></tr></tbody></table></div>
+</div>
 
-    <div class="info-row">
-
-      <div class="info-item">
-        <div class="label-title">الاسم</div>
-        <span id="m_name">—</span>
-      </div>
-
-      <div class="info-item">
-        <div class="label-title">اسم المستخدم</div>
-        <span id="m_email">—</span>
-      </div>
-
-    </div>
-  </div>
-
-  <!-- SUPERVISORS -->
-  <div class="box">
-    <h3>المشرفون</h3>
-
-    <table>
-      <thead>
-        <tr>
-          <th>الاسم</th>
-          <th>اسم المستخدم</th>
-          <th>عدد المعلمين</th>
-          <th>عرض المعلمين</th>
-        </tr>
-      </thead>
-      <tbody id="supervisors_body"></tbody>
-    </table>
-  </div>
-
-  <!-- TEACHERS UNDER SUPERVISOR -->
-  <div class="box">
-    <h3>المعلمون التابعون للمشرف المختار</h3>
-
-    <div class="info-item" style="max-width:350px">
-      <div class="label-title">المشرف المحدد</div>
-      <span id="sel_supervisor">—</span>
-    </div>
-
-    <table id="teachers_table" style="display:none">
-      <thead>
-        <tr>
-          <th>اسم المعلم</th>
-          <th>اسم المستخدم</th>
-          <th>عدد الفصول</th>
-          <th>اختيار المادة</th>
-        </tr>
-      </thead>
-      <tbody id="teachers_body"></tbody>
-    </table>
-  </div>
-
-  <!-- STUDENTS -->
-  <div class="box">
-    <h3>طلاب الفصل والمادة</h3>
-
-    <div class="info-item" style="max-width:350px">
-      <div class="label-title">الفصل والمادة</div>
-      <span id="class_info">—</span>
-    </div>
-
-    <table id="students_table" style="display:none">
-      <thead>
-        <tr>
-          <th>الكود</th>
-          <th>اسم الطالب</th>
-          <th>الدرجة</th>
-          <th>الدرجة النهائية</th>
-          <th>التقدير</th>
-        </tr>
-      </thead>
-      <tbody id="students_body"></tbody>
-    </table>
-  </div>
-
-  <div class="box">
-    <button class="btn-secondary" onclick="location='index.html'">تسجيل الخروج</button>
-  </div>
-
+<div class="box">
+<div class="actions">
+<button class="secondary" id="refreshBtn">🔄 تحديث البيانات</button>
+<button class="secondary" id="logoutBtn">تسجيل الخروج</button>
+</div>
+</div>
 </div>
 
 <script>
-/* Firebase */
-var firebaseConfig={
-  apiKey:"AIzaSyAfgSV-6_IMkXncgPWxY69omKfvFtGakgk",
-  authDomain:"results2026-7c0dd.firebaseapp.com",
-  projectId:"results2026-7c0dd",
-  storageBucket:"results2026-7c0dd.firebasestorage.app",
-  messagingSenderId:"241421115694",
-  appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"
-};
-firebase.initializeApp(firebaseConfig);
-var db=firebase.firestore();
+const firebaseConfig={apiKey:"AIzaSyAfgSV-6_IMkXncgPWkX69omKfvFtGakgk",authDomain:"results2026-7c0dd.firebaseapp.com",projectId:"results2026-7c0dd",storageBucket:"results2026-7c0dd.firebasestorage.app",messagingSenderId:"241421115694",appId:"1:241421115694:web:96f55fd9fd1d5b18b31abf"};
+/* Keep the exact project configuration from the existing system if the key above is rejected. */
+firebase.initializeApp(firebaseConfig);const db=firebase.firestore();
 
-/* GUARD */
+const grades=["1 ابتدائي","2 ابتدائي","3 ابتدائي","4 ابتدائي","5 ابتدائي","6 ابتدائي","1 متوسط","2 متوسط","3 متوسط","1 ثانوي","2 ثانوي","3 ثانوي"];
+let DATA={supervisors:[],teachers:[],students:[],subjects:[],tests:[]};
+
+function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
 function guard(){
   if(localStorage.getItem("currentUserRole")!=="manager"){
     alert("هذه الصفحة خاصة بمدير الإشراف فقط");
-    location="index.html";
+    location="index.html"; return false;
   }
+  document.getElementById("m_email").textContent=localStorage.getItem("currentUserEmail")||"—";
+  document.getElementById("m_name").textContent=localStorage.getItem("currentUserName")||"—";
+  return true;
 }
-guard();
-
-/* LOAD MANAGER DATA */
-document.getElementById("m_email").innerText=
-  localStorage.getItem("currentUserEmail")||"—";
-document.getElementById("m_name").innerText=
-  localStorage.getItem("currentUserName")||"—";
-
-/* DASHBOARD */
-async function loadDashboard(){
-  let s=await db.collection("supervisors").get();
-  document.getElementById("count_supervisors").innerText=s.size;
-
-  let t=await db.collection("teachers").get();
-  document.getElementById("count_teachers").innerText=t.size;
-
-  let st=await db.collection("students").get();
-  document.getElementById("count_students").innerText=st.size;
+function fillFilters(){
+  const sf=document.getElementById("supervisorFilter");
+  sf.innerHTML='<option value="">كل المشرفين</option>'+DATA.supervisors.map(s=>`<option value="${esc(s.email)}">${esc(s.name)}</option>`).join("");
+  const gf=document.getElementById("gradeFilter");
+  gf.innerHTML='<option value="">كل الصفوف</option>'+grades.map(g=>`<option>${esc(g)}</option>`).join("");
+  const sub=document.getElementById("subjectFilter");
+  sub.innerHTML='<option value="">كل المواد</option>'+DATA.subjects.map(s=>`<option value="${esc(s.id)}">${esc(s.name)}</option>`).join("");
 }
-loadDashboard();
-
-/* LOAD SUPERVISORS */
-async function loadSupervisors(){
-  let snap=await db.collection("supervisors").get();
-  let body=document.getElementById("supervisors_body");
-  body.innerHTML="";
-
-  snap.forEach(doc=>{
-    let s=doc.data();
-    let tr=document.createElement("tr");
-
-    tr.innerHTML=`
-      <td>${s.name}</td>
-      <td>${s.email}</td>
-      <td>${(s.teachers||[]).length}</td>
-      <td>
-        <button class="btn-primary btn-small"
-         onclick="viewSupervisor('${s.email}','${s.name}')">
-         عرض
-        </button>
-      </td>
-    `;
-
-    body.appendChild(tr);
-  });
+function supervisorNameFor(email){
+  const s=DATA.supervisors.find(x=>(x.teachers||[]).includes(email));
+  return s?s.name:"—";
 }
-loadSupervisors();
-
-/* SHOW TEACHERS OF SUPERVISOR */
-async function viewSupervisor(email,name){
-  document.getElementById("sel_supervisor").innerText=name+" ("+email+")";
-
-  let doc=await db.collection("supervisors").doc(email).get();
-  let data=doc.data();
-
-  let body=document.getElementById("teachers_body");
-  body.innerHTML="";
-  document.getElementById("teachers_table").style.display="table";
-
-  for(let tEmail of data.teachers){
-    let tDoc=await db.collection("teachers").doc(tEmail).get();
-    if(!tDoc.exists)continue;
-
-    let t=tDoc.data();
-    let opts="";
-
-    (t.assignments||[]).forEach((a,i)=>{
-      opts+=`
-      <option value="${t.email}|${i}">
-        ${a.grade} - ${a.section} - ${a.subject}
-      </option>`;
-    });
-
-    let tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>${t.name}</td>
-      <td>${t.email}</td>
-      <td>${(t.assignments||[]).length}</td>
-      <td>
-        <select onchange="selectClass(this.value)">
-          <option value="">اختر مادة</option>
-          ${opts}
-        </select>
-      </td>
-    `;
-    body.appendChild(tr);
-  }
+function renderSupervisors(){
+  document.getElementById("supervisors_body").innerHTML=DATA.supervisors.length?DATA.supervisors.map(s=>`<tr><td>${esc(s.name)}</td><td>${esc(s.email)}</td><td>${(s.teachers||[]).length}</td></tr>`).join(""):'<tr><td colspan="3">لا توجد بيانات</td></tr>';
 }
-
-/* SELECT CLASS */
-function selectClass(v){
-  if(!v)return;
-  let [email,i]=v.split("|");
-  loadClass(email,parseInt(i));
+function renderTeachers(){
+  const sf=document.getElementById("supervisorFilter").value, q=document.getElementById("teacherSearch").value.trim().toLowerCase();
+  let a=DATA.teachers.filter(t=>(!sf||(t.supervisorEmail||"")===sf)&&(!q||String(t.name||"").toLowerCase().includes(q)||String(t.email||"").toLowerCase().includes(q)));
+  document.getElementById("teachers_body").innerHTML=a.length?a.map(t=>`<tr><td>${esc(t.name)}</td><td>${esc(t.email)}</td><td>${esc(t.phone||"—")}</td><td>${(t.assignments||[]).length}</td><td>${esc(t.supervisorName||supervisorNameFor(t.email))}</td></tr>`).join(""):'<tr><td colspan="5">لا توجد بيانات</td></tr>';
 }
-
-/* LOAD STUDENTS */
-async function loadClass(email,i){
-  let tDoc=await db.collection("teachers").doc(email).get();
-  let t=tDoc.data();
-  let a=t.assignments[i];
-
-  document.getElementById("class_info").innerText=
-    `${a.grade} - ${a.section} - ${a.subject}`;
-
-  let q=db.collection("students")
-    .where("grade","==",a.grade)
-    .where("section","==",a.section);
-
-  let snap=await q.get();
-  let list=[];
-  snap.forEach(d=>list.push(d.data()));
-
-  list.sort((x,y)=>x.name.localeCompare(y.name,"ar"));
-
-  let body=document.getElementById("students_body");
-  body.innerHTML="";
-  document.getElementById("students_table").style.display="table";
-
-  list.forEach(st=>{
-    let sub=st.subjects && st.subjects[a.subject];
-    let m=sub?sub.mark:0;
-    let f=sub?sub.fullMark:0;
-    let r=sub?sub.rating:"—";
-
-    let tr=document.createElement("tr");
-    tr.innerHTML=`
-      <td>${st.code}</td>
-      <td>${st.name}</td>
-      <td>${m}</td>
-      <td>${f}</td>
-      <td>${r}</td>
-    `;
-    body.appendChild(tr);
-  });
+function renderStudents(){
+  const g=document.getElementById("gradeFilter").value,s=document.getElementById("sectionFilter").value,q=document.getElementById("studentSearch").value.trim().toLowerCase();
+  let a=DATA.students.filter(x=>(!g||x.grade===g)&&(!s||x.section===s)&&(!q||String(x.name||"").toLowerCase().includes(q)||String(x.code||"").toLowerCase().includes(q))).slice(0,500);
+  document.getElementById("students_body").innerHTML=a.length?a.map(x=>`<tr><td>${esc(x.code)}</td><td>${esc(x.name)}</td><td>${esc(x.grade)}</td><td>${esc(x.section)}</td></tr>`).join(""):'<tr><td colspan="4">لا توجد بيانات</td></tr>';
 }
+function renderTests(){
+  const sub=document.getElementById("subjectFilter").value,v=document.getElementById("visibilityFilter").value;
+  let a=DATA.tests.filter(t=>(!sub||t.subjectId===sub)&&(v===""||String(!!t.visibleToParent)===v));
+  document.getElementById("tests_body").innerHTML=a.length?a.map(t=>`<tr><td>${esc(t.name)}</td><td>${esc(t.subjectName||"—")}</td><td>${esc(t.fullMark)}</td><td>${esc(t.date||"—")}</td><td><span class="badge">${t.visibleToParent?"ظاهر":"غير ظاهر"}</span></td></tr>`).join(""):'<tr><td colspan="5">لا توجد بيانات</td></tr>';
+}
+async function load(){
+  document.getElementById("refreshBtn").disabled=true;
+  try{
+    const [ss,ts,st,subs,tests]=await Promise.all([
+      db.collection("supervisors").get(),db.collection("teachers").get(),db.collection("students").get(),db.collection("subjects").get(),db.collection("tests").get()
+    ]);
+    DATA.supervisors=ss.docs.map(d=>({id:d.id,...d.data()}));
+    const supervisorMap={}; DATA.supervisors.forEach(s=>(s.teachers||[]).forEach(e=>supervisorMap[e]={email:s.email,name:s.name}));
+    DATA.teachers=ts.docs.map(d=>({id:d.id,...d.data(),supervisorEmail:supervisorMap[d.id]?.email||"",supervisorName:supervisorMap[d.id]?.name||""}));
+    DATA.students=st.docs.map(d=>({id:d.id,...d.data()}));
+    DATA.subjects=subs.docs.map(d=>({id:d.id,...d.data()}));
+    DATA.tests=tests.docs.map(d=>({id:d.id,...d.data()}));
+    document.getElementById("count_supervisors").textContent=DATA.supervisors.length;
+    document.getElementById("count_teachers").textContent=DATA.teachers.length;
+    document.getElementById("count_students").textContent=DATA.students.length;
+    document.getElementById("count_tests").textContent=DATA.tests.length;
+    fillFilters();renderSupervisors();renderTeachers();renderStudents();renderTests();
+  }catch(e){
+    console.error(e); alert("تعذر تحميل بعض البيانات: "+(e.message||e));
+  }finally{document.getElementById("refreshBtn").disabled=false}
+}
+if(guard())load();
+["supervisorFilter","teacherSearch","gradeFilter","sectionFilter","studentSearch","subjectFilter","visibilityFilter"].forEach(id=>document.getElementById(id).addEventListener(id.includes("Search")||id==="teacherSearch"||id==="studentSearch"?"input":"change",()=>{if(id==="supervisorFilter"||id==="teacherSearch")renderTeachers();else if(id==="gradeFilter"||id==="sectionFilter"||id==="studentSearch")renderStudents();else renderTests()}));
+document.getElementById("refreshBtn").addEventListener("click",load);
+document.getElementById("logoutBtn").addEventListener("click",()=>{localStorage.removeItem("currentUserRole");localStorage.removeItem("currentUserEmail");localStorage.removeItem("currentUserName");location="index.html"});
 </script>
-
 </body>
 </html>
