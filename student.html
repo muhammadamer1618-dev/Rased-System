@@ -748,6 +748,31 @@ tbody tr:hover{
 .parent-progress-box{margin-top:18px;background:#fff;border:1px solid #d8e2e9;border-radius:16px;padding:16px}
 .parent-progress-box select{width:100%;height:46px;border:1px solid #cbd5e1;border-radius:9px;padding:8px;font-family:Tahoma,Arial,sans-serif;background:#fff}
 
+
+/* إصلاح قائمة اختيار المادة في تحليل تطور المستوى */
+#parentProgressSubject{display:none!important}
+.parent-subject-picker{position:relative;width:100%;z-index:100}
+.parent-subject-btn{
+ width:100%;min-height:46px;border:1px solid #cbd5e1;border-radius:9px;
+ padding:10px 14px;background:#fff;color:#1f2937;font-family:Tahoma,Arial,sans-serif;
+ font-size:14px;text-align:right;display:flex;align-items:center;justify-content:space-between;cursor:pointer
+}
+.parent-subject-btn::after{content:"▼";font-size:10px;color:#174f7c}
+.parent-subject-menu{
+ display:none;position:absolute;top:calc(100% + 5px);right:0;left:0;width:100%;
+ max-height:260px;overflow-y:auto;background:#fff;border:1px solid #cbd5e1;
+ border-radius:9px;box-shadow:0 10px 28px rgba(0,0,0,.18);z-index:99999
+}
+.parent-subject-picker.open .parent-subject-menu{display:block}
+.parent-subject-option{
+ display:block;width:100%;border:0;border-bottom:1px solid #edf0f3;
+ background:#fff;color:#1f2937;padding:12px 14px;text-align:right;
+ font-family:Tahoma,Arial,sans-serif;font-size:14px;cursor:pointer
+}
+.parent-subject-option:last-child{border-bottom:0}
+.parent-subject-option:hover{background:#eef4fa;color:#174f7c}
+.parent-progress-box{overflow:visible!important}
+
 </style>
 </head>
 
@@ -908,8 +933,31 @@ function rasedProgressHtml(items,escFn){
 function parentProgressSection(){
  const map=new Map();currentResults.forEach(r=>{if(r.subjectId&&!map.has(r.subjectId))map.set(r.subjectId,r.subjectName||"المادة")});
  if(!map.size)return "";
- return `<div class="parent-progress-box"><div class="section-title">📈 تطور مستوى الطالب</div><p style="color:#64748b;font-size:12px;line-height:1.8">اختر المادة لعرض تطور النتائج في الاختبارات المتاحة لولي الأمر فقط.</p><select id="parentProgressSubject" onchange="renderParentProgress()"><option value="">-- اختر المادة --</option>${[...map.entries()].sort((a,b)=>String(a[1]).localeCompare(String(b[1]),"ar")).map(([id,n])=>`<option value="${escapeHtml(id)}">${escapeHtml(n)}</option>`).join("")}</select><div id="parentProgressResult"></div></div>`;
+ return `<div class="parent-progress-box"><div class="section-title">📈 تطور مستوى الطالب</div><p style="color:#64748b;font-size:12px;line-height:1.8">اختر المادة لعرض تطور النتائج في الاختبارات المتاحة لولي الأمر فقط.</p><select id="parentProgressSubject"><option value="">-- اختر المادة --</option>${[...map.entries()].sort((a,b)=>String(a[1]).localeCompare(String(b[1]),"ar")).map(([id,n])=>`<option value="${escapeHtml(id)}">${escapeHtml(n)}</option>`).join("")}</select>
+<div id="parentSubjectPicker" class="parent-subject-picker">
+<button type="button" class="parent-subject-btn" onclick="toggleParentSubjectPicker(event)"><span id="parentSubjectPickerText">-- اختر المادة --</span></button>
+<div class="parent-subject-menu">${[...map.entries()].sort((a,b)=>String(a[1]).localeCompare(String(b[1]),"ar")).map(([id,n])=>`<button type="button" class="parent-subject-option" onclick="chooseParentSubject('${escapeHtml(id)}','${escapeHtml(n)}',event)">${escapeHtml(n)}</button>`).join("")}</div>
+</div>
+<div id="parentProgressResult"></div></div>`;
 }
+function toggleParentSubjectPicker(event){
+ event.stopPropagation();
+ const p=el("parentSubjectPicker");
+ if(p)p.classList.toggle("open");
+}
+function chooseParentSubject(id,name,event){
+ event.stopPropagation();
+ const s=el("parentProgressSubject"),p=el("parentSubjectPicker"),t=el("parentSubjectPickerText");
+ if(s)s.value=id;
+ if(t)t.textContent=name;
+ if(p)p.classList.remove("open");
+ renderParentProgress();
+}
+document.addEventListener("click",()=>{
+ const p=el("parentSubjectPicker");
+ if(p)p.classList.remove("open");
+});
+
 function renderParentProgress(){
  const sid=el("parentProgressSubject")?.value||"",out=el("parentProgressResult");if(!out)return;
  if(!sid){out.innerHTML="";return}
