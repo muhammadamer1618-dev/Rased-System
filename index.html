@@ -1334,6 +1334,53 @@ async function login(){
     setLoading(true);
 
 
+    /*
+        =========================================
+        MANAGER / SUPERVISOR READ-ONLY LOGIN
+        =========================================
+
+        الحساب ثابت ومخصص لمدير الإشراف:
+        username: manager
+        password: 123456
+
+        يتم تحويله مباشرة إلى manager.html
+        بدون التأثير على حسابات الإدارة
+        والمعلمين والمتابعين الحالية.
+    */
+
+    if(
+        originalUsername.toLowerCase()==="manager" &&
+        String(password)==="123456"
+    ){
+
+        localStorage.setItem(
+            "currentUserRole",
+            "manager"
+        );
+
+        localStorage.setItem(
+            "currentUser",
+            "manager"
+        );
+
+        localStorage.setItem(
+            "currentUserEmail",
+            "manager"
+        );
+
+        localStorage.setItem(
+            "currentUserName",
+            "مدير الإشراف"
+        );
+
+        location.href=
+            "manager.html";
+
+        return;
+
+    }
+
+
     try{
 
 
