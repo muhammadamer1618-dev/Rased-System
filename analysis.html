@@ -1431,6 +1431,7 @@ const sectionOrder=[
 
 let role="";
 let isAdmin=false;
+let isManager=false;
 let isTeacher=false;
 
 let currentUsername="";
@@ -1549,10 +1550,13 @@ function protectPage(){
         role==="admin" ||
         role==="superadmin";
 
+    isManager=
+        role==="manager";
+
     isTeacher=
         role==="teacher";
 
-    if(!isAdmin && !isTeacher){
+    if(!isAdmin && !isManager && !isTeacher){
 
         alert("يجب تسجيل الدخول أولًا.");
 
@@ -1675,7 +1679,7 @@ function renderSubjects(){
 
     let list=[];
 
-    if(isAdmin){
+    if(isAdmin || isManager){
 
         list=subjects;
 
@@ -3319,6 +3323,10 @@ function goBack(){
 
         location.href="teacher.html";
 
+    }else if(isManager){
+
+        location.href="manager.html";
+
     }else{
 
         location.href="admin.html";
@@ -3332,11 +3340,11 @@ function goBack(){
 
 function renderMode(){
 
-    if(isAdmin){
+    if(isAdmin || isManager){
 
         el("modeNote").innerHTML=
 
-            "<strong>الإدارة:</strong> يمكنك تحليل نتائج جميع المواد والفصول في المدرسة.";
+            "<strong>الإدارة / المشرف العام:</strong> يمكنك تحليل نتائج جميع المواد والفصول في المدرسة (عرض فقط).";
 
     }else{
 
