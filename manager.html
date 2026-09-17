@@ -40,13 +40,13 @@ button.secondary{background:#607d8b}
 </style>
 </head>
 <body>
-<div class="header"><h1>نظام راصد</h1><h2>مدير الإشراف — صلاحية عرض فقط</h2></div>
+<div class="header"><h1>نظام راصد</h1><h2>المشرف العام — صلاحية عرض فقط</h2></div>
 <div class="container">
 
 <div class="box">
-<h3>بيانات مدير الإشراف</h3>
+<h3>بيانات المشرف العام</h3>
 <div class="info-row">
-<div class="info-item"><div class="label">الاسم</div><div class="value" id="m_name">—</div></div>
+<div class="info-item"><div class="label">الاسم</div><div class="value" id="m_name">أحمد سمير</div></div>
 <div class="info-item"><div class="label">اسم المستخدم</div><div class="value" id="m_email">—</div></div>
 </div>
 <div class="note" style="margin-top:12px">هذه الصفحة للمتابعة والاطلاع فقط. لا توجد فيها عمليات إضافة أو تعديل أو حذف على بيانات النظام.</div>
@@ -127,8 +127,8 @@ let DATA={supervisors:[],teachers:[],students:[],subjects:[],tests:[]};
 
 function esc(v){return String(v??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[m]))}
 function guard(){
-  if(localStorage.getItem("currentUserRole")!=="manager"){
-    alert("هذه الصفحة خاصة بمدير الإشراف فقط");
+  if(localStorage.getItem("currentUserRole")!=="manager" && localStorage.getItem("currentUserRole")!=="superadmin"){
+    alert("هذه الصفحة خاصة بالمشرف العام فقط");
     location="index.html"; return false;
   }
   document.getElementById("m_email").textContent=localStorage.getItem("currentUserEmail")||"—";
