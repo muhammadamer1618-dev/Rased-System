@@ -78,7 +78,7 @@ table{max-width:100%;}
 <img src="logo.jpeg" class="logo" onerror="this.style.display='none'">
 <h1>متابعة الاختبارات الإلكترونية</h1>
 <p>مدارس الفلاح الأهلية</p>
-<button class="back" onclick="location.href='admin.html'">↩ العودة للإدارة</button>
+<button class="back" onclick="goBack()">↩ العودة للإدارة</button>
 </header>
 
 <div class="container">
@@ -142,7 +142,23 @@ const gradesOrder=["1 ابتدائي","2 ابتدائي","3 ابتدائي","4 �
 let teachers=[],subjects=[],exams=[],attempts=[],questionCounts={};
 function el(id){return document.getElementById(id)}
 function esc(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;")}
-function protect(){const r=String(localStorage.getItem("currentUserRole")||"").toLowerCase();if(!["admin","superadmin"].includes(r)){alert("هذه الصفحة مخصصة للإدارة.");location.href="index.html";return false}return true}
+function protect(){
+const r=String(localStorage.getItem("currentUserRole")||"").toLowerCase();
+if(!["admin","superadmin","manager"].includes(r)){
+alert("هذه الصفحة مخصصة للإدارة والمشرف العام.");
+location.href="index.html";
+return false
+}
+return true
+}
+function goBack(){
+const r=String(localStorage.getItem("currentUserRole")||"").toLowerCase();
+if(r==="manager"){
+location.href="manager.html";
+}else{
+location.href="admin.html";
+}
+}
 async function start(){
  if(!protect())return;
  try{
